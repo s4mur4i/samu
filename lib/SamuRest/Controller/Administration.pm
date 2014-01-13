@@ -1,9 +1,8 @@
 package SamuRest::Controller::Administration;
 use Moose;
 use namespace::autoclean;
-use strict;
-use warnings;
-use parent 'Catalyst::Controller';
+
+BEGIN { extends 'Catalyst::Controller' }
 
 sub adminBase : Chained('/'): PathPart('admin'): CaptureArgs(0) {
     my ($self, $c) = @_;
@@ -29,12 +28,17 @@ sub userRegister : Chained('adminBase'): PathPart('register'): Args(0) {
 	}
 }
 
+sub list: Chained('adminBase'): PathPart('list'):Args(0) {
+    my ($self,$c) = @_;
+}
+
 sub user : Chained('adminBase'): Pathpart(''): CaptureArgs(1) {
 	my ($self, $c, $userid) = @_;
 	if ($userid =~/\D/){
 		die "Misue of URL, userid mot only digits";
 	}
-	my $user = $c->stash>{user_rs}->find({id => $userid},{key =>'primary'});
+	my $users_rs = $c->stash->{users_rs};
+	my $user = $c->stash->{users_rs}->find({id => $userid},{key =>'primary'});
 	die "No such user" if (!$user);
 	## Fixme: return some error;
 	$c->stash(user=>$user);
@@ -68,7 +72,7 @@ sub userSetRoles: Chained('user'): PathPart('set_roles'): Args() {
  
 sub userEdit: Chained('user'): PathPart('edit'): Args(0) {
 	my ($self, $c) = @_;
-	if ( $c $c->req->method eq 'post') {
+	if ( lc $c->req->method eq 'post') {
 		my $params = $c->req->params;
 		my $user = $c->stash->{user};
 		$user->update({email => $params->{email}});

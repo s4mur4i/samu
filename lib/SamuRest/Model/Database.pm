@@ -4,7 +4,7 @@ use strict;
 use base 'Catalyst::Model::DBIC::Schema';
 
 __PACKAGE__->config(
-    schema_class => 'Auth::Schema',
+    schema_class => 'DB::Schema',
     
     connect_info => {
         dsn => 'dbi:SQLite:db/samu.db',
