@@ -84,8 +84,7 @@ sub __bad_request {
 	);
 }
 
-sub profile :Chained('adminBase') :PathPart('') :Args(1) :ActionClass('REST') {}
-sub profile_GET {
+sub profile :Chained('adminBase') :PathPart('') :Args(1) :ActionClass('REST') {
 	my ($self, $c, $id) = @_;
 
 	return $self->__bad_request($c, "Unknown id") unless $id and $id =~ /^\d+$/;
@@ -94,7 +93,23 @@ sub profile_GET {
 	my $user = $users_rs->find($id);
 	return $self->__error($c, "Can't find user: $id") unless $user;
 
+	$c->stash(user => $user);
+}
+sub profile_GET {
+	my ($self, $c, $id) = @_;
+
+	my $user = $c->stash->{user};
 	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email });
+}
+sub profile_DELETE {
+	my ($self, $c, $id) = @_;
+
+	# check permission?
+
+	my $user = $c->stash->{user};
+	$user->delete;
+
+	return $self->__ok($c, { message => 'deleted.' });
 }
 
 # sub list: Chained('adminBase'): PathPart('list'):Args(0) {
@@ -109,14 +124,6 @@ sub profile_GET {
 # 	my ($self, $c) = @_;
 # }
 
-# sub userDelete: Chained('user'): PathPart('delete'): Args() {
-# 	my ($self, $c) = @_;
-# 	my $user = $c->stash->{user};
-# 	$user->delete();
-
-# 	#FIXME return success
-# }
-
 # sub userSetRoles: Chained('user'): PathPart('set_roles'): Args() {
 # 	my ($self, $c) = @_;
 # 	my $user = $c->stash->{user};
@@ -127,10 +134,6 @@ sub profile_GET {
 # 	## Fixme return success
 # }
 
-
-# sub profile: Chained('user'): PathPart('profile'):Args(0) {
-# 	my ($self, $c) = @_;
-# }
 
 __PACKAGE__->meta->make_immutable;
 
