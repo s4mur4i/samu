@@ -19,7 +19,6 @@ sub adminBase : Chained('/'): PathPart('admin'): CaptureArgs(0) {
 }
 
 sub user : Chained('adminBase') :PathPart('') :Args(0) :ActionClass('REST') {}
-
 sub user_POST {
 	my ( $self, $c ) = @_;
 
@@ -76,21 +75,30 @@ sub __error {
    );
 }
 
+sub __bad_request {
+	my ($self, $c, $error) = @_;
+
+	$self->status_bad_request(
+	  $c,
+	  message => $error
+	);
+}
+
+sub profile :Chained('adminBase') :PathPart('') :Args(1) :ActionClass('REST') {}
+sub profile_GET {
+	my ($self, $c, $id) = @_;
+
+	return $self->__bad_request($c, "Unknown id") unless $id and $id =~ /^\d+$/;
+
+	my $users_rs = $c->stash->{users_rs};
+	my $user = $users_rs->find($id);
+	return $self->__error($c, "Can't find user: $id") unless $user;
+
+	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email });
+}
 
 # sub list: Chained('adminBase'): PathPart('list'):Args(0) {
 #     my ($self,$c) = @_;
-# }
-
-# sub user : Chained('adminBase'): Pathpart(''): CaptureArgs(1) {
-# 	my ($self, $c, $userid) = @_;
-# 	if ($userid =~/\D/){
-# 		die "Misue of URL, userid mot only digits";
-# 	}
-# 	my $users_rs = $c->stash->{users_rs};
-# 	my $user = $c->stash->{users_rs}->find({id => $userid},{key =>'primary'});
-# 	die "No such user" if (!$user);
-# 	## Fixme: return some error;
-# 	$c->stash(user=>$user);
 # }
 
 # sub userLogin : Chained('user'): PathPart('login'): Args(0) {
