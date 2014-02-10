@@ -17,6 +17,12 @@ requires 'Moose';
 requires 'namespace::autoclean';
 requires 'Config::General'; # This should reflect the config file format you've chosen
                  # See Catalyst::Plugin::ConfigLoader for supported formats
+requires 'DBIx::Class::TimeStamp' => '0.14';
+requires 'DateTime::Format::SQLite' => '0.11';
+requires 'Email::Valid';
+requires 'DBIx::Class::Core';
+requires 'DBIx::Class::InflateColumn::DateTime';
+requires 'Catalyst::View::JSON';
 test_requires 'Test::More' => '0.88';
 catalyst;
 
