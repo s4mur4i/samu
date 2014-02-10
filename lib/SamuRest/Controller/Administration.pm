@@ -61,6 +61,7 @@ sub __ok {
             %$data
         },
    );
+	$c->detach;
 }
 
 sub __error {
@@ -73,6 +74,7 @@ sub __error {
             message => $error,
         },
    );
+	$c->detach;
 }
 
 sub __bad_request {
@@ -82,6 +84,7 @@ sub __bad_request {
 	  $c,
 	  message => $error
 	);
+	$c->detach;
 }
 
 sub profile :Chained('adminBase') :PathPart('') :Args(1) :ActionClass('REST') {
