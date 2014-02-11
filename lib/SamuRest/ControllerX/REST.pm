@@ -49,6 +49,9 @@ sub __bad_request {
     $c->detach;
 }
 
+sub __has_session {
+    my ($self, $c) = @_;
+}
 1;
 
 =head1 NAME

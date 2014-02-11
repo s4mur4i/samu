@@ -13,6 +13,7 @@ sub adminBase : Chained('/'): PathPart('admin'): CaptureArgs(0) {
 }
 
 sub user : Chained('adminBase') :PathPart('') :Args(0) :ActionClass('REST') {}
+
 sub user_POST {
 	my ( $self, $c ) = @_;
 
@@ -61,12 +62,14 @@ sub profile :Chained('adminBase') :PathPart('') :Args(1) :ActionClass('REST') {
 
 	$c->stash(user => $user);
 }
+
 sub profile_GET {
 	my ($self, $c, $id) = @_;
 
 	my $user = $c->stash->{user};
 	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email });
 }
+
 sub profile_DELETE {
 	my ($self, $c, $id) = @_;
 
@@ -78,9 +81,29 @@ sub profile_DELETE {
 	return $self->__ok($c, { message => 'deleted.' });
 }
 
-# sub list: Chained('adminBase'): PathPart('list'):Args(0) {
-#     my ($self,$c) = @_;
-# }
+sub userlist :Chained('adminBase') :PathPart('list') :Args(0) :ActionClass('REST') {}
+
+sub userlist_GET {
+	my ($self, $c) = @_;
+	my $users_rs = $c->stash->{users_rs};
+	my @users = $c->model('Database::User')->search( undef, { order_by => 'id' } )->all;
+	my %result=();
+	## Need fix return list of id => username
+	#foreach my $user ( @users) {
+	#	$result{"$user->id"}= $user->username;
+	#}
+	return $self->__ok($c, %result);
+}
+
+sub infouser :Chained('adminBase') :PathPart('list') :Args(1) :ActionClass('REST') {}
+
+sub infouser_GET {
+	my ($self, $c, $username) = @_;
+	my $users_rs = $c->stash->{users_rs};
+	my $user = $users_rs->find( {username => $username} );
+	return $self->__error($c, "Can't find user: $username") unless $user;
+	return $self->__ok($c, { id => $user->id, username => $user->username });
+}
 
 # sub userLogin : Chained('user'): PathPart('login'): Args(0) {
 # 	my ($self, $c) = @_;
