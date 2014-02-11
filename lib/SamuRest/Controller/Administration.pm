@@ -38,9 +38,9 @@ sub user_POST {
 	# validate
 	return $self->__error($c, "Username is required.") unless $username;
 	my $cnt = $users_rs->count({ username => $username });
-	return $self->__error($c, "Username is already signed up.") unless $cnt;
+	return $self->__error($c, "Username is already signed up.") if $cnt;
 	$cnt = $users_rs->count({ email => $email });
-	return $self->__error($c, "Email is already signed up.") unless $cnt;
+	return $self->__error($c, "Email is already signed up.") if $cnt;
 
 	## Create the user:
 	my $user = $users_rs->create({
