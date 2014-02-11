@@ -1,6 +1,8 @@
 package SamuRest::Controller::Administration;
+
 use Moose;
 use namespace::autoclean;
+use Email::Valid;
 
 BEGIN { extends 'Catalyst::Controller::REST' }
 
@@ -31,6 +33,7 @@ sub user_POST {
 	my $email    = $params->{email};
 
 	return $self->__error($c, "Email is required.") unless $email;
+	return $self->__error($c, "Email is invalid.") unless Email::Valid->address($email);
 
 	if ($id) { # update
 		my $user = $users_rs->find($id);
@@ -40,8 +43,12 @@ sub user_POST {
 		return $self->__ok($c, { id => $user->id });
 	}
 
-	# create
+	# validate
 	return $self->__error($c, "Username is required.") unless $username;
+	my $cnt = $users_rs->count({ username => $username });
+	return $self->__error($c, "Username is already signed up.") unless $cnt;
+	$cnt = $users_rs->count({ email => $email });
+	return $self->__error($c, "Email is already signed up.") unless $cnt;
 
 	## Create the user:
 	my $user = $users_rs->create({
