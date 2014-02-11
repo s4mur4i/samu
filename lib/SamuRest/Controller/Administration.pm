@@ -4,15 +4,7 @@ use Moose;
 use namespace::autoclean;
 use Email::Valid;
 
-BEGIN { extends 'Catalyst::Controller::REST' }
-
-__PACKAGE__->config(
-	default => 'application/json',
-	maps => {
-		'application/json'   => 'JSON',
-		'text/x-json'        => 'JSON',
-	}
-);
+BEGIN { extends 'SamuRest::ControllerX::REST' }
 
 sub adminBase : Chained('/'): PathPart('admin'): CaptureArgs(0) {
     my ($self, $c) = @_;
@@ -56,42 +48,6 @@ sub user_POST {
 		email    => $email
 	});
 	return $self->__ok($c, { id => $user->id });
-}
-
-sub __ok {
-	my ($self, $c, $data) = @_;
-
-	$self->status_ok(
-        $c,
-        entity => {
-        	result => 'success',
-            %$data
-        },
-   );
-	$c->detach;
-}
-
-sub __error {
-	my ($self, $c, $error) = @_;
-
-	$self->status_ok(
-        $c,
-        entity => {
-        	result => 'error',
-            message => $error,
-        },
-   );
-	$c->detach;
-}
-
-sub __bad_request {
-	my ($self, $c, $error) = @_;
-
-	$self->status_bad_request(
-	  $c,
-	  message => $error
-	);
-	$c->detach;
 }
 
 sub profile :Chained('adminBase') :PathPart('') :Args(1) :ActionClass('REST') {
