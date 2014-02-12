@@ -88,7 +88,6 @@ sub userlist_GET {
 	my $users_rs = $c->stash->{users_rs};
 	my @users = $c->model('Database::User')->search( undef, { order_by => 'id' } )->all;
 	my %result=();
-	# Need fix return list of id => username
 	foreach my $user (@users) {
 		$result{$user->id} = $user->username;
 	}
