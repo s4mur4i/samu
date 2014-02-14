@@ -20,6 +20,9 @@ use Catalyst qw/
     -Debug
     ConfigLoader
     Static::Simple
+    Session
+    Session::Store::DBI
+    Session::State::URI
 /;
 
 extends 'Catalyst';
@@ -44,6 +47,14 @@ __PACKAGE__->config(
         allow_callback => 1,
         callback_param => 'cb',
         expose_stash => 'json_data'
+    },
+    'Plugin::Session' => {
+        expires   => 3600,
+        dbi_dsn   => 'dbi:SQLite:db/samu.db',
+        dbi_table => 'session',
+        dbi_id_field => 'id',
+        dbi_data_field => 'session_data',
+        dbi_expires_field => 'expires',
     }
 );
 

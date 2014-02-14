@@ -20,9 +20,13 @@ requires 'Config::General'; # This should reflect the config file format you've 
 requires 'DBIx::Class::TimeStamp' => '0.14';
 requires 'DateTime::Format::SQLite' => '0.11';
 requires 'Email::Valid';
+requires 'Digest::SHA1';
 requires 'DBIx::Class::Core';
 requires 'DBIx::Class::InflateColumn::DateTime';
 requires 'Catalyst::View::JSON';
+requires 'Catalyst::Plugin::Session';
+requires 'Catalyst::Plugin::Session::State::URI';
+requires 'Catalyst::Plugin::Session::Store::DBI';
 test_requires 'Test::More' => '0.88';
 catalyst;
 

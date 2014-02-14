@@ -3,6 +3,7 @@ package SamuRest::Controller::Administration;
 use Moose;
 use namespace::autoclean;
 use Email::Valid;
+use Digest::SHA1 qw/sha1_hex/;
 
 BEGIN { extends 'SamuRest::ControllerX::REST' }
 
@@ -23,15 +24,20 @@ sub user_POST {
 	my $params = $c->req->params;
 	my $id 		 = $params->{id};
 	my $username = $params->{username};
+	my $password = $params->{password};
 	my $email    = $params->{email};
-
-	return $self->__error($c, "Email is required.") unless $email;
-	return $self->__error($c, "Email is invalid.") unless Email::Valid->address($email);
 
 	if ($id) { # update
 		my $user = $users_rs->find($id);
 		return $self->__error($c, "Can't find user: $id") unless $user;
-		$user->email($email);
+		if ($email) {
+			return $self->__error($c, "Email is invalid.") unless Email::Valid->address($email);
+			$user->email($email);
+		}
+		if ($password) {
+			$user->password( sha1_hex($password) );
+		}
+
 		$user->update;
 		return $self->__ok($c, { id => $user->id });
 	}
@@ -40,12 +46,16 @@ sub user_POST {
 	return $self->__error($c, "Username is required.") unless $username;
 	my $cnt = $users_rs->count({ username => $username });
 	return $self->__error($c, "Username is already signed up.") if $cnt;
+	return $self->__error($c, "Password is required.") unless $password;
+	return $self->__error($c, "Email is required.") unless $email;
+	return $self->__error($c, "Email is invalid.") unless Email::Valid->address($email);
 	$cnt = $users_rs->count({ email => $email });
 	return $self->__error($c, "Email is already signed up.") if $cnt;
 
 	## Create the user:
 	my $user = $users_rs->create({
 		username => $username,
+		password => sha1_hex($password),
 		email    => $email
 	});
 	return $self->__ok($c, { id => $user->id });

@@ -6,6 +6,7 @@
   CREATE TABLE users (
     id       INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE,
+    password CHAR(40),
     email    TEXT,
     last_modified DATETIME
   );
