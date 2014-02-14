@@ -21,18 +21,19 @@ Catalyst Controller.
 
 =cut
 
-#sub index :Path :Args(0) {
-#    my ( $self, $c ) = @_;
-#
-#    $c->response->body('Matched SamuRest::Controller::Vmware in Vmware.');
-#}
-
 sub vmwareBase : Chained('/'): PathPart('vmware'): CaptureArgs(0) {
     my ($self, $c) = @_;
-
+    my $user_id = $c->session->{__user};
+    return $self->__error($c, "You're not login yet.") unless $user_id
 }
 
+sub test : Chained('vmwareBase') :PathPart('') :Args(0) :ActionClass('REST') {}
 
+sub test_GET {
+    my ($self, $c) = @_;
+
+    return $self->__ok($c, { something => "ok" });
+}
 
 =head1 AUTHOR
 
