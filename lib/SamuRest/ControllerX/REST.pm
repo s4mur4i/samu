@@ -51,6 +51,8 @@ sub __bad_request {
 
 sub __has_session {
     my ($self, $c) = @_;
+    my $user_id = $c->session->{__user};
+    return $self->__error($c, "You're not login yet.") unless $user_id;
 }
 1;
 

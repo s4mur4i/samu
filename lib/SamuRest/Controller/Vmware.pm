@@ -24,7 +24,7 @@ Catalyst Controller.
 sub vmwareBase : Chained('/'): PathPart('vmware'): CaptureArgs(0) {
     my ($self, $c) = @_;
     my $user_id = $c->session->{__user};
-    return $self->__error($c, "You're not login yet.") unless $user_id
+    return $self->__error($c, "You're not login yet.") unless $user_id;
 }
 
 sub test : Chained('vmwareBase') :PathPart('') :Args(0) :ActionClass('REST') {}
