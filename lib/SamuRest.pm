@@ -49,6 +49,9 @@ __PACKAGE__->config(
         expose_stash => 'json_data'
     },
     'Plugin::Session' => {
+        rewrite_redirect => 0,
+        rewrite_body => 0,
+
         expires   => 3600,
         dbi_dsn   => 'dbi:SQLite:db/samu.db',
         dbi_table => 'session',

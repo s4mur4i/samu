@@ -61,7 +61,7 @@ sub user_POST {
 	return $self->__ok($c, { id => $user->id });
 }
 
-sub profile :Chained('adminBase') :PathPart('') :Args(1) :ActionClass('REST') {
+sub profile :Chained('adminBase') :PathPart('profile') :Args(1) :ActionClass('REST') {
 	my ($self, $c, $id) = @_;
 
 	return $self->__bad_request($c, "Unknown id") unless $id and $id =~ /^\d+$/;
@@ -92,7 +92,6 @@ sub profile_DELETE {
 }
 
 sub userlist :Chained('adminBase') :PathPart('list') :Args(0) :ActionClass('REST') {}
-
 sub userlist_GET {
 	my ($self, $c) = @_;
 	my $users_rs = $c->stash->{users_rs};
@@ -105,7 +104,6 @@ sub userlist_GET {
 }
 
 sub infouser :Chained('adminBase') :PathPart('list') :Args(1) :ActionClass('REST') {}
-
 sub infouser_GET {
 	my ($self, $c, $username) = @_;
 	my $users_rs = $c->stash->{users_rs};
@@ -114,13 +112,49 @@ sub infouser_GET {
 	return $self->__ok($c, { id => $user->id, username => $user->username });
 }
 
-# sub userLogin : Chained('user'): PathPart('login'): Args(0) {
-# 	my ($self, $c) = @_;
-# }
+sub userLogin :Chained('adminBase') :PathPart('login') :Args(0) :ActionClass('REST') {
+	my ($self, $c) = @_;
 
-# sub userLogoff : Chained('user'): PathPart('logoff'): Args(0) {
-# 	my ($self, $c) = @_;
-# }
+	my $params = $c->req->params;
+	my $username = $params->{username};
+	my $password = $params->{password};
+
+	return $self->__error($c, "Username is required.") unless $username;
+	return $self->__error($c, "Password is required.") unless $password;
+
+	my $users_rs = $c->stash->{users_rs};
+	my $user = $users_rs->find({ username => $username });
+	return $self->__error($c, "Can't find user: $username") unless $user;
+
+	return $self->__error($c, "Incorrect password") unless $user->password eq sha1_hex($password);
+	$c->session->{__user} = $user->id;
+
+	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email, sessionid => $c->sessionid });
+}
+
+sub userLogoff :Chained('adminBase') :PathPart('logoff') :ActionClass('REST') {
+	my ($self, $c) = @_;
+
+	undef $c->session->{__user};
+	return $self->__ok($c, { sessionid => $c->sessionid });
+}
+
+sub me :Chained('adminBase') :PathPart('me') :ActionClass('REST') {
+	my ($self, $c) = @_;
+
+	my $session = $c->session;
+	print STDERR Dumper(\$session); use Data::Dumper;
+
+	my $user_id = $c->session->{__user};
+	return $self->__error($c, "You're not login yet.") unless $user_id;
+
+	my $users_rs = $c->stash->{users_rs};
+	my $user = $users_rs->find($user_id);
+	return $self->__error($c, "Can't find user: $user_id") unless $user;
+
+	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email });
+}
+
 
 # sub userSetRoles: Chained('user'): PathPart('set_roles'): Args() {
 # 	my ($self, $c) = @_;
