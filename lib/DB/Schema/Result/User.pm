@@ -18,20 +18,6 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-=head1 COMPONENTS LOADED
-
-=over 4
-
-=item * L<DBIx::Class::InflateColumn::DateTime>
-
-=item * L<DBIx::Class::TimeStamp>
-
-=back
-
-=cut
-
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
-
 =head1 TABLE: C<users>
 
 =cut
@@ -61,6 +47,12 @@ __PACKAGE__->table("users");
   data_type: 'datetime'
   is_nullable: 1
 
+=head2 password
+
+  data_type: 'char'
+  is_nullable: 1
+  size: 40
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -72,6 +64,8 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "last_modified",
   { data_type => "datetime", is_nullable => 1 },
+  "password",
+  { data_type => "char", is_nullable => 1, size => 40 },
 );
 
 =head1 PRIMARY KEY
@@ -128,22 +122,11 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-01-11 23:22:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IR25wcgUE+CKbCszFnoAcQ
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-14 21:18:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3rWqeXp7DurPStnZ+7jmQg
 
-
-__PACKAGE__->add_columns('last_modified', { %{__PACKAGE__->column_info('last_modified')}, set_on_create => 1, set_on_update => 1 }); 
-use Email::Valid;
-sub new {
-	my ($class, $args) = @_;
-
-	if( exists $args->{email}
-	&& !Email::Valid->address($args->{email}) ) {
-	die 'Email invalid';
-	}
-
-	return $class->next::method($args);
-}
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
+__PACKAGE__->add_columns('last_modified', { %{__PACKAGE__->column_info('last_modified')}, set_on_create => 1, set_on_update => 1 });
 
 sub set_all_roles {
 	my ($self,@roleids) = @_;
@@ -155,5 +138,5 @@ sub set_all_roles {
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
-__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
+__PACKAGE__->meta->make_immutable;
 1;

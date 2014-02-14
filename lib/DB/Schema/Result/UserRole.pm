@@ -18,20 +18,6 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-=head1 COMPONENTS LOADED
-
-=over 4
-
-=item * L<DBIx::Class::InflateColumn::DateTime>
-
-=item * L<DBIx::Class::TimeStamp>
-
-=back
-
-=cut
-
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
-
 =head1 TABLE: C<user_roles>
 
 =cut
@@ -89,7 +75,7 @@ __PACKAGE__->belongs_to(
   "role",
   "DB::Schema::Result::Role",
   { id => "role_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 user
@@ -104,12 +90,12 @@ __PACKAGE__->belongs_to(
   "user",
   "DB::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-01-11 23:22:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pTuOlEoLeO+H+T4enXrgGw
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-14 21:18:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XuvJV9yR5pUn+nUPFbMgaw
 
 __PACKAGE__->many_to_many('roles', 'user_roles', 'role');
 

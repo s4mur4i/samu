@@ -18,20 +18,6 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-=head1 COMPONENTS LOADED
-
-=over 4
-
-=item * L<DBIx::Class::InflateColumn::DateTime>
-
-=item * L<DBIx::Class::TimeStamp>
-
-=back
-
-=cut
-
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
-
 =head1 TABLE: C<roles>
 
 =cut
@@ -114,8 +100,8 @@ Composing rels: L</user_roles> -> user
 __PACKAGE__->many_to_many("users", "user_roles", "user");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-01-11 23:22:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:g8K6puaIf4GzydiMOkyt/g
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-14 21:18:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:onE/OMvTBcbxqYaT43LAwg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
