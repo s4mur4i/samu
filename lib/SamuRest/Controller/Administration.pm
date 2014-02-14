@@ -135,15 +135,12 @@ sub userLogin :Chained('adminBase') :PathPart('login') :Args(0) :ActionClass('RE
 sub userLogoff :Chained('adminBase') :PathPart('logoff') :ActionClass('REST') {
 	my ($self, $c) = @_;
 
-	undef $c->session->{__user};
+	delete $c->session->{__user};
 	return $self->__ok($c, { sessionid => $c->sessionid });
 }
 
 sub me :Chained('adminBase') :PathPart('me') :ActionClass('REST') {
 	my ($self, $c) = @_;
-
-	my $session = $c->session;
-	print STDERR Dumper(\$session); use Data::Dumper;
 
 	my $user_id = $c->session->{__user};
 	return $self->__error($c, "You're not login yet.") unless $user_id;
