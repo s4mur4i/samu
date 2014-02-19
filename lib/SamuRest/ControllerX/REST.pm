@@ -49,12 +49,23 @@ sub __bad_request {
     $c->detach;
 }
 
-sub __has_session {
+sub __is_logined {
     my ($self, $c) = @_;
     my $user_id = $c->session->{__user};
     return $self->__error($c, "You're not login yet.") unless $user_id;
     return $user_id;
 }
+
+sub __is_admin {
+    my ($self, $c) = @_;
+    my $user_id = $self->__is_logined($c);
+
+    my $cnt = $c->model('Database::UserRole')->count({ user_id => $user_id, role_id => 1 }); # 1 is admin, hardcode for now
+    return $self->__error($c, "Permission Denied.") unless $cnt;
+
+    return $user_id;
+}
+
 1;
 
 =head1 NAME

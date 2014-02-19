@@ -142,13 +142,63 @@ sub userLogoff :Chained('adminBase') :PathPart('logoff') :ActionClass('REST') {
 sub me :Chained('adminBase') :PathPart('me') :ActionClass('REST') {
 	my ($self, $c) = @_;
 
-	my $user_id = $self->__has_session($c);
+	my $user_id = $self->__is_logined($c);
 
 	my $users_rs = $c->stash->{users_rs};
 	my $user = $users_rs->find($user_id);
 	return $self->__error($c, "Can't find user: $user_id") unless $user;
 
 	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email });
+}
+
+sub roles :Chained('adminBase') :PathPart('roles') :ActionClass('REST') {
+	my ($self, $c) = @_;
+
+	my $user_id = $self->__is_admin($c); # requires admin
+}
+
+sub roles_POST {
+	my ($self, $c) = @_;
+
+	my $params = $c->req->params;
+	my $to_user_id = $params->{user_id};
+	my $role = $params->{role};
+
+	## validate
+	my $schema = $c->model('Database');
+	my $role_rs = $schema->resultset('Role')->find({ role => $role });
+	return $self->__error($c, "Unknown role: $role") unless $role_rs;
+
+	my $to_user = $schema->resultset('User')->find($to_user_id);
+	return $self->__error($c, "Unknown user: $to_user_id") unless $to_user;
+
+	my $cnt = $schema->resultset('UserRole')->count({ user_id => $to_user->id, role_id => $role_rs->id });
+	return $self->__error($c, "Role already granted.") if $cnt;
+
+	$schema->resultset('UserRole')->create({ user_id => $to_user->id, role_id => $role_rs->id });
+	return $self->__ok($c, { id => $to_user->id });
+}
+
+sub roles_DELETE {
+	my ($self, $c) = @_;
+
+	my $params = $c->req->params;
+	my $to_user_id = $params->{user_id};
+	my $role = $params->{role};
+
+	## validate
+	my $schema = $c->model('Database');
+	my $role_rs = $schema->resultset('Role')->find({ role => $role });
+	return $self->__error($c, "Unknown role: $role") unless $role_rs;
+
+	my $to_user = $schema->resultset('User')->find($to_user_id);
+	return $self->__error($c, "Unknown user: $to_user_id") unless $to_user;
+
+	my $cnt = $schema->resultset('UserRole')->count({ user_id => $to_user->id, role_id => $role_rs->id });
+	return $self->__error($c, "Role already deleted.") unless $cnt;
+
+	$schema->resultset('UserRole')->search({ user_id => $to_user->id, role_id => $role_rs->id })->delete;
+	return $self->__ok($c, { id => $to_user->id });
 }
 
 # sub userSetRoles: Chained('user'): PathPart('set_roles'): Args() {
