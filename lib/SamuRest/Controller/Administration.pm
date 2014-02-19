@@ -142,8 +142,7 @@ sub userLogoff :Chained('adminBase') :PathPart('logoff') :ActionClass('REST') {
 sub me :Chained('adminBase') :PathPart('me') :ActionClass('REST') {
 	my ($self, $c) = @_;
 
-	my $user_id = $c->session->{__user};
-	return $self->__error($c, "You're not login yet.") unless $user_id;
+	my $user_id = $self->__has_session($c);
 
 	my $users_rs = $c->stash->{users_rs};
 	my $user = $users_rs->find($user_id);
@@ -151,7 +150,6 @@ sub me :Chained('adminBase') :PathPart('me') :ActionClass('REST') {
 
 	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email });
 }
-
 
 # sub userSetRoles: Chained('user'): PathPart('set_roles'): Args() {
 # 	my ($self, $c) = @_;
@@ -162,7 +160,6 @@ sub me :Chained('adminBase') :PathPart('me') :ActionClass('REST') {
 # 	}
 # 	## Fixme return success
 # }
-
 
 __PACKAGE__->meta->make_immutable;
 
