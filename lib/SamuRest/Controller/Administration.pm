@@ -63,9 +63,8 @@ sub user_POST {
 
 sub profile :Chained('adminBase') :PathPart('profile') :Args(1) :ActionClass('REST') {
 	my ($self, $c, $id) = @_;
-
 	return $self->__bad_request($c, "Unknown id") unless $id and $id =~ /^\d+$/;
-
+    #Checkek logedin here?
 	my $users_rs = $c->stash->{users_rs};
 	my $user = $users_rs->find($id);
 	return $self->__error($c, "Can't find user: $id") unless $user;
@@ -84,7 +83,7 @@ sub profile_DELETE {
 	my ($self, $c, $id) = @_;
 
 	# check permission?
-
+    # admin or self can delete
 	my $user = $c->stash->{user};
 	$user->delete;
 
@@ -93,8 +92,20 @@ sub profile_DELETE {
 
 sub profile_POST {
     my ($self,$c,$id) = @_;
-    my $user_id = $self->__is_logined($c);
-    # Update profile information
+    my $params = $c->req->params;
+# Is there a more friendly way to find the param and update the database?
+	my $user = $c->stash->{users_rs}->find({id=>$id});
+    if ( $params->{username} ) {
+        $user->update( {username=> $params->{username}});    
+    }
+    if ( $params->{password}) {
+        $user->update( {password=> sha1_hex($params->{password})});
+    }
+    if ( $params->{email}) {
+        return $self->__error($c, "Email is invalid.") unless Email::Valid->address($params->{email});
+        $user->update( { email => $params->{email}});
+    }
+	return $self->__ok($c, { username => $user->username });
 }
 
 sub userlist :Chained('adminBase') :PathPart('list') :Args(0) :ActionClass('REST') {}
@@ -153,8 +164,15 @@ sub me :Chained('adminBase') :PathPart('me') :ActionClass('REST') {
 	my $users_rs = $c->stash->{users_rs};
 	my $user = $users_rs->find($user_id);
 	return $self->__error($c, "Can't find user: $user_id") unless $user;
-
-	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email });
+    # roles
+    my @roles = ();
+    my $schema = $c->model('Database');
+    my @ret = $c->model('Database::UserRole')->search({user_id => $user->id},undef)->all;
+    foreach my $userrole( @ret) {
+        my $role = $schema->resultset('Role')->find({id=>$userrole->role_id});
+        push(@roles, $role->role);
+    }
+	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email , roles=> \@roles});
 }
 
 sub roles :Chained('adminBase') :PathPart('roles'): Args(0) :ActionClass('REST') {
