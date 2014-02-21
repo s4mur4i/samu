@@ -93,6 +93,7 @@ sub profile_DELETE {
 sub profile_POST {
     my ($self,$c,$id) = @_;
     my $params = $c->req->params;
+# Security, only admin or own profiles
 # Is there a more friendly way to find the param and update the database?
 	my $user = $c->stash->{users_rs}->find({id=>$id});
     if ( $params->{username} ) {
