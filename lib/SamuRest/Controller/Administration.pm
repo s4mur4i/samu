@@ -91,6 +91,12 @@ sub profile_DELETE {
 	return $self->__ok($c, { message => 'deleted.' });
 }
 
+sub profile_POST {
+    my ($self,$c,$id) = @_;
+    my $user_id = $self->__is_logined($c);
+    # Update profile information
+}
+
 sub userlist :Chained('adminBase') :PathPart('list') :Args(0) :ActionClass('REST') {}
 sub userlist_GET {
 	my ($self, $c) = @_;
@@ -151,10 +157,36 @@ sub me :Chained('adminBase') :PathPart('me') :ActionClass('REST') {
 	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email });
 }
 
-sub roles :Chained('adminBase') :PathPart('roles') :ActionClass('REST') {
+sub roles :Chained('adminBase') :PathPart('roles'): Args(0) :ActionClass('REST') {
 	my ($self, $c) = @_;
 
 	my $user_id = $self->__is_admin($c); # requires admin
+}
+# can these two somehow be chained together?
+sub roleslist :Chained('adminBase') :PathPart('roles'): Args(1) :ActionClass('REST') {
+	my ($self, $c) = @_;
+}
+
+sub roleslist_GET {
+    my ($self, $c,$type) = @_;
+    my %result =();
+    if ( $type =~ /^list$/) {
+        my @roles = $c->model('Database::Role')->search( undef, { order_by => 'id' } )->all;
+        foreach my $role (@roles) {
+            $result{$role->id} = $role->role;
+        }
+    } else {
+	    my $schema = $c->model('Database');
+        my $role_rs = $schema->resultset('Role')->find({ role => $type });
+	    return $self->__error($c, "Unknown role: $type") unless $role_rs;
+        my @users = $c->model('Database::UserRole')->search({role_id => $role_rs->id},undef)->all;
+        $result{$type}= [];
+        foreach my $user (@users) {
+            my $userobj = $schema->resultset('User')->find($user->user_id);
+            push($result{$type}, $userobj->username);
+        }
+    }
+    return $self->__ok( $c, \%result);
 }
 
 sub roles_POST {
@@ -201,15 +233,7 @@ sub roles_DELETE {
 	return $self->__ok($c, { id => $to_user->id });
 }
 
-# sub userSetRoles: Chained('user'): PathPart('set_roles'): Args() {
-# 	my ($self, $c) = @_;
-# 	my $user = $c->stash->{user};
-# 	if ( lc $c->req->method eq 'post') {
-# 		my @roles = $c->req->param('role');
-# 		$user->set_all_roles(@roles);
-# 	}
-# 	## Fixme return success
-# }
+
 
 __PACKAGE__->meta->make_immutable;
 
