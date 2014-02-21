@@ -21,3 +21,12 @@
    session_data	text,
    expires	int
   );
+  CREATE TABLE user_values (
+   user_id   INTEGER REFERENCES users(id), 
+   value_id  INTEGER REFERENCES value(id),
+   PRIMARY KEY(user_id,value_id)
+  );
+  CREATE TABLE value (
+   id	INTEGER PRIMARY KEY AUTOINCREMENT,
+   value TEXT UNIQUE
+  );

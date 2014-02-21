@@ -111,6 +111,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 user_values
+
+Type: has_many
+
+Related object: L<DB::Schema::Result::UserValue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_values",
+  "DB::Schema::Result::UserValue",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 roles
 
 Type: many_to_many
@@ -121,9 +136,19 @@ Composing rels: L</user_roles> -> role
 
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
+=head2 values
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-14 21:18:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3rWqeXp7DurPStnZ+7jmQg
+Type: many_to_many
+
+Composing rels: L</user_values> -> value
+
+=cut
+
+__PACKAGE__->many_to_many("values", "user_values", "value");
+
+
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-02-21 15:46:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rklolvkVy7vUf+OuTbgb4A
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
 __PACKAGE__->add_columns('last_modified', { %{__PACKAGE__->column_info('last_modified')}, set_on_create => 1, set_on_update => 1 });

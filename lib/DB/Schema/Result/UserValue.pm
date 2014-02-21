@@ -1,12 +1,12 @@
 use utf8;
-package DB::Schema::Result::UserRole;
+package DB::Schema::Result::UserValue;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-DB::Schema::Result::UserRole
+DB::Schema::Result::UserValue
 
 =cut
 
@@ -18,11 +18,11 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-=head1 TABLE: C<user_roles>
+=head1 TABLE: C<user_values>
 
 =cut
 
-__PACKAGE__->table("user_roles");
+__PACKAGE__->table("user_values");
 
 =head1 ACCESSORS
 
@@ -32,7 +32,7 @@ __PACKAGE__->table("user_roles");
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 role_id
+=head2 value_id
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -43,7 +43,7 @@ __PACKAGE__->table("user_roles");
 __PACKAGE__->add_columns(
   "user_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "role_id",
+  "value_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
@@ -53,30 +53,15 @@ __PACKAGE__->add_columns(
 
 =item * L</user_id>
 
-=item * L</role_id>
+=item * L</value_id>
 
 =back
 
 =cut
 
-__PACKAGE__->set_primary_key("user_id", "role_id");
+__PACKAGE__->set_primary_key("user_id", "value_id");
 
 =head1 RELATIONS
-
-=head2 role
-
-Type: belongs_to
-
-Related object: L<DB::Schema::Result::Role>
-
-=cut
-
-__PACKAGE__->belongs_to(
-  "role",
-  "DB::Schema::Result::Role",
-  { id => "role_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
-);
 
 =head2 user
 
@@ -93,11 +78,25 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
+=head2 value
+
+Type: belongs_to
+
+Related object: L<DB::Schema::Result::Role>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "value",
+  "DB::Schema::Result::Role",
+  { id => "value_id" },
+  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+);
+
 
 # Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-02-21 15:46:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FWLRaqC1sqA0FQasEXXcZg
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N3acEGYaokzDYN+cs2GdsA
 
-__PACKAGE__->many_to_many('roles', 'user_roles', 'role');
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
