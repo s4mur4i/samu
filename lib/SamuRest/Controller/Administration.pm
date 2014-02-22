@@ -61,6 +61,29 @@ sub user_POST {
 	return $self->__ok($c, { id => $user->id });
 }
 
+sub profile_me :Chained('adminBase') :PathPart('profile') :Args(0) :ActionClass('REST') {
+	my ($self, $c) = @_;
+	my $user_id = $self->__is_logined($c);
+    $c->stash(user_id=> $user_id);
+}
+
+sub profile_me_GET {
+    my ($self,$c) = @_;
+    my $user_id = $c->stash->{user_id};
+# need to forward to profile_GET with user_id
+#    $c->detach('/administration/profile',\[$user_id]);
+}
+
+sub profile_me_POST{
+    my ($self,$c) = @_;
+# need to forward to profile_POST with user_id
+}
+
+sub profile_me_DELETE {
+    my ($self,$c) = @_;
+# need to forward to profile_DELETE with user_id
+}
+
 sub profile :Chained('adminBase') :PathPart('profile') :Args(1) :ActionClass('REST') {
 	my ($self, $c, $id) = @_;
 	return $self->__bad_request($c, "Unknown id") unless $id and $id =~ /^\d+$/;
@@ -68,15 +91,21 @@ sub profile :Chained('adminBase') :PathPart('profile') :Args(1) :ActionClass('RE
 	my $users_rs = $c->stash->{users_rs};
 	my $user = $users_rs->find($id);
 	return $self->__error($c, "Can't find user: $id") unless $user;
-
 	$c->stash(user => $user);
 }
 
 sub profile_GET {
 	my ($self, $c, $id) = @_;
-
 	my $user = $c->stash->{user};
-	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email });
+    # roles
+    my @roles = ();
+    my $schema = $c->model('Database');
+    my @ret = $c->model('Database::UserRole')->search({user_id => $user->id},undef)->all;
+    foreach my $userrole( @ret) {
+        my $role = $schema->resultset('Role')->find({id=>$userrole->role_id});
+        push(@roles, $role->role);
+    }
+	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email , roles=> \@roles});
 }
 
 sub profile_DELETE {
@@ -157,24 +186,7 @@ sub userLogoff :Chained('adminBase') :PathPart('logoff') :ActionClass('REST') {
 	return $self->__ok($c, { sessionid => $c->sessionid });
 }
 
-sub me :Chained('adminBase') :PathPart('me') :ActionClass('REST') {
-	my ($self, $c) = @_;
 
-	my $user_id = $self->__is_logined($c);
-
-	my $users_rs = $c->stash->{users_rs};
-	my $user = $users_rs->find($user_id);
-	return $self->__error($c, "Can't find user: $user_id") unless $user;
-    # roles
-    my @roles = ();
-    my $schema = $c->model('Database');
-    my @ret = $c->model('Database::UserRole')->search({user_id => $user->id},undef)->all;
-    foreach my $userrole( @ret) {
-        my $role = $schema->resultset('Role')->find({id=>$userrole->role_id});
-        push(@roles, $role->role);
-    }
-	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email , roles=> \@roles});
-}
 
 sub roles :Chained('adminBase') :PathPart('roles'): Args(0) :ActionClass('REST') {
 	my ($self, $c) = @_;
@@ -189,21 +201,24 @@ sub roleslist :Chained('adminBase') :PathPart('roles'): Args(1) :ActionClass('RE
 sub roleslist_GET {
     my ($self, $c,$type) = @_;
     my %result =();
-    if ( $type =~ /^list$/) {
-        my @roles = $c->model('Database::Role')->search( undef, { order_by => 'id' } )->all;
-        foreach my $role (@roles) {
-            $result{$role->id} = $role->role;
-        }
-    } else {
-	    my $schema = $c->model('Database');
-        my $role_rs = $schema->resultset('Role')->find({ role => $type });
-	    return $self->__error($c, "Unknown role: $type") unless $role_rs;
-        my @users = $c->model('Database::UserRole')->search({role_id => $role_rs->id},undef)->all;
-        $result{$type}= [];
-        foreach my $user (@users) {
-            my $userobj = $schema->resultset('User')->find($user->user_id);
-            push($result{$type}, $userobj->username);
-        }
+    my $schema = $c->model('Database');
+    my $role_rs = $schema->resultset('Role')->find({ role => $type });
+    return $self->__error($c, "Unknown role: $type") unless $role_rs;
+    my @users = $c->model('Database::UserRole')->search({role_id => $role_rs->id},undef)->all;
+    $result{$type}= [];
+    foreach my $user (@users) {
+        my $userobj = $schema->resultset('User')->find($user->user_id);
+        push($result{$type}, $userobj->username);
+    }
+    return $self->__ok( $c, \%result);
+}
+
+sub roles_GET {
+    my ($self, $c) = @_;
+    my %result =();
+    my @roles = $c->model('Database::Role')->search( undef, { order_by => 'id' } )->all;
+    foreach my $role (@roles) {
+        $result{$role->id} = $role->role;
     }
     return $self->__ok( $c, \%result);
 }
