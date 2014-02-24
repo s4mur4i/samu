@@ -136,19 +136,9 @@ Composing rels: L</user_roles> -> role
 
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
-=head2 values
 
-Type: many_to_many
-
-Composing rels: L</user_values> -> value
-
-=cut
-
-__PACKAGE__->many_to_many("values", "user_values", "value");
-
-
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-02-21 15:46:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rklolvkVy7vUf+OuTbgb4A
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 20:32:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:49EPbtAUghjYp4L+G0fS0Q
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
 __PACKAGE__->add_columns('last_modified', { %{__PACKAGE__->column_info('last_modified')}, set_on_create => 1, set_on_update => 1 });

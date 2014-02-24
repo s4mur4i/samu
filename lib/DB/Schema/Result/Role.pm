@@ -89,32 +89,7 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 user_values
-
-Type: has_many
-
-Related object: L<DB::Schema::Result::UserValue>
-
-=cut
-
-__PACKAGE__->has_many(
-  "user_values",
-  "DB::Schema::Result::UserValue",
-  { "foreign.value_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 users
-
-Type: many_to_many
-
-Composing rels: L</user_values> -> user
-
-=cut
-
-__PACKAGE__->many_to_many("users", "user_values", "user");
-
-=head2 users_2s
 
 Type: many_to_many
 
@@ -122,11 +97,11 @@ Composing rels: L</user_roles> -> user
 
 =cut
 
-__PACKAGE__->many_to_many("users_2s", "user_roles", "user");
+__PACKAGE__->many_to_many("users", "user_roles", "user");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-02-21 15:46:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:SFSzsbaVcg/Wx8COasXA5w
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 20:32:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kHHMx+DM2pC9kFu471iRhQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

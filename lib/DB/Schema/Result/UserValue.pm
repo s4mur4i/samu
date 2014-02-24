@@ -38,6 +38,11 @@ __PACKAGE__->table("user_values");
   is_foreign_key: 1
   is_nullable: 0
 
+=head2 value
+
+  data_type: 'text'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -45,6 +50,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "value_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "value",
+  { data_type => "text", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -75,27 +82,27 @@ __PACKAGE__->belongs_to(
   "user",
   "DB::Schema::Result::User",
   { id => "user_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 value
 
 Type: belongs_to
 
-Related object: L<DB::Schema::Result::Role>
+Related object: L<DB::Schema::Result::Value>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "value",
-  "DB::Schema::Result::Role",
+  "DB::Schema::Result::Value",
   { id => "value_id" },
-  { is_deferrable => 1, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-02-21 15:46:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N3acEGYaokzDYN+cs2GdsA
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 20:32:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sxM0t7dIuUfB6B7/wEGB1w
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

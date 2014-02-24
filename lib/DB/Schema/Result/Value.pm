@@ -72,9 +72,26 @@ __PACKAGE__->set_primary_key("id");
 
 __PACKAGE__->add_unique_constraint("value_unique", ["value"]);
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-02-21 15:46:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Z5QZsdCnUiii8Mzzvy+wcA
+=head2 user_values
+
+Type: has_many
+
+Related object: L<DB::Schema::Result::UserValue>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_values",
+  "DB::Schema::Result::UserValue",
+  { "foreign.value_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 20:32:58
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ns3lu7sfZpJWNCvXrza7ng
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
