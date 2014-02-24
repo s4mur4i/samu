@@ -7,11 +7,39 @@ use Digest::SHA1 qw/sha1_hex/;
 
 BEGIN { extends 'SamuRest::ControllerX::REST' }
 
+=head1 NAME
+
+SamuRest::Controller::Administration - Administration API
+
+=head1 DESCRIPTION
+
+REST API of /admin
+
+=head1 METHODS
+
+=head2 adminBase
+
+base chain for url /admin
+
+=cut
+
 sub adminBase : Chained('/'): PathPart('admin'): CaptureArgs(0) {
     my ($self, $c) = @_;
 
     $c->stash(users_rs => $c->model('Database::User'));
 }
+
+=pod
+
+=head2 register
+
+=head2 register_POST
+
+    curl -X POST -d 'username=X&password=P&email=test@email.com' http://localhost:3000/admin/
+
+register user with params of B<username>, B<password>, B<email>
+
+=cut
 
 sub register : Chained('adminBase') :PathPart('') :Args(0) :ActionClass('REST') {}
 
@@ -45,6 +73,16 @@ sub register_POST {
 	return $self->__ok($c, { id => $user->id });
 }
 
+=pod
+
+=head2 profile_me, profile_me_GET, profile_me_POST, profile_me_DELETE
+
+    curl http://localhost:3000/admin/profile/-/$sessionid_from_login
+
+get current user info, refer B<profile> below for more details
+
+=cut
+
 sub profile_me :Chained('adminBase') :PathPart('profile') :Args(0) :ActionClass('REST') {
 	my ($self, $c) = @_;
 	my $user_id = $self->__is_logined($c);
@@ -66,6 +104,30 @@ sub profile_me_DELETE {
     my ($self, $c) = @_;
     $self->profile_DELETE($c, $c->stash->{user_id});
 }
+
+=pod
+
+=head2 profile
+
+=head2 profile_GET
+
+    curl http://localhost:3000/admin/profile/2/-/$sessionid_from_login
+
+get user basic info with roles etc.
+
+=head2 profile_DELETE
+
+    curl -X DELETE http://localhost:3000/admin/profile/2/-/$sessionid_from_login
+
+delete user, admin or owner only
+
+=head2 profile_POST
+
+    curl -X POST -d 'username=X&password=P&email=test@email.com' http://localhost:3000/admin/profile/2/-/$sessionid_from_login
+
+update user info
+
+=cut
 
 sub profile :Chained('adminBase') :PathPart('profile') :Args(1) :ActionClass('REST') {
 	my ($self, $c, $id) = @_;
@@ -94,8 +156,8 @@ sub profile_GET {
 sub profile_DELETE {
 	my ($self, $c, $id) = @_;
 
-	# check permission?
-    # admin or self can delete
+	$self->__is_admin_or_owner($c, $id);
+
 	my $user = $c->stash->{user};
 	$user->delete;
 
@@ -124,6 +186,20 @@ sub profile_POST {
 	return $self->__ok($c, { username => $user->username });
 }
 
+=pod
+
+=head2 listBase
+
+for /admin/list chain
+
+=head2 userlist, userlist_GET
+
+    curl http://localhost:3000/admin/list
+
+list users
+
+=cut
+
 sub listBase: Chained('adminBase') : PathPart('list'): CaptureArgs(0) {}
 
 sub userlist :Chained('listBase') :PathPart('') :Args(0) :ActionClass('REST') {}
@@ -139,6 +215,16 @@ sub userlist_GET {
 	return $self->__ok($c, \%result);
 }
 
+=pod
+
+=head2 infouser, infouser_GET
+
+    curl http://localhost:3000/admin/list/$username
+
+show one user
+
+=cut
+
 sub infouser :Chained('listBase') :PathPart('') :Args(1) :ActionClass('REST') {}
 
 sub infouser_GET {
@@ -148,6 +234,16 @@ sub infouser_GET {
 	return $self->__error($c, "Can't find user: $username") unless $user;
 	return $self->__ok($c, { id => $user->id, username => $user->username });
 }
+
+=pod
+
+=head2 userLogin
+
+    curl -X POST -d 'username=X&password=P' http://localhost:3000/admin/login
+
+login user, will return sessionid
+
+=cut
 
 sub userLogin :Chained('adminBase') :PathPart('login') :Args(0) :ActionClass('REST') {
 	my ($self, $c) = @_;
@@ -169,12 +265,46 @@ sub userLogin :Chained('adminBase') :PathPart('login') :Args(0) :ActionClass('RE
 	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email, sessionid => $c->sessionid });
 }
 
+=pod
+
+=head2 userLogin
+
+    curl http://localhost:3000/admin/logoff
+
+logout user
+
+=cut
+
 sub userLogoff :Chained('adminBase') :PathPart('logoff') :ActionClass('REST') {
 	my ($self, $c) = @_;
 
 	delete $c->session->{__user};
 	return $self->__ok($c, { sessionid => $c->sessionid });
 }
+
+=pod
+
+=head2 rolesBase
+
+chain for /admin/roles
+
+=head2 roles, roles_GET
+
+show all roles
+
+=head2 roles_POST
+
+    curl -X POST -d 'user_id=$user_id&role=$role' http://localhost:3000/admin/roles
+
+assign $user_id for $role
+
+=head2 roles_POST
+
+    curl -X DELETE -d 'user_id=$user_id&role=$role' http://localhost:3000/admin/roles
+
+unassign $user_id for $role
+
+=cut
 
 sub rolesBase: Chained('adminBase'): PathPart('roles') : CaptureArgs(0) {}
 
@@ -183,6 +313,70 @@ sub roles :Chained('rolesBase') :PathPart(''): Args(0) :ActionClass('REST') {
 
 	my $user_id = $self->__is_admin($c); # requires admin
 }
+
+sub roles_GET {
+    my ($self, $c) = @_;
+    my %result =();
+    my @roles = $c->model('Database::Role')->search( undef, { order_by => 'id' } )->all;
+    foreach my $role (@roles) {
+        $result{$role->id} = $role->role;
+    }
+    return $self->__ok( $c, \%result);
+}
+
+sub roles_POST {
+    my ($self, $c) = @_;
+
+    my $params = $c->req->params;
+    my $to_user_id = $params->{user_id};
+    my $role = $params->{role};
+
+    ## validate
+    my $schema = $c->model('Database');
+    my $role_rs = $schema->resultset('Role')->find({ role => $role });
+    return $self->__error($c, "Unknown role: $role") unless $role_rs;
+
+    my $to_user = $schema->resultset('User')->find($to_user_id);
+    return $self->__error($c, "Unknown user: $to_user_id") unless $to_user;
+
+    my $cnt = $schema->resultset('UserRole')->count({ user_id => $to_user->id, role_id => $role_rs->id });
+    return $self->__error($c, "Role already granted.") if $cnt;
+
+    $schema->resultset('UserRole')->create({ user_id => $to_user->id, role_id => $role_rs->id });
+    return $self->__ok($c, { id => $to_user->id });
+}
+
+sub roles_DELETE {
+    my ($self, $c) = @_;
+
+    my $params = $c->req->params;
+    my $to_user_id = $params->{user_id};
+    my $role = $params->{role};
+
+    ## validate
+    my $schema = $c->model('Database');
+    my $role_rs = $schema->resultset('Role')->find({ role => $role });
+    return $self->__error($c, "Unknown role: $role") unless $role_rs;
+
+    my $to_user = $schema->resultset('User')->find($to_user_id);
+    return $self->__error($c, "Unknown user: $to_user_id") unless $to_user;
+
+    my $cnt = $schema->resultset('UserRole')->count({ user_id => $to_user->id, role_id => $role_rs->id });
+    return $self->__error($c, "Role already deleted.") unless $cnt;
+
+    $schema->resultset('UserRole')->search({ user_id => $to_user->id, role_id => $role_rs->id })->delete;
+    return $self->__ok($c, { id => $to_user->id });
+}
+
+=pod
+
+=head2 roleslist, roleslist_GET
+
+    curl http://localhost:3000/admin/roles/$role
+
+show users for the $role
+
+=cut
 
 sub roleslist :Chained('rolesBase') :PathPart(''): Args(1) :ActionClass('REST') {
 	my ($self, $c) = @_;
@@ -201,60 +395,6 @@ sub roleslist_GET {
         push($result{$type}, $userobj->username);
     }
     return $self->__ok( $c, \%result);
-}
-
-sub roles_GET {
-    my ($self, $c) = @_;
-    my %result =();
-    my @roles = $c->model('Database::Role')->search( undef, { order_by => 'id' } )->all;
-    foreach my $role (@roles) {
-        $result{$role->id} = $role->role;
-    }
-    return $self->__ok( $c, \%result);
-}
-
-sub roles_POST {
-	my ($self, $c) = @_;
-
-	my $params = $c->req->params;
-	my $to_user_id = $params->{user_id};
-	my $role = $params->{role};
-
-	## validate
-	my $schema = $c->model('Database');
-	my $role_rs = $schema->resultset('Role')->find({ role => $role });
-	return $self->__error($c, "Unknown role: $role") unless $role_rs;
-
-	my $to_user = $schema->resultset('User')->find($to_user_id);
-	return $self->__error($c, "Unknown user: $to_user_id") unless $to_user;
-
-	my $cnt = $schema->resultset('UserRole')->count({ user_id => $to_user->id, role_id => $role_rs->id });
-	return $self->__error($c, "Role already granted.") if $cnt;
-
-	$schema->resultset('UserRole')->create({ user_id => $to_user->id, role_id => $role_rs->id });
-	return $self->__ok($c, { id => $to_user->id });
-}
-
-sub roles_DELETE {
-	my ($self, $c) = @_;
-
-	my $params = $c->req->params;
-	my $to_user_id = $params->{user_id};
-	my $role = $params->{role};
-
-	## validate
-	my $schema = $c->model('Database');
-	my $role_rs = $schema->resultset('Role')->find({ role => $role });
-	return $self->__error($c, "Unknown role: $role") unless $role_rs;
-
-	my $to_user = $schema->resultset('User')->find($to_user_id);
-	return $self->__error($c, "Unknown user: $to_user_id") unless $to_user;
-
-	my $cnt = $schema->resultset('UserRole')->count({ user_id => $to_user->id, role_id => $role_rs->id });
-	return $self->__error($c, "Role already deleted.") unless $cnt;
-
-	$schema->resultset('UserRole')->search({ user_id => $to_user->id, role_id => $role_rs->id })->delete;
-	return $self->__ok($c, { id => $to_user->id });
 }
 
 __PACKAGE__->meta->make_immutable;
