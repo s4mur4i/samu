@@ -87,7 +87,7 @@ sub profile_me : Chained('adminBase') PathPart('profile') Args(0) ActionClass('R
 	my ($self, $c) = @_;
 	my $user_id = $self->__is_logined($c);
     $c->stash(user_id => $user_id);
-    $self->profile($c, $user_id);
+    $self->profile_base($c, $user_id);
 }
 
 sub profile_me_GET {
