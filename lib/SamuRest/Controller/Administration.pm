@@ -13,9 +13,9 @@ sub adminBase : Chained('/'): PathPart('admin'): CaptureArgs(0) {
     $c->stash(users_rs => $c->model('Database::User'));
 }
 
-sub user : Chained('adminBase') :PathPart('') :Args(0) :ActionClass('REST') {}
+sub register : Chained('adminBase') :PathPart('') :Args(0) :ActionClass('REST') {}
 
-sub user_POST {
+sub register_POST {
 	my ( $self, $c ) = @_;
 
 	## Retrieve the users_rs stashed by the base action:
@@ -70,18 +70,19 @@ sub profile_me :Chained('adminBase') :PathPart('profile') :Args(0) :ActionClass(
 sub profile_me_GET {
     my ($self,$c) = @_;
     my $user_id = $c->stash->{user_id};
-# need to forward to profile_GET with user_id
-#    $c->detach('/administration/profile',\[$user_id]);
+    $c->detach("profile", [$user_id]);
 }
 
 sub profile_me_POST{
     my ($self,$c) = @_;
-# need to forward to profile_POST with user_id
+    my $user_id = $c->stash->{user_id};
+    $c->detach("profile", [$user_id]);
 }
 
 sub profile_me_DELETE {
     my ($self,$c) = @_;
-# need to forward to profile_DELETE with user_id
+    my $user_id = $c->stash->{user_id};
+    $c->detach("profile", [$user_id]);
 }
 
 sub profile :Chained('adminBase') :PathPart('profile') :Args(1) :ActionClass('REST') {
@@ -138,7 +139,10 @@ sub profile_POST {
 	return $self->__ok($c, { username => $user->username });
 }
 
-sub userlist :Chained('adminBase') :PathPart('list') :Args(0) :ActionClass('REST') {}
+sub listBase: Chained('adminBase') : PathPart('list'): CaptureArgs(0) {}
+
+sub userlist :Chained('listBase') :PathPart('') :Args(0) :ActionClass('REST') {}
+
 sub userlist_GET {
 	my ($self, $c) = @_;
 	my $users_rs = $c->stash->{users_rs};
@@ -150,7 +154,8 @@ sub userlist_GET {
 	return $self->__ok($c, \%result);
 }
 
-sub infouser :Chained('adminBase') :PathPart('list') :Args(1) :ActionClass('REST') {}
+sub infouser :Chained('listBase') :PathPart('') :Args(1) :ActionClass('REST') {}
+
 sub infouser_GET {
 	my ($self, $c, $username) = @_;
 	my $users_rs = $c->stash->{users_rs};
@@ -186,15 +191,15 @@ sub userLogoff :Chained('adminBase') :PathPart('logoff') :ActionClass('REST') {
 	return $self->__ok($c, { sessionid => $c->sessionid });
 }
 
+sub rolesBase: Chained('adminBase'): PathPart('roles') : CaptureArgs(0) {}
 
-
-sub roles :Chained('adminBase') :PathPart('roles'): Args(0) :ActionClass('REST') {
+sub roles :Chained('rolesBase') :PathPart(''): Args(0) :ActionClass('REST') {
 	my ($self, $c) = @_;
 
 	my $user_id = $self->__is_admin($c); # requires admin
 }
-# can these two somehow be chained together?
-sub roleslist :Chained('adminBase') :PathPart('roles'): Args(1) :ActionClass('REST') {
+
+sub roleslist :Chained('rolesBase') :PathPart(''): Args(1) :ActionClass('REST') {
 	my ($self, $c) = @_;
 }
 
@@ -266,8 +271,6 @@ sub roles_DELETE {
 	$schema->resultset('UserRole')->search({ user_id => $to_user->id, role_id => $role_rs->id })->delete;
 	return $self->__ok($c, { id => $to_user->id });
 }
-
-
 
 __PACKAGE__->meta->make_immutable;
 
