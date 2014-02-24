@@ -22,25 +22,9 @@ sub user_POST {
 	my $users_rs = $c->stash->{users_rs};
 
 	my $params = $c->req->params;
-	my $id 		 = $params->{id};
 	my $username = $params->{username};
 	my $password = $params->{password};
 	my $email    = $params->{email};
-
-	if ($id) { # update
-		my $user = $users_rs->find($id);
-		return $self->__error($c, "Can't find user: $id") unless $user;
-		if ($email) {
-			return $self->__error($c, "Email is invalid.") unless Email::Valid->address($email);
-			$user->email($email);
-		}
-		if ($password) {
-			$user->password( sha1_hex($password) );
-		}
-
-		$user->update;
-		return $self->__ok($c, { id => $user->id });
-	}
 
 	# validate
 	return $self->__error($c, "Username is required.") unless $username;
@@ -121,7 +105,7 @@ sub profile_DELETE {
 sub profile_POST {
     my ($self, $c, $id) = @_;
 
-    return $self->__error($c, 'Permission Denied') unless $self->__is_admin_or_owner($c, $id);
+    $self->__is_admin_or_owner($c, $id);
 
     my $params = $c->req->params;
 	my $user = $c->stash->{users_rs}->find({id=>$id});
