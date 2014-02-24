@@ -411,11 +411,27 @@ sub values :Chained('profile_base') PathPart('values') Args(0) ActionClass('REST
 sub values_GET {
     my ($self, $c) = @_;
 
-    $self->__is_admin_or_owner($c, $c->stash->{user_id});
+    my $id = $c->stash->{user_id};
+    $self->__is_admin_or_owner($c, $id);
 
-    my $user = $c->stash->{user};
-    my %data = $c->model('Database::UserValue')->get_user_values($user->id);
+    my %data = $c->model('Database::UserValue')->get_user_values($id);
     return $self->__ok( $c, \%data);
+}
+
+sub values_POST {
+    my ($self, $c) = @_;
+
+    my $id = $c->stash->{user_id};
+    $self->__is_admin_or_owner($c, $id);
+
+    my $params = $c->req->params;
+    my $name  = $params->{name};
+    my $value = $params->{value};
+
+    my $r = $c->model("Database::UserValue")->set_user_value($id, $name, $value);
+    return $self->__error($c, "Unknown value name: $name") unless $r;
+
+    return $self->__ok($c, { value_id => $r->value_id, data => $value });
 }
 
 __PACKAGE__->meta->make_immutable;
