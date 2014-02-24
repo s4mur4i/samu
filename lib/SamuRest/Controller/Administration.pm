@@ -64,24 +64,23 @@ sub user_POST {
 sub profile_me :Chained('adminBase') :PathPart('profile') :Args(0) :ActionClass('REST') {
 	my ($self, $c) = @_;
 	my $user_id = $self->__is_logined($c);
-    $c->stash(user_id=> $user_id);
+    $c->stash(user_id => $user_id);
+    $self->profile($c, $user_id);
 }
 
 sub profile_me_GET {
-    my ($self,$c) = @_;
-    my $user_id = $c->stash->{user_id};
-# need to forward to profile_GET with user_id
-#    $c->detach('/administration/profile',\[$user_id]);
+    my ($self, $c) = @_;
+    $self->profile_GET($c, $c->stash->{user_id});
 }
 
-sub profile_me_POST{
-    my ($self,$c) = @_;
-# need to forward to profile_POST with user_id
+sub profile_me_POST {
+    my ($self, $c) = @_;
+	$self->profile_POST($c, $c->stash->{user_id});
 }
 
 sub profile_me_DELETE {
-    my ($self,$c) = @_;
-# need to forward to profile_DELETE with user_id
+    my ($self, $c) = @_;
+    $self->profile_DELETE($c, $c->stash->{user_id});
 }
 
 sub profile :Chained('adminBase') :PathPart('profile') :Args(1) :ActionClass('REST') {
@@ -126,7 +125,7 @@ sub profile_POST {
 # Is there a more friendly way to find the param and update the database?
 	my $user = $c->stash->{users_rs}->find({id=>$id});
     if ( $params->{username} ) {
-        $user->update( {username=> $params->{username}});    
+        $user->update( {username=> $params->{username}});
     }
     if ( $params->{password}) {
         $user->update( {password=> sha1_hex($params->{password})});
