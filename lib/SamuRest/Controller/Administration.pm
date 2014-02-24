@@ -23,7 +23,7 @@ base chain for url /admin
 
 =cut
 
-sub adminBase : Chained('/'): PathPart('admin'): CaptureArgs(0) {
+sub adminBase : Chained('/') PathPart('admin') CaptureArgs(0) {
     my ($self, $c) = @_;
 
     $c->stash(users_rs => $c->model('Database::User'));
@@ -41,7 +41,7 @@ register user with params of B<username>, B<password>, B<email>
 
 =cut
 
-sub register : Chained('adminBase') :PathPart('') :Args(0) :ActionClass('REST') {}
+sub register : Chained('adminBase') PathPart('') Args(0) ActionClass('REST') {}
 
 sub register_POST {
 	my ( $self, $c ) = @_;
@@ -83,7 +83,7 @@ get current user info, refer B<profile> below for more details
 
 =cut
 
-sub profile_me :Chained('adminBase') :PathPart('profile') :Args(0) :ActionClass('REST') {
+sub profile_me : Chained('adminBase') PathPart('profile') Args(0) ActionClass('REST') {
 	my ($self, $c) = @_;
 	my $user_id = $self->__is_logined($c);
     $c->stash(user_id => $user_id);
@@ -129,18 +129,21 @@ update user info
 
 =cut
 
-sub profile :Chained('adminBase') :PathPart('profile') :Args(1) :ActionClass('REST') {
-	my ($self, $c, $id) = @_;
-	return $self->__bad_request($c, "Unknown id") unless $id and $id =~ /^\d+$/;
-    #Checkek logedin here?
-	my $users_rs = $c->stash->{users_rs};
-	my $user = $users_rs->find($id);
-	return $self->__error($c, "Can't find user: $id") unless $user;
-	$c->stash(user => $user);
+sub profile_base : Chained('adminBase') PathPart('profile') CaptureArgs(1) {
+    my ($self, $c, $id) = @_;
+    $c->stash(user_id => $id);
+    return $self->__bad_request($c, "Unknown id") unless $id and $id =~ /^\d+$/;
+    my $users_rs = $c->stash->{users_rs};
+    my $user = $users_rs->find($id);
+    return $self->__error($c, "Can't find user: $id") unless $user;
+    $c->stash(user => $user);
 }
 
+sub profile : Chained('profile_base') PathPart('') Args(0) ActionClass('REST') {}
+
 sub profile_GET {
-	my ($self, $c, $id) = @_;
+	my ($self, $c) = @_;
+    my $id = $c->stash->{user_id};
 	my $user = $c->stash->{user};
     my @roles = ();
     my $schema = $c->model('Database');
@@ -160,8 +163,10 @@ sub profile_GET {
 }
 
 sub profile_DELETE {
-	my ($self, $c, $id) = @_;
-    $self->__is_admin_or_owner($c, $id);
+	my ($self, $c) = @_;
+
+    $self->__is_admin_or_owner($c, $c->stash->{user_id});
+
 	my $user = $c->stash->{user};
 	$user->delete;
 
@@ -169,8 +174,9 @@ sub profile_DELETE {
 }
 
 sub profile_POST {
-    my ($self, $c, $id) = @_;
+    my ($self, $c) = @_;
 
+    my $id = $c->stash->{user_id};
     $self->__is_admin_or_owner($c, $id);
 
     my $params = $c->req->params;
@@ -204,9 +210,9 @@ list users
 
 =cut
 
-sub listBase: Chained('adminBase') : PathPart('list'): CaptureArgs(0) {}
+sub listBase : Chained('adminBase') PathPart('list') CaptureArgs(0) {}
 
-sub userlist :Chained('listBase') :PathPart('') :Args(0) :ActionClass('REST') {}
+sub userlist : Chained('listBase') PathPart('') Args(0) ActionClass('REST') {}
 
 sub userlist_GET {
 	my ($self, $c) = @_;
@@ -229,7 +235,7 @@ show one user
 
 =cut
 
-sub infouser :Chained('listBase') :PathPart('') :Args(1) :ActionClass('REST') {}
+sub infouser : Chained('listBase') PathPart('') Args(1) ActionClass('REST') {}
 
 sub infouser_GET {
 	my ($self, $c, $username) = @_;
@@ -249,7 +255,7 @@ login user, will return sessionid
 
 =cut
 
-sub userLogin :Chained('adminBase') :PathPart('login') :Args(0) :ActionClass('REST') {
+sub userLogin : Chained('adminBase') PathPart('login') Args(0) ActionClass('REST') {
 	my ($self, $c) = @_;
 
 	my $params = $c->req->params;
@@ -279,7 +285,7 @@ logout user
 
 =cut
 
-sub userLogoff :Chained('adminBase') :PathPart('logoff') :ActionClass('REST') {
+sub userLogoff : Chained('adminBase') PathPart('logoff') ActionClass('REST') {
 	my ($self, $c) = @_;
 
 	delete $c->session->{__user};
@@ -310,9 +316,9 @@ unassign $user_id for $role
 
 =cut
 
-sub rolesBase: Chained('adminBase'): PathPart('roles') : CaptureArgs(0) {}
+sub rolesBase : Chained('adminBase') PathPart('roles') CaptureArgs(0) {}
 
-sub roles :Chained('rolesBase') :PathPart(''): Args(0) :ActionClass('REST') {
+sub roles : Chained('rolesBase') PathPart('') Args(0) ActionClass('REST') {
 	my ($self, $c) = @_;
 
 	my $user_id = $self->__is_admin($c); # requires admin
@@ -382,7 +388,7 @@ show users for the $role
 
 =cut
 
-sub roleslist :Chained('rolesBase') :PathPart(''): Args(1) :ActionClass('REST') {
+sub roleslist : Chained('rolesBase') PathPart('') Args(1) ActionClass('REST') {
 	my ($self, $c) = @_;
 }
 
@@ -401,9 +407,15 @@ sub roleslist_GET {
     return $self->__ok( $c, \%result);
 }
 
-sub values :Chained('profile') :PathPart('values') :ActionClass('REST') {}
+sub values :Chained('profile_base') PathPart('values') Args(0) ActionClass('REST') {}
 sub values_GET {
+    my ($self, $c) = @_;
 
+    $self->__is_admin_or_owner($c, $c->stash->{user_id});
+
+    my $user = $c->stash->{user};
+    my %data = $c->model('Database::UserValue')->get_user_values($user->id);
+    return $self->__ok( $c, \%data);
 }
 
 __PACKAGE__->meta->make_immutable;
