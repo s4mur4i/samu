@@ -22,25 +22,9 @@ sub register_POST {
 	my $users_rs = $c->stash->{users_rs};
 
 	my $params = $c->req->params;
-	my $id 		 = $params->{id};
 	my $username = $params->{username};
 	my $password = $params->{password};
 	my $email    = $params->{email};
-
-	if ($id) { # update
-		my $user = $users_rs->find($id);
-		return $self->__error($c, "Can't find user: $id") unless $user;
-		if ($email) {
-			return $self->__error($c, "Email is invalid.") unless Email::Valid->address($email);
-			$user->email($email);
-		}
-		if ($password) {
-			$user->password( sha1_hex($password) );
-		}
-
-		$user->update;
-		return $self->__ok($c, { id => $user->id });
-	}
 
 	# validate
 	return $self->__error($c, "Username is required.") unless $username;
@@ -64,25 +48,23 @@ sub register_POST {
 sub profile_me :Chained('adminBase') :PathPart('profile') :Args(0) :ActionClass('REST') {
 	my ($self, $c) = @_;
 	my $user_id = $self->__is_logined($c);
-    $c->stash(user_id=> $user_id);
+    $c->stash(user_id => $user_id);
+    $self->profile($c, $user_id);
 }
 
 sub profile_me_GET {
-    my ($self,$c) = @_;
-    my $user_id = $c->stash->{user_id};
-    $c->detach("profile", [$user_id]);
+    my ($self, $c) = @_;
+    $self->profile_GET($c, $c->stash->{user_id});
 }
 
-sub profile_me_POST{
-    my ($self,$c) = @_;
-    my $user_id = $c->stash->{user_id};
-    $c->detach("profile", [$user_id]);
+sub profile_me_POST {
+    my ($self, $c) = @_;
+	$self->profile_POST($c, $c->stash->{user_id});
 }
 
 sub profile_me_DELETE {
-    my ($self,$c) = @_;
-    my $user_id = $c->stash->{user_id};
-    $c->detach("profile", [$user_id]);
+    my ($self, $c) = @_;
+    $self->profile_DELETE($c, $c->stash->{user_id});
 }
 
 sub profile :Chained('adminBase') :PathPart('profile') :Args(1) :ActionClass('REST') {
@@ -121,21 +103,24 @@ sub profile_DELETE {
 }
 
 sub profile_POST {
-    my ($self,$c,$id) = @_;
+    my ($self, $c, $id) = @_;
+
+    $self->__is_admin_or_owner($c, $id);
+
     my $params = $c->req->params;
-# Security, only admin or own profiles
-# Is there a more friendly way to find the param and update the database?
 	my $user = $c->stash->{users_rs}->find({id=>$id});
     if ( $params->{username} ) {
-        $user->update( {username=> $params->{username}});    
+        $user->username($params->{username});
     }
     if ( $params->{password}) {
-        $user->update( {password=> sha1_hex($params->{password})});
+    	$user->password( sha1_hex($params->{password}) );
     }
     if ( $params->{email}) {
         return $self->__error($c, "Email is invalid.") unless Email::Valid->address($params->{email});
-        $user->update( { email => $params->{email}});
+        $user->email($params->{email});
     }
+    $user->update();
+
 	return $self->__ok($c, { username => $user->username });
 }
 

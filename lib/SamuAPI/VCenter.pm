@@ -33,13 +33,9 @@ Connecting to a VCenter
 
 =head3 RETURNS
 
-True on success
-
 =head3 DESCRIPTION
 
 =head3 THROWS
-
-Connection::Connect if connection to VCenter fails
 
 =head3 COMMENTS
 
@@ -48,13 +44,12 @@ Connection::Connect if connection to VCenter fails
 =cut
 
 sub connect_vcenter {
+    my ( $url, $username, $password ) = @_;
     &Log::debug("Starting " . (caller(0))[3] . " sub");
+    my $vim;
     eval {
-        Util::connect(
-            Opts::get_option('url'),
-            Opts::get_option('username'),
-            Opts::get_option('password')
-        );
+        $vim = Vim->new(service_url => $url);
+        $vim->login(user_name => $username, password => $password);
     };
     if ($@) {
         Connection::Connect->throw(
@@ -63,8 +58,9 @@ sub connect_vcenter {
             dest  => 'VCenter'
         );
     }
+    &Log::dumpobj("Vim connect object", $vim);
     &Log::debug("Finishing " . (caller(0))[3] . " sub");
-    return 1;
+    return $vim;
 }
 
 1
