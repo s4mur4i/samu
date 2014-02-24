@@ -434,6 +434,21 @@ sub values_POST {
     return $self->__ok($c, { value_id => $r->value_id, data => $value });
 }
 
+sub values_DELETE {
+    my ($self, $c) = @_;
+
+    my $id = $c->stash->{user_id};
+    $self->__is_admin_or_owner($c, $id);
+
+    my $params = $c->req->params;
+    my $name  = $params->{name};
+
+    my $st = $c->model("Database::UserValue")->delete_user_value($id, $name);
+    return $self->__error($c, "Unknown value name: $name") unless $st;
+
+    return $self->__ok($c, {});
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
