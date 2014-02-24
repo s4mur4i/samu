@@ -44,7 +44,7 @@ Connecting to a VCenter
 =cut
 
 sub connect_vcenter {
-    my ( $url, $username, $password ) = @_;
+    my ($self, $url, $username, $password ) = @_;
     &Log::debug("Starting " . (caller(0))[3] . " sub");
     my $vim;
     eval {

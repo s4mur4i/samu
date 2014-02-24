@@ -12,9 +12,9 @@ Collector sub for VmwareAPI modules
 
 =cut
 
-use VmwareAPI::Exception;
+#use VmwareAPI::Exception;
 
-&log::debug("Loaded module common");
+#&log::debug("Loaded module common");
 
 our $VERSION = '1.0.0';
 
