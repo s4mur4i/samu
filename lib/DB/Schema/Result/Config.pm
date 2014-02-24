@@ -1,12 +1,12 @@
 use utf8;
-package DB::Schema::Result::Value;
+package DB::Schema::Result::Config;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-DB::Schema::Result::Value
+DB::Schema::Result::Config
 
 =cut
 
@@ -18,11 +18,11 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-=head1 TABLE: C<value>
+=head1 TABLE: C<config>
 
 =cut
 
-__PACKAGE__->table("value");
+__PACKAGE__->table("config");
 
 =head1 ACCESSORS
 
@@ -37,6 +37,11 @@ __PACKAGE__->table("value");
   data_type: 'text'
   is_nullable: 1
 
+=head2 display
+
+  data_type: 'boolean'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -44,6 +49,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
   { data_type => "text", is_nullable => 1 },
+  "display",
+  { data_type => "boolean", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -74,24 +81,24 @@ __PACKAGE__->add_unique_constraint("name_unique", ["name"]);
 
 =head1 RELATIONS
 
-=head2 user_values
+=head2 user_configs
 
 Type: has_many
 
-Related object: L<DB::Schema::Result::UserValue>
+Related object: L<DB::Schema::Result::UserConfig>
 
 =cut
 
 __PACKAGE__->has_many(
-  "user_values",
-  "DB::Schema::Result::UserValue",
-  { "foreign.value_id" => "self.id" },
+  "user_configs",
+  "DB::Schema::Result::UserConfig",
+  { "foreign.config_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 20:42:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N1vg1msgxzwxnwkhAthleQ
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-02-24 22:10:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rEtMWfQKx/w6eWDtlB38ZA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

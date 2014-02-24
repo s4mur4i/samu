@@ -96,6 +96,21 @@ __PACKAGE__->add_unique_constraint("username_unique", ["username"]);
 
 =head1 RELATIONS
 
+=head2 user_configs
+
+Type: has_many
+
+Related object: L<DB::Schema::Result::UserConfig>
+
+=cut
+
+__PACKAGE__->has_many(
+  "user_configs",
+  "DB::Schema::Result::UserConfig",
+  { "foreign.user_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 user_roles
 
 Type: has_many
@@ -111,21 +126,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 user_values
-
-Type: has_many
-
-Related object: L<DB::Schema::Result::UserValue>
-
-=cut
-
-__PACKAGE__->has_many(
-  "user_values",
-  "DB::Schema::Result::UserValue",
-  { "foreign.user_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 roles
 
 Type: many_to_many
@@ -137,8 +137,8 @@ Composing rels: L</user_roles> -> role
 __PACKAGE__->many_to_many("roles", "user_roles", "role");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 20:32:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:49EPbtAUghjYp4L+G0fS0Q
+# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-02-24 21:58:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8B8CySSpcrCfeoiXg/5trA
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
 __PACKAGE__->add_columns('last_modified', { %{__PACKAGE__->column_info('last_modified')}, set_on_create => 1, set_on_update => 1 });

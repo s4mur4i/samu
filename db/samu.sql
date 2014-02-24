@@ -21,13 +21,15 @@
    session_data	text,
    expires	int
   );
-  CREATE TABLE user_values (
+  CREATE TABLE user_config (
    user_id   INTEGER REFERENCES users(id),
-   value_id  INTEGER REFERENCES value(id),
+   config_id  INTEGER REFERENCES config(id),
    data     TEXT,
-   PRIMARY KEY(user_id,value_id)
+   PRIMARY KEY(user_id,config_id)
   );
-  CREATE TABLE value (
+  CREATE TABLE config (
    id INTEGER PRIMARY KEY AUTOINCREMENT,
-   name TEXT UNIQUE
+   name TEXT UNIQUE,
+   display BOOLEAN,
+   encrypt BOOLEAN
   );
