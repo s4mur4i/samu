@@ -2,7 +2,7 @@ package SamuRest::Controller::Kayako;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'SamuRest::ControllerX::REST'; }
 
 =head1 NAME
 
@@ -21,12 +21,16 @@ Catalyst Controller.
 
 =cut
 
-sub index :Path :Args(0) {
-    my ( $self, $c ) = @_;
-
-    $c->response->body('Matched SamuRest::Controller::Kayako in Kayako.');
+sub kayakoBase : Chained('/'): PathPart('kayako'): CaptureArgs(0) {
+        my ($self, $c) = @_;
 }
 
+sub test : Chained('kayakoBase') :PathPart('') :Args(0) :ActionClass('REST') {}
+
+sub test_GET {
+    my ($self, $c) = @_;
+    return $self->__ok($c, { something => "ok" });
+}
 
 =head1 AUTHOR
 

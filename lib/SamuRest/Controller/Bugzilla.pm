@@ -2,7 +2,7 @@ package SamuRest::Controller::Bugzilla;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'SamuRest::ControllerX::REST'; }
 
 =head1 NAME
 
@@ -16,17 +16,20 @@ Catalyst Controller.
 
 =cut
 
-
 =head2 index
 
 =cut
 
-sub index :Path :Args(0) {
-    my ( $self, $c ) = @_;
-
-    $c->response->body('Matched SamuRest::Controller::Bugzilla in Bugzilla.');
+sub bugzillaBase : Chained('/'): PathPart('bugzilla'): CaptureArgs(0) {
+        my ($self, $c) = @_;
 }
 
+sub test : Chained('bugzillaBase') :PathPart('') :Args(0) :ActionClass('REST') {}
+
+sub test_GET {
+    my ($self, $c) = @_;
+    return $self->__ok($c, { something => "ok" });
+}
 
 =head1 AUTHOR
 
