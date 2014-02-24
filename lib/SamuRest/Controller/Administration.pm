@@ -142,7 +142,6 @@ sub profile :Chained('adminBase') :PathPart('profile') :Args(1) :ActionClass('RE
 sub profile_GET {
 	my ($self, $c, $id) = @_;
 	my $user = $c->stash->{user};
-    # roles
     my @roles = ();
     my $schema = $c->model('Database');
     my @ret = $c->model('Database::UserRole')->search({user_id => $user->id},undef)->all;
@@ -150,14 +149,19 @@ sub profile_GET {
         my $role = $schema->resultset('Role')->find({id=>$userrole->role_id});
         push(@roles, $role->role);
     }
-	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email , roles=> \@roles});
+    my %extend =();
+    if ( $id == $c->session->{__user}) {
+        #add all user_value stored in table for user
+        $extend{self} = "yes";
+    } else {
+        $extend{self} = "no";
+    }
+	return $self->__ok($c, { id => $user->id, username => $user->username, email => $user->email , roles=> \@roles, extended => \%extend});
 }
 
 sub profile_DELETE {
 	my ($self, $c, $id) = @_;
-
-	$self->__is_admin_or_owner($c, $id);
-
+    $self->__is_admin_or_owner($c, $id);
 	my $user = $c->stash->{user};
 	$user->delete;
 
