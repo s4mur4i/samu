@@ -407,6 +407,28 @@ sub roleslist_GET {
     return $self->__ok( $c, \%result);
 }
 
+=pod
+
+=head2 values, values_GET
+
+    curl http://localhost:3000/admin/profile/$userid/values/-/$sessionid
+
+get user values
+
+=head2 values_POST
+
+    curl -X POST -d "name=vcenter_username&value=test2" http://localhost:3000/admin/profile/$userid/values/-/$sessionid
+
+set user value
+
+=head2 values_DELETE
+
+    curl -X DELETE -d "name=vcenter_username" http://localhost:3000/admin/profile/$userid/values/-/$sessionid
+
+delete user values
+
+=cut
+
 sub values :Chained('profile_base') PathPart('values') Args(0) ActionClass('REST') {}
 sub values_GET {
     my ($self, $c) = @_;

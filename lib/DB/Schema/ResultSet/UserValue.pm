@@ -44,7 +44,7 @@ sub delete_user_value {
     my $schema = $self->result_source->schema;
 
     my $vr = $schema->resultset('Value')->find({ name => $name });
-    return unless $vr; # or create it on the fly? TODO
+    return unless $vr;
 
     $self->search({ user_id => $user_id, value_id => $vr->id })->delete;
     return 1;
