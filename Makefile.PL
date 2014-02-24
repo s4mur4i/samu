@@ -21,6 +21,8 @@ requires 'DBIx::Class::TimeStamp' => '0.14';
 requires 'DateTime::Format::SQLite' => '0.11';
 requires 'Email::Valid';
 requires 'Digest::SHA1';
+requires 'Crypt::CBC';
+requires 'Crypt::Blowfish';
 requires 'DBIx::Class::Core';
 requires 'DBIx::Class::InflateColumn::DateTime';
 requires 'Catalyst::View::JSON';
