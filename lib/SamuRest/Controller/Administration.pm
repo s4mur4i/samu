@@ -401,6 +401,11 @@ sub roleslist_GET {
     return $self->__ok( $c, \%result);
 }
 
+sub values :Chained('profile') :PathPart('values') :ActionClass('REST') {}
+sub values_GET {
+
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

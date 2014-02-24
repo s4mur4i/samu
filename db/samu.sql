@@ -24,10 +24,10 @@
   CREATE TABLE user_values (
    user_id   INTEGER REFERENCES users(id),
    value_id  INTEGER REFERENCES value(id),
-   value     TEXT,
+   data     TEXT,
    PRIMARY KEY(user_id,value_id)
   );
   CREATE TABLE value (
-   id	INTEGER PRIMARY KEY AUTOINCREMENT,
-   value TEXT UNIQUE
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   name TEXT UNIQUE
   );

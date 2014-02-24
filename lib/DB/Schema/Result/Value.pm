@@ -32,7 +32,7 @@ __PACKAGE__->table("value");
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 value
+=head2 name
 
   data_type: 'text'
   is_nullable: 1
@@ -42,7 +42,7 @@ __PACKAGE__->table("value");
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "value",
+  "name",
   { data_type => "text", is_nullable => 1 },
 );
 
@@ -60,17 +60,17 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 UNIQUE CONSTRAINTS
 
-=head2 C<value_unique>
+=head2 C<name_unique>
 
 =over 4
 
-=item * L</value>
+=item * L</name>
 
 =back
 
 =cut
 
-__PACKAGE__->add_unique_constraint("value_unique", ["value"]);
+__PACKAGE__->add_unique_constraint("name_unique", ["name"]);
 
 =head1 RELATIONS
 
@@ -90,8 +90,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 20:32:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ns3lu7sfZpJWNCvXrza7ng
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 20:42:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:N1vg1msgxzwxnwkhAthleQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -38,7 +38,7 @@ __PACKAGE__->table("user_values");
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 value
+=head2 data
 
   data_type: 'text'
   is_nullable: 1
@@ -50,7 +50,7 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "value_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "value",
+  "data",
   { data_type => "text", is_nullable => 1 },
 );
 
@@ -101,8 +101,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 20:32:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sxM0t7dIuUfB6B7/wEGB1w
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-24 20:42:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FGAywDcJjPbxe0XOazLxnA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
