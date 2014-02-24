@@ -66,6 +66,16 @@ sub __is_admin {
     return $user_id;
 }
 
+sub __is_admin_or_owner {
+    my ($self, $c, $owner_id) = @_;
+
+    my $user_id = $c->session->{__user};
+    return 0 unless $user_id;
+    return 1 if $owner_id == $user_id;
+    return 1 if $c->model('Database::UserRole')->count({ user_id => $user_id, role_id => 1 }); # 1 is admin, hardcode for now
+    return 0;
+}
+
 1;
 
 =head1 NAME

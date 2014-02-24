@@ -119,21 +119,24 @@ sub profile_DELETE {
 }
 
 sub profile_POST {
-    my ($self,$c,$id) = @_;
+    my ($self, $c, $id) = @_;
+
+    return $self->__error($c, 'Permission Denied') unless $self->__is_admin_or_owner($c, $id);
+
     my $params = $c->req->params;
-# Security, only admin or own profiles
-# Is there a more friendly way to find the param and update the database?
 	my $user = $c->stash->{users_rs}->find({id=>$id});
     if ( $params->{username} ) {
-        $user->update( {username=> $params->{username}});
+        $user->username($params->{username});
     }
     if ( $params->{password}) {
-        $user->update( {password=> sha1_hex($params->{password})});
+    	$user->password( sha1_hex($params->{password}) );
     }
     if ( $params->{email}) {
         return $self->__error($c, "Email is invalid.") unless Email::Valid->address($params->{email});
-        $user->update( { email => $params->{email}});
+        $user->email($params->{email});
     }
+    $user->update();
+
 	return $self->__ok($c, { username => $user->username });
 }
 
