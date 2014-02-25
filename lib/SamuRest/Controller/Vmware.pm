@@ -48,21 +48,13 @@ sub connection_POST {
     my $vcenter_url = $params->{vcenter_url} || $model->get_user_value($user_id, "vcenter_url");
     return $self->__error($c, "Vcenter_url cannot be parsed or found") unless $vcenter_url;
     # TODO: Maybe later implement proto, servicepath, server, but for me currently not needed
-   {
-           no strict 'refs';
-
-               for my $var (keys %{'main::'}) {
-                           print "$var\n";
-                               }
-   }
-    my $vim = &SamuAPI::VCenter::connect_vcenter( $vcenter_url, $vcenter_username, $vcenter_password );
-#    my $vim = $SamuAPI::Common::VERSION;
+    my $vim = &VCenter::connect_vcenter( $vcenter_url, $vcenter_username, $vcenter_password );
     if ( !$c->session->{__vim_login} ) {
-         $c->session->{__vim_login} = ();       
+         @{ $c->session->{__vim_login}} = ();       
     }
-    push ( $c->session->{__vim_login}, $vim) ;
     use Data::Dumper;
     print Dumper $c->session;
+    push ( @{ $c->session->{__vim_login}} , $vim) ;
     return $self->__ok( $c, { vim_login => "success" });
 }
 
