@@ -42,10 +42,10 @@ use overload
 
 sub catch_ex {
     my ($ex) = @_;
-    &log::debug(
+    &Log::debug(
         "Starting " . ( caller(0) )[3] . " sub" );
-    &log::dumpobj( "ex", $ex );
-    &log::debug(
+    &Log::dumpobj( "ex", $ex );
+    &Log::debug(
         "Finishing " . ( caller(0) )[3] . " sub" );
     return 1;
 }

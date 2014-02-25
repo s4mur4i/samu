@@ -47,17 +47,17 @@ sub connect_vcenter {
     my ($self, $url, $username, $password ) = @_;
     &Log::debug("Starting " . (caller(0))[3] . " sub");
     my $vim;
-    eval {
-        $vim = Vim->new(service_url => $url);
-        $vim->login(user_name => $username, password => $password);
-    };
-    if ($@) {
-        Connection::Connect->throw(
-            error => 'Failed to connect to VCenter',
-            type  => 'SDK',
-            dest  => 'VCenter'
-        );
-    }
+#    eval {
+#        $vim = Vim->new(service_url => $url);
+#        $vim->login(user_name => $username, password => $password);
+#    };
+#    if ($@) {
+#        Connection::Connect->throw(
+#            error => 'Failed to connect to VCenter',
+#            type  => 'SDK',
+#            dest  => 'VCenter'
+#        );
+#    }
     &Log::dumpobj("Vim connect object", $vim);
     &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return $vim;

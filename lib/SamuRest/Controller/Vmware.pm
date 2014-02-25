@@ -1,9 +1,10 @@
 package SamuRest::Controller::Vmware;
 use Moose;
 use namespace::autoclean;
-use SamuAPI::common;
 
 BEGIN { extends 'SamuRest::ControllerX::REST'; }
+
+use SamuAPI::Common;
 
 =head1 NAME
 
@@ -28,27 +29,45 @@ sub vmwareBase : Chained('/'): PathPart('vmware'): CaptureArgs(0) {
     return $self->__error($c, "You're not login yet.") unless $user_id;
 }
 
-sub test : Chained('vmwareBase') :PathPart('') :Args(0) :ActionClass('REST') {}
-
-sub test_GET {
-    my ($self, $c) = @_;
-
-    return $self->__ok($c, { something => "ok" });
+sub connection: Chained('vmwareBase'): PathPart(''): Args(0) : ActionClass('REST'){
 }
 
-sub connect: Chained('vmwareBase'): PathPart('connect'): Args(0) : ActionClass('REST'){
+sub connection_GET {
+
+}
+
+sub connection_POST {
     my ($self, $c) = @_;
     my $params = $c->req->params;
     my $user_id = $c->session->{__user};
     my $model = $c->model("Database::UserConfig");
-    my $username = $params->{vcenter_username} || $model->get_user_value($user_id, "vcenter_username");
-    my $password = $params->{vcenter_password} || $model->get_user_value($user_id, "vcenter_password");
-    my $url = $params->{vcenter_url} || $model->get_user_value($user_id, "vcenter_url");
+    my $vcenter_username = $params->{vcenter_username} || $model->get_user_value($user_id, "vcenter_username");
+    return $self->__error($c, "Vcenter_username cannot be parsed or found") unless $vcenter_username;
+    my $vcenter_password = $params->{vcenter_password} || $model->get_user_value($user_id, "vcenter_password");
+    return $self->__error($c, "Vcenter_password cannot be parsed or found") unless $vcenter_password;
+    my $vcenter_url = $params->{vcenter_url} || $model->get_user_value($user_id, "vcenter_url");
+    return $self->__error($c, "Vcenter_url cannot be parsed or found") unless $vcenter_url;
+    # TODO: Maybe later implement proto, servicepath, server, but for me currently not needed
+   {
+           no strict 'refs';
 
-    my $vim = &connect_vcenter( $url, $username, $password );
-#    if ( $c->) {
- #   }
-  #  $c->session->{__vim_login} = ;
+               for my $var (keys %{'main::'}) {
+                           print "$var\n";
+                               }
+   }
+    my $vim = &SamuAPI::VCenter::connect_vcenter( $vcenter_url, $vcenter_username, $vcenter_password );
+#    my $vim = $SamuAPI::Common::VERSION;
+    if ( !$c->session->{__vim_login} ) {
+         $c->session->{__vim_login} = ();       
+    }
+    push ( $c->session->{__vim_login}, $vim) ;
+    use Data::Dumper;
+    print Dumper $c->session;
+    return $self->__ok( $c, { vim_login => "success" });
+}
+
+sub connection_DELETE {
+
 }
 
 =head1 AUTHOR
