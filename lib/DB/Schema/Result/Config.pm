@@ -42,6 +42,11 @@ __PACKAGE__->table("config");
   data_type: 'boolean'
   is_nullable: 1
 
+=head2 encrypt
+
+  data_type: 'boolean'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -50,6 +55,8 @@ __PACKAGE__->add_columns(
   "name",
   { data_type => "text", is_nullable => 1 },
   "display",
+  { data_type => "boolean", is_nullable => 1 },
+  "encrypt",
   { data_type => "boolean", is_nullable => 1 },
 );
 
@@ -97,8 +104,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07025 @ 2014-02-24 22:10:19
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rEtMWfQKx/w6eWDtlB38ZA
+# Created by DBIx::Class::Schema::Loader v0.07038 @ 2014-02-25 18:43:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Ma0p4RKv+4jmDD3eGcHhOQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

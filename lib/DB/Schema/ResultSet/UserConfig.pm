@@ -17,10 +17,15 @@ sub get_user_configs {
     my ($self, $user_id) = @_;
     my %data;
 # Search if config display is true
-    my $rs = $self->search({ user_id => $user_id });
+    my $rs = $self->search({
+        user_id => $user_id,
+        'config.display' => 1
+    }, {
+        join => 'config',
+        prefetch => 'config'
+    });
     while (my $r = $rs->next) {
         my $name = $r->config->name;
-        next if $name =~ /password/; # skip password?
         $data{ $name } = $r->data;
     }
 
@@ -37,8 +42,7 @@ sub get_user_config {
 
     my $r = $self->find({ user_id => $user_id, config_id => $vr->id });
     return unless $r;
-# Encrypt if encrypted is true
-    if ($name =~ /password/) {
+    if ($r->encrypt) {
         return __get_crypt()->decrypt($r->data);
     } else {
         return $r->data;
@@ -51,9 +55,9 @@ sub set_user_config {
     my $schema = $self->result_source->schema;
 
     my $vr = $schema->resultset('Config')->find({ name => $name });
-    return unless $vr; # or create it on the fly? TODO
-# Encrypt if encrypted true
-    if ($name =~ /password/) { # or use eq
+    return unless $vr;
+
+    if ($vr->encrypt) {
         $value = __get_crypt()->encrypt($value);
     }
 
