@@ -334,34 +334,38 @@ sub roles_GET {
     return $self->__ok( $c, \%result);
 }
 
-sub roles_POST {
-    my ($self, $c) = @_;
+=pod
 
-    my $params = $c->req->params;
-    my $to_user_id = $params->{user_id};
-    my $role = $params->{role};
+=head2 roleslist, roleslist_GET
 
-    ## validate
+    curl http://localhost:3000/admin/roles/$role
+
+show users for the $role
+
+=cut
+
+sub role : Chained('rolesBase') PathPart('') Args(1) ActionClass('REST') { }
+
+sub role_GET {
+    my ($self, $c,$role) = @_;
+    my %result =();
     my $schema = $c->model('Database');
     my $role_rs = $schema->resultset('Role')->find({ role => $role });
     return $self->__error($c, "Unknown role: $role") unless $role_rs;
-
-    my $to_user = $schema->resultset('User')->find($to_user_id);
-    return $self->__error($c, "Unknown user: $to_user_id") unless $to_user;
-
-    my $cnt = $schema->resultset('UserRole')->count({ user_id => $to_user->id, role_id => $role_rs->id });
-    return $self->__error($c, "Role already granted.") if $cnt;
-
-    $schema->resultset('UserRole')->create({ user_id => $to_user->id, role_id => $role_rs->id });
-    return $self->__ok($c, { id => $to_user->id });
+    my @users = $c->model('Database::UserRole')->search({role_id => $role_rs->id},undef)->all;
+    $result{$role}= [];
+    foreach my $user (@users) {
+        my $userobj = $schema->resultset('User')->find($user->user_id);
+        push($result{$role}, $userobj->username);
+    }
+    return $self->__ok( $c, \%result);
 }
 
-sub roles_DELETE {
-    my ($self, $c) = @_;
+sub role_DELETE {
+    my ($self, $c, $role) = @_;
 
     my $params = $c->req->params;
     my $to_user_id = $params->{user_id};
-    my $role = $params->{role};
 
     ## validate
     my $schema = $c->model('Database');
@@ -378,33 +382,25 @@ sub roles_DELETE {
     return $self->__ok($c, { id => $to_user->id });
 }
 
-=pod
+sub role_POST {
+    my ($self, $c, $role ) = @_;
 
-=head2 roleslist, roleslist_GET
+    my $params = $c->req->params;
+    my $to_user_id = $params->{user_id};
 
-    curl http://localhost:3000/admin/roles/$role
-
-show users for the $role
-
-=cut
-
-sub roleslist : Chained('rolesBase') PathPart('') Args(1) ActionClass('REST') {
-	my ($self, $c) = @_;
-}
-
-sub roleslist_GET {
-    my ($self, $c,$type) = @_;
-    my %result =();
+    ## validate
     my $schema = $c->model('Database');
-    my $role_rs = $schema->resultset('Role')->find({ role => $type });
-    return $self->__error($c, "Unknown role: $type") unless $role_rs;
-    my @users = $c->model('Database::UserRole')->search({role_id => $role_rs->id},undef)->all;
-    $result{$type}= [];
-    foreach my $user (@users) {
-        my $userobj = $schema->resultset('User')->find($user->user_id);
-        push($result{$type}, $userobj->username);
-    }
-    return $self->__ok( $c, \%result);
+    my $role_rs = $schema->resultset('Role')->find({ role => $role });
+    return $self->__error($c, "Unknown role: $role") unless $role_rs;
+
+    my $to_user = $schema->resultset('User')->find($to_user_id);
+    return $self->__error($c, "Unknown user: $to_user_id") unless $to_user;
+
+    my $cnt = $schema->resultset('UserRole')->count({ user_id => $to_user->id, role_id => $role_rs->id });
+    return $self->__error($c, "Role already granted.") if $cnt;
+
+    $schema->resultset('UserRole')->create({ user_id => $to_user->id, role_id => $role_rs->id });
+    return $self->__ok($c, { id => $to_user->id });
 }
 
 =pod
