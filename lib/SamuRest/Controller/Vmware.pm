@@ -1,10 +1,12 @@
 package SamuRest::Controller::Vmware;
 use Moose;
 use namespace::autoclean;
+#use Storable qw(freeze);
 
 BEGIN { extends 'SamuRest::ControllerX::REST'; }
 
 use SamuAPI::Common;
+#use Data::Structure::Util qw(unbless);
 
 =head1 NAME
 
@@ -33,7 +35,16 @@ sub connection: Chained('vmwareBase'): PathPart(''): Args(0) : ActionClass('REST
 }
 
 sub connection_GET {
-
+    my ( $self, $c ) = @_;
+    my %return = ();
+    if ( !$c->session->{__vim_login} && scalar($c->session->{__vim_login}->{sessions}) eq 0) {
+        $return{connections} = "none";
+    } else {
+        for my $num ( 0..$#{ $c->session->{__vim_login}->{sessions} } ) {
+            $return{connections}->{$num} = $c->session->{__vim_login}->{sessions}->[$num]->{url};
+        }
+    }
+    return $self->__ok( $c, \%return );
 }
 
 sub connection_POST {
@@ -48,17 +59,25 @@ sub connection_POST {
     my $vcenter_url = $params->{vcenter_url} || $model->get_user_value($user_id, "vcenter_url");
     return $self->__error($c, "Vcenter_url cannot be parsed or found") unless $vcenter_url;
     # TODO: Maybe later implement proto, servicepath, server, but for me currently not needed
-    my $vim = &VCenter::connect_vcenter( $vcenter_url, $vcenter_username, $vcenter_password );
+
+    my $vim = &VCenter::connect_vcenter( vcenter_url => $vcenter_url, vcenter_username => $vcenter_username, vcenter_password => $vcenter_password );
+    delete $c->session->{__vim_login};
     if ( !$c->session->{__vim_login} ) {
-         @{ $c->session->{__vim_login}} = ();       
+         %{ $c->session->{__vim_login} } = ( active => {} );
+         @{ $c->session->{__vim_login}->{sessions}} = ();
     }
-    use Data::Dumper;
-    print Dumper $c->session;
-    push ( @{ $c->session->{__vim_login}} , $vim) ;
+    # TODO save object to session for reuse
+    $c->session->{__vim_login}->{active} = $vim;
+    my $sessionfile = &VCenter::savesession_vcenter( vim => $vim );
+    push($c->session->{__vim_login}->{sessions}, ( url => $vcenter_url, sessionfile => $sessionfile) );
     return $self->__ok( $c, { vim_login => "success" });
 }
 
 sub connection_DELETE {
+
+}
+
+sub connection_PUT {
 
 }
 
