@@ -32,7 +32,7 @@ sub test : Chained('vmwareBase') :PathPart('') :Args(0) :ActionClass('REST') {}
 
 sub test_GET {
     my ($self, $c) = @_;
-    
+
     return $self->__ok($c, { something => "ok" });
 }
 
@@ -40,7 +40,7 @@ sub connect: Chained('vmwareBase'): PathPart('connect'): Args(0) : ActionClass('
     my ($self, $c) = @_;
     my $params = $c->req->params;
     my $user_id = $c->session->{__user};
-    my $model = $c->model("Database::UserValue");
+    my $model = $c->model("Database::UserConfig");
     my $username = $params->{vcenter_username} || $model->get_user_value($user_id, "vcenter_username");
     my $password = $params->{vcenter_password} || $model->get_user_value($user_id, "vcenter_password");
     my $url = $params->{vcenter_url} || $model->get_user_value($user_id, "vcenter_url");
