@@ -1,4 +1,4 @@
-package log;
+package Log;
 
 use strict;
 use warnings;

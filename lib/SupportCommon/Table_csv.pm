@@ -1,4 +1,4 @@
-package table_csv;
+package Table_csv;
 
 use strict;
 use warnings;

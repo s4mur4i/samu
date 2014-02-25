@@ -1,21 +1,21 @@
 use strict;
 use warnings;
 
-package common;
+package Common;
 use FindBin;
 
 =pod
 
-=head1 common.pm
+=head1 Common.pm
 
 Collector sub for SupportCommon modules
 
 =cut
 
-use SupportCommon::log;
-use SupportCommon::table_csv;
+use SupportCommon::Log;
+use SupportCommon::Table_csv;
 
-&log::debug("Loaded module common");
+&Log::debug("Loaded module common");
 
 our $VERSION = '1.0.0';
 
