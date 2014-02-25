@@ -4,7 +4,7 @@ use warnings;
 package Common;
 use FindBin;
 use SupportCommon::Common;
-use VMware::VICommon;
+use VMware::VIRuntime;
 
 =pod
 
