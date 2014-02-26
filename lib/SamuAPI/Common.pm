@@ -13,6 +13,7 @@ use VMware::VIRuntime;
 Collector sub for VmwareAPI modules
 
 =cut
+
 BEGIN {
     use Exporter;
     our @ISA    = qw( Exporter );

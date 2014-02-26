@@ -18,6 +18,28 @@ BEGIN {
     our @EXPORT = qw( );
 }
 
+our $vim = undef;
+our $vcenter_username = undef;
+our $vcenter_password = undef;
+our $vcenter_url = undef;
+our $sessionfile = undef;
+
+sub new {
+   my ($class, %args) = @_;
+   my $self = bless {}, $class;
+   my $vcenter_username = delete($args{vcenter_username});
+   my $vcenter_password = delete($args{vcenter_password});
+   my $vcenter_url = delete($args{vcenter_url});
+   if (keys %args) {
+#      croak "Unrecognized arg(s) " .  join(', ', sort keys %args) . " to 'Samu::new'";
+# TODO Throw an error
+   }
+   $self->{vcenter_username} = $vcenter_username;
+   $self->{vcenter_password} = $vcenter_password;
+   $self->{vcenter_url} = $vcenter_url;
+   return $self;
+}
+
 =pod
 
 =head2 connect_vcenter
@@ -45,29 +67,29 @@ Connecting to a VCenter
 =cut
 
 sub connect_vcenter {
-    my %args = @_;
-    my ( $url, $username, $password ) = @_;
+    my $self = shift;
     &Log::debug("Starting " . (caller(0))[3] . " sub");
     my $vim;
     eval {
-        $vim = Vim->new(service_url => $args{vcenter_url});
-        $vim->login(user_name => $args{vcenter_username}, password => $args{vcenter_password});
+        $vim = Vim->new(service_url => $self->{vcenter_url});
+        $vim->login(user_name => $self->{vcenter_username}, password => $self->{vcenter_password});
     };
     if ($@) {
     #    print Dumper $@;
+    # maybe use carp
     }
+    $self->{vim} = $vim;
     &Log::dumpobj("Vim connect object", $vim);
     &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return $vim;
 }
 
 sub savesession_vcenter {
-    my %args = @_;
-    use Data::Dumper;
-    print Dumper %args;
-    my $sessionfile = File::Temp->new( DIR => '/tmp', UNLINK => 0, SUFFIX => '.session', TEMPLATE => 'vcenterXXXXXX' );
-    $args{vim}->save_session( session_file => $sessionfile );
-    return $sessionfile;
+    my $self = shift;
+    my $sessionfile = File::Temp->new( DIR => '/tmp', UNLINK => 0, SUFFIX => '.session', TEMPLATE => 'vcenter.XXXXXX' );
+    $self->{vim}->save_session( session_file => $sessionfile );
+    $self->{sessionfile} = $sessionfile->filename;
+    return $sessionfile->filename;
 }
 
 sub loadsession_vcenter {
