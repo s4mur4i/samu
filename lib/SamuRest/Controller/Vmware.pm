@@ -32,14 +32,28 @@ sub vmwareBase : Chained('/'): PathPart('vmware'): CaptureArgs(0) {
 
 sub loginBase : Chained('vmwareBase') : PathPart('') : CaptureArgs(0) {
     my ($self, $c) = @_;
-    if ( !$c->session->{__vim_login} || !$c->session->{__vim_login}->{active} || !$c->session->{__vim_login}->{sessions}->[ $c->session->{__vim_login}->{active} ]) {
+    print Dumper $c->session->{__vim_login}->{sessions}->[ $c->session->{__vim_login}->{active} ];
+    if (!$c->session->{__vim_login} ) {
+        $self->__error( $c, "Login to VCenter first");
+    }
+    if ( !defined($c->session->{__vim_login}->{sessions}->[ $c->session->{__vim_login}->{active} ]) ) {
         $self->__error( $c, "No active login session to vcenter");
     }
     my $vim;
-    my $active_session= $c->session->{__vim_login}->{sessions}->[$c->session->{__vim_login}->{active}];
-    my $VCenter = VCenter->new(vcenter_url => $active_session->{vcenter_url});
-    $VCenter->loadsession_vcenter(session_file=> $active_session->{vcenter_sessionfile});
-    $c->stash->{vim} = $VCenter;
+    my $active_session;
+    if ($c->req->params->{vim_id}) {
+        $active_session= $c->session->{__vim_login}->{sessions}->[$c->req->params->{vim_id}];
+    } else {
+        $active_session= $c->session->{__vim_login}->{sessions}->[$c->session->{__vim_login}->{active}];
+    }
+    eval {
+        my $VCenter = VCenter->new(vcenter_url => $active_session->{vcenter_url}, sessionfile => $active_session->{vcenter_sessionfile});
+        $VCenter->loadsession_vcenter;
+        $c->stash->{vim} = $VCenter;
+    };
+    if ($@) {
+        $self->__exception_to_json($c, $@);
+    }
 }
 
 sub connection: Chained('vmwareBase'): PathPart(''): Args(0) : ActionClass('REST'){
@@ -123,6 +137,28 @@ sub connection_PUT {
     $c->session->{__vim_login}->{active} = $id;
     return $self->__ok( $c, { active => $id } );
 }
+
+sub folderBase: Chained('loginBase'): PathPart('folder'): CaptureArgs(0) { }
+
+sub folders : Chained('folderBase'): PathPart(''): Args(0): ActionClass('REST'){ }
+
+sub folder: Chained('folderBase'): PathPart(''):Args(1): ActionClass('REST') { }
+
+sub resourcepoolBase: Chained('loginBase'): PathPart('resourcepool'): CaptureArgs(0) { }
+
+sub resourcepools : Chained('resourcepoolBase'): PathPart(''): Args(0): ActionClass('REST'){ }
+
+sub resourcepools_GET {
+    my ($self, $c ) =@_;
+    return $self->__ok($c, {implementing => "yes"});
+}
+
+sub resourcepools_POST {
+    my ($self, $c ) =@_;
+    return $self->__ok($c, {implementing => "yes"});
+}
+
+sub resourcepool: Chained('resourcepoolBase'): PathPart(''):Args(1): ActionClass('REST') { }
 
 =head1 AUTHOR
 

@@ -112,6 +112,7 @@ sub loadsession_vcenter {
         $vim = $vim->load_session(session_file => $self->{sessionfile});
     };
     if ($@) {
+        # Cannot detect if timeout or session file is missing TODO: fix
         ExConnection::VCenter->throw( error => 'Could not load session to VCenter', vcenter_url => $self->{vcenter_url} );
     }
     $self->{vim} = $vim;
