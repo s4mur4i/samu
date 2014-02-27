@@ -12,21 +12,20 @@ Subroutines from VmwareAPI/Exception.pm
 =cut
 
 use Exception::Class (
-    'BaseException' => {},
+    'ExBase' => {},
 
     ## Base Classes
-    'Entity' => {
-        isa    => 'BaseException',
+    'ExEntity' => {
+        isa    => 'ExBase',
         fields => ['entity'],
     },
-    'Template' => {
-        isa    => 'BaseException',
+    'ExTemplate' => {
+        isa    => 'ExBase',
         fields => ['template'],
     },
-    'TaskEr'     => { isa => 'BaseException', },
-    'Connection' => { isa => 'BaseException', },
-    'Vcenter'    => { isa => 'BaseException', },
-    'Vmware'     => { isa => 'BaseException' },
+    'ExTask'     => { isa => 'ExBase', fields => ['number'] },
+    'ExConnection' => { isa => 'ExBase', },
+    'ExConnection::VCenter' => { isa => 'ExConnection', fields => ['vcenter_url'] },
 );
 
 BEGIN {

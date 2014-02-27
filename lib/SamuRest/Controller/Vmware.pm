@@ -32,10 +32,14 @@ sub vmwareBase : Chained('/'): PathPart('vmware'): CaptureArgs(0) {
 
 sub loginBase : Chained('vmwareBase') : PathPart('') : CaptureArgs(0) {
     my ($self, $c) = @_;
-    #TODO login to vcenter with active connection
-    if ( !$c->session->{__vim_login}->{active}) {
-        $self->__error( $c, "Session not created");
+    if ( !$c->session->{__vim_login} || !$c->session->{__vim_login}->{active} || !$c->session->{__vim_login}->{sessions}->[ $c->session->{__vim_login}->{active} ]) {
+        $self->__error( $c, "No active login session to vcenter");
     }
+    my $vim;
+    my $active_session= $c->session->{__vim_login}->{sessions}->[$c->session->{__vim_login}->{active}];
+    my $VCenter = VCenter->new(vcenter_url => $active_session->{vcenter_url});
+    $VCenter->loadsession_vcenter(session_file=> $active_session->{vcenter_sessionfile});
+    $c->stash->{vim} = $VCenter;
 }
 
 sub connection: Chained('vmwareBase'): PathPart(''): Args(0) : ActionClass('REST'){
@@ -48,13 +52,13 @@ sub connection: Chained('vmwareBase'): PathPart(''): Args(0) : ActionClass('REST
 sub connection_GET {
     my ( $self, $c ) = @_;
     my %return = ();
-    if ( scalar($c->session->{__vim_login}->{sessions}) eq 0) {
-        $return{connections} = "none";
+    if ( !@{ $c->session->{__vim_login}->{sessions} } ) {
+        $return{connections} = "";
     } else {
-        print Dumper $c->session;
         for my $num ( 0..$#{ $c->session->{__vim_login}->{sessions} } ) {
-            $return{connections}->{$num} = $c->session->{__vim_login}->{sessions}->[$num]->{url};
+            $return{connections}->{$num} = $c->session->{__vim_login}->{sessions}->[$num]->{vcenter_url};
         }
+        $return{active} = $c->session->{__vim_login}->{active};
     }
     return $self->__ok( $c, \%return );
 }
@@ -74,22 +78,19 @@ sub connection_POST {
     return $self->__error($c, "Vcenter_url cannot be parsed or found") unless $vcenter_url;
     # TODO: Maybe later implement proto, servicepath, server, but for me currently not needed
     my $VCenter;
-    my $ret = "success";
     eval { 
         $VCenter = VCenter->new(vcenter_url => $vcenter_url, vcenter_username => $vcenter_username, vcenter_password => $vcenter_password);
         $VCenter->connect_vcenter;
     };
     if ($@) {
-        my $ex = $@; 
-        $ret = $ex->error;
+        $self->__exception_to_json($c, $@);
     } else {
         my $sessionfile = $VCenter->savesession_vcenter;
-        push( @{ $c->session->{__vim_login}->{sessions} }, { url => $vcenter_url, sessionfile => $sessionfile} );
-
+        push( @{ $c->session->{__vim_login}->{sessions} }, { vcenter_url => $vcenter_url, vcenter_sessionfile => $sessionfile} );
     }
-    $c->stash->{vim} = $VCenter;
-    print Dumper $c->stash;
-    return $self->__ok( $c, { vim_login => $ret, id => $#{ $c->session->{__vim_login}->{sessions} }});
+    #$c->stash->{vim} = $VCenter;
+    $c->session->{__vim_login}->{active} = $#{ $c->session->{__vim_login}->{sessions} };
+    return $self->__ok( $c, { vim_login => "success", id => $#{ $c->session->{__vim_login}->{sessions} }});
 }
 
 sub connection_DELETE {
@@ -99,10 +100,16 @@ sub connection_DELETE {
     if ( $id < 0 || $id > $#{ $c->session->{__vim_login}->{sessions} } ) {
         return $self->__error( $c, "Session ID out of range" );
     }
-    my $vim = &VCenter::loadsession_vcenter( vcenter_url => $c->session->{__vim_login}->{sessions}->[$id]->{url}, sessionfile => $c->session->{__vim_login}->{sessions}->[$id]->{sessionfile} );
-    &VCenter::disconnect_vcenter( vim => $vim );
-    delete($c->session->{__vim_login}->{sessions}->[$id]);
-    # TODO shift the array to remove the undef item
+    my $session = $c->session->{__vim_login}->{sessions}->[$id];
+    eval {
+        my $VCenter = VCenter->new( vcenter_url => $session->{vcenter_url}, sessionfile => $session->{vcenter_sessionfile} );
+        $VCenter->loadsession_vcenter;
+        $VCenter->disconnect_vcenter;
+    };
+    if ($@) {
+        $self->__exception_to_json($c, $@);
+    }
+    $c->session->{__vim_login}->{sessions}->[$id] = undef;
     return $self->__ok( $c, { $id => "deleted" } );
 }
 

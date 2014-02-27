@@ -76,6 +76,18 @@ sub __is_admin_or_owner {
     return $self->__error($c, "Permission Denied.");
 }
 
+sub __exception_to_json {
+    my ($self, $c, $ex ) = @_;
+    my %return=();
+    for my $key ( keys %$ex ) {
+        if ( $key eq "trace" ) {
+            next;
+        }
+        $return{$key} = $ex->{$key};
+    }
+    $self->__error( $c, \%return );
+}
+
 1;
 
 =head1 NAME
