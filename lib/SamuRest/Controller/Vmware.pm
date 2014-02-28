@@ -265,6 +265,76 @@ it under the same terms as Perl itself.
 
 =cut
 
+sub taskBase: Chained('loginBase'): PathPart('task') : CaptureArgs(0) { }
+
+sub tasks : Chained('taskBase'): PathPart(''): Args(0) : ActionClass('REST') {}
+
+sub tasks_GET {
+    my ( $self, $c ) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub task : Chained(taskBase) : PathPart(''): Args(1) : ActionClass('REST') {}
+
+sub task_GET {
+    my ( $self, $c ,$num) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub task_DELETE {
+    my ( $self, $c ,$num) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub templateBase: Chained('loginBase'): PathPart('template') : CaptureArgs(0) { }
+
+sub templates : Chained('templateBase'): PathPart(''): Args(0) : ActionClass('REST') {}
+
+sub templates_GET {
+    my ( $self, $c ) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub template : Chained(templateBase) : PathPart(''): Args(1) : ActionClass('REST') {}
+
+sub template_GET {
+    my ( $self, $c ,$name) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub template_DELETE {
+    my ( $self, $c ,$name) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub user: Chained('loginBase'): PathPart('user'): Args(1) : ActionClass('REST') {}
+
+sub user_GET {
+    my ( $self, $c ,$name) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub networkBase: Chained('loginBase'): PathPart('network') : CaptureArgs(0) { }
+
+sub networks : Chained('networkBase'): PathPart(''): Args(0) : ActionClass('REST') {}
+
+sub networks_GET {
+    my ( $self, $c ) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub network : Chained(networkBase) : PathPart(''): Args(1) : ActionClass('REST') {}
+
+sub network_GET {
+    my ( $self, $c ,$name) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub network_DELETE {
+    my ( $self, $c ,$name) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
