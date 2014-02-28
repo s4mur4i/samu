@@ -24,6 +24,7 @@ our $vcenter_username = undef;
 our $vcenter_password = undef;
 our $vcenter_url = undef;
 our $sessionfile = undef;
+our @entities = undef;
 
 sub new {
     my ($class, %args) = @_;
@@ -118,7 +119,7 @@ sub loadsession_vcenter {
     $self->{vim} = $vim;
     &Log::dumpobj("Vim connect object", $vim);
     &Log::debug("Finishing " . (caller(0))[3] . " sub");
-    return $vim;
+    return $self;
 }
 
 sub disconnect_vcenter {
@@ -133,6 +134,54 @@ sub disconnect_vcenter {
     &Log::dumpobj("Returning self", $self);
     &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return $self;
+}
+
+sub find_entities {
+    my ($self, %args) = @_;
+    my %params = ();
+    if ($args{view_type}) {
+        $params{view_type} = delete($args{view_type});
+    } else {
+        ExAPI::Argument->throw( error => 'Default argument not given', argument => 'view_type', subroutine => 'find_entities' );
+    }
+    if ($args{filter}) {
+        $params{filter} = delete($args{filter});
+    }
+    if ($args{begin_entity}) {
+        $params{begin_entity} = delete($args{begin_entity});
+    }
+    if ($args{properties}) {
+        $params{properties} = delete($args{properties});
+    }
+    if ( keys %args) {
+        ExAPI::Argument->throw( error => 'Unrecognized argument given', argument => join(', ', sort keys %args), subroutine => 'find_entities' );
+    }
+    my @results = $self->{vim}->find_entity_views(%params);
+    return @results;
+}
+
+sub find_entity {
+    my ($self,%args) = shift;
+    my %params = ();
+     if ($args{view_type}) {
+        $params{view_type} = delete($args{view_type});
+    } else {
+        ExAPI::Argument->throw( error => 'Default argument not given', argument => 'view_type', subroutine => 'find_entities' );
+    }
+    if ($args{filter}) {
+        $params{filter} = delete($args{filter});
+    }
+    if ($args{begin_entity}) {
+        $params{begin_entity} = delete($args{begin_entity});
+    }
+    if ($args{properties}) {
+        $params{properties} = delete($args{properties});
+    }
+    if ( keys %args) {
+        ExAPI::Argument->throw( error => 'Unrecognized argument given', argument => join(', ', sort keys %args), subroutine => 'find_entities' );
+    }
+    my $result = $self->{vim}->find_entity_view(%params);
+    return $result;
 }
 
 1

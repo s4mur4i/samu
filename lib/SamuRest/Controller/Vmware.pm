@@ -31,8 +31,6 @@ sub vmwareBase : Chained('/') : PathPart('vmware') : CaptureArgs(0) {
 
 sub loginBase : Chained('vmwareBase') : PathPart('') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    print Dumper $c->session->{__vim_login}->{sessions}
-      ->[ $c->session->{__vim_login}->{active} ];
     if ( !$c->session->{__vim_login} ) {
         $self->__error( $c, "Login to VCenter first" );
     }
@@ -52,8 +50,7 @@ sub loginBase : Chained('vmwareBase') : PathPart('') : CaptureArgs(0) {
           $c->session->{__vim_login}->{sessions}->[ $c->req->params->{vim_id} ];
     }
     else {
-        $active_session = $c->session->{__vim_login}->{sessions}
-          ->[ $c->session->{__vim_login}->{active} ];
+        $active_session = $c->session->{__vim_login}->{sessions}->[ $c->session->{__vim_login}->{active} ];
     }
     eval {
         my $VCenter = VCenter->new(
@@ -228,6 +225,9 @@ sub resourcepools : Chained('resourcepoolBase') : PathPart('') : Args(0) :
 
 sub resourcepools_GET {
     my ( $self, $c ) = @_;
+#    my @result = $c->stash->{vim}->find_entities( view_type => 'VirtualMachine', begin_entity => 'test', properties => ['test.1', 'test.2'], filter => { name => qr/.*dsa/i, 'runtime.sa'=> 'test'} );
+    my @result = $c->stash->{vim}->find_entities( view_type => 'VirtualMachine' );
+    print Dumper @result;
     return $self->__ok( $c, { implementing => "yes" } );
 }
 

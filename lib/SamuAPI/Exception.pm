@@ -25,7 +25,10 @@ use Exception::Class (
     },
     'ExTask'     => { isa => 'ExBase', fields => ['number'] },
     'ExConnection' => { isa => 'ExBase', },
+    'ExAPI' => { isa => 'ExBase' },
+
     'ExConnection::VCenter' => { isa => 'ExConnection', fields => ['vcenter_url'] },
+    'ExAPI::Argument' => { isa => 'ExAPI', fields => ['argument','subroutine']},
 );
 
 BEGIN {
