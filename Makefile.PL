@@ -29,6 +29,7 @@ requires 'Catalyst::View::JSON';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::State::URI';
 requires 'Catalyst::Plugin::Session::Store::DBI';
+requires 'Catalyst::Plugin::DateTime';
 test_requires 'Test::More' => '0.88';
 catalyst;
 

@@ -23,6 +23,7 @@ use Catalyst qw/
     Session
     Session::Store::DBI
     Session::State::URI
+    DateTime
 /;
 
 extends 'Catalyst';
