@@ -372,6 +372,7 @@ sub role_DELETE {
     my $role_rs = $schema->resultset('Role')->find({ role => $role });
     return $self->__error($c, "Unknown role: $role") unless $role_rs;
 
+    return $self->__error($c, "param user_id is required.") unless $to_user_id;
     my $to_user = $schema->resultset('User')->find($to_user_id);
     return $self->__error($c, "Unknown user: $to_user_id") unless $to_user;
 
@@ -393,6 +394,7 @@ sub role_POST {
     my $role_rs = $schema->resultset('Role')->find({ role => $role });
     return $self->__error($c, "Unknown role: $role") unless $role_rs;
 
+    return $self->__error($c, "param user_id is required.") unless $to_user_id;
     my $to_user = $schema->resultset('User')->find($to_user_id);
     return $self->__error($c, "Unknown user: $to_user_id") unless $to_user;
 

@@ -9,7 +9,6 @@ use File::Temp qw/tempfile/;
 my ( undef, $path ) = File::Spec->splitpath(__FILE__);
 
 sub init {
-
     my ($fh, $filename) = tempfile(EXLOCK => 0);
     $ENV{TEST_SAMUREST_DB} = 'dbi:SQLite:dbname=' . $filename;
 
@@ -24,6 +23,8 @@ sub init {
         next unless $part =~ /\S/;
         $dbh->do($part . ';') or die $dbh->errstr;
     }
+
+    return $dbh;
 }
 
 1;
