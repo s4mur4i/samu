@@ -5,9 +5,9 @@ use base 'Catalyst::Model::DBIC::Schema';
 
 __PACKAGE__->config(
     schema_class => 'DB::Schema',
-    
+
     connect_info => {
-        dsn => 'dbi:SQLite:db/samu.db',
+        dsn => $ENV{TEST_SAMUREST_DB} ? $ENV{TEST_SAMUREST_DB} : 'dbi:SQLite:db/samu.db',
         user => '',
         password => '',
     }
