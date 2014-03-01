@@ -2,17 +2,16 @@ use strict;
 use warnings;
 use Test::More;
 
-use Catalyst::Test 'SamuRest';
-use SamuRest::Controller::Administration;
-use HTTP::Request::Common;
-
 use FindBin qw/$Bin/;
 use lib "$Bin/lib";
 use Test::SamuRest;
+BEGIN { Test::SamuRest->init(); } # before Catalyst::Test
+
+use Catalyst::Test 'SamuRest';
+use SamuRest::Controller::Administration;
+use HTTP::Request::Common;
 use Data::Dumper;
 use JSON;
-
-Test::SamuRest->init();
 
 my $base_url = '/admin';
 
