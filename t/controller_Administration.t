@@ -74,11 +74,35 @@ $data = decode_json($resp->content);
 is($data->{result}, 'error', 'return error');
 ok($data->{message} =~ /Username/i, 'Username is already signed up.');
 
+$resp = request POST $base_url, [
+    username => 'testuser2',
+    password => 'testpass',
+    email => 'test@example.com',
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /Email/i, 'Email is already signed up.');
+
 diag("test profile");
 $data = decode_json( get("$base_url/profile/$user_id") );
 is($data->{result}, 'success', 'profile OK');
 is($data->{username}, 'testuser', 'username ok');
 is($data->{email}, 'test@example.com', 'email ok');
+
+$resp = request("$base_url/profile/XXX");
+is($resp->code, 400, 'Bad Request');
+
+diag("test list");
+$data = decode_json( get("$base_url/list") );
+is($data->{1}, 'testuser', 'get list OK');
+
+diag("test list/testuser");
+$data = decode_json( get("$base_url/list/testuser") );
+is($data->{id}, $user_id, 'get list/testuser OK');
+
+$data = decode_json( get("$base_url/list/testuserXXX") );
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /find user/i, 'failed to find user testuserXXX.');
 
 diag("test login");
 $resp = request POST "$base_url/login", [
@@ -88,6 +112,34 @@ $resp = request POST "$base_url/login", [
 $data = decode_json($resp->content);
 is($data->{result}, 'success', 'login OK');
 my $sessionid = $data->{sessionid};
+
+$resp = request POST "$base_url/login";
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /Username/i, 'Username is required for login');
+
+$resp = request POST "$base_url/login", [
+    username => 'testuser',
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /Password/i, 'Password is required for login');
+
+$resp = request POST "$base_url/login", [
+    username => 'testuserZZz',
+    password => 'testpass',
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /find user/i, 'wrong username');
+
+$resp = request POST "$base_url/login", [
+    username => 'testuser',
+    password => 'testpassZzz',
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /password/i, 'wrong password');
 
 diag("test profile me");
 $data = decode_json( get("$base_url/profile/-/$sessionid") );
@@ -153,6 +205,9 @@ is($data->{result}, 'success', 'set roles OK');
 
 $data = decode_json( get("$base_url/profile/-/$sessionid") );
 is_deeply($data->{roles}, ['admin', 'privilege'], 'get user roles ok');
+
+$data = decode_json( get("$base_url/roles/privilege") );
+ok(grep { $_ eq 'testuser2' } @{$data->{privilege}}, 'get testuser2 in privilege');
 
 my $req = HTTP::Request->new('DELETE' => "$base_url/roles/privilege/-/$sessionid");
 $req->content("user_id=$user_id"); $req->content_type('application/x-www-form-urlencoded');
@@ -230,6 +285,36 @@ $data = decode_json($resp->content);
 is($data->{result}, 'success', 'delete USER OK');
 
 $data = decode_json( get("$base_url/profile/$user_id") );
+is($data->{result}, 'error', 'return error');
+
+$resp = request POST $base_url, [
+    username => 'testuser2',
+    password => 'testpass2',
+    email => 'test2@example.com',
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'success', 'register OK');
+$user_id = $data->{id};
+ok($data->{id}, 'register id');
+
+$resp = request POST "$base_url/login", [
+    username => 'testuser2',
+    password => 'testpass2',
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'success', 'login OK');
+$sessionid = $data->{sessionid};
+
+$data = decode_json( get("$base_url/profile/-/$sessionid") );
+is($data->{result}, 'success', 'profile OK');
+is($data->{username}, 'testuser2', 'username ok');
+is($data->{email}, 'test2@example.com', 'email ok');
+
+$resp = request DELETE "$base_url/profile/-/$sessionid";
+$data = decode_json($resp->content);
+is($data->{result}, 'success', 'delete profile_me OK');
+
+$data = decode_json( get("$base_url/profile/-/$sessionid") );
 is($data->{result}, 'error', 'return error');
 
 done_testing();
