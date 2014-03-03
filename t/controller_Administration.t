@@ -150,16 +150,48 @@ ok( scalar(@{$data->{roles}}) == 0, 'no roles');
 
 diag("test profile update");
 $resp = request POST "$base_url/profile/-/$sessionid", [
-    username => 'testuser2',
-    password => 'testpass2',
-    email => 'test2@example.com'
+    username => 'testuser3',
+    password => 'testpass3',
+    email => 'test3@example.com'
 ];
+$data = decode_json($resp->content);
 is($data->{result}, 'success', 'update profile OK');
 
 $data = decode_json( get("$base_url/profile/-/$sessionid") );
 is($data->{result}, 'success', 'profile get after update OK');
-is($data->{username}, 'testuser2', 'username ok');
+is($data->{username}, 'testuser3', 'username ok');
+is($data->{email}, 'test3@example.com', 'email ok');
+
+$resp = request POST "$base_url/profile/-/$sessionid", [
+    email => 'test2.example.com'
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /Email/i, 'invalid Email');
+
+$resp = request POST "$base_url/profile/-/$sessionid", [
+    email => 'test2@example.com'
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'success', 'update profile OK');
+$data = decode_json( get("$base_url/profile/-/$sessionid") );
+is($data->{result}, 'success', 'profile get after update OK');
 is($data->{email}, 'test2@example.com', 'email ok');
+
+$resp = request POST "$base_url/profile/-/$sessionid", [
+    password => 'testpass2', # login later
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'success', 'update profile OK');
+
+$resp = request POST "$base_url/profile/-/$sessionid", [
+    username => 'testuser2',
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'success', 'update profile OK');
+$data = decode_json( get("$base_url/profile/-/$sessionid") );
+is($data->{result}, 'success', 'profile get after update OK');
+is($data->{username}, 'testuser2', 'username ok');
 
 diag("test logoff");
 $data = decode_json( get("$base_url/logoff/-/$sessionid") );
@@ -203,6 +235,32 @@ $resp = request POST "$base_url/roles/privilege/-/$sessionid", [
 $data = decode_json($resp->content);
 is($data->{result}, 'success', 'set roles OK');
 
+$resp = request POST "$base_url/roles/unknownROLE/-/$sessionid", [
+    user_id => $user_id
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /role/i, 'set unknown role failed.');
+
+$resp = request POST "$base_url/roles/privilege/-/$sessionid";
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /user_id/i, 'user_id required.');
+
+$resp = request POST "$base_url/roles/privilege/-/$sessionid", [
+    user_id => 'ZZzzz'
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /Unknown user/i, 'Unknown user');
+
+$resp = request POST "$base_url/roles/privilege/-/$sessionid", [
+    user_id => $user_id
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /Role already granted/i, 'Role already granted.');
+
 $data = decode_json( get("$base_url/profile/-/$sessionid") );
 is_deeply($data->{roles}, ['admin', 'privilege'], 'get user roles ok');
 
@@ -214,6 +272,27 @@ $req->content("user_id=$user_id"); $req->content_type('application/x-www-form-ur
 $resp = request($req);
 $data = decode_json($resp->content);
 is($data->{result}, 'success', 'delete roles OK');
+
+$req = HTTP::Request->new('DELETE' => "$base_url/roles/privilege/-/$sessionid");
+$req->content_type('application/x-www-form-urlencoded');
+$resp = request($req);
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /user_id/i, 'user_id required');
+
+$req = HTTP::Request->new('DELETE' => "$base_url/roles/privilege/-/$sessionid");
+$req->content("user_id=Zzzz"); $req->content_type('application/x-www-form-urlencoded');
+$resp = request($req);
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /Unknown user/i, 'Unknown user');
+
+$req = HTTP::Request->new('DELETE' => "$base_url/roles/privilege/-/$sessionid");
+$req->content("user_id=$user_id"); $req->content_type('application/x-www-form-urlencoded');
+$resp = request($req);
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /Role already deleted/i, 'Role already deleted');
 
 $data = decode_json( get("$base_url/profile/-/$sessionid") );
 is_deeply($data->{roles}, ['admin'], 'get user roles ok');
@@ -261,6 +340,15 @@ is($data->{vcenter_url}, 'http://localhost/');
 ok(not exists $data->{vcenter_password});
 is($data->{vcenter_username}, 'vuser');
 
+$resp = request POST "$base_url/profile/$user_id/configs/-/$sessionid", [
+    user_id => $user_id,
+    name => 'unknown_CONFIG',
+    value => 'http://localhost/'
+];
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /Unknown config/i, 'Unknown config');
+
 $req = HTTP::Request->new('DELETE' => "$base_url/profile/$user_id/configs/-/$sessionid");
 $req->content("user_id=$user_id&name=vcenter_url"); $req->content_type('application/x-www-form-urlencoded');
 $resp = request($req);
@@ -271,6 +359,13 @@ $data = decode_json( get("$base_url/profile/$user_id/configs/-/$sessionid") );
 ok( (not exists $data->{vcenter_url}), 'delete vcenter_url OK');
 ok(not exists $data->{vcenter_password});
 is($data->{vcenter_username}, 'vuser');
+
+$req = HTTP::Request->new('DELETE' => "$base_url/profile/$user_id/configs/-/$sessionid");
+$req->content("user_id=$user_id&name=unknown_CONFIG"); $req->content_type('application/x-www-form-urlencoded');
+$resp = request($req);
+$data = decode_json($resp->content);
+is($data->{result}, 'error', 'return error');
+ok($data->{message} =~ /Unknown config/i, 'Unknown config');
 
 ### REST of user related functions
 diag("test delete user");

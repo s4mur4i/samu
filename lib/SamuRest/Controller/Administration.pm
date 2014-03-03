@@ -132,7 +132,7 @@ update user info
 sub profile_base : Chained('adminBase') PathPart('profile') CaptureArgs(1) {
     my ($self, $c, $id) = @_;
     $c->stash(user_id => $id);
-    return $self->__bad_request($c, "Unknown id") unless $id and $id =~ /^\d+$/;
+    return $self->__bad_request($c, "Unknown id") unless $id =~ /^\d+$/;
     my $users_rs = $c->stash->{users_rs};
     my $user = $users_rs->find($id);
     return $self->__error($c, "Can't find user: $id") unless $user;
@@ -193,7 +193,7 @@ sub profile_POST {
     }
     $user->update();
 
-	return $self->__ok($c, { username => $user->username });
+	return $self->__ok($c, { username => $user->username, email => $user->email });
 }
 
 =pod
@@ -344,16 +344,25 @@ show users for the $role
 
 =cut
 
-sub role : Chained('rolesBase') PathPart('') Args(1) ActionClass('REST') { }
+sub role : Chained('rolesBase') PathPart('') Args(1) ActionClass('REST') {
+    my ($self, $c, $role) = @_;
 
-sub role_GET {
-    my ($self, $c,$role) = @_;
-    my %result =();
     my $schema = $c->model('Database');
     my $role_rs = $schema->resultset('Role')->find({ role => $role });
     return $self->__error($c, "Unknown role: $role") unless $role_rs;
-    my @users = $c->model('Database::UserRole')->search({role_id => $role_rs->id},undef)->all;
+    $c->stash(role_rs => $role_rs);
+
+}
+
+sub role_GET {
+    my ($self, $c,$role) = @_;
+
+    my $schema = $c->model('Database');
+    my $role_rs = $c->stash->{role_rs};
+
+    my %result =();
     $result{$role}= [];
+    my @users = $c->model('Database::UserRole')->search({role_id => $role_rs->id},undef)->all;
     foreach my $user (@users) {
         my $userobj = $schema->resultset('User')->find($user->user_id);
         push($result{$role}, $userobj->username);
@@ -369,8 +378,7 @@ sub role_DELETE {
 
     ## validate
     my $schema = $c->model('Database');
-    my $role_rs = $schema->resultset('Role')->find({ role => $role });
-    return $self->__error($c, "Unknown role: $role") unless $role_rs;
+    my $role_rs = $c->stash->{role_rs};
 
     return $self->__error($c, "param user_id is required.") unless $to_user_id;
     my $to_user = $schema->resultset('User')->find($to_user_id);
@@ -391,8 +399,7 @@ sub role_POST {
 
     ## validate
     my $schema = $c->model('Database');
-    my $role_rs = $schema->resultset('Role')->find({ role => $role });
-    return $self->__error($c, "Unknown role: $role") unless $role_rs;
+    my $role_rs = $c->stash->{role_rs};
 
     return $self->__error($c, "param user_id is required.") unless $to_user_id;
     my $to_user = $schema->resultset('User')->find($to_user_id);
