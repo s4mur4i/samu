@@ -225,6 +225,9 @@ sub resourcepools : Chained('resourcepoolBase') : PathPart('') : Args(0) :
 
 sub resourcepools_GET {
     my ( $self, $c ) = @_;
+    my $params = $c->req->params;
+    my $req_Datacenter = $params->{datacenter};
+    my $refresh = $params->{refresh} || 0;
     my %result= ();
 ## Need to implement possibility to give Datacenter to query TODO
     eval {
@@ -233,19 +236,27 @@ sub resourcepools_GET {
         for my $datacenter (@$datacenters) {
             my $resourcepools = $c->stash->{vim}->find_entities( view_type => 'ResourcePool', begin_entity => $datacenter->{mo_ref});
             for my $resourcepool ( @{ $resourcepools } ) {
-                # Resources is a top level special resource pool, needs to be handled seperatly
                 my $resourcepoolname = $resourcepool->{name};
-                #print Dumper $resourcepool;
-                $result{$resourcepoolname} = ();
-                $result{$resourcepool->{name}}->{parent} = $c->stash->{vim}->get_view( mo_ref => $resourcepool->{parent}, properties => ['name'] )->name unless !defined($resourcepool->{parent});
-               # $result{resourcepoolname}->{vmcount} = scalar @{ $resourcepool->{vm}} || 0;
+                $result{$resourcepoolname} = {virtualmachinecount => 0, parent => "unknown", resourcepoolcount => 0, runtime => {} };
+                $result{$resourcepoolname}->{parent} = $c->stash->{vim}->get_view( mo_ref => $resourcepool->{parent}, properties => ['name'] )->name if defined($resourcepool->{parent});
+                $result{$resourcepoolname}->{virtualmachinecount} = scalar @{ $resourcepool->{vm}} if defined($resourcepool->{vm});
+                $result{$resourcepoolname}->{resourcepoolcount} = scalar @{ $resourcepool->{resourcePool}} if defined($resourcepool->{resourcePool});
+                if ($refresh) {
+# Need to verify if I need to specify the VIM object, or where does it know the session it should use.
+                    $resourcepool->RefreshRuntime;
+                }
+                my $runtime = $resourcepool->{runtime};
+                # Only returning some information can be expanded further later
+                $result{$resourcepoolname}->{runtime} = { Status => $runtime->{overallStatus}->{val}, 
+                                                          memory => { overallUsage => $runtime->{memory}->{overallUsage} }, 
+                                                          cpu => { overallUsage => $runtime->{cpu}->{overallUsage} }};
+                print Dumper $result{$resourcepoolname}->{runtime};
             }
         }
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
     }
-    print Dumper %result;
     return $self->__ok( $c, \%result );
 }
 
