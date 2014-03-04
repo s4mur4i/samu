@@ -235,22 +235,14 @@ sub resourcepools_GET {
         my $datacenters = $c->stash->{vim}->find_entities( %datacenterparam );
         for my $datacenter (@$datacenters) {
             my $resourcepools = $c->stash->{vim}->find_entities( view_type => 'ResourcePool', begin_entity => $datacenter->{mo_ref});
-            for my $resourcepool ( @{ $resourcepools } ) {
-                my $resourcepoolname = $resourcepool->{name};
-                $result{$resourcepoolname} = {virtualmachinecount => 0, parent => "unknown", resourcepoolcount => 0, runtime => {} };
-                $result{$resourcepoolname}->{parent} = $c->stash->{vim}->get_view( mo_ref => $resourcepool->{parent}, properties => ['name'] )->name if defined($resourcepool->{parent});
-                $result{$resourcepoolname}->{virtualmachinecount} = scalar @{ $resourcepool->{vm}} if defined($resourcepool->{vm});
-                $result{$resourcepoolname}->{resourcepoolcount} = scalar @{ $resourcepool->{resourcePool}} if defined($resourcepool->{resourcePool});
-                if ($refresh) {
-# Need to verify if I need to specify the VIM object, or where does it know the session it should use.
-                    $resourcepool->RefreshRuntime;
+            for my $resourcepool_view ( @{ $resourcepools } ) {
+            #    $result{$resourcepoolname}->{parent} = $c->stash->{vim}->get_view( mo_ref => $resourcepool->{parent}, properties => ['name'] )->name if defined($resourcepool->{parent});
+                my $resourcepool = SamuAPI_resourcepool->new( view => $resourcepool_view, refresh => $refresh);
+                $resourcepool->parse_info;
+                $result{$resourcepool_view->{name}} = $resourcepool->get_info;
+                if ( $result{$resourcepool_view->{name}}->{parent} ) {
+                    $result{$resourcepool_view->{name}}->{parent} = $c->stash->{vim}->get_view( mo_ref => $result{$resourcepool_view->{name}}->{parent}, properties => ['name'] )->name;
                 }
-                my $runtime = $resourcepool->{runtime};
-                # Only returning some information can be expanded further later
-                $result{$resourcepoolname}->{runtime} = { Status => $runtime->{overallStatus}->{val}, 
-                                                          memory => { overallUsage => $runtime->{memory}->{overallUsage} }, 
-                                                          cpu => { overallUsage => $runtime->{cpu}->{overallUsage} }};
-                print Dumper $result{$resourcepoolname}->{runtime};
             }
         }
     };
