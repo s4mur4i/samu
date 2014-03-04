@@ -225,10 +225,28 @@ sub resourcepools : Chained('resourcepoolBase') : PathPart('') : Args(0) :
 
 sub resourcepools_GET {
     my ( $self, $c ) = @_;
-#    my @result = $c->stash->{vim}->find_entities( view_type => 'VirtualMachine', begin_entity => 'test', properties => ['test.1', 'test.2'], filter => { name => qr/.*dsa/i, 'runtime.sa'=> 'test'} );
-    my @result = $c->stash->{vim}->find_entities( view_type => 'VirtualMachine' );
-    print Dumper @result;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my %result= ();
+## Need to implement possibility to give Datacenter to query TODO
+    eval {
+        my %datacenterparam = ( view_type => 'Datacenter', properties => ['name'] );
+        my $datacenters = $c->stash->{vim}->find_entities( %datacenterparam );
+        for my $datacenter (@$datacenters) {
+            my $resourcepools = $c->stash->{vim}->find_entities( view_type => 'ResourcePool', begin_entity => $datacenter->{mo_ref});
+            for my $resourcepool ( @{ $resourcepools } ) {
+                # Resources is a top level special resource pool, needs to be handled seperatly
+                my $resourcepoolname = $resourcepool->{name};
+                #print Dumper $resourcepool;
+                $result{$resourcepoolname} = ();
+                $result{$resourcepool->{name}}->{parent} = $c->stash->{vim}->get_view( mo_ref => $resourcepool->{parent}, properties => ['name'] )->name unless !defined($resourcepool->{parent});
+               # $result{resourcepoolname}->{vmcount} = scalar @{ $resourcepool->{vm}} || 0;
+            }
+        }
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    print Dumper %result;
+    return $self->__ok( $c, \%result );
 }
 
 sub resourcepools_POST {

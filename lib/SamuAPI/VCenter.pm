@@ -156,12 +156,13 @@ sub find_entities {
     if ( keys %args) {
         ExAPI::Argument->throw( error => 'Unrecognized argument given', argument => join(', ', sort keys %args), subroutine => 'find_entities' );
     }
-    my @results = $self->{vim}->find_entity_views(%params);
-    return @results;
+    my $results = $self->{vim}->find_entity_views(%params);
+    push( @{ $self->{entities}}, @$results);
+    return $results;
 }
 
 sub find_entity {
-    my ($self,%args) = shift;
+    my ($self,%args) = @_;
     my %params = ();
      if ($args{view_type}) {
         $params{view_type} = delete($args{view_type});
@@ -181,7 +182,41 @@ sub find_entity {
         ExAPI::Argument->throw( error => 'Unrecognized argument given', argument => join(', ', sort keys %args), subroutine => 'find_entities' );
     }
     my $result = $self->{vim}->find_entity_view(%params);
+    push( @{ $self->{entities}}, $result);
     return $result;
+}
+
+sub get_view {
+    my ( $self, %args ) = @_;
+    my %params = ();
+    if ($args{properties}) {
+        $params{properties} = delete($args{properties});
+    }
+    if ($args{mo_ref}) {
+        $params{mo_ref} = delete($args{mo_ref});
+    }
+    if ($args{begin_entity}) {
+        $params{begin_entity} = delete($args{begin_entity});
+    }
+    if ( keys %args) {
+        ExAPI::Argument->throw( error => 'Unrecognized argument given', argument => join(', ', sort keys %args), subroutine => 'get_view' );
+    }
+    my $view = $self->{vim}->get_view( %params );
+    push( @{ $self->{entities}}, $view);
+    return $view;
+}
+
+sub update_view {
+    my ( $self, $view ) = @_;
+    my $updated_view = $view->update_view_data;
+    return $updated_view;
+
+}
+
+sub clear_entities {
+    my $self = shift;
+    @{ $self->{entities} } = ();
+    return $self;
 }
 
 1
