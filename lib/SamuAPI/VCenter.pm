@@ -219,4 +219,20 @@ sub clear_entities {
     return $self;
 }
 
+sub create_moref {
+    my ($self, %args ) = @_;
+    my ($type,$value);
+    if ( $args{type}) {
+        $type = delete($args{type});
+    }
+    if ( $args{value}) {
+        $value = delete($args{value});
+    }
+    if ( keys %args) {
+        ExAPI::Argument->throw( error => 'Unrecognized argument given', argument => join(', ', sort keys %args), subroutine => 'moref2view' );
+    }
+    my $moref = ManagedObjectReference->new( type => $type, value => $value);
+    return $moref;
+}
+
 1

@@ -226,12 +226,14 @@ sub resourcepools : Chained('resourcepoolBase') : PathPart('') : Args(0) :
 sub resourcepools_GET {
     my ( $self, $c ) = @_;
     my $params = $c->req->params;
-    my $req_Datacenter = $params->{datacenter};
+    my $req_Datacenter = $params->{datacenter} || undef;
     my $refresh = $params->{refresh} || 0;
     my %result= ();
-## Need to implement possibility to give Datacenter to query TODO
     eval {
         my %datacenterparam = ( view_type => 'Datacenter', properties => ['name'] );
+        if ( defined($req_Datacenter)) {
+            $datacenterparam{filter} = { name => $req_Datacenter };
+        }
         my $datacenters = $c->stash->{vim}->find_entities( %datacenterparam );
         for my $datacenter (@$datacenters) {
             my $resourcepools = $c->stash->{vim}->find_entities( view_type => 'ResourcePool', begin_entity => $datacenter->{mo_ref});
@@ -261,8 +263,27 @@ sub resourcepool : Chained('resourcepoolBase') : PathPart('') : Args(1) :
   ActionClass('REST') { }
 
 sub resourcepool_GET {
-    my ( $self, $c, $name ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my ( $self, $c, $mo_ref_value ) = @_;
+    my $params = $c->req->params;
+    my $req_Datacenter = $params->{datacenter} || undef;
+    my $refresh = $params->{refresh} || 0;
+    my %result = ();
+    eval {
+        my $moref = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $mo_ref_value);
+        my %params = ( mo_ref => $moref);
+        if ($req_Datacenter) {
+            my $datacenterview = $c->stash->{vim}->find_entity( view_type => 'Datacenter', properties => ['name'], filter => { name => $req_Datacenter});
+            $params{begin_entity} = $datacenterview->{mo_ref};
+        }
+        my $view = $c->stash->{vim}->get_view( %params);   
+        my $resourcepool = SamuAPI_resourcepool->new( view => $view, refresh => $refresh);
+        $resourcepool->parse_info;
+        %result = %{ $resourcepool->get_info} ;
+        if ( $result{parent} ) {
+            $result{parent} = $c->stash->{vim}->get_view( mo_ref => $result{parent}, properties => ['name'] )->name;
+        }
+    };
+    return $self->__ok( $c, \%result);
 }
 
 sub resourcepool_DELETE {

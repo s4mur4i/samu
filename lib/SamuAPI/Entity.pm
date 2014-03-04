@@ -34,12 +34,13 @@ sub parse_info {
         $self->{info} = ();
     }
     my $view = $self->{view};
-    $self->{info} = {virtualmachinecount => 0, parent => "", resourcepoolcount => 0, runtime => {}, name => "", parent_id => 0 };
+    $self->{info} = {virtualmachinecount => 0, parent => "", resourcepoolcount => 0, runtime => {}, name => "", parent_id => 0, mo_ref_value => "" };
     $self->{info}->{name} = $view->{name};
     $self->{info}->{parent} = $view->{parent} if defined($view->{parent});
     $self->{info}->{parent_id} = $view->{parent}->{value} if defined($view->{parent});
     $self->{info}->{virtualmachinecount} = scalar @{ $view->{vm}} if defined($view->{vm});
     $self->{info}->{resourcepoolcount} = scalar @{ $view->{resourcePool}} if defined($view->{resourcePool});
+    $self->{info}->{mo_ref_value} = $view->{mo_ref}->{value};
     if ($self->{refresh}) {
         $view->RefreshRuntime;
     }
