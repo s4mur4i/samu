@@ -259,36 +259,55 @@ sub resourcepools_POST {
     return $self->__ok( $c, { implementing => "yes" } );
 }
 
-sub resourcepool : Chained('resourcepoolBase') : PathPart('') : Args(1) :
-  ActionClass('REST') { }
-
-sub resourcepool_GET {
-    my ( $self, $c, $mo_ref_value ) = @_;
+sub resourcepool : Chained('resourcepoolBase') : PathPart('') : Args(1) : ActionClass('REST') { 
+    my ( $self, $c, $mo_ref_value ) = @_;      
     my $params = $c->req->params;
     my $req_Datacenter = $params->{datacenter} || undef;
-    my $refresh = $params->{refresh} || 0;
-    my %result = ();
     eval {
-        my $moref = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $mo_ref_value);
-        my %params = ( mo_ref => $moref);
+        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $mo_ref_value) ;
+        my %params = ( mo_ref => $c->stash->{mo_ref});
         if ($req_Datacenter) {
             my $datacenterview = $c->stash->{vim}->find_entity( view_type => 'Datacenter', properties => ['name'], filter => { name => $req_Datacenter});
             $params{begin_entity} = $datacenterview->{mo_ref};
         }
-        my $view = $c->stash->{vim}->get_view( %params);   
-        my $resourcepool = SamuAPI_resourcepool->new( view => $view, refresh => $refresh);
+        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+}
+
+sub resourcepool_GET {
+    my ( $self, $c, $mo_ref_value ) = @_;
+    my %result = ();
+    my $refresh = $c->req->params->{refresh} || 0;
+    eval {
+        my $resourcepool = SamuAPI_resourcepool->new( view => $c->stash->{view}, refresh => $refresh );
         $resourcepool->parse_info;
         %result = %{ $resourcepool->get_info} ;
         if ( $result{parent} ) {
             $result{parent} = $c->stash->{vim}->get_view( mo_ref => $result{parent}, properties => ['name'] )->name;
         }
     };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
     return $self->__ok( $c, \%result);
 }
 
 sub resourcepool_DELETE {
-    my ( $self, $c, $name ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my ( $self, $c, $mo_ref_value ) = @_;
+    my $task = undef;
+    eval {
+        my $resourcepool = SamuAPI_resourcepool->new( view => $c->stash->{view} );
+        my $task_mo_ref = $resourcepool->destroy;
+        my $taskobj = SamuAPI_task->new( mo_ref => $task_mo_ref);
+        $task = $taskobj->mo_ref_value;   
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, { taskid => $task } );
 }
 
 sub resourcepool_PUT {
