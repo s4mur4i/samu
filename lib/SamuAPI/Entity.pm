@@ -10,6 +10,20 @@ BEGIN {
     our @EXPORT = qw( );
 }
 
+
+sub new {
+    my ($class, %args) = @_;
+    my $obj=undef;
+    if ( $args{view}->isa('ResourcePool')) {
+        $obj = SamuAPI_resourcepool->new( %args );
+    } elsif ( $args{view}->isa('Folder')) {
+        $obj = SamuAPI_folder->new( %args );
+    } else {
+        ExAPI::ObjectType->throw( error => "Unknown object type", type => ref($args{view}));
+    }
+    return $obj;
+}
+
 #####################################################################################
 package SamuAPI_resourcepool;
 
@@ -38,8 +52,8 @@ sub parse_info {
     $self->{info}->{name} = $view->{name};
     $self->{info}->{parent} = $view->{parent} if defined($view->{parent});
     $self->{info}->{parent_id} = $view->{parent}->{value} if defined($view->{parent});
-    $self->{info}->{virtualmachinecount} = scalar @{ $view->{vm}} if defined($view->{vm});
-    $self->{info}->{resourcepoolcount} = scalar @{ $view->{resourcePool}} if defined($view->{resourcePool});
+    $self->{info}->{virtualmachinecount} = $self->child_vms;
+    $self->{info}->{resourcepoolcount} = $self->child_rps;
     $self->{info}->{mo_ref_value} = $view->{mo_ref}->{value};
     if ($self->{refresh}) {
         $view->RefreshRuntime;
@@ -56,10 +70,42 @@ sub get_info {
     return $self->{info};
 }
 
+sub child_vms {
+    my $self = shift;
+    my $value = 0;
+    if ( defined($self->{view}->{vm}) ) {
+        $value = scalar @{ $self->{view}->{vm}};
+    }
+    return $value;
+}
+
+sub child_rps {
+    my $self = shift;
+    my $value = 0;
+    if ( defined($self->{view}->{resourcePool}) ) {
+        $value = scalar @{ $self->{view}->{resourcePool}};
+    }
+    return $value;
+}
+
+sub destroy {
+    my $self = shift;
+    my $task = undef;
+    if ( $self->child_vms ne 0 ) {
+        ExEntity::NotEmpty->throw( error => "ResourcePool has child virtual machines", entity => $self->{view}->{name}, count => $self->child_vms );
+    } elsif ( $self->child_rps ne 0 ) {
+        ExEntity::NotEmpty->throw( error => "ResourcePool has child resourcepools", entity => $self->{view}->{name}, count => $self->child_rps );
+    }
+    $task = $self->{view}->Destroy_Task;
+    return $task;
+}
+
 ######################################################################################
 package SamuAPI_folder;
 
 our $view = undef;
+our $info = ();
+our $refresh = 0;
 
 sub new {
     my ($class, %args) = @_;
@@ -67,4 +113,29 @@ sub new {
     $self->{view} = $args{view};
     return $self;
 }
+
+######################################################################################
+package SamuAPI_task;
+
+our $view = undef;
+our $mo_ref = undef;
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    if ( $args{view}) {
+        $self->{view} = $args{view};
+    } elsif ( $args{mo_ref}) { 
+        $self->{mo_ref} = $args{mo_ref};
+    } else {
+        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_task");
+    }
+    return $self;
+}
+
+sub mo_ref_value {
+    my ( $self ) = shift;
+    return $self->{mo_ref}->{value};
+}
+
 1
