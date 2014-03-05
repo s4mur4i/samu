@@ -29,6 +29,8 @@ use Exception::Class (
 
     'ExConnection::VCenter' => { isa => 'ExConnection', fields => ['vcenter_url'] },
     'ExAPI::Argument' => { isa => 'ExAPI', fields => ['argument','subroutine']},
+    'ExAPI::ObjectType' => { isa => 'ExAPI', fields => ['type'] },
+    'ExEntity::NotEmpty' => { isa => 'ExEntity', fields => ['count'] },
 );
 
 BEGIN {
