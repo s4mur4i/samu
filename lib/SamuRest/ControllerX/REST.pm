@@ -77,13 +77,21 @@ sub __is_admin_or_owner {
 }
 
 sub __exception_to_json {
-    my ($self, $c, $ex ) = @_;
+    my ($self, $c,$ex ) = @_;
     my %return=();
-    for my $key ( keys %$ex ) {
-        if ( $key eq "trace" ) {
-            next;
+    if ( $ex->isa('ExBase')) {
+        for my $key ( keys %$ex ) {
+            if ( $key eq "trace" ) {
+                next;
+            }
+            $return{$key} = $ex->{$key};
         }
-        $return{$key} = $ex->{$key};
+    } else {
+# Handle Fucking VMware exceptions
+        for my $key ( keys %$ex ) {
+            $return{fault_string} = $ex->{fault_string};
+            $return{name} = $ex->{name};
+        }
     }
     $self->__error( $c, \%return );
 }
