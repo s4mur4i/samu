@@ -25,6 +25,7 @@ our $vcenter_password = undef;
 our $vcenter_url = undef;
 our $sessionfile = undef;
 our @entities = undef;
+our %find_params = ();
 
 sub new {
     my ($class, %args) = @_;
@@ -136,10 +137,45 @@ sub disconnect_vcenter {
     return $self;
 }
 
+sub set_find_params {
+    my ($self, %args) = @_;
+    if ($args{view_type}) {
+        $self->{find_params}{view_type} = delete($args{view_type});
+    }
+    if ($args{filter}) {
+        $self->{find_params}{filter} = delete($args{filter});
+    }
+    if ($args{begin_entity}) {
+        $self->{find_params}{begin_entity} = delete($args{begin_entity});
+    }
+    if ($args{properties}) {
+        $self->{find_params}{properties} = delete($args{properties});
+    }
+    if ( keys %args) {
+        ExAPI::Argument->throw( error => 'Unrecognized argument given', argument => join(', ', sort keys %args), subroutine => 'set_find_params' );
+    }
+    return $self;
+}
+
+sub get_find_params {
+    my $self = shift;
+    my %return =();
+    if ( defined $self->{find_params} ) {
+        %return = %{ $self->{find_params}};
+    }
+    return \%return;
+}
+
+sub delete_find_params {
+    my ($self, %args) = @_;
+    $self->{find_params} = ();
+    return $self;
+}
+
 sub find_entities {
     my ($self, %args) = @_;
-    my %params = ();
-    if ($args{view_type}) {
+    my %params = %{ $self->get_find_params} ;
+    if ($args{view_type} or $params{view_type}) {
         $params{view_type} = delete($args{view_type});
     } else {
         ExAPI::Argument->throw( error => 'Default argument not given', argument => 'view_type', subroutine => 'find_entities' );
@@ -163,7 +199,7 @@ sub find_entities {
 
 sub find_entity {
     my ($self,%args) = @_;
-    my %params = ();
+    my %params = %{ $self->get_find_params};
      if ($args{view_type}) {
         $params{view_type} = delete($args{view_type});
     } else {
@@ -188,7 +224,7 @@ sub find_entity {
 
 sub get_view {
     my ( $self, %args ) = @_;
-    my %params = ();
+    my %params = %{ $self->get_find_params };
     if ($args{properties}) {
         $params{properties} = delete($args{properties});
     }

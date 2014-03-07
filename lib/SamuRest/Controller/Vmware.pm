@@ -64,6 +64,25 @@ sub loginBase : Chained('vmwareBase') : PathPart('') : CaptureArgs(0) {
         $self->__exception_to_json( $c, $@ );
     }
     $active_session->{last_used} = $c->datetime->epoch;
+# Parse begin_entity if needed
+    eval {
+        my %param = ();
+# TODO maybe rethink, since this params might be used somewhere else aswell
+        if ( $c->req->params->{computeresource} ) {
+            %param = ( view_type => 'ComputeResource', properties => ['name'], filter => {name => $c->req->params->{computeresource} } );
+        } elsif ($c->req->params->{datacenter}) {
+            %param = ( view_type => 'Datacenter', properties => ['name'], filter => {name => $c->req->params->{datacenter} } );
+        } elsif ( $c->req->params->{hostsystem} ) {
+            %param = ( view_type => 'HostSystem', properties => ['name'], filter => {name => $c->req->params->{hostsystem} } );
+        }
+        if ( keys %param ) {
+            my $begin_entity = $c->stash->{vim}->find_entity( %param );
+            $c->stash->{vim}->set_find_params( begin_entity => $begin_entity);
+        }
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
 }
 
 sub connection : Chained('vmwareBase') : PathPart('') : Args(0) :
@@ -226,25 +245,17 @@ sub resourcepools : Chained('resourcepoolBase') : PathPart('') : Args(0) :
 sub resourcepools_GET {
     my ( $self, $c ) = @_;
     my $params = $c->req->params;
-    my $req_Datacenter = $params->{datacenter} || undef;
     my $refresh = $params->{refresh} || 0;
     my %result= ();
     eval {
-        my %datacenterparam = ( view_type => 'Datacenter', properties => ['name'] );
-        if ( defined($req_Datacenter)) {
-            $datacenterparam{filter} = { name => $req_Datacenter };
-        }
-        my $datacenters = $c->stash->{vim}->find_entities( %datacenterparam );
-        for my $datacenter (@$datacenters) {
-            my $resourcepools = $c->stash->{vim}->find_entities( view_type => 'ResourcePool', begin_entity => $datacenter->{mo_ref});
-            for my $resourcepool_view ( @{ $resourcepools } ) {
-            #    $result{$resourcepoolname}->{parent} = $c->stash->{vim}->get_view( mo_ref => $resourcepool->{parent}, properties => ['name'] )->name if defined($resourcepool->{parent});
-                my $resourcepool = SamuAPI_resourcepool->new( view => $resourcepool_view, refresh => $refresh);
-                $resourcepool->parse_info;
-                $result{$resourcepool_view->{name}} = $resourcepool->get_info;
-                if ( $result{$resourcepool_view->{name}}->{parent} ) {
-                    $result{$resourcepool_view->{name}}->{parent} = $c->stash->{vim}->get_view( mo_ref => $result{$resourcepool_view->{name}}->{parent}, properties => ['name'] )->name;
-                }
+        my $resourcepools = $c->stash->{vim}->find_entities( view_type => 'ResourcePool' );
+        for my $resourcepool_view ( @{ $resourcepools } ) {
+            my $resourcepool = SamuAPI_resourcepool->new( view => $resourcepool_view, refresh => $refresh);
+            $resourcepool->parse_info;
+            my $moref_value = $resourcepool_view->{mo_ref}->{value};
+            $result{$moref_value} = $resourcepool->get_info;
+            if ( $result{$moref_value}->{parent} ) {
+                $result{$moref_value}->{parent} = $c->stash->{vim}->get_view( mo_ref => $result{$moref_value}->{parent}, properties => ['name'] )->name;
             }
         }
     };
@@ -256,20 +267,19 @@ sub resourcepools_GET {
 
 sub resourcepools_POST {
     my ( $self, $c ) = @_;
+    my $params = $c->req->params;
+    my $parent_id = $params->{parent_id} || undef;
+    my $name = $params->{name};
+    my $parent_view = undef;
+# Find parent
     return $self->__ok( $c, { implementing => "yes" } );
 }
 
 sub resourcepool : Chained('resourcepoolBase') : PathPart('') : Args(1) : ActionClass('REST') { 
     my ( $self, $c, $mo_ref_value ) = @_;      
-    my $params = $c->req->params;
-    my $req_Datacenter = $params->{datacenter} || undef;
     eval {
         $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $mo_ref_value) ;
         my %params = ( mo_ref => $c->stash->{mo_ref});
-        if ($req_Datacenter) {
-            my $datacenterview = $c->stash->{vim}->find_entity( view_type => 'Datacenter', properties => ['name'], filter => { name => $req_Datacenter});
-            $params{begin_entity} = $datacenterview->{mo_ref};
-        }
         $c->stash->{view} = $c->stash->{vim}->get_view( %params);
     };
     if ($@) {
@@ -313,6 +323,10 @@ sub resourcepool_DELETE {
 sub resourcepool_PUT {
     my ( $self, $c, $name ) = @_;
     return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub resourcepool_POST{
+# TODO: maybe this should be implemented, if we have parent a child resource pool shoould be implemented.
 }
 
 =head1 AUTHOR
