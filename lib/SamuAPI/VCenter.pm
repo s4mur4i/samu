@@ -166,6 +166,21 @@ sub get_find_params {
     return \%return;
 }
 
+sub entity_exists {
+    my ($self, %args) = @_;
+    my $return = 0;
+    if ( $args{mo_ref}) {
+        my $view = $self->get_view( %args );
+        if ( $view ) {
+            push(@{$self->{entities} }, $view);
+            $return = 1;
+        }
+    } else {
+        ExAPI::Argument->throw( error => 'No required argument give', argument => join(', ', sort keys %args), subroutine => 'entity_exists' );
+    }
+    return $return;
+}
+
 sub delete_find_params {
     my ($self, %args) = @_;
     $self->{find_params} = ();

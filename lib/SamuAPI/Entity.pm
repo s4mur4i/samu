@@ -100,6 +100,31 @@ sub destroy {
     return $task;
 }
 
+sub create {
+    my ( $self, %args) = @_;
+    my $rp_name = delete($args{name});
+    my $rp_parent_view = $self->{view};
+    my $share_level = delete($args{shareslevel}) || "normal";
+    my $cpu_share = delete($args{cpu_share}) || 4000;
+    my $memory_share = delete($args{memory_share}) || 32928;
+    my $cpu_expandable_reservation = delete($args{cpu_expandable_reservation}) || "true";
+    my $cpu_limit = delete($args{cpu_limit}) || -1;
+    my $cpu_reservation = delete($args{cpu_reservation}) || 0;
+    my $memory_expandable_reservation = delete($args{memory_expandable_reservation}) || "true";
+    my $memory_limit = delete($args{memory_limit}) || -1;
+    my $memory_reservation = delete($args{memory_reservation}) || 0;
+    ## Creation objects
+    my $shareslevel = SharesLevel->new($share_level);
+    my $cpushares   = SharesInfo->new( shares => $cpu_share, level => $shareslevel );
+    my $memshares   = SharesInfo->new( shares => $memory_share, level => $shareslevel );
+
+    my $cpuallocation = ResourceAllocationInfo->new( expandableReservation => $cpu_expandable_reservation, limit                 => $cpu_limit, reservation           => $cpu_reservation, shares                => $cpushares);
+    my $memoryallocation = ResourceAllocationInfo->new( expandableReservation => $memory_expandable_reservation, limit                 => $memory_limit, reservation           => $memory_reservation, shares                => $memshares);
+    my $rp_spec = ResourceConfigSpec->new( cpuAllocation    => $cpuallocation, memoryAllocation => $memoryallocation);
+    my $rp_view = $rp_parent_view->CreateResourcePool( name => $rp_name, spec => $rp_spec );
+    return $rp_view;
+}
+
 ######################################################################################
 package SamuAPI_folder;
 

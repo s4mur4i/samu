@@ -267,18 +267,42 @@ sub resourcepools_GET {
 
 sub resourcepools_POST {
     my ( $self, $c ) = @_;
+# TODO Maybe move to a specific resourcepool creation, or leave this for root resource creation
     my $params = $c->req->params;
     my $parent_id = $params->{parent_id} || undef;
     my $name = $params->{name};
     my $parent_view = undef;
-# Find parent
-    return $self->__ok( $c, { implementing => "yes" } );
+    if ($parent_id) {
+# TODO if multiple computeresources with same mo_ref how can they be distingueshed
+        my $parent_moref = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $parent_id) ;
+        $parent_view = $c->stash->{vim}->get_view( mo_ref => $parent_moref, properties => ['name']);
+    } else {
+        $parent_view = $c->stash->{vim}->find_entity( view_type => 'ResourcePool', properties => ['name'], filter => { name => 'Resources'} );
+    }
+# TODO Refactor code and add further options
+    my %result = ();
+    eval {
+        my $rp = SamuAPI_resourcepool->new( view => $parent_view );
+        my $moref = $rp->create( name => $name);
+        my $view = $c->stash->{vim}->get_view( mo_ref => $moref);
+        my $resourcepool = SamuAPI_resourcepool->new( view => $view );
+        $resourcepool->parse_info;
+        %result = %{ $resourcepool->get_info} ;
+        if ( $result{parent} ) {
+            $result{parent} = $c->stash->{vim}->get_view( mo_ref => $result{parent}, properties => ['name'] )->name;
+        }
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub resourcepool : Chained('resourcepoolBase') : PathPart('') : Args(1) : ActionClass('REST') { 
     my ( $self, $c, $mo_ref_value ) = @_;      
     eval {
         $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $mo_ref_value) ;
+# TODO maybe this can merged together
         my %params = ( mo_ref => $c->stash->{mo_ref});
         $c->stash->{view} = $c->stash->{vim}->get_view( %params);
     };
