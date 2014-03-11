@@ -104,7 +104,7 @@ sub create {
     my ( $self, %args) = @_;
     my $rp_name = delete($args{name});
     my $rp_parent_view = $self->{view};
-    my $share_level = delete($args{shareslevel}) || "normal";
+    my $share_level = delete($args{shares_level}) || "normal";
     my $cpu_share = delete($args{cpu_share}) || 4000;
     my $memory_share = delete($args{memory_share}) || 32928;
     my $cpu_expandable_reservation = delete($args{cpu_expandable_reservation}) || "true";

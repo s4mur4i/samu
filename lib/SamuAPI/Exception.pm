@@ -65,6 +65,8 @@ sub parse_ex {
             $info = &vmwareInsufficientResourcesFault($ex);
         } elsif ( $ex->{name} eq "InvalidArgumentFault" ) {
             $info = &vmwareInvalidArgument($ex);
+        } elsif ( $ex->{name} eq 'InvalidRequestFault' ) {
+            $info = &vmwareInvalidRequest($ex);
         } elsif ( $ex->{name} eq "InvalidNameFault" ) {
             $info = &vmwareInvalidName($ex);
         } elsif ($ex->{name} eq "NotSupportedFault") {
@@ -72,7 +74,7 @@ sub parse_ex {
         } elsif ( $ex->{name} eq "RuntimeFaultFault") {
             $info = &vmwareRuntimeFault($ex);
         } else {
-            $info = { unknown => "unknown"};
+            $info = { unknown => "unknown_vmware"};
             print Dumper $ex;
         }
     } elsif ( $ex->isa('ExBase') ) {
@@ -116,6 +118,15 @@ sub vmwareInvalidArgument {
     $return->{invalidProperty} = $ex->{invalidProperty};
     return $return;
 }
+
+sub vmwareInvalidRequest {
+    my $ex = shift;
+    my $return = {};
+    $return->{fault_string} = $ex->{fault_string};
+    $return->{name} = $ex->{name};
+    return $return;
+}
+
 
 sub vmwareInvalidName {
     my $ex = shift;

@@ -248,12 +248,13 @@ sub resourcepools_GET {
     my $refresh = $params->{refresh} || 0;
     my %result= ();
     eval {
+# TODO, try to implement properties for faster query
         my $resourcepools = $c->stash->{vim}->find_entities( view_type => 'ResourcePool' );
         for my $resourcepool_view ( @{ $resourcepools } ) {
             my $resourcepool = SamuAPI_resourcepool->new( view => $resourcepool_view, refresh => $refresh);
             $resourcepool->parse_info;
             my $moref_value = $resourcepool_view->{mo_ref}->{value};
-            $result{$moref_value} = $resourcepool->get_info;
+            $result{ $moref_value } = $resourcepool->get_info;
             if ( $result{$moref_value}->{parent} ) {
                 $result{$moref_value}->{parent} = $c->stash->{vim}->get_view( mo_ref => $result{$moref_value}->{parent}, properties => ['name'] )->name;
             }
@@ -267,42 +268,15 @@ sub resourcepools_GET {
 
 sub resourcepools_POST {
     my ( $self, $c ) = @_;
-# TODO Maybe move to a specific resourcepool creation, or leave this for root resource creation
-    my $params = $c->req->params;
-    my $parent_id = $params->{parent_id} || undef;
-    my $name = $params->{name};
-    my $parent_view = undef;
-    if ($parent_id) {
-# TODO if multiple computeresources with same mo_ref how can they be distingueshed
-        my $parent_moref = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $parent_id) ;
-        $parent_view = $c->stash->{vim}->get_view( mo_ref => $parent_moref, properties => ['name']);
-    } else {
-        $parent_view = $c->stash->{vim}->find_entity( view_type => 'ResourcePool', properties => ['name'], filter => { name => 'Resources'} );
-    }
-# TODO Refactor code and add further options
-    my %result = ();
-    eval {
-        my $rp = SamuAPI_resourcepool->new( view => $parent_view );
-        my $moref = $rp->create( name => $name);
-        my $view = $c->stash->{vim}->get_view( mo_ref => $moref);
-        my $resourcepool = SamuAPI_resourcepool->new( view => $view );
-        $resourcepool->parse_info;
-        %result = %{ $resourcepool->get_info} ;
-        if ( $result{parent} ) {
-            $result{parent} = $c->stash->{vim}->get_view( mo_ref => $result{parent}, properties => ['name'] )->name;
-        }
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }
-    return $self->__ok( $c, \%result );
+    my $view = $c->stash->{vim}->find_entity( view_type => 'ResourcePool', properties => ['name'], filter => { name => 'Resources'} );
+    $self->resourcepool($c, $view->{mo_ref}->{value});
+    $self->resourcepool_POST($c, $view->{mo_ref}->{value});
 }
 
 sub resourcepool : Chained('resourcepoolBase') : PathPart('') : Args(1) : ActionClass('REST') { 
     my ( $self, $c, $mo_ref_value ) = @_;      
     eval {
         $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $mo_ref_value) ;
-# TODO maybe this can merged together
         my %params = ( mo_ref => $c->stash->{mo_ref});
         $c->stash->{view} = $c->stash->{vim}->get_view( %params);
     };
@@ -349,20 +323,27 @@ sub resourcepool_PUT {
     return $self->__ok( $c, { implementing => "yes" } );
 }
 
-sub resourcepool_POST{
-# TODO: maybe this should be implemented, if we have parent a child resource pool shoould be implemented.
+sub resourcepool_POST {
+    my ( $self, $c, $mo_ref_value ) = @_;
+    my %result = ();
+    my %create_param = %{ $c->req->params };
+# TODO if multiple computeresources with same mo_ref how can they be distingueshed
+    eval {
+        my $parent_rp = SamuAPI_resourcepool->new( view => $c->stash->{view} );
+        my $moref = $parent_rp->create( %create_param );
+        my $view = $c->stash->{vim}->get_view( mo_ref => $moref);
+        my $resourcepool = SamuAPI_resourcepool->new( view => $view );
+        $resourcepool->parse_info;
+        %result = %{ $resourcepool->get_info} ;
+        if ( $result{parent} ) {
+            $result{parent} = $c->stash->{vim}->get_view( mo_ref => $result{parent}, properties => ['name'] )->name;
+        }
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
-
-=head1 AUTHOR
-
-s4mur4i,,,
-
-=head1 LICENSE
-
-This library is free software. You can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
 
 sub taskBase: Chained('loginBase'): PathPart('task') : CaptureArgs(0) { }
 
