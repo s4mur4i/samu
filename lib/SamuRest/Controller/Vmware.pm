@@ -319,8 +319,19 @@ sub resourcepool_DELETE {
 }
 
 sub resourcepool_PUT {
-    my ( $self, $c, $name ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my ( $self, $c, $mo_ref_value ) = @_;
+    my %result = ();
+    my %update_param = %{ $c->req->params };
+# TODO Bring evals to higher level at begining to catch them at one place
+    eval {
+# implement move TODO
+        my $rp = SamuAPI_resourcepool->new( view => $c->stash->{view} );
+        $rp->update(%update_param);
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub resourcepool_POST {
