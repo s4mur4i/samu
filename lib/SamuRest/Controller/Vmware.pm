@@ -273,6 +273,32 @@ sub resourcepools_POST {
     $self->resourcepool_POST($c, $view->{mo_ref}->{value});
 }
 
+sub resourcepools_PUT {
+    my ( $self, $c ) = @_;
+    my %result = ();
+    my $param = $c->req->params;
+    my $child_value = $param->{child_value};
+    my $child_type = $param->{child_type};
+    my $child_mo_ref = $c->stash->{vim}->create_moref( type => $child_type, value => $child_value) ;
+    my $parent_value = $param->{parent_value} || undef;
+    eval {
+        my $parent_view = undef;
+        if (defined($parent_value) ) {
+            my $mo_ref = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $parent_value) ;
+            my %params = ( mo_ref => $mo_ref);
+            $parent_view = $c->stash->{vim}->get_view( %params);
+        } else {
+            $parent_view = $c->stash->{vim}->find_entity( view_type => 'ResourcePool', properties => ['name'], filter => { name => 'Resources'} );
+        }
+        my $resourcepool = SamuAPI_resourcepool->new( view => $parent_view );
+        $resourcepool->move( mo_ref => $child_mo_ref);
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result);
+}
+
 sub resourcepool : Chained('resourcepoolBase') : PathPart('') : Args(1) : ActionClass('REST') { 
     my ( $self, $c, $mo_ref_value ) = @_;      
     eval {
@@ -322,9 +348,7 @@ sub resourcepool_PUT {
     my ( $self, $c, $mo_ref_value ) = @_;
     my %result = ();
     my %update_param = %{ $c->req->params };
-# TODO Bring evals to higher level at begining to catch them at one place
     eval {
-# implement move TODO
         my $rp = SamuAPI_resourcepool->new( view => $c->stash->{view} );
         $rp->update(%update_param);
     };

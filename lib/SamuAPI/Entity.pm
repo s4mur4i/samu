@@ -123,7 +123,9 @@ sub create {
 }
 
 sub move {
-
+    my ( $self, %args ) = @_;
+    #TODO complete
+    return $self;
 }
 
 sub _resourcepool_resource_config_spec {
