@@ -217,12 +217,13 @@ sub folders_GET {
         my $folders = $c->stash->{vim}->find_entities( view_type => 'Folder' );
         for my $folder_view ( @{ $folders } ) {
             my $folder = SamuAPI_folder->new( view => $folder_view);
-            $folder->parse_info;
-            my $moref_value = $folder_view->{mo_ref}->{value};
-            $result{ $moref_value } = $folder->get_info;
-            if ( $result{$moref_value}->{parent} ) {
-                $result{$moref_value}->{parent} = $c->stash->{vim}->get_view( mo_ref => $result{$moref_value}->{parent}, properties => ['name'] )->name;
-            }
+            print Dumper $folder_view;
+    #        $folder->parse_info;
+    #        my $moref_value = $folder_view->{mo_ref}->{value};
+    #        $result{ $moref_value } = $folder->get_info;
+    #        if ( $result{$moref_value}->{parent} ) {
+    #            $result{$moref_value}->{parent} = $c->stash->{vim}->get_view( mo_ref => $result{$moref_value}->{parent}, properties => ['name'] )->name;
+    #        }
         }
     };
     if ($@) {
@@ -236,8 +237,17 @@ sub folders_POST {
     return $self->__ok( $c, { implementing => "yes" } );
 }
 
-sub folder : Chained('folderBase') : PathPart('') : Args(1) :
-  ActionClass('REST') { }
+sub folder : Chained('folderBase') : PathPart('') : Args(1) : ActionClass('REST') { 
+    my ( $self, $c, $mo_ref_value ) = @_;
+    eval {
+        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'Folder', value => $mo_ref_value) ;
+        my %params = ( mo_ref => $c->stash->{mo_ref});
+        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+}
 
 sub folder_GET {
     my ( $self, $c, $name ) = @_;

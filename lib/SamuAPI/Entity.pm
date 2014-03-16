@@ -159,7 +159,6 @@ package SamuAPI_folder;
 
 our $view = undef;
 our $info = ();
-our $refresh = 0;
 
 sub new {
     my ($class, %args) = @_;
@@ -167,6 +166,23 @@ sub new {
     $self->{view} = $args{view};
     return $self;
 }
+
+sub parse_info {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    my $view = $self->{view};
+
+    return $self;
+}
+
+sub get_info {
+    my $self = shift;
+    return $self->{info};
+}
+
 
 ######################################################################################
 package SamuAPI_task;
