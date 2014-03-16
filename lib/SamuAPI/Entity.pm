@@ -124,7 +124,13 @@ sub create {
 
 sub move {
     my ( $self, %args ) = @_;
-    #TODO complete
+    my @list = ();
+    if ( defined($args{list}) ) {
+        @list = @{$args{list}}
+    } else {
+        ExAPI_Argument->throw( error => "Missing list argument", argument => "list", subroutine => "move");
+    }
+    $self->{view}->MoveIntoResourcePool( list => @list );
     return $self;
 }
 
