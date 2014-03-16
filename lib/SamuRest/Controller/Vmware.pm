@@ -250,7 +250,20 @@ sub folder : Chained('folderBase') : PathPart('') : Args(1) : ActionClass('REST'
 
 sub folder_GET {
     my ( $self, $c, $name ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my %result = ();
+    eval {
+        my $folder = SamuAPI_folder->new( view => $c->stash->{view} );
+        $folder->parse_info;
+        %result = %{ $folder->get_info} ;
+        if ( $result{parent} ) {
+            $result{parent} = $c->stash->{vim}->get_view( mo_ref => $result{parent}, properties => ['name'] )->name;
+        }
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result);
+
 }
 
 sub folder_DELETE {
