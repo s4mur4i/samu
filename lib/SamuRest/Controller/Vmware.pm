@@ -210,7 +210,25 @@ sub folders : Chained('folderBase') : PathPart('') : Args(0) :
 
 sub folders_GET {
     my ( $self, $c ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my $params = $c->req->params;
+    my %result= ();
+    eval {
+# TODO, try to implement properties for faster query
+        my $folders = $c->stash->{vim}->find_entities( view_type => 'Folder' );
+        for my $folder_view ( @{ $folders } ) {
+            my $folder = SamuAPI_folder->new( view => $folder_view);
+            $folder->parse_info;
+            my $moref_value = $folder_view->{mo_ref}->{value};
+            $result{ $moref_value } = $folder->get_info;
+            if ( $result{$moref_value}->{parent} ) {
+                $result{$moref_value}->{parent} = $c->stash->{vim}->get_view( mo_ref => $result{$moref_value}->{parent}, properties => ['name'] )->name;
+            }
+        }
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub folders_POST {
