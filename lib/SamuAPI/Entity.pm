@@ -174,13 +174,40 @@ sub parse_info {
         $self->{info} = ();
     }
     my $view = $self->{view};
-
+    $self->{info}->{name} = $view->{name};
+    $self->{info}->{parent} = $view->{parent} if defined($view->{parent});
+    $self->{info}->{parent_id} = $view->{parent}->{value} if defined($view->{parent});
+    $self->{info}->{Status} = $view->{overallStatus}->{val};
+    $self->{info}->{foldercount} = $self->child_folders;
+    $self->{info}->{virtualmachinecount} = $self->child_vms;
     return $self;
 }
 
 sub get_info {
     my $self = shift;
     return $self->{info};
+}
+
+sub child_folders {
+    my $self = shift;
+    my $value = 0;
+    if ( defined($self->{view}->{childEntity}) ) {
+        for my $moref ( @{ $self->{view}->{childEntity} } ) {
+            $value++ if ($moref->{type} eq "Folder");
+        }
+    }
+    return $value;
+}
+
+sub child_vms {
+    my $self = shift;
+    my $value = 0;
+    if ( defined($self->{view}->{childEntity}) ) {
+        for my $moref ( @{ $self->{view}->{childEntity} }) {
+            $value++ if ($moref->{type} eq "VirtualMachine");
+        }
+    }
+    return $value;
 }
 
 
