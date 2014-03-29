@@ -286,4 +286,24 @@ sub create_moref {
     return $moref;
 }
 
+sub get_service_content {
+    my $self = shift;
+    my $sc = $self->{vim}->get_service_content();
+    if ( !defined($sc) ) {
+        ExEntity::Empty->throw( error => 'Could not retrieve Service Content', entity => "Service Content" );
+    }
+    return $sc;
+}
+
+sub get_manager {
+    my ( $self, $type) = @_;
+    my $sc = $self->get_service_content;
+    my $manager = $self->get_view( mo_ref => $sc->{$type});
+    if ( !defined($manager)) {
+        ExEntity::Empty->throw( error => 'Could not retrieve manager', entity => "$type" );
+    }
+    return $manager;
+#    return $sc;
+}
+
 1

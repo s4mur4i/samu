@@ -426,7 +426,17 @@ sub tasks : Chained('taskBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 sub tasks_GET {
     my ( $self, $c ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my %result =();
+    eval {
+        my $taskmanager = $c->stash->{vim}->get_manager("taskManager");
+        for my $task ( @{ $taskmanager->{recentTask}}) {
+            $result{$task->{value}} = {}
+        }
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub task : Chained(taskBase) : PathPart(''): Args(1) : ActionClass('REST') {}
