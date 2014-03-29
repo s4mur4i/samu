@@ -442,16 +442,44 @@ sub tasks_GET {
     return $self->__ok( $c, \%result );
 }
 
-sub task : Chained(taskBase) : PathPart(''): Args(1) : ActionClass('REST') {}
+sub task : Chained(taskBase) : PathPart(''): Args(1) : ActionClass('REST') {
+    my ( $self, $c, $mo_ref_value ) = @_;
+    eval {
+        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'Task', value => $mo_ref_value) ;
+        my %params = ( mo_ref => $c->stash->{mo_ref});
+        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }   
+}
 
 sub task_GET {
-    my ( $self, $c ,$num) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my ( $self, $c ,$mo_ref_value ) = @_;
+    my %result =();
+    eval {
+        my $task = SamuAPI_task->new( view => $c->stash->{view} );
+        $task->parse_info;
+        $result{$mo_ref_value} = $task->get_info;
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub task_DELETE {
     my ( $self, $c ,$num) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my %result = ();
+    eval {
+#Verify functionality
+        my $task = SamuAPI_task->new( view => $c->stash->{view} );
+        $task->cancel;
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub templateBase: Chained('loginBase'): PathPart('template') : CaptureArgs(0) { }

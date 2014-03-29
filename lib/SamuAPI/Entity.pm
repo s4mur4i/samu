@@ -265,4 +265,11 @@ sub get_info {
     return $self->{info};
 }
 
+sub cancel {
+    my $self = shift;
+    #verify if cancaleable
+    $self->{view}->CancelTask;
+    return $self;
+}
+
 1
