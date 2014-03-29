@@ -429,8 +429,11 @@ sub tasks_GET {
     my %result =();
     eval {
         my $taskmanager = $c->stash->{vim}->get_manager("taskManager");
-        for my $task ( @{ $taskmanager->{recentTask}}) {
-            $result{$task->{value}} = {}
+        for ( @{ $taskmanager->{recentTask}}) {
+            my $task_view = $c->stash->{vim}->get_view( mo_ref => $_);
+            my $task = SamuAPI_task->new( view => $task_view );
+            $task->parse_info;
+            $result{$_->{value}} = $task->get_info;
         }
     };
     if ($@) {

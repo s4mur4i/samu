@@ -216,6 +216,7 @@ package SamuAPI_task;
 
 our $view = undef;
 our $mo_ref = undef;
+our $info = ();
 
 sub new {
     my ($class, %args) = @_;
@@ -233,6 +234,35 @@ sub new {
 sub mo_ref_value {
     my ( $self ) = shift;
     return $self->{mo_ref}->{value};
+}
+
+sub parse_info {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    my $view = $self->{view};
+    $self->{info}->{cancelable} = $view->{info}->{cancelable} || 0;
+    $self->{info}->{cancelled} = $view->{info}->{cancelled} || 0;
+    $self->{info}->{startTime} = $view->{info}->{startTime};
+    $self->{info}->{completeTime} = $view->{info}->{completeTime} if defined($view->{info}->{completeTime});
+    $self->{info}->{entityName} = $view->{info}->{entityName};
+    $self->{info}->{entity} = { value => $view->{info}->{entity}->{value}, type =>$self->{view}->{info}->{entity}->{type}};
+    $self->{info}->{queueTime} = $view->{info}->{queueTime};
+    $self->{info}->{key} = $view->{info}->{key};
+    $self->{info}->{state} = $view->{info}->{state}->{val};
+    $self->{info}->{description} = { message => $view->{info}->{description}->{message} ,key => $self->{view}->{info}->{description}->{key} };
+    $self->{info}->{name} = $view->{info}->{name};
+    #Need to implement different reasons TODO
+    $self->{info}->{reason} = $view->{info}->{reason}->{userName};
+    $self->{info}->{progress} = $view->{info}->{progress};
+    return $self;
+}
+
+sub get_info {
+    my $self = shift;
+    return $self->{info};
 }
 
 1
