@@ -231,9 +231,47 @@ sub folders_GET {
     return $self->__ok( $c, \%result );
 }
 
+sub folders_PUT {
+    my ( $self, $c) = @_;
+    my $params = $c->req->params;
+    my $parent_folder_mo_ref_value = $params->{parent_folder};
+    my $child_type = $params->{child_type};
+    my $child_value = $params->{child_value};
+    my %result= ();
+    eval {
+# TODO test if works
+        my $parent_mo_ref = $c->stash->{vim}->create_moref( type => 'Folder', value => $parent_folder_mo_ref_value) ;
+        my $parent_view = $c->stash->{vim}->get_view( mo_ref => $parent_mo_ref );
+        my $child_mo_ref = $c->stash->{vim}->create_moref( type => $child_type, value => $child_value) ;
+        my $child_view = $c->stash->{vim}->get_view( mo_ref => $child_mo_ref );
+        my $task = $parent_view->MoveIntoFolder_Task( list => [$child_view] );
+        $result{task} = $task->{value};
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
+}
+
 sub folders_POST {
     my ( $self, $c ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my %result = ();
+    my $params = $c->req->params;
+    my $folder_name = $params->{name};
+    if (defined( $params->{parent_value} )) {
+        my $parent_mo_ref = $c->stash->{vim}->create_moref( type => 'Folder', value => $params->{parent_value} );
+        $c->stash->{view} = $c->stash->{vim}->get_view( mo_ref => $parent_mo_ref );
+    } else {
+        $c->stash->{view} = $c->stash->{vim}->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'vm'} );
+    }
+    eval {
+        my $folder = SamuAPI_folder->new( view => $c->stash->{view} );
+        $folder->create( name => $folder_name );
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub folder : Chained('folderBase') : PathPart('') : Args(1) : ActionClass('REST') { 

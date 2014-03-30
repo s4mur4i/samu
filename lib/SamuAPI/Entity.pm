@@ -188,6 +188,14 @@ sub get_info {
     return $self->{info};
 }
 
+sub create {
+    my ( $self, %args) = @_;
+    my $folder_name = delete($args{name});
+    my $folder_view = $self->{view}->CreateFolder( name => $folder_name );
+# TODO verify if correctly created
+    return $folder_view;
+}
+
 sub child_folders {
     my $self = shift;
     my $value = 0;
