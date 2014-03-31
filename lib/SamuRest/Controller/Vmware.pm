@@ -305,8 +305,19 @@ sub folder_GET {
 }
 
 sub folder_DELETE {
-    my ( $self, $c, $name ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my ( $self, $c, $mo_ref_value ) = @_;
+    my $task = undef;
+    eval {
+        my $folder = SamuAPI_folder->new( view => $c->stash->{view} );
+        my $task_mo_ref = $folder->destroy;
+        my $taskobj = SamuAPI_task->new( mo_ref => $task_mo_ref);
+        $task = $taskobj->mo_ref_value;
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, { taskid => $task } );
+
 }
 
 sub folder_PUT {

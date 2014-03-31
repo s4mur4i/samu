@@ -196,6 +196,18 @@ sub create {
     return $folder_view;
 }
 
+sub destroy {
+    my $self = shift;
+    my $task = undef;
+    if ( $self->child_vms ne 0 ) {
+        ExEntity::NotEmpty->throw( error => "Folder has child virtual machines", entity => $self->{view}->{name}, count => $self->child_vms );
+    } elsif ( $self->child_folders ne 0 ) {
+        ExEntity::NotEmpty->throw( error => "Folder has child folders", entity => $self->{view}->{name}, count => $self->child_folders );
+    }
+    $task = $self->{view}->Destroy_Task;
+    return $task;
+}
+
 sub child_folders {
     my $self = shift;
     my $value = 0;
