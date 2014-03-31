@@ -54,7 +54,7 @@ sub parse_info {
     $self->{info}->{parent_id} = $view->{parent}->{value} if defined($view->{parent});
     $self->{info}->{virtualmachinecount} = $self->child_vms;
     $self->{info}->{resourcepoolcount} = $self->child_rps;
-    $self->{info}->{mo_ref_value} = $view->{mo_ref}->{value};
+    $self->{info}->{mo_ref} = $view->{mo_ref}->{value};
     if ($self->{refresh}) {
         $view->RefreshRuntime;
     }
@@ -190,6 +190,7 @@ sub parse_info {
     $self->{info}->{Status} = $view->{overallStatus}->{val};
     $self->{info}->{foldercount} = $self->child_folders;
     $self->{info}->{virtualmachinecount} = $self->child_vms;
+    $self->{info}->{mo_ref} = $view->{mo_ref}->{value};
     return $self;
 }
 
@@ -215,6 +216,7 @@ sub get_mo_ref_value {
     my $self = shift;
     return $self->{info}->{mo_ref};
 }
+
 sub destroy {
     my $self = shift;
     my $task = undef;
@@ -270,9 +272,9 @@ sub new {
     return $self;
 }
 
-sub mo_ref_value {
+sub get_mo_ref_value {
     my ( $self ) = shift;
-    return $self->{mo_ref}->{value};
+    return $self->{info}->{mo_ref};
 }
 
 sub parse_info {
@@ -296,6 +298,7 @@ sub parse_info {
     #Need to implement different reasons TODO
     $self->{info}->{reason} = $view->{info}->{reason}->{userName};
     $self->{info}->{progress} = $view->{info}->{progress};
+    $self->{info}->{mo_ref} = $view->{mo_ref}->{value};
     return $self;
 }
 

@@ -218,11 +218,7 @@ sub folders_GET {
         for my $folder_view ( @{ $folders } ) {
             my $folder = SamuAPI_folder->new( view => $folder_view);
             $folder->parse_info;
-            my $moref_value = $folder_view->{mo_ref}->{value};
-            $result{ $moref_value } = $folder->get_info;
-            if ( $result{$moref_value}->{parent} ) {
-                $result{$moref_value}->{parent} = $c->stash->{vim}->get_view( mo_ref => $result{$moref_value}->{parent}, properties => ['name'] )->name;
-            }
+            $result{ $folder->get_mo_ref_value } = $folder->get_name;
         }
     };
     if ($@) {
@@ -337,11 +333,7 @@ sub resourcepools_GET {
         for my $resourcepool_view ( @{ $resourcepools } ) {
             my $resourcepool = SamuAPI_resourcepool->new( view => $resourcepool_view, refresh => $refresh);
             $resourcepool->parse_info;
-            my $moref_value = $resourcepool_view->{mo_ref}->{value};
-            $result{ $moref_value } = $resourcepool->get_info;
-            if ( $result{$moref_value}->{parent} ) {
-                $result{$moref_value}->{parent} = $c->stash->{vim}->get_view( mo_ref => $result{$moref_value}->{parent}, properties => ['name'] )->name;
-            }
+            $result{ $resourcepool->get_mo_ref_value } = $resourcepool->get_name;
         }
     };
     if ($@) {
@@ -475,9 +467,10 @@ sub tasks_GET {
         my $taskmanager = $c->stash->{vim}->get_manager("taskManager");
         for ( @{ $taskmanager->{recentTask}}) {
             my $task_view = $c->stash->{vim}->get_view( mo_ref => $_);
+            print Dumper $task_view;
             my $task = SamuAPI_task->new( view => $task_view );
             $task->parse_info;
-            $result{$_->{value}} = $task->get_info;
+            $result{ $task->get_mo_ref_value} = $task->get_info;
         }
     };
     if ($@) {
