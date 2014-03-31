@@ -306,4 +306,11 @@ sub get_manager {
 #    return $sc;
 }
 
+sub get_templates {
+    my $self = shift;
+    my $result = ();
+    $result = $self->find_entities( view_type => 'VirtualMachine', properties => ['summary'], filter => { 'config.template' => 'true'  }  );
+    return $result;
+}
+
 1

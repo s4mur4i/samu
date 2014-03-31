@@ -70,6 +70,16 @@ sub get_info {
     return $self->{info};
 }
 
+sub get_name {
+    my $self = shift;
+    return $self->{info}->{name};
+}
+
+sub get_mo_ref_value {
+    my $self = shift;
+    return $self->{info}->{mo_ref};
+}
+
 sub child_vms {
     my $self = shift;
     my $value = 0;
@@ -196,6 +206,15 @@ sub create {
     return $folder_view;
 }
 
+sub get_name {
+    my $self = shift;
+    return $self->{info}->{name};
+}
+
+sub get_mo_ref_value {
+    my $self = shift;
+    return $self->{info}->{mo_ref};
+}
 sub destroy {
     my $self = shift;
     my $task = undef;
@@ -289,6 +308,75 @@ sub cancel {
     my $self = shift;
     #verify if cancaleable
     $self->{view}->CancelTask;
+    return $self;
+}
+
+######################################################################################
+package SamuAPI_template;
+
+our $view = undef;
+our $info = ();
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    if ( $args{view}) {
+        $self->{view} = $args{view};
+    } else {
+        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_template");
+    }
+    return $self;
+}
+
+sub parse_info {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    my $view = $self->{view}->{summary};
+    $self->{info}->{name} = $view->{config}->{name};
+    $self->{info}->{vmpath} = $view->{config}->{vmPathName};
+    $self->{info}->{memorySizeMB} = $view->{config}->{memorySizeMB};
+    $self->{info}->{numCpu} = $view->{config}->{numCpu};
+    $self->{info}->{overallStatus} = $view->{overallStatus}->{val};
+    $self->{info}->{toolsVersionStatus} = $view->{guest}->{toolsVersionStatus};
+    $self->{info}->{mo_ref} = $view->{vm}->{value};
+    return $self;
+}
+
+sub get_info {
+    my $self = shift;
+    return $self->{info};
+}
+
+sub get_name {
+    my $self = shift;
+    return $self->{info}->{name};
+}
+
+sub get_mo_ref_value {
+    my $self = shift;
+    return $self->{info}->{mo_ref};
+}
+
+######################################################################################
+package SamuAPI_virtualmachine;
+
+our $view = undef;
+our $mo_ref = undef;
+our $info = ();
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    if ( $args{view}) {
+        $self->{view} = $args{view};
+    } elsif ( $args{mo_ref}) { 
+        $self->{mo_ref} = $args{mo_ref};
+    } else {
+        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_virtualmachine");
+    }
     return $self;
 }
 

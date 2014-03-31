@@ -320,11 +320,6 @@ sub folder_DELETE {
 
 }
 
-sub folder_PUT {
-    my ( $self, $c, $name ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
-}
-
 sub resourcepoolBase : Chained('loginBase') : PathPart('resourcepool') :
   CaptureArgs(0) { }
 
@@ -537,14 +532,45 @@ sub templates : Chained('templateBase'): PathPart(''): Args(0) : ActionClass('RE
 
 sub templates_GET {
     my ( $self, $c ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my %result = ();
+    eval {
+        my $templates = $c->stash->{vim}->get_templates;
+        for my $vm (@$templates) {
+            my $template = SamuAPI_template->new( view => $vm);
+            $template->parse_info;
+            $result{$template->get_mo_ref_value } = $template->get_name;
+        }
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
-sub template : Chained(templateBase) : PathPart(''): Args(1) : ActionClass('REST') {}
+sub template : Chained(templateBase) : PathPart(''): Args(1) : ActionClass('REST') {
+    my ( $self, $c, $mo_ref_value ) = @_;
+    eval {
+        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'VirtualMachine', value => $mo_ref_value) ;
+        my %params = ( mo_ref => $c->stash->{mo_ref});
+        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }    
+}
 
 sub template_GET {
     my ( $self, $c ,$name) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my %result = ();
+    eval {
+        my $template = SamuAPI_template->new( view => $c->stash->{view});
+        $template->parse_info;
+        $result{$template->get_mo_ref_value } = $template->get_info;
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c,\%result );
 }
 
 sub template_DELETE {
