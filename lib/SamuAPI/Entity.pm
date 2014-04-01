@@ -164,6 +164,12 @@ sub _resourcepool_resource_config_spec {
     return $configspec;
 }
 
+sub get_property {
+    my ($self, $property) = @_;
+    my $object = $self->{view}->get_property($property);
+    return $object;
+}
+
 ######################################################################################
 package SamuAPI_folder;
 
@@ -363,6 +369,12 @@ sub get_mo_ref_value {
     return $self->{info}->{mo_ref};
 }
 
+sub get_property {
+    my ($self, $property) = @_;
+    my $object = $self->{view}->get_property($property);
+    return $object;
+}
+
 ######################################################################################
 package SamuAPI_virtualmachine;
 
@@ -381,6 +393,43 @@ sub new {
         ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_virtualmachine");
     }
     return $self;
+}
+
+sub get_property {
+    my ($self, $property) = @_;
+    my $object = $self->{view}->get_property($property);
+    return $object;
+}
+
+sub last_snapshot_moref {
+    my $self = shift;
+    my $snapshot_view;
+    if (   defined( $self->{view}->{snapshot} ) && defined( $self->{view}->{snapshot}->{rootSnapshotList} ) ) {
+        $snapshot_view = $self->{view}->{snapshot}->{rootSnapshotList};
+    } else {
+        ExEntity::NoSnapshot->throw( error    => 'VM has no snapshots defined', entity   => $self->get_name );  
+    }
+    if ( defined( $snapshot_view->[0]->{'childSnapshotList'} ) ) {
+        $snapshot_view = &self->_find_last_snapshot( $snapshot_view->[0]->{'childSnapshotList'} );
+    }
+    return $snapshot_view->[0]->{'snapshot'};
+}
+
+sub _find_last_snapshot {
+    my ( $self, $snapshot_view) = @_;
+    foreach (@$snapshot_view) {
+        if ( defined( $_->{'childSnapshotList'} ) ) {
+            &self->_find_last_snapshot( $_->{'childSnapshotList'} );
+        }
+        else {
+            return $_;
+        }
+    }
+}
+
+sub get_name {
+    my $self = shift;
+    return $self->{view}->{name};
 }
 
 1

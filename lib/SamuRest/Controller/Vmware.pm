@@ -559,6 +559,8 @@ sub template_GET {
         my $template = SamuAPI_template->new( view => $c->stash->{view});
         $template->parse_info;
         $result{$template->get_mo_ref_value } = $template->get_info;
+        my $linked = $c->stash->{vim}->linked_clones( view => $c->stash->{view});
+        $result{$template->get_mo_ref_value}->{linked_clones} = $linked;
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -567,13 +569,6 @@ sub template_GET {
 }
 
 sub template_DELETE {
-    my ( $self, $c ,$name) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
-}
-
-sub user: Chained('loginBase'): PathPart('user'): Args(1) : ActionClass('REST') {}
-
-sub user_GET {
     my ( $self, $c ,$name) = @_;
     return $self->__ok( $c, { implementing => "yes" } );
 }

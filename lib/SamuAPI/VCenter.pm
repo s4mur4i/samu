@@ -313,4 +313,39 @@ sub get_templates {
     return $result;
 }
 
+sub linked_clones {
+    my ( $self, %args) = @_;
+    my $vm = SamuAPI_virtualmachine->new( view => $args{view} );
+    my $snapshot = $self->get_view( mo_ref => $vm->last_snapshot_moref );
+    my $disk;
+    for my $device ( @{ $snapshot->{'config'}->{'hardware'}->{'device'} } ) {
+        if ( defined( $device->{'backing'}->{'fileName'} ) ) {
+            $disk = $device->{'backing'}->{'fileName'};
+            last;
+        }
+    }
+    my @vms = @{ $self->find_vms_with_disk( disk => $disk, template => $vm->get_name)};
+    return \@vms;
+}
+ 
+sub find_vms_with_disk {
+    my ( $self, %args) = @_;
+    my @vms           = ();
+    my $machine_views = $self->find_entities( view_type  => 'VirtualMachine', properties => [ 'layout.disk', 'name' ]);
+    for my $machine_view (@$machine_views) {
+        if ( $machine_view->{name} eq $args{template}) {
+            next;
+        }
+        my $disks = $machine_view->get_property('layout.disk');
+        for my $vdisk (@{ $disks } ) {
+            for my $diskfile ( @{ $vdisk->{'diskFile'} } ) {
+                if ( $diskfile eq $args{disk} ) {
+                    push( @vms, $machine_view->{name} );
+                }
+            }
+        }
+    }
+    return \@vms;
+}
+
 1

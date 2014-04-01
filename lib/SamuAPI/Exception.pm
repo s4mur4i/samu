@@ -32,6 +32,7 @@ use Exception::Class (
     'ExAPI::ObjectType' => { isa => 'ExAPI', fields => ['type'] },
     'ExEntity::Empty' => { isa => 'ExEntity' },
     'ExEntity::NotEmpty' => { isa => 'ExEntity', fields => ['count'] },
+    'ExEntity::NoSnapshot' => { isa => 'ExEntity' },
 );
 
 BEGIN {
