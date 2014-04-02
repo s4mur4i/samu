@@ -340,7 +340,7 @@ sub find_vms_with_disk {
         for my $vdisk (@{ $disks } ) {
             for my $diskfile ( @{ $vdisk->{'diskFile'} } ) {
                 if ( $diskfile eq $args{disk} ) {
-                    push( @vms, $machine_view->{name} );
+                    push( @vms, { name => $machine_view->{name}, mo_ref => $machine_view->{mo_ref}->value });
                 }
             }
         }

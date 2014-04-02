@@ -320,6 +320,42 @@ sub cancel {
     return $self;
 }
 
+sub update {
+    my $self = shift;
+    $self->{view}->update_view_data;
+    return $self;
+}
+
+sub get_status {
+    my $self = shift;
+    return $self->{view}->{info}->{state}->{val};
+}
+
+sub get_fault {
+    my $self = shift;
+    return $self->{view}->{info}->{error}->{fault};
+}
+
+sub get_localizedmessage {
+    my $self = shift;
+    return $self->{view}->{info}->{error}->{localizedMessage};
+}
+
+sub wait_for_finish {
+    my $self = shift;
+    while (1) {
+        if ( $self->get_status eq 'success' ) {
+            last;
+        } elsif ( $self->get_status eq 'error' ) {
+            ExTask::Error->throw( error  => 'Error happened during task', detail => $self->get_fault, fault  => $self->get_localizedmessage);
+        }   
+        else {
+            sleep 1;
+        } 
+    }
+    return $self;
+}
+
 ######################################################################################
 package SamuAPI_template;
 
@@ -427,9 +463,38 @@ sub _find_last_snapshot {
     }
 }
 
+sub get_powerstate {
+    my $self = shift;
+    return $self->{view}->{runtime}->{powerState}->{val};
+}
+
 sub get_name {
     my $self = shift;
     return $self->{view}->{name};
+}
+
+sub promote {
+    my $self = shift;
+    $self->poweroff;
+    my $task_ref = $self->{view}->PromoteDisks_Task( unlink => 1);
+    return $task_ref;
+}
+
+sub poweroff {
+    my $self = shift;
+    if ( $self->get_powerstate ne "poweredOff" ) {
+        $self->{view}->PowerOffVM;
+# TODO maybe impelemnt shutdown or force
+    }
+    return $self;
+}
+
+sub poweron {
+    my $self = shift;
+    if ( $self->get_powerstate ne "poweredOff" ) {
+        $self->{view}->PowerOnVM;
+    }
+    return $self;
 }
 
 1

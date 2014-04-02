@@ -553,14 +553,14 @@ sub template : Chained(templateBase) : PathPart(''): Args(1) : ActionClass('REST
 }
 
 sub template_GET {
-    my ( $self, $c ,$name) = @_;
+    my ( $self, $c ,$mo_ref_value) = @_;
     my %result = ();
     eval {
         my $template = SamuAPI_template->new( view => $c->stash->{view});
         $template->parse_info;
         $result{$template->get_mo_ref_value } = $template->get_info;
         my $linked = $c->stash->{vim}->linked_clones( view => $c->stash->{view});
-        $result{$template->get_mo_ref_value}->{linked_clones} = $linked;
+        $result{$template->get_mo_ref_value}->{active_linked_clones} = $linked;
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -569,8 +569,24 @@ sub template_GET {
 }
 
 sub template_DELETE {
-    my ( $self, $c ,$name) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my ( $self, $c ,$mo_ref) = @_;
+    my %result =();
+    eval {
+        my $vms = $c->stash->{vim}->linked_clones( view => $c->stash->{view});
+        for my $vm ( @{ $vms }) {
+            my $mo_ref = $c->stash->{vim}->create_moref( type => 'VirtualMachine', value => $vm->{mo_ref} ) ;
+            my $vm_view = $c->stash->{vim}->get_view( mo_ref => $mo_ref );
+            my $vm = SamuAPI_virtualmachine->new( view => $vm_view);
+            my $task = $vm->promote;
+            print Dumper $task;
+            $result{$vm->get_name} = $task->{value};
+        }
+    };
+    if ($@) {
+        print Dumper $@;
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub networkBase: Chained('loginBase'): PathPart('network') : CaptureArgs(0) { }
