@@ -217,7 +217,6 @@ sub folders_GET {
         my $folders = $c->stash->{vim}->find_entities( view_type => 'Folder' );
         for my $folder_view ( @{ $folders } ) {
             my $folder = SamuAPI_folder->new( view => $folder_view);
-            $folder->parse_info;
             $result{ $folder->get_mo_ref_value } = $folder->get_name;
         }
     };
@@ -287,10 +286,11 @@ sub folder_GET {
     my %result = ();
     eval {
         my $folder = SamuAPI_folder->new( view => $c->stash->{view} );
-        $folder->parse_info;
         %result = %{ $folder->get_info} ;
-        if ( $result{parent} ) {
-            $result{parent} = $c->stash->{vim}->get_view( mo_ref => $result{parent}, properties => ['name'] )->name;
+        if ( $result{parent_name} ) {
+            my $parent_view = $c->stash->{vim}->get_view( mo_ref => $result{parent_name}, properties => ['name'] );
+            my $parent = SamuAPI_resourcepool->new( view => $parent_view, refresh => 0 );
+            $result{parent_name} = $parent->get_name;
         }
     };
     if ($@) {
@@ -332,7 +332,6 @@ sub resourcepools_GET {
         my $resourcepools = $c->stash->{vim}->find_entities( view_type => 'ResourcePool' );
         for my $resourcepool_view ( @{ $resourcepools } ) {
             my $resourcepool = SamuAPI_resourcepool->new( view => $resourcepool_view, refresh => $refresh);
-            $resourcepool->parse_info;
             $result{ $resourcepool->get_mo_ref_value } = $resourcepool->get_name;
         }
     };
@@ -393,10 +392,11 @@ sub resourcepool_GET {
     my $refresh = $c->req->params->{refresh} || 0;
     eval {
         my $resourcepool = SamuAPI_resourcepool->new( view => $c->stash->{view}, refresh => $refresh );
-        $resourcepool->parse_info;
         %result = %{ $resourcepool->get_info} ;
-        if ( $result{parent} ) {
-            $result{parent} = $c->stash->{vim}->get_view( mo_ref => $result{parent}, properties => ['name'] )->name;
+        if ( $result{parent_name} ) {
+            my $parent_view = $c->stash->{vim}->get_view( mo_ref => $result{parent_name}, properties => ['name'] );
+            my $parent = SamuAPI_resourcepool->new( view => $parent_view, refresh => 0 );
+            $result{parent_name} = $parent->get_name;
         }
     };
     if ($@) {
@@ -444,7 +444,6 @@ sub resourcepool_POST {
         my $moref = $parent_rp->create( %create_param );
         my $view = $c->stash->{vim}->get_view( mo_ref => $moref);
         my $resourcepool = SamuAPI_resourcepool->new( view => $view );
-        $resourcepool->parse_info;
         %result = %{ $resourcepool->get_info} ;
         if ( $result{parent} ) {
             $result{parent} = $c->stash->{vim}->get_view( mo_ref => $result{parent}, properties => ['name'] )->name;
@@ -469,7 +468,6 @@ sub tasks_GET {
             my $task_view = $c->stash->{vim}->get_view( mo_ref => $_);
             print Dumper $task_view;
             my $task = SamuAPI_task->new( view => $task_view );
-            $task->parse_info;
             $result{ $task->get_mo_ref_value} = $task->get_info;
         }
     };
@@ -496,7 +494,6 @@ sub task_GET {
     my %result =();
     eval {
         my $task = SamuAPI_task->new( view => $c->stash->{view} );
-        $task->parse_info;
         $result{$mo_ref_value} = $task->get_info;
     };
     if ($@) {
@@ -530,7 +527,6 @@ sub templates_GET {
         my $templates = $c->stash->{vim}->get_templates;
         for my $vm (@$templates) {
             my $template = SamuAPI_template->new( view => $vm);
-            $template->parse_info;
             $result{$template->get_mo_ref_value } = $template->get_name;
         }
     };
@@ -557,10 +553,9 @@ sub template_GET {
     my %result = ();
     eval {
         my $template = SamuAPI_template->new( view => $c->stash->{view});
-        $template->parse_info;
-        $result{$template->get_mo_ref_value } = $template->get_info;
+        %result = %{ $template->get_info};
         my $linked = $c->stash->{vim}->linked_clones( view => $c->stash->{view});
-        $result{$template->get_mo_ref_value}->{active_linked_clones} = $linked;
+        $result{active_linked_clones} = $linked;
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -595,17 +590,49 @@ sub networks : Chained('networkBase'): PathPart(''): Args(0) : ActionClass('REST
 
 sub networks_GET {
     my ( $self, $c ) = @_;
-    return $self->__ok( $c, { implementing => "yes" } );
+    my $params = $c->req->params;
+    my $no_switch = $params->{no_switch} || 0;
+    my $no_dvp = $params->{no_dvp} ||0;
+    my $no_network = $params->{no_network} ||0;
+    my %result = ( dvp => {}, switch => {}, network => {} );
+    if ( !$no_switch ) {
+        my $switches = $c->stash->{vim}->find_entity( view_type => 'DistributedVirtualSwitch', properties => ['summary', 'portgroup'] );
+        for my $switch ( $switches ) {
+            my $obj = SamuAPI_distributedvirtualswitch->new( view => $switch );
+        }
+    }
+    if ( !$no_dvp ) {
+        my $dvps = $c->stash->{vim}->find_entity( view_type => 'DistributedVirtualPortgroup', properties => ['name'] );
+        for my $dvp ( $dvps ) {
+            my $obj = SamuAPI_distributedvirtualportgroup->new( view => $dvp );
+        }
+    }
+    if ( !$no_network) {
+        my $networks = $c->stash->{vim}->find_entity( view_type => 'Network', properties => ['name'] );
+        for my $network ( $networks ) {
+            my $obj = SamuAPI_network->new( view => $network );
+        }
+    }
+    return $self->__ok( $c, \%result );
 }
 
+sub networks_POST {
+    my ( $self, $c ) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
 sub network : Chained(networkBase) : PathPart(''): Args(1) : ActionClass('REST') {}
 
 sub network_GET {
-    my ( $self, $c ,$name) = @_;
+    my ( $self, $c ,$mo_ref) = @_;
     return $self->__ok( $c, { implementing => "yes" } );
 }
 
 sub network_DELETE {
+    my ( $self, $c ,$mo_ref) = @_;
+    return $self->__ok( $c, { implementing => "yes" } );
+}
+
+sub network_PUT {
     my ( $self, $c ,$name) = @_;
     return $self->__ok( $c, { implementing => "yes" } );
 }

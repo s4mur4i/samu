@@ -10,34 +10,62 @@ BEGIN {
     our @EXPORT = qw( );
 }
 
+# Maybe make some Inheritance TODO
+our $view = undef;
+our $info = ();
+our $mo_ref = undef;
 
 sub new {
     my ($class, %args) = @_;
-    my $obj=undef;
-    if ( $args{view}->isa('ResourcePool')) {
-        $obj = SamuAPI_resourcepool->new( %args );
-    } elsif ( $args{view}->isa('Folder')) {
-        $obj = SamuAPI_folder->new( %args );
-    } else {
-        ExAPI::ObjectType->throw( error => "Unknown object type", type => ref($args{view}));
+    my $self = bless {}, $class;
+    if ( $args{view} ) {
+        $self->{view} = delete$args{view};
     }
-    return $obj;
+    if ( $args{mo_ref} ) {
+        $self->{mo_ref} = delete$args{mo_ref};
+    }
+    return $self;
 }
 
+sub get_info {
+    my $self = shift;
+    return $self->{info};
+}
+
+sub get_mo_ref_value {
+    my $self = shift;
+    return $self->{mo_ref}->{value};
+}
+
+sub get_mo_ref {
+    my $self = shift;
+    my %result = ( value => $self->{mo_ref}->{value}, type => $self->{mo_ref}->{type});
+    return \%result;
+}
+
+sub get_name {
+    my $self = shift;
+    return $self->{info}->{name};
+}
 #####################################################################################
 package SamuAPI_resourcepool;
 
-our $view = undef;
-our $info = ();
+use base 'Entity';
 our $refresh = 0;
 
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    $self->{view} = delete$args{view};
+    if ( $args{view} ) {
+        $self->{view} = delete$args{view};
+    }
+    if ( $args{mo_ref} ) {
+        $self->{mo_ref} = delete$args{mo_ref};
+    }
     if ( $args{refresh}) {
         $self->{refresh} = delete($args{refresh});
     }
+    $self->parse_info;
     return $self;
 }
 
@@ -47,37 +75,28 @@ sub parse_info {
     if ( defined( $self->{info} ) && keys $self->{info} ) {
         $self->{info} = ();
     }
-    my $view = $self->{view};
-    $self->{info} = {virtualmachinecount => 0, parent => "", resourcepoolcount => 0, runtime => {}, name => "", parent_id => 0, mo_ref_value => "" };
-    $self->{info}->{name} = $view->{name};
-    $self->{info}->{parent} = $view->{parent} if defined($view->{parent});
-    $self->{info}->{parent_id} = $view->{parent}->{value} if defined($view->{parent});
-    $self->{info}->{virtualmachinecount} = $self->child_vms;
-    $self->{info}->{resourcepoolcount} = $self->child_rps;
-    $self->{info}->{mo_ref} = $view->{mo_ref}->{value};
-    if ($self->{refresh}) {
-        $view->RefreshRuntime;
+    if ( defined($self->{view}) ) {
+        my $view = $self->{view};
+        $self->{info}->{name} = $view->{name};
+        $self->{info}->{parent_name} = $view->{parent} if defined($view->{parent});
+        if ( defined($view->{parent} )) {
+            my $parent = Entity->new( mo_ref => $view->{parent});
+            $self->{info}->{parent_mo_ref} = $parent->get_mo_ref;
+        }
+        $self->{info}->{virtualmachinecount} = $self->child_vms;
+        $self->{info}->{resourcepoolcount} = $self->child_rps;
+        if ($self->{refresh}) {
+            $view->RefreshRuntime;
+        }
+        my $runtime = $view->{runtime};
+        # Only returning some information can be expanded further later
+        $self->{info}->{runtime} = { Status => $runtime->{overallStatus}->{val}, memory => { overallUsage => $runtime->{memory}->{overallUsage} }, cpu => { overallUsage => $runtime->{cpu}->{overallUsage} }};
     }
-    my $runtime = $view->{runtime};
-    # Only returning some information can be expanded further later
-    $self->{info}->{runtime} = { Status => $runtime->{overallStatus}->{val}, memory => { overallUsage => $runtime->{memory}->{overallUsage} }, cpu => { overallUsage => $runtime->{cpu}->{overallUsage} }};
-
+    if ( !defined($self->{mo_ref}) ) {
+        $self->{mo_ref} = $self->{view}->{mo_ref};
+    }
+    $self->{info}->{mo_ref} = $self->get_mo_ref_value;
     return $self;
-}
-
-sub get_info {
-    my $self = shift;
-    return $self->{info};
-}
-
-sub get_name {
-    my $self = shift;
-    return $self->{info}->{name};
-}
-
-sub get_mo_ref_value {
-    my $self = shift;
-    return $self->{info}->{mo_ref};
 }
 
 sub child_vms {
@@ -173,13 +192,18 @@ sub get_property {
 ######################################################################################
 package SamuAPI_folder;
 
-our $view = undef;
-our $info = ();
+use base 'Entity';
 
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    $self->{view} = $args{view};
+    if ( $args{view} ) {
+        $self->{view} = delete$args{view};
+    }
+    if ( $args{mo_ref} ) {
+        $self->{mo_ref} = delete$args{mo_ref};
+    }
+    $self->parse_info;
     return $self;
 }
 
@@ -191,18 +215,19 @@ sub parse_info {
     }
     my $view = $self->{view};
     $self->{info}->{name} = $view->{name};
-    $self->{info}->{parent} = $view->{parent} if defined($view->{parent});
-    $self->{info}->{parent_id} = $view->{parent}->{value} if defined($view->{parent});
-    $self->{info}->{Status} = $view->{overallStatus}->{val};
+    $self->{info}->{parent_name} = $view->{parent} if defined($view->{parent});
+    if ( defined($view->{parent} )) {
+        my $parent = Entity->new( mo_ref => $view->{parent});
+        $self->{info}->{parent_mo_ref} = $parent->get_mo_ref;
+    }
+    $self->{info}->{status} = $view->{overallStatus}->{val};
     $self->{info}->{foldercount} = $self->child_folders;
     $self->{info}->{virtualmachinecount} = $self->child_vms;
-    $self->{info}->{mo_ref} = $view->{mo_ref}->{value};
+    if ( !defined($self->{mo_ref}) ) {
+        $self->{mo_ref} = $self->{view}->{mo_ref};
+    }
+    $self->{info}->{mo_ref} = $self->get_mo_ref_value;
     return $self;
-}
-
-sub get_info {
-    my $self = shift;
-    return $self->{info};
 }
 
 sub create {
@@ -211,16 +236,6 @@ sub create {
     my $folder_view = $self->{view}->CreateFolder( name => $folder_name );
 # TODO verify if correctly created
     return $folder_view;
-}
-
-sub get_name {
-    my $self = shift;
-    return $self->{info}->{name};
-}
-
-sub get_mo_ref_value {
-    my $self = shift;
-    return $self->{info}->{mo_ref};
 }
 
 sub destroy {
@@ -257,13 +272,10 @@ sub child_vms {
     return $value;
 }
 
-
 ######################################################################################
 package SamuAPI_task;
 
-our $view = undef;
-our $mo_ref = undef;
-our $info = ();
+use base 'Entity';
 
 sub new {
     my ($class, %args) = @_;
@@ -275,12 +287,8 @@ sub new {
     } else {
         ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_task");
     }
+    $self->parse_info;
     return $self;
-}
-
-sub get_mo_ref_value {
-    my ( $self ) = shift;
-    return $self->{info}->{mo_ref};
 }
 
 sub parse_info {
@@ -289,28 +297,29 @@ sub parse_info {
     if ( defined( $self->{info} ) && keys $self->{info} ) {
         $self->{info} = ();
     }
-    my $view = $self->{view};
-    $self->{info}->{cancelable} = $view->{info}->{cancelable} || 0;
-    $self->{info}->{cancelled} = $view->{info}->{cancelled} || 0;
-    $self->{info}->{startTime} = $view->{info}->{startTime};
-    $self->{info}->{completeTime} = $view->{info}->{completeTime} if defined($view->{info}->{completeTime});
-    $self->{info}->{entityName} = $view->{info}->{entityName};
-    $self->{info}->{entity} = { value => $view->{info}->{entity}->{value}, type =>$self->{view}->{info}->{entity}->{type}};
-    $self->{info}->{queueTime} = $view->{info}->{queueTime};
-    $self->{info}->{key} = $view->{info}->{key};
-    $self->{info}->{state} = $view->{info}->{state}->{val};
-    $self->{info}->{description} = { message => $view->{info}->{description}->{message} ,key => $self->{view}->{info}->{description}->{key} };
-    $self->{info}->{name} = $view->{info}->{name};
-    #Need to implement different reasons TODO
-    $self->{info}->{reason} = $view->{info}->{reason}->{userName};
-    $self->{info}->{progress} = $view->{info}->{progress};
-    $self->{info}->{mo_ref} = $view->{mo_ref}->{value};
+    if ( defined($self->{view}) ) {
+        my $view = $self->{view};
+        $self->{info}->{cancelable} = $view->{info}->{cancelable} || 0;
+        $self->{info}->{cancelled} = $view->{info}->{cancelled} || 0;
+        $self->{info}->{startTime} = $view->{info}->{startTime};
+        $self->{info}->{completeTime} = $view->{info}->{completeTime} if defined($view->{info}->{completeTime});
+        $self->{info}->{entityName} = $view->{info}->{entityName};
+        my $entity = Entity->new( mo_ref => $view->{info}->{entity});
+        $self->{info}->{entity_moref} = $entity->get_mo_ref;
+        $self->{info}->{queueTime} = $view->{info}->{queueTime};
+        $self->{info}->{key} = $view->{info}->{key};
+        $self->{info}->{state} = $view->{info}->{state}->{val};
+        $self->{info}->{description} = { message => $view->{info}->{description}->{message} ,key => $self->{view}->{info}->{description}->{key} };
+        $self->{info}->{name} = $view->{info}->{name};
+        #Need to implement different reasons TODO
+        $self->{info}->{reason} = $view->{info}->{reason}->{userName} || "unimplemented";
+        $self->{info}->{progress} = $view->{info}->{progress} ||100;
+    }
+    if ( !defined($self->{mo_ref}) ) {
+        $self->{mo_ref} = $self->{view}->{mo_ref};
+    }
+    $self->{info}->{mo_ref} = $self->get_mo_ref_value;
     return $self;
-}
-
-sub get_info {
-    my $self = shift;
-    return $self->{info};
 }
 
 sub cancel {
@@ -359,17 +368,19 @@ sub wait_for_finish {
 ######################################################################################
 package SamuAPI_template;
 
-our $view = undef;
-our $info = ();
+use base 'Entity';
 
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
     if ( $args{view}) {
         $self->{view} = $args{view};
+    } elsif ( $args{mo_ref}) { 
+        $self->{mo_ref} = $args{mo_ref};
     } else {
         ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_template");
     }
+    $self->parse_info;
     return $self;
 }
 
@@ -379,30 +390,20 @@ sub parse_info {
     if ( defined( $self->{info} ) && keys $self->{info} ) {
         $self->{info} = ();
     }
-    my $view = $self->{view}->{summary};
-    $self->{info}->{name} = $view->{config}->{name};
-    $self->{info}->{vmpath} = $view->{config}->{vmPathName};
-    $self->{info}->{memorySizeMB} = $view->{config}->{memorySizeMB};
-    $self->{info}->{numCpu} = $view->{config}->{numCpu};
-    $self->{info}->{overallStatus} = $view->{overallStatus}->{val};
-    $self->{info}->{toolsVersionStatus} = $view->{guest}->{toolsVersionStatus};
-    $self->{info}->{mo_ref} = $view->{vm}->{value};
+    if ( defined($self->{view}) ) {
+        my $view = $self->{view}->{summary};
+        $self->{info}->{name} = $view->{config}->{name};
+        $self->{info}->{vmpath} = $view->{config}->{vmPathName};
+        $self->{info}->{memorySizeMB} = $view->{config}->{memorySizeMB};
+        $self->{info}->{numCpu} = $view->{config}->{numCpu};
+        $self->{info}->{overallStatus} = $view->{overallStatus}->{val};
+        $self->{info}->{toolsVersionStatus} = $view->{guest}->{toolsVersionStatus};
+    }
+    if ( !defined($self->{mo_ref}) ) {
+        $self->{mo_ref} = $self->{view}->{mo_ref};
+    }
+    $self->{info}->{mo_ref} = $self->get_mo_ref_value;
     return $self;
-}
-
-sub get_info {
-    my $self = shift;
-    return $self->{info};
-}
-
-sub get_name {
-    my $self = shift;
-    return $self->{info}->{name};
-}
-
-sub get_mo_ref_value {
-    my $self = shift;
-    return $self->{info}->{mo_ref};
 }
 
 sub get_property {
@@ -414,9 +415,7 @@ sub get_property {
 ######################################################################################
 package SamuAPI_virtualmachine;
 
-our $view = undef;
-our $mo_ref = undef;
-our $info = ();
+use base 'Entity';
 
 sub new {
     my ($class, %args) = @_;
@@ -428,6 +427,12 @@ sub new {
     } else {
         ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_virtualmachine");
     }
+    $self->parse_info;
+    return $self;
+}
+
+sub parse_info {
+    my $self = shift;
     return $self;
 }
 
@@ -468,11 +473,6 @@ sub get_powerstate {
     return $self->{view}->{runtime}->{powerState}->{val};
 }
 
-sub get_name {
-    my $self = shift;
-    return $self->{view}->{name};
-}
-
 sub promote {
     my $self = shift;
     $self->poweroff;
@@ -493,6 +493,87 @@ sub poweron {
     my $self = shift;
     if ( $self->get_powerstate ne "poweredOff" ) {
         $self->{view}->PowerOnVM;
+    }
+    return $self;
+}
+
+######################################################################################
+package SamuAPI_distributedvirtualswitch;
+
+our $view = undef;
+our $mo_ref = undef;
+our $info = ();
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    if ( $args{view}) {
+        $self->{view} = $args{view};
+    } else {
+        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_distributedvirtualswitch");
+    }
+    return $self;
+}
+
+sub parse_info {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    my $view = $self->{view}->{summary};
+    $self->{info}->{name} = $view->{name};
+    $self->{info}->{numports} = $view->{numports};
+    $self->{info}->{uuid} = $view->{uuid};
+    $self->{info}->{connected_vms} = ();
+    return $self;
+}
+
+sub connected_vms {
+    my $self = shift;
+    my @vm= ();
+    #for my $vm 
+# TODO FINISH
+    return \@vm;
+}
+
+sub get_info {
+    my $self = shift;
+    return $self->{info};
+}
+
+######################################################################################
+package SamuAPI_distributedvirtualportgroup;
+
+our $view = undef;
+our $mo_ref = undef;
+our $info = ();
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    if ( $args{view}) {
+        $self->{view} = $args{view};
+    } else {
+        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_distributedvirtualportgroup");
+    }
+    return $self;
+}
+
+######################################################################################
+package SamuAPI_network;
+
+our $view = undef;
+our $mo_ref = undef;
+our $info = ();
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    if ( $args{view}) {
+        $self->{view} = $args{view};
+    } else {
+        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_distributedvirtualportgroup");
     }
     return $self;
 }
