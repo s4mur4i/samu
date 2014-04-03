@@ -500,18 +500,19 @@ sub poweron {
 ######################################################################################
 package SamuAPI_distributedvirtualswitch;
 
-our $view = undef;
-our $mo_ref = undef;
-our $info = ();
+use base 'Entity';
 
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
     if ( $args{view}) {
         $self->{view} = $args{view};
+    } elsif ( $args{mo_ref}) { 
+        $self->{mo_ref} = $args{mo_ref};
     } else {
         ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_distributedvirtualswitch");
     }
+    $self->parse_info;
     return $self;
 }
 
@@ -523,59 +524,119 @@ sub parse_info {
     }
     my $view = $self->{view}->{summary};
     $self->{info}->{name} = $view->{name};
-    $self->{info}->{numports} = $view->{numports};
+    $self->{info}->{numports} = $view->{numPorts} || 0;
     $self->{info}->{uuid} = $view->{uuid};
-    $self->{info}->{connected_vms} = ();
+    $self->{info}->{connected_vms} = $self->connected_vms;
+    if ( !defined($self->{mo_ref}) ) {
+        $self->{mo_ref} = $self->{view}->{mo_ref};
+    }
+    $self->{info}->{mo_ref_value} = $self->get_mo_ref_value;
+    $self->{info}->{mo_ref} = $self->get_mo_ref;
     return $self;
 }
 
 sub connected_vms {
     my $self = shift;
     my @vm= ();
-    #for my $vm 
-# TODO FINISH
+    for my $vm ( @{$self->{view}->{vm}}) {
+        my $obj = Entity->new( mo_ref => $vm );
+        push( @vm, $obj->get_mo_ref);
+    }
     return \@vm;
-}
-
-sub get_info {
-    my $self = shift;
-    return $self->{info};
 }
 
 ######################################################################################
 package SamuAPI_distributedvirtualportgroup;
 
-our $view = undef;
-our $mo_ref = undef;
-our $info = ();
+use base 'Entity';
 
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
     if ( $args{view}) {
         $self->{view} = $args{view};
+    } elsif ( $args{mo_ref}) { 
+        $self->{mo_ref} = $args{mo_ref};
     } else {
         ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_distributedvirtualportgroup");
     }
+    $self->parse_info;
     return $self;
+}
+
+sub parse_info {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    my $view = $self->{view};
+    $self->{info}->{name} = $view->{summary}->{name};
+    $self->{info}->{key} = $view->{key};
+    $self->{info}->{status} = $view->{overallStatus}->{val};
+    $self->{info}->{connected_vms} = $self->connected_vms;
+    if ( !defined($self->{mo_ref}) ) {
+        $self->{mo_ref} = $self->{view}->{mo_ref};
+    }
+    $self->{info}->{mo_ref_value} = $self->get_mo_ref_value;
+    $self->{info}->{mo_ref} = $self->get_mo_ref;
+    return $self;
+}
+
+sub connected_vms {
+    my $self = shift;
+    my @vm= ();
+    for my $vm ( @{ $self->{view}->{vm} }) {
+        my $obj = Entity->new( mo_ref => $vm );
+        push( @vm, $obj->get_mo_ref);
+    }
+    return \@vm;
 }
 
 ######################################################################################
 package SamuAPI_network;
 
-our $view = undef;
-our $mo_ref = undef;
-our $info = ();
+use base 'Entity';
 
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
     if ( $args{view}) {
         $self->{view} = $args{view};
+    } elsif ( $args{mo_ref}) { 
+        $self->{mo_ref} = $args{mo_ref};
     } else {
         ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_distributedvirtualportgroup");
     }
+    $self->parse_info;
     return $self;
+}
+
+sub parse_info {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    my $view = $self->{view};
+    $self->{info}->{connected_vms} = $self->connected_vms;
+    $self->{info}->{name} = $view->{name};
+    if ( !defined($self->{mo_ref}) ) {
+        $self->{mo_ref} = $self->{view}->{mo_ref};
+    }
+    $self->{info}->{mo_ref_value} = $self->get_mo_ref_value;
+    $self->{info}->{mo_ref} = $self->get_mo_ref;
+    return $self;
+}
+
+sub connected_vms {
+    my $self = shift;
+    my @vm= ();
+    for my $vm ( @{ $self->{view}->{vm} }) {
+        my $obj = Entity->new( mo_ref => $vm );
+        push( @vm, $obj->get_mo_ref);
+    }
+    return \@vm;
 }
 
 1

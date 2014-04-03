@@ -596,21 +596,27 @@ sub networks_GET {
     my $no_network = $params->{no_network} ||0;
     my %result = ( dvp => {}, switch => {}, network => {} );
     if ( !$no_switch ) {
-        my $switches = $c->stash->{vim}->find_entity( view_type => 'DistributedVirtualSwitch', properties => ['summary', 'portgroup'] );
-        for my $switch ( $switches ) {
+        my $switches = $c->stash->{vim}->find_entities( view_type => 'DistributedVirtualSwitch', properties => ['summary', 'portgroup'] );
+        for my $switch ( @{ $switches } ) {
             my $obj = SamuAPI_distributedvirtualswitch->new( view => $switch );
+            $result{switch}{$obj->get_mo_ref_value} = $obj->get_mo_ref;
+            $result{switch}{$obj->get_mo_ref_value}{name} = $obj->get_name;
         }
     }
     if ( !$no_dvp ) {
-        my $dvps = $c->stash->{vim}->find_entity( view_type => 'DistributedVirtualPortgroup', properties => ['name'] );
-        for my $dvp ( $dvps ) {
+        my $dvps = $c->stash->{vim}->find_entities( view_type => 'DistributedVirtualPortgroup', properties => ['summary', 'key'] );
+        for my $dvp ( @{ $dvps } ) {
             my $obj = SamuAPI_distributedvirtualportgroup->new( view => $dvp );
+            $result{dvp}{$obj->get_mo_ref_value} = $obj->get_mo_ref;
+            $result{dvp}{$obj->get_mo_ref_value}{name} = $obj->get_name;
         }
     }
     if ( !$no_network) {
-        my $networks = $c->stash->{vim}->find_entity( view_type => 'Network', properties => ['name'] );
-        for my $network ( $networks ) {
+        my $networks = $c->stash->{vim}->find_entities( view_type => 'Network', properties => ['name', 'vm'] );
+        for my $network ( @{ $networks } ) {
             my $obj = SamuAPI_network->new( view => $network );
+            $result{network}{$obj->get_mo_ref_value} = $obj->get_mo_ref;
+            $result{network}{$obj->get_mo_ref_value}{name} = $obj->get_name;
         }
     }
     return $self->__ok( $c, \%result );
@@ -620,6 +626,7 @@ sub networks_POST {
     my ( $self, $c ) = @_;
     return $self->__ok( $c, { implementing => "yes" } );
 }
+
 sub network : Chained(networkBase) : PathPart(''): Args(1) : ActionClass('REST') {}
 
 sub network_GET {
