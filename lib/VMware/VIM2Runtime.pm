@@ -3015,7 +3015,7 @@ VMware::VIRuntime - VI Perl Toolkit runtime module
 
    # logout
    Vim::logout();
-
+  
 =head1 DESCRIPTION
 
 VMware::VIRuntime module provides an interface to discover and interact with
@@ -3032,7 +3032,7 @@ based on filter parameter.
 This modules also provides synchronous version of methods that return
 Task object (methods with '_Task' appended to their names). For example,
 PowerOnVM_Task method for VirtualMachine view provides PowerOnVM operation
-that blocks until task completion.
+that blocks until task completion.  
 
 The module is built(depends) on Perl binding for VI API (VMware::VIStub)
 
@@ -3046,18 +3046,19 @@ VI API Programming guide and reference guide is available for download at
 
 =head1 COPYRIGHT AND LICENSE
 
-The Original Software is licensed under the CDDL v. 1.0 only and cannot
-be distributed or otherwise made available under any subsequent version
-of the license.  This License hall be governed by and construed in
-accordance with the laws of the State of California, excluding its
-conflict-of-law provisions.  Any litigation relating to this License
-will be brought solely in the federal court in the Northern District
-of California or the state court in the County of Santa Clara.
+The Original Software is licensed under the CDDL v. 1.0 only and cannot 
+be distributed or otherwise made available under any subsequent version 
+of the license.  This License hall be governed by and construed in 
+accordance with the laws of the State of California, excluding its 
+conflict-of-law provisions.  Any litigation relating to this License 
+will be brought solely in the federal court in the Northern District 
+of California or the state court in the County of Santa Clara.  
 
 A copy of the CDDL license is included in this distribution.
 
 
-Copyright (c) 2006, VMware, Inc.  All rights not expressly granted herein
-are reserved.
+Copyright (c) 2006, VMware, Inc.  All rights not expressly granted herein 
+are reserved. 
 
 =cut
+

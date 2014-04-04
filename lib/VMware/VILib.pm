@@ -12,8 +12,8 @@ use File::Basename;
 package Util;
 our $tracelevel = 0;
 our $tracefilter;
-our $version = '5.1.0';
-our $script_version = '5.1.0';
+our $version = '5.5.0';
+our $script_version = '5.5.0';
 
 
 sub trace {
@@ -71,7 +71,7 @@ our %options = (
       help => "VI SDK URL to connect to. Required if server is not present",
       func => \&get_url,
    },
-   # sessionid isn't supported yet because the back-end can't do it
+   # sessionid isn't supported yet because the back-end can't do it             
    #sessionid => {
    #   type => "=s",
    #   variable => "VI_SESSIONID",
@@ -93,7 +93,7 @@ our %options = (
       type => "=s",
       variable => "VI_SAVESESSIONFILE",
       help => "File to save session ID/cookie to utilize",
-   },
+   },   
    username => {
       type => "=s",
       variable => "VI_USERNAME",
@@ -110,10 +110,6 @@ our %options = (
       help => "Display additional debugging information",
    },
    help => {
-      type => "",
-      help => "Display usage information for the script",
-   },
-   h => {
       type => "",
       help => "Display usage information for the script",
    },
@@ -189,11 +185,11 @@ sub set_option {
    # bug 217030
    else {
       Util::trace(0, "\nWARNING : Not able to set undefined option " . $key . "\n");
-   }
-}
+   } 
+} 
 
-sub option_is_set {
-   my ($key) = @_;
+sub option_is_set { 
+   my ($key) = @_; 
    Util::trace(5, "option_is_set $key\n");
    my $opt = $options{$key};
    if (!defined($opt)) {
@@ -202,7 +198,7 @@ sub option_is_set {
    } else {
       Util::trace(5, "  => " . defined($opt->{value}) . "\n");
       return defined($opt->{value});
-   }
+   }   
 }
 
 #
@@ -312,7 +308,7 @@ sub usage {
    print "\n";
 
    my $default_str = "";
-
+   
    if (defined($options{_default_})) {
       my $default = $options{_default_};
       $default_str = defined($default->{argval}) ? $default->{argval} : "argval";
@@ -322,7 +318,7 @@ sub usage {
          $default_str = "[<$default_str>]";
       }
    }
-
+   
    print "Synopsis: " . $app_name . " OPTIONS " .  $default_str;
    print "\n\n";
 
@@ -333,24 +329,24 @@ sub usage {
          print_option($key) unless $key eq "_default_";
       }
    }
-
+   
    print "\nCommon VI options: \n";
    foreach my $key (sort @builtin_options) {
       print_option($key);
-   }
+   }   
 }
 
 sub parse_cmdline {
    my %vals;
    my ($pass_through_option) = @_;
 
-   my @spec =
-      map { (defined($options{$_}{alias}) ? "$_|$options{$_}{alias}" : $_) .
+   my @spec = 
+      map { (defined($options{$_}{alias}) ? "$_|$options{$_}{alias}" : $_) . 
             (defined($options{$_}{type}) ? "$options{$_}{type}" : '=s') } keys %options;
    Getopt::Long::Configure('no_ignore_case', $pass_through_option, 'no_auto_abbrev');
    if (!GetOptions(\%vals, @spec)) {
       # bug 271033
-      $app_name = $0;
+      $app_name = $0;  
       # bug 290470
       die "For a summary of command usage, type '$0 --help'. \n" .
           "For documentation, type 'perldoc $0'.\n";
@@ -420,14 +416,14 @@ sub parse_config {
    Util::trace(5, "parse_config $cfgfile\n");
    local *CFGFILE;
 
-   # bug 216803
+   # bug 216803 
    if(open(IN,$cfgfile)) {
       if(eof(IN)){
           print "\nWarning : The file exists but is empty.\n";
           return;
        }
     }
-    my $read_flag = open(CFGFILE, $cfgfile);
+    my $read_flag = open(CFGFILE, $cfgfile); 
     if(defined $read_flag && $read_flag == 1) {
        $config_path = $cfgfile;
     }
@@ -452,7 +448,7 @@ sub parse_config {
       # bug 217294
       # bug 216803
       if(defined $var) {
-         my $warn;
+         my $warn; 
          $warn = validate_options($var,$val);
          if(!$warn eq '1') {
             Util::trace(5, "Warning: Undefined variable '$var' in config file.\n");
@@ -527,21 +523,21 @@ sub parse {
       $pass_through_option = 'no_pass_through';
    }
    parse_cmdline($pass_through_option);
-
+   
    # bug 182644
    $app_name = $0;
    $0 = "Hiding the command line arguments";
-
+   
    parse_environment;
    parse_config;
    parse_stdin;
-
+   
    # user overwrites system encoding
    $enc = get_option('encoding');
    if ($enc eq "utf8") {
       $enc = getencname();
    }
-
+   
    if (defined($enc)) {
       binmode(STDIN, ":encoding($enc)");
       binmode(STDOUT, ":encoding($enc)");
@@ -552,7 +548,7 @@ sub parse {
 
 sub validate {
    my @validators = @_;
-   if (option_is_set('help') or option_is_set('h')) {
+   if (option_is_set('help')) {
       usage();
       exit 0;
    }
@@ -569,7 +565,7 @@ sub validate {
       exit 0;
    }
    my $valid = 1;
-
+   
    # bug 222613
    foreach my $validator (@validators) {
        if (!&$validator()) {
@@ -580,7 +576,7 @@ sub validate {
       usage();
       exit 1;
    }
-
+   
    foreach my $key (sort @builtin_options) {
       my $opt = $options{$key};
       if (defined($opt->{required}) && $opt->{required} && !option_is_set($key)) {
@@ -595,7 +591,7 @@ sub validate {
          $valid = 0;
       }
    }
-
+   
    # bug 268260
    if (!(option_is_set('help') || option_is_set('version') ||
          option_is_set('passthroughauth')) && $valid) {
@@ -637,7 +633,7 @@ sub validate {
             }
             else {
                local *CREDSTOREFILE;
-               my $read_flag = open(CREDSTOREFILE, $filename);
+               my $read_flag = open(CREDSTOREFILE, $filename); 
                if ( not (defined $read_flag && $read_flag == 1) ) {
                   warn "Note: Default credential store file is not readable.\n";
                   $filename = undef
@@ -648,7 +644,7 @@ sub validate {
          if (defined($filename) ) {
             # bug 316125
             local *CREDSTOREFILE_EXIST;
-            my $read_flag_exist = open(CREDSTOREFILE_EXIST, $filename);
+            my $read_flag_exist = open(CREDSTOREFILE_EXIST, $filename); 
             if (not -e $filename) {
                warn "Note: credential store file '$filename' does not exist \n";
             }
@@ -672,13 +668,13 @@ sub validate {
                         $options{username}{value} = $username;
                      }
                   }
-                  my $pwd = VMware::VICredStore::get_password (server => $servername,
+                  my $pwd = VMware::VICredStore::get_password (server => $servername, 
                                                                username => get_option('username'));
                   if (defined $pwd) {
                      $options{password}{value} = $pwd;
                   }
                };
-               if ($@) {
+               if ($@) { 
                   Util::trace(0, "Error ::  ". $@ . "" );
                }
                VMware::VICredStore::close();
@@ -713,9 +709,9 @@ sub validate {
          }
       }
    }
-
+   
    # one of sessionfile or (username, password) must be present. if not print usage
-   if ($valid && !option_is_set('sessionfile') &&
+   if ($valid && !option_is_set('sessionfile') && 
        !(option_is_set('username') && option_is_set('password')) &&
        !(option_is_set('passthroughauth'))) {
       print "Must have one of command options 'sessionfile', 'passthroughauth', 'credstore' or " .
@@ -737,7 +733,7 @@ sub assert_usage {
       # bug 445565
       # usage();
       print STDERR "For a summary of command usage, type '$app_name --help'.\n" .
-                   "For documentation, type 'perldoc $app_name'.\n";
+                   "For documentation, type 'perldoc $app_name'.\n";      
       exit 1;
    }
    return;
@@ -756,3 +752,5 @@ __END__
 =head1 HELP-LINKS
 
 See the vSphere SDK for Perl Programming Guide at http://www.vmware.com/support/developer/viperltoolkit/ for reference documentation for the subroutines.
+
+

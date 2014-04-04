@@ -44,7 +44,7 @@ VIMRuntime::make_get_set('AboutInfo', 'name', 'fullName', 'vendor', 'version', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -69,7 +69,7 @@ VIMRuntime::make_get_set('AuthorizationDescription', 'privilege', 'privilegeGrou
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -97,7 +97,7 @@ VIMRuntime::make_get_set('Permission', 'entity', 'principal', 'group', 'roleId',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -121,7 +121,7 @@ VIMRuntime::make_get_set('ArrayOfPermission', 'Permission');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -149,7 +149,7 @@ VIMRuntime::make_get_set('AuthorizationRole', 'roleId', 'system', 'name', 'info'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -173,7 +173,7 @@ VIMRuntime::make_get_set('ArrayOfAuthorizationRole', 'AuthorizationRole');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -200,7 +200,7 @@ VIMRuntime::make_get_set('AuthorizationPrivilege', 'privId', 'onParent', 'name',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -224,7 +224,105 @@ VIMRuntime::make_get_set('ArrayOfAuthorizationPrivilege', 'AuthorizationPrivileg
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package PrivilegeAvailability;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['privId', undef, undef, 1],
+   ['isGranted', 'boolean', undef, 1],
+);
+
+
+VIMRuntime::make_get_set('PrivilegeAvailability', 'privId', 'isGranted');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfPrivilegeAvailability;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['PrivilegeAvailability', 'PrivilegeAvailability', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfPrivilegeAvailability', 'PrivilegeAvailability');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package EntityPrivilege;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['entity', 'ManagedObjectReference', undef, 1],
+   ['privAvailability', 'PrivilegeAvailability', 1, 1],
+);
+
+
+VIMRuntime::make_get_set('EntityPrivilege', 'entity', 'privAvailability');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfEntityPrivilege;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['EntityPrivilege', 'EntityPrivilege', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfEntityPrivilege', 'EntityPrivilege');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -248,7 +346,7 @@ VIMRuntime::make_get_set('BoolPolicy', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -276,7 +374,7 @@ VIMRuntime::make_get_set('Capability', 'provisioningSupported', 'multiHostSuppor
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -306,7 +404,7 @@ VIMRuntime::make_get_set('ClusterComputeResourceSummary', 'currentFailoverLevel'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -338,7 +436,7 @@ VIMRuntime::make_get_set('ComputeResourceSummary', 'totalCpu', 'totalMemory', 'n
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -364,7 +462,7 @@ VIMRuntime::make_get_set('ComputeResourceConfigInfo', 'vmSwapPlacement', 'spbmEn
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -389,7 +487,7 @@ VIMRuntime::make_get_set('ComputeResourceHostSPBMLicenseInfo', 'host', 'licenseS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -413,7 +511,7 @@ VIMRuntime::make_get_set('ArrayOfComputeResourceHostSPBMLicenseInfo', 'ComputeRe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -439,7 +537,7 @@ VIMRuntime::make_get_set('ComputeResourceConfigSpec', 'vmSwapPlacement', 'spbmEn
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -468,7 +566,7 @@ VIMRuntime::make_get_set('CustomFieldDef', 'key', 'name', 'type', 'managedObject
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -492,7 +590,7 @@ VIMRuntime::make_get_set('ArrayOfCustomFieldDef', 'CustomFieldDef');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -516,7 +614,7 @@ VIMRuntime::make_get_set('CustomFieldValue', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -540,7 +638,7 @@ VIMRuntime::make_get_set('ArrayOfCustomFieldValue', 'CustomFieldValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -564,7 +662,7 @@ VIMRuntime::make_get_set('CustomFieldStringValue', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -592,7 +690,7 @@ VIMRuntime::make_get_set('CustomizationSpecInfo', 'name', 'description', 'type',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -616,7 +714,7 @@ VIMRuntime::make_get_set('ArrayOfCustomizationSpecInfo', 'CustomizationSpecInfo'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -641,7 +739,7 @@ VIMRuntime::make_get_set('CustomizationSpecItem', 'info', 'spec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -665,7 +763,7 @@ VIMRuntime::make_get_set('DatacenterConfigInfo', 'defaultHardwareVersionKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -689,7 +787,7 @@ VIMRuntime::make_get_set('DatacenterConfigSpec', 'defaultHardwareVersionKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -722,7 +820,7 @@ VIMRuntime::make_get_set('DatastoreSummary', 'datastore', 'name', 'url', 'capaci
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -740,17 +838,19 @@ our @property_list = (
    ['url', undef, undef, 1],
    ['freeSpace', undef, undef, 1],
    ['maxFileSize', undef, undef, 1],
+   ['maxVirtualDiskCapacity', undef, undef, 0],
    ['timestamp', undef, undef, 0],
+   ['containerId', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('DatastoreInfo', 'name', 'url', 'freeSpace', 'maxFileSize', 'timestamp');
+VIMRuntime::make_get_set('DatastoreInfo', 'name', 'url', 'freeSpace', 'maxFileSize', 'maxVirtualDiskCapacity', 'timestamp', 'containerId');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -769,16 +869,18 @@ our @property_list = (
    ['perFileThinProvisioningSupported', 'boolean', undef, 1],
    ['storageIORMSupported', 'boolean', undef, 0],
    ['nativeSnapshotSupported', 'boolean', undef, 0],
+   ['topLevelDirectoryCreateSupported', 'boolean', undef, 0],
+   ['seSparseSupported', 'boolean', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('DatastoreCapability', 'directoryHierarchySupported', 'rawDiskMappingsSupported', 'perFileThinProvisioningSupported', 'storageIORMSupported', 'nativeSnapshotSupported');
+VIMRuntime::make_get_set('DatastoreCapability', 'directoryHierarchySupported', 'rawDiskMappingsSupported', 'perFileThinProvisioningSupported', 'storageIORMSupported', 'nativeSnapshotSupported', 'topLevelDirectoryCreateSupported', 'seSparseSupported');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -803,7 +905,7 @@ VIMRuntime::make_get_set('DatastoreHostMount', 'key', 'mountInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -827,7 +929,7 @@ VIMRuntime::make_get_set('ArrayOfDatastoreHostMount', 'DatastoreHostMount');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -852,7 +954,7 @@ VIMRuntime::make_get_set('DatastoreMountPathDatastorePair', 'oldMountPath', 'dat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -876,7 +978,7 @@ VIMRuntime::make_get_set('ArrayOfDatastoreMountPathDatastorePair', 'DatastoreMou
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -901,7 +1003,7 @@ VIMRuntime::make_get_set('Description', 'label', 'summary');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -930,7 +1032,7 @@ VIMRuntime::make_get_set('DiagnosticManagerLogDescriptor', 'key', 'fileName', 'c
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -954,7 +1056,7 @@ VIMRuntime::make_get_set('ArrayOfDiagnosticManagerLogDescriptor', 'DiagnosticMan
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -980,7 +1082,7 @@ VIMRuntime::make_get_set('DiagnosticManagerLogHeader', 'lineStart', 'lineEnd', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1005,7 +1107,7 @@ VIMRuntime::make_get_set('DiagnosticManagerBundleInfo', 'system', 'url');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1029,7 +1131,7 @@ VIMRuntime::make_get_set('ArrayOfDiagnosticManagerBundleInfo', 'DiagnosticManage
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1054,7 +1156,7 @@ VIMRuntime::make_get_set('DVSContactInfo', 'name', 'contact');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1081,7 +1183,7 @@ VIMRuntime::make_get_set('DVSNetworkResourceManagementCapability', 'networkResou
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1105,7 +1207,7 @@ VIMRuntime::make_get_set('DVSRollbackCapability', 'rollbackSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1129,7 +1231,7 @@ VIMRuntime::make_get_set('DVSBackupRestoreCapability', 'backupRestoreSupported')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1151,16 +1253,17 @@ our @property_list = (
    ['healthCheckCapability', 'DVSHealthCheckCapability', undef, 0],
    ['rollbackCapability', 'DVSRollbackCapability', undef, 0],
    ['backupRestoreCapability', 'DVSBackupRestoreCapability', undef, 0],
+   ['networkFilterSupported', 'boolean', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('DVSFeatureCapability', 'networkResourceManagementSupported', 'vmDirectPathGen2Supported', 'nicTeamingPolicy', 'networkResourcePoolHighShareValue', 'networkResourceManagementCapability', 'healthCheckCapability', 'rollbackCapability', 'backupRestoreCapability');
+VIMRuntime::make_get_set('DVSFeatureCapability', 'networkResourceManagementSupported', 'vmDirectPathGen2Supported', 'nicTeamingPolicy', 'networkResourcePoolHighShareValue', 'networkResourceManagementCapability', 'healthCheckCapability', 'rollbackCapability', 'backupRestoreCapability', 'networkFilterSupported');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1183,7 +1286,7 @@ VIMRuntime::make_get_set('DVSHealthCheckCapability');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1211,7 +1314,7 @@ VIMRuntime::make_get_set('DVSCapability', 'dvsOperationSupported', 'dvPortGroupO
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1235,16 +1338,17 @@ our @property_list = (
    ['portgroupName', undef, 1, 0],
    ['description', undef, undef, 0],
    ['contact', 'DVSContactInfo', undef, 0],
+   ['numHosts', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('DVSSummary', 'name', 'uuid', 'numPorts', 'productInfo', 'hostMember', 'vm', 'host', 'portgroupName', 'description', 'contact');
+VIMRuntime::make_get_set('DVSSummary', 'name', 'uuid', 'numPorts', 'productInfo', 'hostMember', 'vm', 'host', 'portgroupName', 'description', 'contact', 'numHosts');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1270,7 +1374,7 @@ VIMRuntime::make_get_set('DVSPolicy', 'autoPreInstallAllowed', 'autoUpgradeAllow
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1293,7 +1397,7 @@ VIMRuntime::make_get_set('DVSUplinkPortPolicy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1317,7 +1421,7 @@ VIMRuntime::make_get_set('DVSNameArrayUplinkPortPolicy', 'uplinkPortName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1355,7 +1459,7 @@ VIMRuntime::make_get_set('DVSConfigSpec', 'configVersion', 'name', 'numStandalon
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1381,7 +1485,7 @@ VIMRuntime::make_get_set('DVSCreateSpec', 'configSpec', 'productInfo', 'capabili
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1426,7 +1530,7 @@ VIMRuntime::make_get_set('DVSConfigInfo', 'uuid', 'name', 'numStandalonePorts', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1451,7 +1555,7 @@ VIMRuntime::make_get_set('DVSHealthCheckConfig', 'enable', 'interval');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1475,7 +1579,7 @@ VIMRuntime::make_get_set('ArrayOfDVSHealthCheckConfig', 'DVSHealthCheckConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1499,7 +1603,7 @@ VIMRuntime::make_get_set('DVSRuntimeInfo', 'hostMemberRuntime');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1529,7 +1633,7 @@ VIMRuntime::make_get_set('EVCMode', 'guaranteedCPUFeatures', 'featureCapability'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1553,7 +1657,7 @@ VIMRuntime::make_get_set('ArrayOfEVCMode', 'EVCMode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1577,7 +1681,7 @@ VIMRuntime::make_get_set('ElementDescription', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1601,7 +1705,7 @@ VIMRuntime::make_get_set('ArrayOfElementDescription', 'ElementDescription');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1626,7 +1730,7 @@ VIMRuntime::make_get_set('EnumDescription', 'key', 'tags');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1650,7 +1754,7 @@ VIMRuntime::make_get_set('ArrayOfEnumDescription', 'EnumDescription');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1675,7 +1779,7 @@ VIMRuntime::make_get_set('ExtendedDescription', 'messageCatalogKeyPrefix', 'mess
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1700,7 +1804,7 @@ VIMRuntime::make_get_set('ExtendedElementDescription', 'messageCatalogKeyPrefix'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1729,7 +1833,7 @@ VIMRuntime::make_get_set('ExtensionServerInfo', 'url', 'description', 'company',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1753,7 +1857,7 @@ VIMRuntime::make_get_set('ArrayOfExtensionServerInfo', 'ExtensionServerInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1781,7 +1885,7 @@ VIMRuntime::make_get_set('ExtensionClientInfo', 'version', 'description', 'compa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1805,7 +1909,7 @@ VIMRuntime::make_get_set('ArrayOfExtensionClientInfo', 'ExtensionClientInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1829,7 +1933,7 @@ VIMRuntime::make_get_set('ExtensionTaskTypeInfo', 'taskID');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1853,7 +1957,7 @@ VIMRuntime::make_get_set('ArrayOfExtensionTaskTypeInfo', 'ExtensionTaskTypeInfo'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1878,7 +1982,7 @@ VIMRuntime::make_get_set('ExtensionEventTypeInfo', 'eventID', 'eventTypeSchema')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1902,7 +2006,7 @@ VIMRuntime::make_get_set('ArrayOfExtensionEventTypeInfo', 'ExtensionEventTypeInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1926,7 +2030,7 @@ VIMRuntime::make_get_set('ExtensionFaultTypeInfo', 'faultID');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1950,7 +2054,7 @@ VIMRuntime::make_get_set('ArrayOfExtensionFaultTypeInfo', 'ExtensionFaultTypeInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1975,7 +2079,7 @@ VIMRuntime::make_get_set('ExtensionPrivilegeInfo', 'privID', 'privGroupName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -1999,7 +2103,7 @@ VIMRuntime::make_get_set('ArrayOfExtensionPrivilegeInfo', 'ExtensionPrivilegeInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2025,7 +2129,7 @@ VIMRuntime::make_get_set('ExtensionResourceInfo', 'locale', 'module', 'data');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2049,7 +2153,7 @@ VIMRuntime::make_get_set('ArrayOfExtensionResourceInfo', 'ExtensionResourceInfo'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2073,7 +2177,7 @@ VIMRuntime::make_get_set('ExtensionHealthInfo', 'url');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2098,7 +2202,7 @@ VIMRuntime::make_get_set('ExtensionOvfConsumerInfo', 'callbackUrl', 'sectionType
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2141,7 +2245,7 @@ VIMRuntime::make_get_set('Extension', 'description', 'key', 'company', 'type', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2165,7 +2269,7 @@ VIMRuntime::make_get_set('ArrayOfExtension', 'Extension');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2190,7 +2294,7 @@ VIMRuntime::make_get_set('ExtensionManagerIpAllocationUsage', 'extensionKey', 'n
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2214,7 +2318,7 @@ VIMRuntime::make_get_set('ArrayOfExtensionManagerIpAllocationUsage', 'ExtensionM
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2242,7 +2346,7 @@ VIMRuntime::make_get_set('ReplicationVmProgressInfo', 'progress', 'bytesTransfer
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2269,7 +2373,7 @@ VIMRuntime::make_get_set('HbrManagerReplicationVmInfo', 'state', 'progressInfo',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2298,7 +2402,7 @@ VIMRuntime::make_get_set('HostServiceTicket', 'host', 'port', 'sslThumbprint', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2322,7 +2426,7 @@ VIMRuntime::make_get_set('HostSystemReconnectSpec', 'syncState');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2347,7 +2451,7 @@ VIMRuntime::make_get_set('HttpNfcLeaseDatastoreLeaseInfo', 'datastoreKey', 'host
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2371,7 +2475,7 @@ VIMRuntime::make_get_set('ArrayOfHttpNfcLeaseDatastoreLeaseInfo', 'HttpNfcLeaseD
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2396,7 +2500,7 @@ VIMRuntime::make_get_set('HttpNfcLeaseHostInfo', 'url', 'sslThumbprint');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2420,7 +2524,7 @@ VIMRuntime::make_get_set('ArrayOfHttpNfcLeaseHostInfo', 'HttpNfcLeaseHostInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2449,7 +2553,7 @@ VIMRuntime::make_get_set('HttpNfcLeaseInfo', 'lease', 'entity', 'deviceUrl', 'to
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2480,7 +2584,7 @@ VIMRuntime::make_get_set('HttpNfcLeaseDeviceUrl', 'key', 'importKey', 'url', 'ss
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2504,7 +2608,7 @@ VIMRuntime::make_get_set('ArrayOfHttpNfcLeaseDeviceUrl', 'HttpNfcLeaseDeviceUrl'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2533,7 +2637,7 @@ VIMRuntime::make_get_set('HttpNfcLeaseManifestEntry', 'key', 'sha1', 'size', 'di
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2557,7 +2661,7 @@ VIMRuntime::make_get_set('ArrayOfHttpNfcLeaseManifestEntry', 'HttpNfcLeaseManife
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2582,7 +2686,7 @@ VIMRuntime::make_get_set('ImportSpec', 'entityConfig', 'instantiationOst');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2606,7 +2710,7 @@ VIMRuntime::make_get_set('ArrayOfImportSpec', 'ImportSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2630,7 +2734,31 @@ VIMRuntime::make_get_set('InheritablePolicy', 'inherited');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package IntExpression;
+our @ISA = qw(NegatableExpression);
+
+our @property_list = (
+   ['value', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('IntExpression', 'value');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2654,7 +2782,30 @@ VIMRuntime::make_get_set('IntPolicy', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package IpAddress;
+our @ISA = qw(NegatableExpression);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('IpAddress');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2679,7 +2830,7 @@ VIMRuntime::make_get_set('IpPoolManagerIpAllocation', 'ipAddress', 'allocationId
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2703,7 +2854,32 @@ VIMRuntime::make_get_set('ArrayOfIpPoolManagerIpAllocation', 'IpPoolManagerIpAll
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package IpRange;
+our @ISA = qw(IpAddress);
+
+our @property_list = (
+   ['addressPrefix', undef, undef, 1],
+   ['prefixLength', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('IpRange', 'addressPrefix', 'prefixLength');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2728,7 +2904,7 @@ VIMRuntime::make_get_set('KeyValue', 'key', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2752,7 +2928,7 @@ VIMRuntime::make_get_set('ArrayOfKeyValue', 'KeyValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2777,7 +2953,7 @@ VIMRuntime::make_get_set('LatencySensitivity', 'level', 'sensitivity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2805,7 +2981,7 @@ VIMRuntime::make_get_set('LicenseAssignmentManagerLicenseAssignment', 'entityId'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2829,7 +3005,7 @@ VIMRuntime::make_get_set('ArrayOfLicenseAssignmentManagerLicenseAssignment', 'Li
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2852,7 +3028,7 @@ VIMRuntime::make_get_set('LicenseSource');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2876,7 +3052,7 @@ VIMRuntime::make_get_set('LicenseServerSource', 'licenseServer');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2900,7 +3076,7 @@ VIMRuntime::make_get_set('LocalLicenseSource', 'licenseKeys');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2924,7 +3100,7 @@ VIMRuntime::make_get_set('EvaluationLicenseSource', 'remainingHours');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2956,7 +3132,7 @@ VIMRuntime::make_get_set('LicenseFeatureInfo', 'key', 'featureName', 'featureDes
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -2980,7 +3156,7 @@ VIMRuntime::make_get_set('ArrayOfLicenseFeatureInfo', 'LicenseFeatureInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3006,7 +3182,7 @@ VIMRuntime::make_get_set('LicenseReservationInfo', 'key', 'state', 'required');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3030,7 +3206,7 @@ VIMRuntime::make_get_set('ArrayOfLicenseReservationInfo', 'LicenseReservationInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3056,7 +3232,7 @@ VIMRuntime::make_get_set('LicenseAvailabilityInfo', 'feature', 'total', 'availab
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3080,7 +3256,7 @@ VIMRuntime::make_get_set('ArrayOfLicenseAvailabilityInfo', 'LicenseAvailabilityI
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3112,7 +3288,7 @@ VIMRuntime::make_get_set('LicenseDiagnostics', 'sourceLastChanged', 'sourceLost'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3139,7 +3315,7 @@ VIMRuntime::make_get_set('LicenseUsageInfo', 'source', 'sourceAvailable', 'reser
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3163,7 +3339,7 @@ VIMRuntime::make_get_set('LicenseManagerEvaluationInfo', 'properties');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3187,7 +3363,7 @@ VIMRuntime::make_get_set('HostLicensableResourceInfo', 'resource');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3218,7 +3394,7 @@ VIMRuntime::make_get_set('LicenseManagerLicenseInfo', 'licenseKey', 'editionKey'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3242,7 +3418,7 @@ VIMRuntime::make_get_set('ArrayOfLicenseManagerLicenseInfo', 'LicenseManagerLice
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3272,7 +3448,7 @@ VIMRuntime::make_get_set('LocalizationManagerMessageCatalog', 'moduleName', 'cat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3296,7 +3472,7 @@ VIMRuntime::make_get_set('ArrayOfLocalizationManagerMessageCatalog', 'Localizati
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3320,7 +3496,55 @@ VIMRuntime::make_get_set('LongPolicy', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package MacAddress;
+our @ISA = qw(NegatableExpression);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('MacAddress');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package MacRange;
+our @ISA = qw(MacAddress);
+
+our @property_list = (
+   ['address', undef, undef, 1],
+   ['mask', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('MacRange', 'address', 'mask');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3344,7 +3568,31 @@ VIMRuntime::make_get_set('MethodDescription', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package NegatableExpression;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['negate', 'boolean', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('NegatableExpression', 'negate');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3372,7 +3620,7 @@ VIMRuntime::make_get_set('NetworkSummary', 'network', 'name', 'accessible', 'ipP
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3397,7 +3645,7 @@ VIMRuntime::make_get_set('NumericRange', 'start', 'end');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3421,7 +3669,32 @@ VIMRuntime::make_get_set('ArrayOfNumericRange', 'NumericRange');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package OpaqueNetworkSummary;
+our @ISA = qw(NetworkSummary);
+
+our @property_list = (
+   ['opaqueNetworkId', undef, undef, 1],
+   ['opaqueNetworkType', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('OpaqueNetworkSummary', 'opaqueNetworkId', 'opaqueNetworkType');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3446,7 +3719,7 @@ VIMRuntime::make_get_set('OvfConsumerOvfSection', 'lineNumber', 'xml');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3470,7 +3743,7 @@ VIMRuntime::make_get_set('ArrayOfOvfConsumerOvfSection', 'OvfConsumerOvfSection'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3498,7 +3771,7 @@ VIMRuntime::make_get_set('OvfConsumerOstNode', 'id', 'type', 'section', 'child',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3522,7 +3795,7 @@ VIMRuntime::make_get_set('ArrayOfOvfConsumerOstNode', 'OvfConsumerOstNode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3547,7 +3820,7 @@ VIMRuntime::make_get_set('OvfOptionInfo', 'option', 'description');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3571,7 +3844,7 @@ VIMRuntime::make_get_set('ArrayOfOvfOptionInfo', 'OvfOptionInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3597,7 +3870,7 @@ VIMRuntime::make_get_set('OvfDeploymentOption', 'key', 'label', 'description');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3621,7 +3894,7 @@ VIMRuntime::make_get_set('ArrayOfOvfDeploymentOption', 'OvfDeploymentOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3648,7 +3921,7 @@ VIMRuntime::make_get_set('OvfManagerCommonParams', 'locale', 'deploymentOption',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3671,7 +3944,7 @@ VIMRuntime::make_get_set('OvfValidateHostParams');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3700,7 +3973,7 @@ VIMRuntime::make_get_set('OvfValidateHostResult', 'downloadSize', 'flatDeploymen
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3723,7 +3996,7 @@ VIMRuntime::make_get_set('OvfParseDescriptorParams');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3764,7 +4037,7 @@ VIMRuntime::make_get_set('OvfParseDescriptorResult', 'eula', 'network', 'ipAlloc
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3789,7 +4062,7 @@ VIMRuntime::make_get_set('OvfNetworkInfo', 'name', 'description');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3813,7 +4086,7 @@ VIMRuntime::make_get_set('ArrayOfOvfNetworkInfo', 'OvfNetworkInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3845,7 +4118,7 @@ VIMRuntime::make_get_set('OvfCreateImportSpecParams', 'entityName', 'hostSystem'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3872,7 +4145,7 @@ VIMRuntime::make_get_set('OvfResourceMap', 'source', 'parent', 'resourceSpec', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3896,7 +4169,7 @@ VIMRuntime::make_get_set('ArrayOfOvfResourceMap', 'OvfResourceMap');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3921,7 +4194,7 @@ VIMRuntime::make_get_set('OvfNetworkMapping', 'name', 'network');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3945,7 +4218,7 @@ VIMRuntime::make_get_set('ArrayOfOvfNetworkMapping', 'OvfNetworkMapping');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -3972,7 +4245,7 @@ VIMRuntime::make_get_set('OvfCreateImportSpecResult', 'importSpec', 'fileItem', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4002,7 +4275,7 @@ VIMRuntime::make_get_set('OvfFileItem', 'deviceId', 'path', 'compressionMethod',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4026,7 +4299,7 @@ VIMRuntime::make_get_set('ArrayOfOvfFileItem', 'OvfFileItem');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4045,16 +4318,17 @@ our @property_list = (
    ['description', undef, undef, 0],
    ['includeImageFiles', 'boolean', undef, 0],
    ['exportOption', undef, 1, 0],
+   ['snapshot', 'ManagedObjectReference', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('OvfCreateDescriptorParams', 'ovfFiles', 'name', 'description', 'includeImageFiles', 'exportOption');
+VIMRuntime::make_get_set('OvfCreateDescriptorParams', 'ovfFiles', 'name', 'description', 'includeImageFiles', 'exportOption', 'snapshot');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4081,7 +4355,7 @@ VIMRuntime::make_get_set('OvfCreateDescriptorResult', 'ovfDescriptor', 'error', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4111,7 +4385,7 @@ VIMRuntime::make_get_set('OvfFile', 'deviceId', 'path', 'compressionMethod', 'ch
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4135,7 +4409,7 @@ VIMRuntime::make_get_set('ArrayOfOvfFile', 'OvfFile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4159,7 +4433,7 @@ VIMRuntime::make_get_set('PasswordField', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4184,7 +4458,7 @@ VIMRuntime::make_get_set('PerformanceDescription', 'counterType', 'statsType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4211,7 +4485,7 @@ VIMRuntime::make_get_set('PerfProviderSummary', 'entity', 'currentSupported', 's
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4243,7 +4517,7 @@ VIMRuntime::make_get_set('PerfCounterInfo', 'key', 'nameInfo', 'groupInfo', 'uni
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4267,7 +4541,7 @@ VIMRuntime::make_get_set('ArrayOfPerfCounterInfo', 'PerfCounterInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4292,7 +4566,7 @@ VIMRuntime::make_get_set('PerfMetricId', 'counterId', 'instance');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4316,7 +4590,7 @@ VIMRuntime::make_get_set('ArrayOfPerfMetricId', 'PerfMetricId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4346,7 +4620,7 @@ VIMRuntime::make_get_set('PerfQuerySpec', 'entity', 'startTime', 'endTime', 'max
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4370,7 +4644,7 @@ VIMRuntime::make_get_set('ArrayOfPerfQuerySpec', 'PerfQuerySpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4395,7 +4669,7 @@ VIMRuntime::make_get_set('PerfSampleInfo', 'timestamp', 'interval');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4419,7 +4693,7 @@ VIMRuntime::make_get_set('ArrayOfPerfSampleInfo', 'PerfSampleInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4443,7 +4717,7 @@ VIMRuntime::make_get_set('PerfMetricSeries', 'id');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4467,7 +4741,7 @@ VIMRuntime::make_get_set('ArrayOfPerfMetricSeries', 'PerfMetricSeries');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4491,7 +4765,7 @@ VIMRuntime::make_get_set('PerfMetricIntSeries', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4515,7 +4789,7 @@ VIMRuntime::make_get_set('PerfMetricSeriesCSV', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4539,7 +4813,7 @@ VIMRuntime::make_get_set('ArrayOfPerfMetricSeriesCSV', 'PerfMetricSeriesCSV');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4563,7 +4837,7 @@ VIMRuntime::make_get_set('PerfEntityMetricBase', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4587,7 +4861,7 @@ VIMRuntime::make_get_set('ArrayOfPerfEntityMetricBase', 'PerfEntityMetricBase');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4612,7 +4886,7 @@ VIMRuntime::make_get_set('PerfEntityMetric', 'sampleInfo', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4637,7 +4911,7 @@ VIMRuntime::make_get_set('PerfEntityMetricCSV', 'sampleInfoCSV', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4662,7 +4936,7 @@ VIMRuntime::make_get_set('PerfCompositeMetric', 'entity', 'childEntity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4688,7 +4962,7 @@ VIMRuntime::make_get_set('PerformanceManagerCounterLevelMapping', 'counterId', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4712,7 +4986,7 @@ VIMRuntime::make_get_set('ArrayOfPerformanceManagerCounterLevelMapping', 'Perfor
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4741,7 +5015,7 @@ VIMRuntime::make_get_set('PerfInterval', 'key', 'samplingPeriod', 'name', 'lengt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4765,7 +5039,7 @@ VIMRuntime::make_get_set('ArrayOfPerfInterval', 'PerfInterval');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4790,7 +5064,7 @@ VIMRuntime::make_get_set('PosixUserSearchResult', 'id', 'shellAccess');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4817,7 +5091,7 @@ VIMRuntime::make_get_set('PrivilegePolicyDef', 'createPrivilege', 'readPrivilege
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4845,7 +5119,7 @@ VIMRuntime::make_get_set('ResourceAllocationInfo', 'reservation', 'expandableRes
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4869,7 +5143,7 @@ VIMRuntime::make_get_set('ResourceAllocationOption', 'sharesOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4894,7 +5168,7 @@ VIMRuntime::make_get_set('ResourceConfigOption', 'cpuAllocationOption', 'memoryA
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4922,7 +5196,7 @@ VIMRuntime::make_get_set('ResourceConfigSpec', 'entity', 'changeVersion', 'lastM
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4946,7 +5220,7 @@ VIMRuntime::make_get_set('ArrayOfResourceConfigSpec', 'ResourceConfigSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -4971,7 +5245,7 @@ VIMRuntime::make_get_set('DatabaseSizeParam', 'inventoryDesc', 'perfStatsDesc');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5004,7 +5278,7 @@ VIMRuntime::make_get_set('InventoryDescription', 'numHosts', 'numVirtualMachines
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5028,7 +5302,7 @@ VIMRuntime::make_get_set('PerformanceStatisticsDescription', 'intervals');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5052,7 +5326,7 @@ VIMRuntime::make_get_set('DatabaseSizeEstimate', 'size');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5081,7 +5355,7 @@ VIMRuntime::make_get_set('ResourcePoolResourceUsage', 'reservationUsed', 'reserv
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5107,7 +5381,7 @@ VIMRuntime::make_get_set('ResourcePoolRuntimeInfo', 'memory', 'cpu', 'overallSta
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5145,7 +5419,7 @@ VIMRuntime::make_get_set('ResourcePoolQuickStats', 'overallCpuUsage', 'overallCp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5173,7 +5447,7 @@ VIMRuntime::make_get_set('ResourcePoolSummary', 'name', 'config', 'runtime', 'qu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5196,7 +5470,7 @@ VIMRuntime::make_get_set('SelectionSet');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5220,7 +5494,7 @@ VIMRuntime::make_get_set('ArrayOfSelectionSet', 'SelectionSet');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5245,7 +5519,7 @@ VIMRuntime::make_get_set('HostVMotionCompatibility', 'host', 'compatibility');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5269,7 +5543,7 @@ VIMRuntime::make_get_set('ArrayOfHostVMotionCompatibility', 'HostVMotionCompatib
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5296,7 +5570,7 @@ VIMRuntime::make_get_set('ProductComponentInfo', 'id', 'name', 'version', 'relea
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5320,7 +5594,7 @@ VIMRuntime::make_get_set('ArrayOfProductComponentInfo', 'ProductComponentInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5356,6 +5630,7 @@ our @property_list = (
    ['licenseManager', 'ManagedObjectReference', undef, 0],
    ['searchIndex', 'ManagedObjectReference', undef, 0],
    ['fileManager', 'ManagedObjectReference', undef, 0],
+   ['datastoreNamespaceManager', 'ManagedObjectReference', undef, 0],
    ['virtualDiskManager', 'ManagedObjectReference', undef, 0],
    ['virtualizationManager', 'ManagedObjectReference', undef, 0],
    ['snmpSystem', 'ManagedObjectReference', undef, 0],
@@ -5373,13 +5648,13 @@ our @property_list = (
 );
 
 
-VIMRuntime::make_get_set('ServiceContent', 'rootFolder', 'propertyCollector', 'viewManager', 'about', 'setting', 'userDirectory', 'sessionManager', 'authorizationManager', 'serviceManager', 'perfManager', 'scheduledTaskManager', 'alarmManager', 'eventManager', 'taskManager', 'extensionManager', 'customizationSpecManager', 'customFieldsManager', 'accountManager', 'diagnosticManager', 'licenseManager', 'searchIndex', 'fileManager', 'virtualDiskManager', 'virtualizationManager', 'snmpSystem', 'vmProvisioningChecker', 'vmCompatibilityChecker', 'ovfManager', 'ipPoolManager', 'dvSwitchManager', 'hostProfileManager', 'clusterProfileManager', 'complianceManager', 'localizationManager', 'storageResourceManager', 'guestOperationsManager');
+VIMRuntime::make_get_set('ServiceContent', 'rootFolder', 'propertyCollector', 'viewManager', 'about', 'setting', 'userDirectory', 'sessionManager', 'authorizationManager', 'serviceManager', 'perfManager', 'scheduledTaskManager', 'alarmManager', 'eventManager', 'taskManager', 'extensionManager', 'customizationSpecManager', 'customFieldsManager', 'accountManager', 'diagnosticManager', 'licenseManager', 'searchIndex', 'fileManager', 'datastoreNamespaceManager', 'virtualDiskManager', 'virtualizationManager', 'snmpSystem', 'vmProvisioningChecker', 'vmCompatibilityChecker', 'ovfManager', 'ipPoolManager', 'dvSwitchManager', 'hostProfileManager', 'clusterProfileManager', 'complianceManager', 'localizationManager', 'storageResourceManager', 'guestOperationsManager');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5406,7 +5681,7 @@ VIMRuntime::make_get_set('ServiceManagerServiceInfo', 'serviceName', 'location',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5430,7 +5705,7 @@ VIMRuntime::make_get_set('ArrayOfServiceManagerServiceInfo', 'ServiceManagerServ
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5455,7 +5730,7 @@ VIMRuntime::make_get_set('SessionManagerLocalTicket', 'userName', 'passwordFileP
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5481,7 +5756,7 @@ VIMRuntime::make_get_set('SessionManagerGenericServiceTicket', 'id', 'hostName',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5504,7 +5779,7 @@ VIMRuntime::make_get_set('SessionManagerServiceRequestSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5528,7 +5803,7 @@ VIMRuntime::make_get_set('SessionManagerVmomiServiceRequestSpec', 'method');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5553,7 +5828,7 @@ VIMRuntime::make_get_set('SessionManagerHttpServiceRequestSpec', 'method', 'url'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5578,7 +5853,7 @@ VIMRuntime::make_get_set('SharesInfo', 'shares', 'level');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5603,7 +5878,55 @@ VIMRuntime::make_get_set('SharesOption', 'sharesOption', 'defaultLevel');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package SingleIp;
+our @ISA = qw(IpAddress);
+
+our @property_list = (
+   ['address', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('SingleIp', 'address');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package SingleMac;
+our @ISA = qw(MacAddress);
+
+our @property_list = (
+   ['address', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('SingleMac', 'address');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5629,7 +5952,7 @@ VIMRuntime::make_get_set('StoragePodSummary', 'name', 'capacity', 'freeSpace');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5645,16 +5968,17 @@ our @ISA = qw(DynamicData);
 our @property_list = (
    ['limit', undef, undef, 0],
    ['shares', 'SharesInfo', undef, 0],
+   ['reservation', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('StorageIOAllocationInfo', 'limit', 'shares');
+VIMRuntime::make_get_set('StorageIOAllocationInfo', 'limit', 'shares', 'reservation');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5679,7 +6003,7 @@ VIMRuntime::make_get_set('StorageIOAllocationOption', 'limitOption', 'sharesOpti
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5708,7 +6032,7 @@ VIMRuntime::make_get_set('StorageIORMInfo', 'enabled', 'congestionThresholdMode'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5737,7 +6061,7 @@ VIMRuntime::make_get_set('StorageIORMConfigSpec', 'enabled', 'congestionThreshol
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5763,7 +6087,7 @@ VIMRuntime::make_get_set('StorageIORMConfigOption', 'enabledOption', 'congestion
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5794,7 +6118,7 @@ VIMRuntime::make_get_set('StoragePerformanceSummary', 'interval', 'percentile', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5818,7 +6142,7 @@ VIMRuntime::make_get_set('ArrayOfStoragePerformanceSummary', 'StoragePerformance
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5845,7 +6169,31 @@ VIMRuntime::make_get_set('PodStorageDrsEntry', 'storageDrsConfig', 'recommendati
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package StringExpression;
+our @ISA = qw(NegatableExpression);
+
+our @property_list = (
+   ['value', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('StringExpression', 'value');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5869,7 +6217,7 @@ VIMRuntime::make_get_set('StringPolicy', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5893,7 +6241,7 @@ VIMRuntime::make_get_set('Tag', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5917,7 +6265,7 @@ VIMRuntime::make_get_set('ArrayOfTag', 'Tag');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5943,7 +6291,7 @@ VIMRuntime::make_get_set('TaskDescription', 'methodInfo', 'state', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5968,7 +6316,7 @@ VIMRuntime::make_get_set('TaskFilterSpecByEntity', 'entity', 'recursion');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -5994,7 +6342,7 @@ VIMRuntime::make_get_set('TaskFilterSpecByTime', 'timeType', 'beginTime', 'endTi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6019,7 +6367,7 @@ VIMRuntime::make_get_set('TaskFilterSpecByUsername', 'systemUser', 'userList');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6052,7 +6400,7 @@ VIMRuntime::make_get_set('TaskFilterSpec', 'entity', 'time', 'userName', 'state'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6076,7 +6424,7 @@ VIMRuntime::make_get_set('ArrayOfTaskInfoState', 'TaskInfoState');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6121,7 +6469,7 @@ VIMRuntime::make_get_set('TaskInfo', 'key', 'task', 'description', 'name', 'desc
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6145,7 +6493,7 @@ VIMRuntime::make_get_set('ArrayOfTaskInfo', 'TaskInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6168,7 +6516,7 @@ VIMRuntime::make_get_set('TaskReason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6191,7 +6539,7 @@ VIMRuntime::make_get_set('TaskReasonSystem');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6215,7 +6563,7 @@ VIMRuntime::make_get_set('TaskReasonUser', 'userName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6242,7 +6590,7 @@ VIMRuntime::make_get_set('TaskReasonAlarm', 'alarmName', 'alarm', 'entityName', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6267,7 +6615,7 @@ VIMRuntime::make_get_set('TaskReasonSchedule', 'name', 'scheduledTask');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6291,7 +6639,7 @@ VIMRuntime::make_get_set('TypeDescription', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6315,7 +6663,7 @@ VIMRuntime::make_get_set('ArrayOfTypeDescription', 'TypeDescription');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6340,7 +6688,7 @@ VIMRuntime::make_get_set('UpdateVirtualMachineFilesResultFailedVmFileInfo', 'vmF
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6364,7 +6712,7 @@ VIMRuntime::make_get_set('ArrayOfUpdateVirtualMachineFilesResultFailedVmFileInfo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6388,7 +6736,7 @@ VIMRuntime::make_get_set('UpdateVirtualMachineFilesResult', 'failedVmFile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6414,7 +6762,7 @@ VIMRuntime::make_get_set('UserSearchResult', 'principal', 'fullName', 'group');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6438,7 +6786,7 @@ VIMRuntime::make_get_set('ArrayOfUserSearchResult', 'UserSearchResult');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6472,7 +6820,7 @@ VIMRuntime::make_get_set('UserSession', 'key', 'userName', 'fullName', 'loginTim
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6496,7 +6844,7 @@ VIMRuntime::make_get_set('ArrayOfUserSession', 'UserSession');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6524,7 +6872,7 @@ VIMRuntime::make_get_set('VirtualAppSummary', 'product', 'vAppState', 'suspended
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6549,7 +6897,7 @@ VIMRuntime::make_get_set('VirtualAppLinkInfo', 'key', 'destroyWithParent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6573,7 +6921,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualAppLinkInfo', 'VirtualAppLinkInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6598,7 +6946,7 @@ VIMRuntime::make_get_set('VirtualDiskSpec', 'diskType', 'adapterType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6613,16 +6961,17 @@ our @ISA = qw(VirtualDiskSpec);
 
 our @property_list = (
    ['capacityKb', undef, undef, 1],
+   ['profile', 'VirtualMachineProfileSpec', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('FileBackedVirtualDiskSpec', 'capacityKb');
+VIMRuntime::make_get_set('FileBackedVirtualDiskSpec', 'capacityKb', 'profile');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6646,7 +6995,7 @@ VIMRuntime::make_get_set('SeSparseVirtualDiskSpec', 'grainSizeKb');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6670,7 +7019,7 @@ VIMRuntime::make_get_set('DeviceBackedVirtualDiskSpec', 'device');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6695,7 +7044,7 @@ VIMRuntime::make_get_set('StorageRequirement', 'datastore', 'freeSpaceRequiredIn
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6719,7 +7068,7 @@ VIMRuntime::make_get_set('ArrayOfStorageRequirement', 'StorageRequirement');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6747,7 +7096,7 @@ VIMRuntime::make_get_set('VirtualMachineTicket', 'ticket', 'cfgFile', 'host', 'p
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6775,7 +7124,7 @@ VIMRuntime::make_get_set('VirtualMachineMksTicket', 'ticket', 'cfgFile', 'host',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6802,7 +7151,7 @@ VIMRuntime::make_get_set('VirtualMachineDisplayTopology', 'x', 'y', 'width', 'he
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6826,7 +7175,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineDisplayTopology', 'VirtualMachine
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6851,7 +7200,7 @@ VIMRuntime::make_get_set('DiskChangeExtent', 'start', 'length');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6875,7 +7224,7 @@ VIMRuntime::make_get_set('ArrayOfDiskChangeExtent', 'DiskChangeExtent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6901,7 +7250,7 @@ VIMRuntime::make_get_set('DiskChangeInfo', 'startOffset', 'length', 'changedArea
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6926,7 +7275,7 @@ VIMRuntime::make_get_set('VirtualMachineWipeResult', 'diskId', 'shrinkableDiskSp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6949,7 +7298,7 @@ VIMRuntime::make_get_set('Action');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6973,7 +7322,7 @@ VIMRuntime::make_get_set('MethodActionArgument', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -6997,7 +7346,7 @@ VIMRuntime::make_get_set('ArrayOfMethodActionArgument', 'MethodActionArgument');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7022,7 +7371,7 @@ VIMRuntime::make_get_set('MethodAction', 'name', 'argument');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7049,7 +7398,7 @@ VIMRuntime::make_get_set('SendEmailAction', 'toList', 'ccList', 'subject', 'body
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7072,7 +7421,7 @@ VIMRuntime::make_get_set('SendSNMPAction');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7096,7 +7445,7 @@ VIMRuntime::make_get_set('RunScriptAction', 'script');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7121,7 +7470,7 @@ VIMRuntime::make_get_set('CreateTaskAction', 'taskTypeId', 'cancelable');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7144,7 +7493,7 @@ VIMRuntime::make_get_set('AlarmAction');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7168,7 +7517,7 @@ VIMRuntime::make_get_set('ArrayOfAlarmAction', 'AlarmAction');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7194,7 +7543,7 @@ VIMRuntime::make_get_set('AlarmTriggeringActionTransitionSpec', 'startState', 'f
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7218,7 +7567,7 @@ VIMRuntime::make_get_set('ArrayOfAlarmTriggeringActionTransitionSpec', 'AlarmTri
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7247,7 +7596,7 @@ VIMRuntime::make_get_set('AlarmTriggeringAction', 'action', 'transitionSpecs', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7271,7 +7620,7 @@ VIMRuntime::make_get_set('GroupAlarmAction', 'action');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7304,7 +7653,7 @@ VIMRuntime::make_get_set('AlarmDescription', 'expr', 'stateOperator', 'metricOpe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7327,7 +7676,7 @@ VIMRuntime::make_get_set('AlarmExpression');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7351,7 +7700,7 @@ VIMRuntime::make_get_set('ArrayOfAlarmExpression', 'AlarmExpression');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7375,7 +7724,7 @@ VIMRuntime::make_get_set('AndAlarmExpression', 'expression');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7399,7 +7748,7 @@ VIMRuntime::make_get_set('OrAlarmExpression', 'expression');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7427,7 +7776,7 @@ VIMRuntime::make_get_set('StateAlarmExpression', 'operator', 'type', 'statePath'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7453,7 +7802,7 @@ VIMRuntime::make_get_set('EventAlarmExpressionComparison', 'attributeName', 'ope
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7477,7 +7826,7 @@ VIMRuntime::make_get_set('ArrayOfEventAlarmExpressionComparison', 'EventAlarmExp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7505,7 +7854,7 @@ VIMRuntime::make_get_set('EventAlarmExpression', 'comparisons', 'eventType', 'ev
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7535,7 +7884,7 @@ VIMRuntime::make_get_set('MetricAlarmExpression', 'operator', 'type', 'metric', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7564,7 +7913,7 @@ VIMRuntime::make_get_set('AlarmInfo', 'key', 'alarm', 'entity', 'lastModifiedTim
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7589,7 +7938,7 @@ VIMRuntime::make_get_set('AlarmSetting', 'toleranceRange', 'reportingFrequency')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7620,7 +7969,7 @@ VIMRuntime::make_get_set('AlarmSpec', 'name', 'systemName', 'description', 'enab
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7651,7 +8000,7 @@ VIMRuntime::make_get_set('AlarmState', 'key', 'entity', 'alarm', 'overallStatus'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7675,7 +8024,7 @@ VIMRuntime::make_get_set('ArrayOfAlarmState', 'AlarmState');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7700,7 +8049,7 @@ VIMRuntime::make_get_set('ClusterAction', 'type', 'target');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7724,7 +8073,7 @@ VIMRuntime::make_get_set('ArrayOfClusterAction', 'ClusterAction');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7749,7 +8098,7 @@ VIMRuntime::make_get_set('ClusterActionHistory', 'action', 'time');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7773,7 +8122,7 @@ VIMRuntime::make_get_set('ArrayOfClusterActionHistory', 'ClusterActionHistory');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7797,7 +8146,7 @@ VIMRuntime::make_get_set('ClusterAffinityRuleSpec', 'vm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7821,7 +8170,7 @@ VIMRuntime::make_get_set('ClusterAntiAffinityRuleSpec', 'vm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7846,7 +8195,7 @@ VIMRuntime::make_get_set('ClusterAttemptedVmInfo', 'vm', 'task');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7870,7 +8219,7 @@ VIMRuntime::make_get_set('ArrayOfClusterAttemptedVmInfo', 'ClusterAttemptedVmInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7898,7 +8247,7 @@ VIMRuntime::make_get_set('ClusterConfigInfo', 'dasConfig', 'dasVmConfig', 'drsCo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7926,7 +8275,7 @@ VIMRuntime::make_get_set('ClusterDrsConfigInfo', 'enabled', 'enableVmBehaviorOve
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7952,7 +8301,7 @@ VIMRuntime::make_get_set('ClusterDrsVmConfigInfo', 'key', 'enabled', 'behavior')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7976,7 +8325,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDrsVmConfigInfo', 'ClusterDrsVmConfigInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -7997,17 +8346,19 @@ our @property_list = (
    ['rule', 'ClusterRuleInfo', 1, 0],
    ['dpmConfigInfo', 'ClusterDpmConfigInfo', undef, 0],
    ['dpmHostConfig', 'ClusterDpmHostConfigInfo', 1, 0],
+   ['vsanConfigInfo', 'VsanClusterConfigInfo', undef, 0],
+   ['vsanHostConfig', 'VsanHostConfigInfo', 1, 0],
    ['group', 'ClusterGroupInfo', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('ClusterConfigInfoEx', 'dasConfig', 'dasVmConfig', 'drsConfig', 'drsVmConfig', 'rule', 'dpmConfigInfo', 'dpmHostConfig', 'group');
+VIMRuntime::make_get_set('ClusterConfigInfoEx', 'dasConfig', 'dasVmConfig', 'drsConfig', 'drsVmConfig', 'rule', 'dpmConfigInfo', 'dpmHostConfig', 'vsanConfigInfo', 'vsanHostConfig', 'group');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8034,7 +8385,7 @@ VIMRuntime::make_get_set('ClusterDpmConfigInfo', 'enabled', 'defaultDpmBehavior'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8060,7 +8411,7 @@ VIMRuntime::make_get_set('ClusterDpmHostConfigInfo', 'key', 'enabled', 'behavior
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8084,7 +8435,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDpmHostConfigInfo', 'ClusterDpmHostConfi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8112,7 +8463,7 @@ VIMRuntime::make_get_set('ClusterConfigSpec', 'dasConfig', 'dasVmConfigSpec', 'd
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8136,7 +8487,7 @@ VIMRuntime::make_get_set('ClusterDasVmConfigSpec', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8160,7 +8511,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDasVmConfigSpec', 'ClusterDasVmConfigSpe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8184,7 +8535,7 @@ VIMRuntime::make_get_set('ClusterDrsVmConfigSpec', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8208,7 +8559,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDrsVmConfigSpec', 'ClusterDrsVmConfigSpe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8229,17 +8580,19 @@ our @property_list = (
    ['rulesSpec', 'ClusterRuleSpec', 1, 0],
    ['dpmConfig', 'ClusterDpmConfigInfo', undef, 0],
    ['dpmHostConfigSpec', 'ClusterDpmHostConfigSpec', 1, 0],
+   ['vsanConfig', 'VsanClusterConfigInfo', undef, 0],
+   ['vsanHostConfigSpec', 'VsanHostConfigInfo', 1, 0],
    ['groupSpec', 'ClusterGroupSpec', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('ClusterConfigSpecEx', 'dasConfig', 'dasVmConfigSpec', 'drsConfig', 'drsVmConfigSpec', 'rulesSpec', 'dpmConfig', 'dpmHostConfigSpec', 'groupSpec');
+VIMRuntime::make_get_set('ClusterConfigSpecEx', 'dasConfig', 'dasVmConfigSpec', 'drsConfig', 'drsVmConfigSpec', 'rulesSpec', 'dpmConfig', 'dpmHostConfigSpec', 'vsanConfig', 'vsanHostConfigSpec', 'groupSpec');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8263,7 +8616,7 @@ VIMRuntime::make_get_set('ClusterDpmHostConfigSpec', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8287,7 +8640,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDpmHostConfigSpec', 'ClusterDpmHostConfi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8311,7 +8664,7 @@ VIMRuntime::make_get_set('ClusterGroupSpec', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8335,7 +8688,7 @@ VIMRuntime::make_get_set('ArrayOfClusterGroupSpec', 'ClusterGroupSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8360,7 +8713,7 @@ VIMRuntime::make_get_set('ClusterDasAamHostInfo', 'hostDasState', 'primaryHosts'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8387,7 +8740,7 @@ VIMRuntime::make_get_set('ClusterDasAamNodeState', 'host', 'name', 'configState'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8411,7 +8764,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDasAamNodeState', 'ClusterDasAamNodeStat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8434,7 +8787,7 @@ VIMRuntime::make_get_set('ClusterDasAdmissionControlInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8457,7 +8810,7 @@ VIMRuntime::make_get_set('ClusterDasAdmissionControlPolicy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8482,7 +8835,7 @@ VIMRuntime::make_get_set('DasHeartbeatDatastoreInfo', 'datastore', 'hosts');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8506,7 +8859,7 @@ VIMRuntime::make_get_set('ArrayOfDasHeartbeatDatastoreInfo', 'DasHeartbeatDatast
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8531,7 +8884,7 @@ VIMRuntime::make_get_set('ClusterDasAdvancedRuntimeInfo', 'dasHostInfo', 'heartb
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8564,7 +8917,7 @@ VIMRuntime::make_get_set('ClusterDasConfigInfo', 'enabled', 'vmMonitoring', 'hos
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8587,7 +8940,7 @@ VIMRuntime::make_get_set('ClusterDasData');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8613,7 +8966,7 @@ VIMRuntime::make_get_set('ClusterDasDataSummary', 'hostListVersion', 'clusterCon
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8639,7 +8992,7 @@ VIMRuntime::make_get_set('ClusterDasFailoverLevelAdvancedRuntimeInfoSlotInfo', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8664,7 +9017,7 @@ VIMRuntime::make_get_set('ClusterDasFailoverLevelAdvancedRuntimeInfoHostSlots', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8688,7 +9041,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDasFailoverLevelAdvancedRuntimeInfoHostS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8713,7 +9066,7 @@ VIMRuntime::make_get_set('ClusterDasFailoverLevelAdvancedRuntimeInfoVmSlots', 'v
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8737,7 +9090,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDasFailoverLevelAdvancedRuntimeInfoVmSlo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8769,7 +9122,7 @@ VIMRuntime::make_get_set('ClusterDasFailoverLevelAdvancedRuntimeInfo', 'slotInfo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8794,7 +9147,7 @@ VIMRuntime::make_get_set('ClusterDasFdmHostState', 'state', 'stateReporter');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8817,7 +9170,7 @@ VIMRuntime::make_get_set('ClusterDasHostInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8842,7 +9195,7 @@ VIMRuntime::make_get_set('ClusterDasHostRecommendation', 'host', 'drsRating');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8869,7 +9222,7 @@ VIMRuntime::make_get_set('ClusterDasVmConfigInfo', 'key', 'restartPriority', 'po
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8893,7 +9246,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDasVmConfigInfo', 'ClusterDasVmConfigInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8919,7 +9272,7 @@ VIMRuntime::make_get_set('ClusterDasVmSettings', 'restartPriority', 'isolationRe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8944,7 +9297,7 @@ VIMRuntime::make_get_set('ClusterDrsFaultsFaultsByVm', 'vm', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8968,7 +9321,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDrsFaultsFaultsByVm', 'ClusterDrsFaultsF
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -8992,7 +9345,7 @@ VIMRuntime::make_get_set('ClusterDrsFaultsFaultsByVirtualDisk', 'disk');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9017,7 +9370,7 @@ VIMRuntime::make_get_set('ClusterDrsFaults', 'reason', 'faultsByVm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9041,7 +9394,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDrsFaults', 'ClusterDrsFaults');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9075,7 +9428,7 @@ VIMRuntime::make_get_set('ClusterDrsMigration', 'key', 'time', 'vm', 'cpuLoad', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9099,7 +9452,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDrsMigration', 'ClusterDrsMigration');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9127,7 +9480,7 @@ VIMRuntime::make_get_set('ClusterDrsRecommendation', 'key', 'rating', 'reason', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9151,7 +9504,7 @@ VIMRuntime::make_get_set('ArrayOfClusterDrsRecommendation', 'ClusterDrsRecommend
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9176,7 +9529,7 @@ VIMRuntime::make_get_set('ClusterEnterMaintenanceResult', 'recommendations', 'fa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9201,7 +9554,7 @@ VIMRuntime::make_get_set('ClusterFailoverHostAdmissionControlInfoHostStatus', 'h
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9225,7 +9578,7 @@ VIMRuntime::make_get_set('ArrayOfClusterFailoverHostAdmissionControlInfoHostStat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9249,7 +9602,7 @@ VIMRuntime::make_get_set('ClusterFailoverHostAdmissionControlInfo', 'hostStatus'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9273,7 +9626,7 @@ VIMRuntime::make_get_set('ClusterFailoverHostAdmissionControlPolicy', 'failoverH
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9297,7 +9650,7 @@ VIMRuntime::make_get_set('ClusterFailoverLevelAdmissionControlInfo', 'currentFai
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9322,7 +9675,7 @@ VIMRuntime::make_get_set('ClusterFailoverLevelAdmissionControlPolicy', 'failover
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9347,7 +9700,7 @@ VIMRuntime::make_get_set('ClusterFailoverResourcesAdmissionControlInfo', 'curren
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9372,7 +9725,7 @@ VIMRuntime::make_get_set('ClusterFailoverResourcesAdmissionControlPolicy', 'cpuF
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9397,7 +9750,7 @@ VIMRuntime::make_get_set('ClusterGroupInfo', 'name', 'userCreated');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9421,7 +9774,7 @@ VIMRuntime::make_get_set('ArrayOfClusterGroupInfo', 'ClusterGroupInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9445,7 +9798,7 @@ VIMRuntime::make_get_set('ClusterHostGroup', 'host');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9472,7 +9825,7 @@ VIMRuntime::make_get_set('ClusterHostPowerAction', 'operationType', 'powerConsum
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9497,7 +9850,7 @@ VIMRuntime::make_get_set('ClusterHostRecommendation', 'host', 'rating');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9521,7 +9874,7 @@ VIMRuntime::make_get_set('ArrayOfClusterHostRecommendation', 'ClusterHostRecomme
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9546,7 +9899,7 @@ VIMRuntime::make_get_set('ClusterInitialPlacementAction', 'targetHost', 'pool');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9570,7 +9923,7 @@ VIMRuntime::make_get_set('ClusterMigrationAction', 'drsMigration');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9595,7 +9948,7 @@ VIMRuntime::make_get_set('ClusterNotAttemptedVmInfo', 'vm', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9619,7 +9972,7 @@ VIMRuntime::make_get_set('ArrayOfClusterNotAttemptedVmInfo', 'ClusterNotAttempte
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9645,7 +9998,7 @@ VIMRuntime::make_get_set('ClusterPowerOnVmResult', 'attempted', 'notAttempted', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9677,7 +10030,7 @@ VIMRuntime::make_get_set('ClusterRecommendation', 'key', 'type', 'time', 'rating
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9701,7 +10054,7 @@ VIMRuntime::make_get_set('ArrayOfClusterRecommendation', 'ClusterRecommendation'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9731,7 +10084,7 @@ VIMRuntime::make_get_set('ClusterRuleInfo', 'key', 'status', 'enabled', 'name', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9755,7 +10108,7 @@ VIMRuntime::make_get_set('ArrayOfClusterRuleInfo', 'ClusterRuleInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9779,7 +10132,7 @@ VIMRuntime::make_get_set('ClusterRuleSpec', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9803,7 +10156,7 @@ VIMRuntime::make_get_set('ArrayOfClusterRuleSpec', 'ClusterRuleSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9826,7 +10179,7 @@ VIMRuntime::make_get_set('ClusterSlotPolicy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9851,7 +10204,7 @@ VIMRuntime::make_get_set('ClusterFixedSizeSlotPolicy', 'cpu', 'memory');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9875,7 +10228,7 @@ VIMRuntime::make_get_set('ClusterVmGroup', 'vm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9901,7 +10254,7 @@ VIMRuntime::make_get_set('ClusterVmHostRuleInfo', 'vmGroupName', 'affineHostGrou
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9931,7 +10284,7 @@ VIMRuntime::make_get_set('ClusterVmToolsMonitoringSettings', 'enabled', 'vmMonit
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9961,7 +10314,7 @@ VIMRuntime::make_get_set('DVPortConfigSpec', 'operation', 'key', 'name', 'scope'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -9985,7 +10338,7 @@ VIMRuntime::make_get_set('ArrayOfDVPortConfigSpec', 'DVPortConfigSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10013,7 +10366,7 @@ VIMRuntime::make_get_set('DVPortConfigInfo', 'name', 'scope', 'description', 'se
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10040,7 +10393,7 @@ VIMRuntime::make_get_set('DVSTrafficShapingPolicy', 'enabled', 'averageBandwidth
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10067,7 +10420,7 @@ VIMRuntime::make_get_set('DVSHostLocalPortInfo', 'switchUuid', 'portKey', 'setti
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10091,7 +10444,179 @@ VIMRuntime::make_get_set('DVSVendorSpecificConfig', 'keyValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsFilterParameter;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['parameters', undef, 1, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsFilterParameter', 'parameters');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsFilterConfig;
+our @ISA = qw(InheritablePolicy);
+
+our @property_list = (
+   ['key', undef, undef, 0],
+   ['agentName', undef, undef, 0],
+   ['slotNumber', undef, undef, 0],
+   ['parameters', 'DvsFilterParameter', undef, 0],
+   ['onFailure', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsFilterConfig', 'key', 'agentName', 'slotNumber', 'parameters', 'onFailure');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfDvsFilterConfig;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['DvsFilterConfig', 'DvsFilterConfig', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfDvsFilterConfig', 'DvsFilterConfig');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsTrafficFilterConfig;
+our @ISA = qw(DvsFilterConfig);
+
+our @property_list = (
+   ['trafficRuleset', 'DvsTrafficRuleset', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsTrafficFilterConfig', 'trafficRuleset');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsFilterConfigSpec;
+our @ISA = qw(DvsFilterConfig);
+
+our @property_list = (
+   ['operation', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('DvsFilterConfigSpec', 'operation');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsTrafficFilterConfigSpec;
+our @ISA = qw(DvsTrafficFilterConfig);
+
+our @property_list = (
+   ['operation', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('DvsTrafficFilterConfigSpec', 'operation');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsFilterPolicy;
+our @ISA = qw(InheritablePolicy);
+
+our @property_list = (
+   ['filterConfig', 'DvsFilterConfig', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsFilterPolicy', 'filterConfig');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10111,16 +10636,17 @@ our @property_list = (
    ['outShapingPolicy', 'DVSTrafficShapingPolicy', undef, 0],
    ['vendorSpecificConfig', 'DVSVendorSpecificConfig', undef, 0],
    ['networkResourcePoolKey', 'StringPolicy', undef, 0],
+   ['filterPolicy', 'DvsFilterPolicy', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('DVPortSetting', 'blocked', 'vmDirectPathGen2Allowed', 'inShapingPolicy', 'outShapingPolicy', 'vendorSpecificConfig', 'networkResourcePoolKey');
+VIMRuntime::make_get_set('DVPortSetting', 'blocked', 'vmDirectPathGen2Allowed', 'inShapingPolicy', 'outShapingPolicy', 'vendorSpecificConfig', 'networkResourcePoolKey', 'filterPolicy');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10155,7 +10681,7 @@ VIMRuntime::make_get_set('DVPortStatus', 'linkUp', 'blocked', 'vlanIds', 'trunki
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10181,7 +10707,7 @@ VIMRuntime::make_get_set('DVPortState', 'runtimeInfo', 'stats', 'vendorSpecificS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10216,7 +10742,7 @@ VIMRuntime::make_get_set('DistributedVirtualPort', 'key', 'config', 'dvsUuid', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10240,7 +10766,7 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualPort', 'DistributedVirtualPor
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10260,16 +10786,17 @@ our @property_list = (
    ['livePortMovingAllowed', 'boolean', undef, 1],
    ['portConfigResetAtDisconnect', 'boolean', undef, 1],
    ['networkResourcePoolOverrideAllowed', 'boolean', undef, 0],
+   ['trafficFilterOverrideAllowed', 'boolean', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('DVPortgroupPolicy', 'blockOverrideAllowed', 'shapingOverrideAllowed', 'vendorConfigOverrideAllowed', 'livePortMovingAllowed', 'portConfigResetAtDisconnect', 'networkResourcePoolOverrideAllowed');
+VIMRuntime::make_get_set('DVPortgroupPolicy', 'blockOverrideAllowed', 'shapingOverrideAllowed', 'vendorConfigOverrideAllowed', 'livePortMovingAllowed', 'portConfigResetAtDisconnect', 'networkResourcePoolOverrideAllowed', 'trafficFilterOverrideAllowed');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10303,7 +10830,7 @@ VIMRuntime::make_get_set('DVPortgroupConfigSpec', 'configVersion', 'name', 'numP
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10327,7 +10854,7 @@ VIMRuntime::make_get_set('ArrayOfDVPortgroupConfigSpec', 'DVPortgroupConfigSpec'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10363,7 +10890,7 @@ VIMRuntime::make_get_set('DVPortgroupConfigInfo', 'key', 'name', 'numPorts', 'di
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10393,7 +10920,7 @@ VIMRuntime::make_get_set('DistributedVirtualPortgroupInfo', 'switchName', 'switc
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10417,7 +10944,7 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualPortgroupInfo', 'DistributedV
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10442,7 +10969,7 @@ VIMRuntime::make_get_set('DVPortgroupSelection', 'dvsUuid', 'portgroupKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10468,7 +10995,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchInfo', 'switchName', 'switchUu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10492,7 +11019,7 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualSwitchInfo', 'DistributedVirt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10517,7 +11044,7 @@ VIMRuntime::make_get_set('DVSManagerDvsConfigTarget', 'distributedVirtualPortgro
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10542,7 +11069,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchManagerCompatibilityResult', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10566,7 +11093,7 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualSwitchManagerCompatibilityRes
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10591,7 +11118,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchManagerHostContainer', 'contai
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10615,7 +11142,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchManagerHostDvsFilterSpec', 'in
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10639,7 +11166,7 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualSwitchManagerHostDvsFilterSpe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10663,7 +11190,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchManagerHostArrayFilter', 'host
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10687,7 +11214,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchManagerHostContainerFilter', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10711,7 +11238,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchManagerHostDvsMembershipFilter
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10736,7 +11263,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchManagerDvsProductSpec', 'newSw
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10762,7 +11289,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchManagerImportResult', 'distrib
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10786,7 +11313,7 @@ VIMRuntime::make_get_set('DVSSelection', 'dvsUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10815,7 +11342,7 @@ VIMRuntime::make_get_set('EntityBackupConfig', 'entityType', 'configBlob', 'key'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10839,7 +11366,7 @@ VIMRuntime::make_get_set('ArrayOfEntityBackupConfig', 'EntityBackupConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10862,7 +11389,7 @@ VIMRuntime::make_get_set('EntityBackup');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10890,7 +11417,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchHostMemberConfigSpec', 'operat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10914,7 +11441,7 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualSwitchHostMemberConfigSpec', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10941,7 +11468,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchHostMemberPnicSpec', 'pnicDevi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10965,7 +11492,7 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualSwitchHostMemberPnicSpec', 'D
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -10988,7 +11515,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchHostMemberBacking');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11012,7 +11539,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchHostMemberPnicBacking', 'pnicS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11036,7 +11563,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchHostMemberRuntimeState', 'curr
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11063,7 +11590,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchHostMemberConfigInfo', 'host',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11090,7 +11617,7 @@ VIMRuntime::make_get_set('HostMemberRuntimeInfo', 'host', 'status', 'statusDetai
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11114,7 +11641,7 @@ VIMRuntime::make_get_set('ArrayOfHostMemberRuntimeInfo', 'HostMemberRuntimeInfo'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11138,7 +11665,7 @@ VIMRuntime::make_get_set('HostMemberHealthCheckResult', 'summary');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11162,7 +11689,7 @@ VIMRuntime::make_get_set('ArrayOfHostMemberHealthCheckResult', 'HostMemberHealth
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11186,7 +11713,7 @@ VIMRuntime::make_get_set('HostMemberUplinkHealthCheckResult', 'uplinkPortKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11215,7 +11742,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchHostMember', 'runtimeState', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11239,7 +11766,7 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualSwitchHostMember', 'Distribut
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11264,7 +11791,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchHostProductSpec', 'productLine
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11288,7 +11815,7 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualSwitchHostProductSpec', 'Dist
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11313,7 +11840,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchKeyedOpaqueBlob', 'key', 'opaq
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11337,7 +11864,7 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualSwitchKeyedOpaqueBlob', 'Dist
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11363,7 +11890,7 @@ VIMRuntime::make_get_set('DVSNetworkResourcePoolAllocationInfo', 'limit', 'share
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11391,7 +11918,7 @@ VIMRuntime::make_get_set('DVSNetworkResourcePoolConfigSpec', 'key', 'configVersi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11415,7 +11942,7 @@ VIMRuntime::make_get_set('ArrayOfDVSNetworkResourcePoolConfigSpec', 'DVSNetworkR
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11443,7 +11970,7 @@ VIMRuntime::make_get_set('DVSNetworkResourcePool', 'key', 'name', 'description',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11467,7 +11994,7 @@ VIMRuntime::make_get_set('ArrayOfDVSNetworkResourcePool', 'DVSNetworkResourcePoo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11494,7 +12021,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchPortConnectee', 'connectedEnti
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11521,7 +12048,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchPortConnection', 'switchUuid',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11551,7 +12078,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchPortCriteria', 'connected', 'a
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11590,7 +12117,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchPortStatistics', 'packetsInMul
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11620,7 +12147,7 @@ VIMRuntime::make_get_set('DistributedVirtualSwitchProductSpec', 'name', 'vendor'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11644,7 +12171,522 @@ VIMRuntime::make_get_set('ArrayOfDistributedVirtualSwitchProductSpec', 'Distribu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsNetworkRuleQualifier;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['key', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsNetworkRuleQualifier', 'key');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfDvsNetworkRuleQualifier;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['DvsNetworkRuleQualifier', 'DvsNetworkRuleQualifier', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfDvsNetworkRuleQualifier', 'DvsNetworkRuleQualifier');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsNetworkRuleAction;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DvsNetworkRuleAction');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsIpNetworkRuleQualifier;
+our @ISA = qw(DvsNetworkRuleQualifier);
+
+our @property_list = (
+   ['sourceAddress', 'IpAddress', undef, 0],
+   ['destinationAddress', 'IpAddress', undef, 0],
+   ['protocol', 'IntExpression', undef, 0],
+   ['sourceIpPort', 'DvsIpPort', undef, 0],
+   ['destinationIpPort', 'DvsIpPort', undef, 0],
+   ['tcpFlags', 'IntExpression', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsIpNetworkRuleQualifier', 'sourceAddress', 'destinationAddress', 'protocol', 'sourceIpPort', 'destinationIpPort', 'tcpFlags');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsIpPort;
+our @ISA = qw(NegatableExpression);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DvsIpPort');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsSingleIpPort;
+our @ISA = qw(DvsIpPort);
+
+our @property_list = (
+   ['portNumber', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('DvsSingleIpPort', 'portNumber');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsIpPortRange;
+our @ISA = qw(DvsIpPort);
+
+our @property_list = (
+   ['startPortNumber', undef, undef, 1],
+   ['endPortNumber', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('DvsIpPortRange', 'startPortNumber', 'endPortNumber');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsMacNetworkRuleQualifier;
+our @ISA = qw(DvsNetworkRuleQualifier);
+
+our @property_list = (
+   ['sourceAddress', 'MacAddress', undef, 0],
+   ['destinationAddress', 'MacAddress', undef, 0],
+   ['protocol', 'IntExpression', undef, 0],
+   ['vlanId', 'IntExpression', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsMacNetworkRuleQualifier', 'sourceAddress', 'destinationAddress', 'protocol', 'vlanId');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsSystemTrafficNetworkRuleQualifier;
+our @ISA = qw(DvsNetworkRuleQualifier);
+
+our @property_list = (
+   ['typeOfSystemTraffic', 'StringExpression', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsSystemTrafficNetworkRuleQualifier', 'typeOfSystemTraffic');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsDropNetworkRuleAction;
+our @ISA = qw(DvsNetworkRuleAction);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DvsDropNetworkRuleAction');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsAcceptNetworkRuleAction;
+our @ISA = qw(DvsNetworkRuleAction);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DvsAcceptNetworkRuleAction');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsUpdateTagNetworkRuleAction;
+our @ISA = qw(DvsNetworkRuleAction);
+
+our @property_list = (
+   ['qosTag', undef, undef, 0],
+   ['dscpTag', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsUpdateTagNetworkRuleAction', 'qosTag', 'dscpTag');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsRateLimitNetworkRuleAction;
+our @ISA = qw(DvsNetworkRuleAction);
+
+our @property_list = (
+   ['packetsPerSecond', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('DvsRateLimitNetworkRuleAction', 'packetsPerSecond');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsLogNetworkRuleAction;
+our @ISA = qw(DvsNetworkRuleAction);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DvsLogNetworkRuleAction');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsGreEncapNetworkRuleAction;
+our @ISA = qw(DvsNetworkRuleAction);
+
+our @property_list = (
+   ['encapsulationIp', 'SingleIp', undef, 1],
+);
+
+
+VIMRuntime::make_get_set('DvsGreEncapNetworkRuleAction', 'encapsulationIp');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsMacRewriteNetworkRuleAction;
+our @ISA = qw(DvsNetworkRuleAction);
+
+our @property_list = (
+   ['rewriteMac', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('DvsMacRewriteNetworkRuleAction', 'rewriteMac');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsPuntNetworkRuleAction;
+our @ISA = qw(DvsNetworkRuleAction);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DvsPuntNetworkRuleAction');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsCopyNetworkRuleAction;
+our @ISA = qw(DvsNetworkRuleAction);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DvsCopyNetworkRuleAction');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsTrafficRule;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['key', undef, undef, 0],
+   ['description', undef, undef, 0],
+   ['sequence', undef, undef, 0],
+   ['qualifier', 'DvsNetworkRuleQualifier', 1, 0],
+   ['action', 'DvsNetworkRuleAction', undef, 0],
+   ['direction', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsTrafficRule', 'key', 'description', 'sequence', 'qualifier', 'action', 'direction');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfDvsTrafficRule;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['DvsTrafficRule', 'DvsTrafficRule', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfDvsTrafficRule', 'DvsTrafficRule');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DvsTrafficRuleset;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['key', undef, undef, 0],
+   ['enabled', 'boolean', undef, 0],
+   ['precedence', undef, undef, 0],
+   ['rules', 'DvsTrafficRule', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('DvsTrafficRuleset', 'key', 'enabled', 'precedence', 'rules');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11672,7 +12714,7 @@ VIMRuntime::make_get_set('VMwareDVSFeatureCapability', 'vspanSupported', 'lldpSu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11687,16 +12729,17 @@ our @ISA = qw(DynamicData);
 
 our @property_list = (
    ['lacpSupported', 'boolean', undef, 0],
+   ['multiLacpGroupSupported', 'boolean', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VMwareDvsLacpCapability', 'lacpSupported');
+VIMRuntime::make_get_set('VMwareDvsLacpCapability', 'lacpSupported', 'multiLacpGroupSupported');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11721,7 +12764,7 @@ VIMRuntime::make_get_set('VMwareDVSHealthCheckCapability', 'vlanMtuSupported', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11749,7 +12792,7 @@ VIMRuntime::make_get_set('VMwareDVSVspanCapability', 'mixedDestSupported', 'dvpo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11777,7 +12820,7 @@ VIMRuntime::make_get_set('VMwareVspanPort', 'portKey', 'uplinkPortName', 'wildca
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11813,7 +12856,7 @@ VIMRuntime::make_get_set('VMwareVspanSession', 'key', 'name', 'description', 'en
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11837,7 +12880,7 @@ VIMRuntime::make_get_set('ArrayOfVMwareVspanSession', 'VMwareVspanSession');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11866,7 +12909,7 @@ VIMRuntime::make_get_set('VMwareIpfixConfig', 'collectorIpAddress', 'collectorPo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11885,16 +12928,18 @@ our @property_list = (
    ['maxMtu', undef, undef, 1],
    ['linkDiscoveryProtocolConfig', 'LinkDiscoveryProtocolConfig', undef, 0],
    ['ipfixConfig', 'VMwareIpfixConfig', undef, 0],
+   ['lacpGroupConfig', 'VMwareDvsLacpGroupConfig', 1, 0],
+   ['lacpApiVersion', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VMwareDVSConfigInfo', 'vspanSession', 'pvlanConfig', 'maxMtu', 'linkDiscoveryProtocolConfig', 'ipfixConfig');
+VIMRuntime::make_get_set('VMwareDVSConfigInfo', 'vspanSession', 'pvlanConfig', 'maxMtu', 'linkDiscoveryProtocolConfig', 'ipfixConfig', 'lacpGroupConfig', 'lacpApiVersion');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11913,16 +12958,17 @@ our @property_list = (
    ['maxMtu', undef, undef, 0],
    ['linkDiscoveryProtocolConfig', 'LinkDiscoveryProtocolConfig', undef, 0],
    ['ipfixConfig', 'VMwareIpfixConfig', undef, 0],
+   ['lacpApiVersion', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VMwareDVSConfigSpec', 'pvlanConfigSpec', 'vspanConfigSpec', 'maxMtu', 'linkDiscoveryProtocolConfig', 'ipfixConfig');
+VIMRuntime::make_get_set('VMwareDVSConfigSpec', 'pvlanConfigSpec', 'vspanConfigSpec', 'maxMtu', 'linkDiscoveryProtocolConfig', 'ipfixConfig', 'lacpApiVersion');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11947,7 +12993,7 @@ VIMRuntime::make_get_set('VMwareUplinkPortOrderPolicy', 'activeUplinkPort', 'sta
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -11977,7 +13023,7 @@ VIMRuntime::make_get_set('DVSFailureCriteria', 'checkSpeed', 'speed', 'checkDupl
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12006,7 +13052,7 @@ VIMRuntime::make_get_set('VmwareUplinkPortTeamingPolicy', 'policy', 'reversePoli
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12029,7 +13075,7 @@ VIMRuntime::make_get_set('VmwareDistributedVirtualSwitchVlanSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12053,7 +13099,7 @@ VIMRuntime::make_get_set('VmwareDistributedVirtualSwitchPvlanSpec', 'pvlanId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12077,7 +13123,7 @@ VIMRuntime::make_get_set('VmwareDistributedVirtualSwitchVlanIdSpec', 'vlanId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12101,7 +13147,7 @@ VIMRuntime::make_get_set('VmwareDistributedVirtualSwitchTrunkVlanSpec', 'vlanId'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12127,7 +13173,7 @@ VIMRuntime::make_get_set('DVSSecurityPolicy', 'allowPromiscuous', 'macChanges', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12157,7 +13203,7 @@ VIMRuntime::make_get_set('VMwareDVSPortSetting', 'vlan', 'qosTag', 'uplinkTeamin
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12184,7 +13230,7 @@ VIMRuntime::make_get_set('VMwareDVSPortgroupPolicy', 'vlanOverrideAllowed', 'upl
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12209,7 +13255,7 @@ VIMRuntime::make_get_set('VMwareDVSPvlanConfigSpec', 'pvlanEntry', 'operation');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12233,7 +13279,7 @@ VIMRuntime::make_get_set('ArrayOfVMwareDVSPvlanConfigSpec', 'VMwareDVSPvlanConfi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12259,7 +13305,7 @@ VIMRuntime::make_get_set('VMwareDVSPvlanMapEntry', 'primaryVlanId', 'secondaryVl
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12283,7 +13329,7 @@ VIMRuntime::make_get_set('ArrayOfVMwareDVSPvlanMapEntry', 'VMwareDVSPvlanMapEntr
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12308,7 +13354,7 @@ VIMRuntime::make_get_set('VMwareDVSVspanConfigSpec', 'vspanSession', 'operation'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12332,7 +13378,7 @@ VIMRuntime::make_get_set('ArrayOfVMwareDVSVspanConfigSpec', 'VMwareDVSVspanConfi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12355,7 +13401,7 @@ VIMRuntime::make_get_set('VMwareDVSHealthCheckConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12378,7 +13424,7 @@ VIMRuntime::make_get_set('VMwareDVSVlanMtuHealthCheckConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12401,7 +13447,7 @@ VIMRuntime::make_get_set('VMwareDVSTeamingHealthCheckConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12426,7 +13472,7 @@ VIMRuntime::make_get_set('VMwareDVSVlanHealthCheckResult', 'trunkedVlan', 'untru
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12452,7 +13498,7 @@ VIMRuntime::make_get_set('VMwareDVSMtuHealthCheckResult', 'mtuMismatch', 'vlanSu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12476,7 +13522,7 @@ VIMRuntime::make_get_set('VMwareDVSTeamingHealthCheckResult', 'teamingStatus');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12501,7 +13547,160 @@ VIMRuntime::make_get_set('VMwareUplinkLacpPolicy', 'enable', 'mode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VMwareDvsLacpGroupConfig;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['key', undef, undef, 0],
+   ['name', undef, undef, 0],
+   ['mode', undef, undef, 0],
+   ['uplinkNum', undef, undef, 0],
+   ['loadbalanceAlgorithm', undef, undef, 0],
+   ['vlan', 'VMwareDvsLagVlanConfig', undef, 0],
+   ['ipfix', 'VMwareDvsLagIpfixConfig', undef, 0],
+   ['uplinkName', undef, 1, 0],
+   ['uplinkPortKey', undef, 1, 0],
+);
+
+
+VIMRuntime::make_get_set('VMwareDvsLacpGroupConfig', 'key', 'name', 'mode', 'uplinkNum', 'loadbalanceAlgorithm', 'vlan', 'ipfix', 'uplinkName', 'uplinkPortKey');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVMwareDvsLacpGroupConfig;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VMwareDvsLacpGroupConfig', 'VMwareDvsLacpGroupConfig', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVMwareDvsLacpGroupConfig', 'VMwareDvsLacpGroupConfig');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VMwareDvsLagVlanConfig;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['vlanId', 'NumericRange', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('VMwareDvsLagVlanConfig', 'vlanId');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VMwareDvsLagIpfixConfig;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['ipfixEnabled', 'boolean', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VMwareDvsLagIpfixConfig', 'ipfixEnabled');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VMwareDvsLacpGroupSpec;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['lacpGroupConfig', 'VMwareDvsLacpGroupConfig', undef, 1],
+   ['operation', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VMwareDvsLacpGroupSpec', 'lacpGroupConfig', 'operation');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVMwareDvsLacpGroupSpec;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VMwareDvsLacpGroupSpec', 'VMwareDvsLacpGroupSpec', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVMwareDvsLacpGroupSpec', 'VMwareDvsLacpGroupSpec');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12537,7 +13736,7 @@ VIMRuntime::make_get_set('Event', 'key', 'chainId', 'createdTime', 'userName', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12561,7 +13760,7 @@ VIMRuntime::make_get_set('ArrayOfEvent', 'Event');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12585,7 +13784,7 @@ VIMRuntime::make_get_set('GeneralEvent', 'message');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12608,7 +13807,7 @@ VIMRuntime::make_get_set('GeneralHostInfoEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12631,7 +13830,7 @@ VIMRuntime::make_get_set('GeneralHostWarningEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12654,7 +13853,7 @@ VIMRuntime::make_get_set('GeneralHostErrorEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12677,7 +13876,7 @@ VIMRuntime::make_get_set('GeneralVmInfoEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12700,7 +13899,7 @@ VIMRuntime::make_get_set('GeneralVmWarningEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12723,7 +13922,7 @@ VIMRuntime::make_get_set('GeneralVmErrorEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12747,7 +13946,7 @@ VIMRuntime::make_get_set('GeneralUserEvent', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12772,7 +13971,7 @@ VIMRuntime::make_get_set('ExtendedEventPair', 'key', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12796,7 +13995,7 @@ VIMRuntime::make_get_set('ArrayOfExtendedEventPair', 'ExtendedEventPair');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12822,7 +14021,7 @@ VIMRuntime::make_get_set('ExtendedEvent', 'eventTypeId', 'managedObject', 'data'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12849,7 +14048,7 @@ VIMRuntime::make_get_set('HealthStatusChangedEvent', 'componentId', 'oldStatus',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12872,7 +14071,7 @@ VIMRuntime::make_get_set('HostInventoryUnreadableEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12895,7 +14094,7 @@ VIMRuntime::make_get_set('DatacenterEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12919,7 +14118,7 @@ VIMRuntime::make_get_set('DatacenterCreatedEvent', 'parent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12944,7 +14143,7 @@ VIMRuntime::make_get_set('DatacenterRenamedEvent', 'oldName', 'newName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12967,7 +14166,7 @@ VIMRuntime::make_get_set('SessionEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -12990,7 +14189,7 @@ VIMRuntime::make_get_set('ServerStartedSessionEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13017,7 +14216,7 @@ VIMRuntime::make_get_set('UserLoginSessionEvent', 'ipAddress', 'userAgent', 'loc
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13045,7 +14244,7 @@ VIMRuntime::make_get_set('UserLogoutSessionEvent', 'ipAddress', 'userAgent', 'ca
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13069,7 +14268,7 @@ VIMRuntime::make_get_set('BadUsernameSessionEvent', 'ipAddress');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13092,7 +14291,7 @@ VIMRuntime::make_get_set('AlreadyAuthenticatedSessionEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13116,7 +14315,7 @@ VIMRuntime::make_get_set('NoAccessUserEvent', 'ipAddress');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13141,7 +14340,7 @@ VIMRuntime::make_get_set('SessionTerminatedEvent', 'sessionId', 'terminatedUsern
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13165,7 +14364,7 @@ VIMRuntime::make_get_set('GlobalMessageChangedEvent', 'message');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13189,7 +14388,7 @@ VIMRuntime::make_get_set('UpgradeEvent', 'message');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13212,7 +14411,7 @@ VIMRuntime::make_get_set('InfoUpgradeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13235,7 +14434,7 @@ VIMRuntime::make_get_set('WarningUpgradeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13258,7 +14457,7 @@ VIMRuntime::make_get_set('ErrorUpgradeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13281,7 +14480,7 @@ VIMRuntime::make_get_set('UserUpgradeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13304,7 +14503,7 @@ VIMRuntime::make_get_set('HostEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13327,7 +14526,7 @@ VIMRuntime::make_get_set('HostDasEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13350,7 +14549,7 @@ VIMRuntime::make_get_set('HostConnectedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13374,7 +14573,7 @@ VIMRuntime::make_get_set('HostDisconnectedEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13398,7 +14597,7 @@ VIMRuntime::make_get_set('HostSyncFailedEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13421,7 +14620,7 @@ VIMRuntime::make_get_set('HostConnectionLostEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13444,7 +14643,7 @@ VIMRuntime::make_get_set('HostReconnectionFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13467,7 +14666,7 @@ VIMRuntime::make_get_set('HostCnxFailedNoConnectionEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13490,7 +14689,7 @@ VIMRuntime::make_get_set('HostCnxFailedBadUsernameEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13513,7 +14712,7 @@ VIMRuntime::make_get_set('HostCnxFailedBadVersionEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13537,7 +14736,7 @@ VIMRuntime::make_get_set('HostCnxFailedAlreadyManagedEvent', 'serverName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13560,7 +14759,7 @@ VIMRuntime::make_get_set('HostCnxFailedNoLicenseEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13583,7 +14782,7 @@ VIMRuntime::make_get_set('HostCnxFailedNetworkErrorEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13606,7 +14805,7 @@ VIMRuntime::make_get_set('HostRemovedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13629,7 +14828,7 @@ VIMRuntime::make_get_set('HostCnxFailedCcagentUpgradeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13652,7 +14851,7 @@ VIMRuntime::make_get_set('HostCnxFailedBadCcagentEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13675,7 +14874,7 @@ VIMRuntime::make_get_set('HostCnxFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13698,7 +14897,7 @@ VIMRuntime::make_get_set('HostCnxFailedAccountFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13721,7 +14920,7 @@ VIMRuntime::make_get_set('HostCnxFailedNoAccessEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13745,7 +14944,7 @@ VIMRuntime::make_get_set('HostShutdownEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13768,7 +14967,7 @@ VIMRuntime::make_get_set('HostCnxFailedNotFoundEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13791,7 +14990,7 @@ VIMRuntime::make_get_set('HostCnxFailedTimeoutEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13814,7 +15013,7 @@ VIMRuntime::make_get_set('HostUpgradeFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13837,7 +15036,7 @@ VIMRuntime::make_get_set('EnteringMaintenanceModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13860,7 +15059,7 @@ VIMRuntime::make_get_set('EnteredMaintenanceModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13883,7 +15082,7 @@ VIMRuntime::make_get_set('ExitMaintenanceModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13906,7 +15105,7 @@ VIMRuntime::make_get_set('CanceledHostOperationEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13929,7 +15128,7 @@ VIMRuntime::make_get_set('TimedOutHostOperationEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13952,7 +15151,7 @@ VIMRuntime::make_get_set('HostDasEnabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13975,7 +15174,7 @@ VIMRuntime::make_get_set('HostDasDisabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -13998,7 +15197,7 @@ VIMRuntime::make_get_set('HostDasEnablingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14021,7 +15220,7 @@ VIMRuntime::make_get_set('HostDasDisablingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14046,7 +15245,7 @@ VIMRuntime::make_get_set('HostDasErrorEvent', 'message', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14069,7 +15268,7 @@ VIMRuntime::make_get_set('HostDasOkEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14092,7 +15291,7 @@ VIMRuntime::make_get_set('VcAgentUpgradedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14115,7 +15314,7 @@ VIMRuntime::make_get_set('VcAgentUninstalledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14139,7 +15338,7 @@ VIMRuntime::make_get_set('VcAgentUpgradeFailedEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14163,7 +15362,7 @@ VIMRuntime::make_get_set('VcAgentUninstallFailedEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14186,7 +15385,7 @@ VIMRuntime::make_get_set('HostAddedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14210,7 +15409,7 @@ VIMRuntime::make_get_set('HostAddFailedEvent', 'hostname');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14235,7 +15434,7 @@ VIMRuntime::make_get_set('HostIpChangedEvent', 'oldIP', 'newIP');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14258,7 +15457,7 @@ VIMRuntime::make_get_set('EnteringStandbyModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14281,7 +15480,7 @@ VIMRuntime::make_get_set('DrsEnteringStandbyModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14304,7 +15503,7 @@ VIMRuntime::make_get_set('EnteredStandbyModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14327,7 +15526,7 @@ VIMRuntime::make_get_set('DrsEnteredStandbyModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14350,7 +15549,7 @@ VIMRuntime::make_get_set('ExitingStandbyModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14373,7 +15572,7 @@ VIMRuntime::make_get_set('DrsExitingStandbyModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14396,7 +15595,7 @@ VIMRuntime::make_get_set('ExitedStandbyModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14419,7 +15618,7 @@ VIMRuntime::make_get_set('DrsExitedStandbyModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14442,7 +15641,7 @@ VIMRuntime::make_get_set('ExitStandbyModeFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14465,7 +15664,7 @@ VIMRuntime::make_get_set('DrsExitStandbyModeFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14488,7 +15687,7 @@ VIMRuntime::make_get_set('UpdatedAgentBeingRestartedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14513,7 +15712,7 @@ VIMRuntime::make_get_set('AccountCreatedEvent', 'spec', 'group');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14538,7 +15737,7 @@ VIMRuntime::make_get_set('AccountRemovedEvent', 'account', 'group');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14562,7 +15761,7 @@ VIMRuntime::make_get_set('UserPasswordChanged', 'userLogin');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14587,7 +15786,7 @@ VIMRuntime::make_get_set('AccountUpdatedEvent', 'spec', 'group');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14612,7 +15811,7 @@ VIMRuntime::make_get_set('UserAssignedToGroup', 'userLogin', 'group');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14637,7 +15836,7 @@ VIMRuntime::make_get_set('UserUnassignedFromGroup', 'userLogin', 'group');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14661,7 +15860,7 @@ VIMRuntime::make_get_set('DatastorePrincipalConfigured', 'datastorePrincipal');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14685,7 +15884,7 @@ VIMRuntime::make_get_set('VMFSDatastoreCreatedEvent', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14709,7 +15908,7 @@ VIMRuntime::make_get_set('NASDatastoreCreatedEvent', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14733,7 +15932,7 @@ VIMRuntime::make_get_set('LocalDatastoreCreatedEvent', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14757,7 +15956,7 @@ VIMRuntime::make_get_set('VMFSDatastoreExtendedEvent', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14781,7 +15980,7 @@ VIMRuntime::make_get_set('VMFSDatastoreExpandedEvent', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14805,7 +16004,7 @@ VIMRuntime::make_get_set('DatastoreRemovedOnHostEvent', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14830,7 +16029,7 @@ VIMRuntime::make_get_set('DatastoreRenamedOnHostEvent', 'oldName', 'newName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14855,7 +16054,7 @@ VIMRuntime::make_get_set('DuplicateIpDetectedEvent', 'duplicateIP', 'macAddress'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14879,7 +16078,7 @@ VIMRuntime::make_get_set('DatastoreDiscoveredEvent', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14903,7 +16102,7 @@ VIMRuntime::make_get_set('DrsResourceConfigureFailedEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14926,7 +16125,7 @@ VIMRuntime::make_get_set('DrsResourceConfigureSyncedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14949,7 +16148,7 @@ VIMRuntime::make_get_set('HostGetShortNameFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14973,7 +16172,7 @@ VIMRuntime::make_get_set('HostShortNameToIpFailedEvent', 'shortName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -14996,7 +16195,7 @@ VIMRuntime::make_get_set('HostIpToShortNameFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15020,7 +16219,7 @@ VIMRuntime::make_get_set('HostPrimaryAgentNotShortNameEvent', 'primaryAgent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15043,7 +16242,7 @@ VIMRuntime::make_get_set('HostNotInClusterEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15067,7 +16266,7 @@ VIMRuntime::make_get_set('HostIsolationIpPingFailedEvent', 'isolationIp');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15092,7 +16291,7 @@ VIMRuntime::make_get_set('HostIpInconsistentEvent', 'ipAddress', 'ipAddress2');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15115,7 +16314,7 @@ VIMRuntime::make_get_set('HostUserWorldSwapNotEnabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15138,7 +16337,7 @@ VIMRuntime::make_get_set('HostNonCompliantEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15161,7 +16360,7 @@ VIMRuntime::make_get_set('HostCompliantEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15185,7 +16384,7 @@ VIMRuntime::make_get_set('HostComplianceCheckedEvent', 'profile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15209,7 +16408,7 @@ VIMRuntime::make_get_set('ClusterComplianceCheckedEvent', 'profile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15233,7 +16432,7 @@ VIMRuntime::make_get_set('ProfileEvent', 'profile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15256,7 +16455,7 @@ VIMRuntime::make_get_set('ProfileCreatedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15279,7 +16478,7 @@ VIMRuntime::make_get_set('ProfileRemovedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15302,7 +16501,7 @@ VIMRuntime::make_get_set('ProfileAssociatedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15325,7 +16524,7 @@ VIMRuntime::make_get_set('ProfileDissociatedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15348,7 +16547,7 @@ VIMRuntime::make_get_set('HostConfigAppliedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15372,7 +16571,7 @@ VIMRuntime::make_get_set('ProfileReferenceHostChangedEvent', 'referenceHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15395,7 +16594,7 @@ VIMRuntime::make_get_set('ProfileChangedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15419,7 +16618,7 @@ VIMRuntime::make_get_set('HostProfileAppliedEvent', 'profile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15444,7 +16643,7 @@ VIMRuntime::make_get_set('HostShortNameInconsistentEvent', 'shortName', 'shortNa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15467,7 +16666,7 @@ VIMRuntime::make_get_set('HostNoRedundantManagementNetworkEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15491,7 +16690,7 @@ VIMRuntime::make_get_set('HostNoAvailableNetworksEvent', 'ips');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15515,7 +16714,7 @@ VIMRuntime::make_get_set('HostExtraNetworksEvent', 'ips');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15538,7 +16737,7 @@ VIMRuntime::make_get_set('HostNoHAEnabledPortGroupsEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15562,7 +16761,7 @@ VIMRuntime::make_get_set('HostMissingNetworksEvent', 'ips');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15587,7 +16786,7 @@ VIMRuntime::make_get_set('VnicPortArgument', 'vnic', 'port');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15611,7 +16810,7 @@ VIMRuntime::make_get_set('ArrayOfVnicPortArgument', 'VnicPortArgument');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15635,7 +16834,7 @@ VIMRuntime::make_get_set('HostVnicConnectedToCustomizedDVPortEvent', 'vnic');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15659,7 +16858,7 @@ VIMRuntime::make_get_set('GhostDvsProxySwitchDetectedEvent', 'switchUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15683,7 +16882,7 @@ VIMRuntime::make_get_set('GhostDvsProxySwitchRemovedEvent', 'switchUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15707,7 +16906,7 @@ VIMRuntime::make_get_set('VmEvent', 'template');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15730,7 +16929,7 @@ VIMRuntime::make_get_set('VmPoweredOffEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15753,7 +16952,7 @@ VIMRuntime::make_get_set('VmPoweredOnEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15776,7 +16975,7 @@ VIMRuntime::make_get_set('VmSuspendedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15799,7 +16998,7 @@ VIMRuntime::make_get_set('VmStartingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15822,7 +17021,7 @@ VIMRuntime::make_get_set('VmStoppingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15845,7 +17044,7 @@ VIMRuntime::make_get_set('VmSuspendingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15868,7 +17067,7 @@ VIMRuntime::make_get_set('VmResumingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15891,7 +17090,7 @@ VIMRuntime::make_get_set('VmDisconnectedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15914,7 +17113,7 @@ VIMRuntime::make_get_set('VmRemoteConsoleConnectedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15937,7 +17136,7 @@ VIMRuntime::make_get_set('VmRemoteConsoleDisconnectedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15960,7 +17159,7 @@ VIMRuntime::make_get_set('VmDiscoveredEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -15983,7 +17182,7 @@ VIMRuntime::make_get_set('VmOrphanedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16007,7 +17206,7 @@ VIMRuntime::make_get_set('VmBeingCreatedEvent', 'configSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16030,7 +17229,7 @@ VIMRuntime::make_get_set('VmCreatedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16053,7 +17252,7 @@ VIMRuntime::make_get_set('VmStartRecordingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16076,7 +17275,7 @@ VIMRuntime::make_get_set('VmEndRecordingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16099,7 +17298,7 @@ VIMRuntime::make_get_set('VmStartReplayingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16122,7 +17321,7 @@ VIMRuntime::make_get_set('VmEndReplayingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16145,7 +17344,7 @@ VIMRuntime::make_get_set('VmRegisteredEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16170,7 +17369,7 @@ VIMRuntime::make_get_set('VmAutoRenameEvent', 'oldName', 'newName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16196,7 +17395,7 @@ VIMRuntime::make_get_set('VmBeingHotMigratedEvent', 'destHost', 'destDatacenter'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16219,7 +17418,7 @@ VIMRuntime::make_get_set('VmResettingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16244,7 +17443,7 @@ VIMRuntime::make_get_set('VmStaticMacConflictEvent', 'conflictedVm', 'mac');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16269,7 +17468,7 @@ VIMRuntime::make_get_set('VmMacConflictEvent', 'conflictedVm', 'mac');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16293,7 +17492,7 @@ VIMRuntime::make_get_set('VmBeingDeployedEvent', 'srcTemplate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16318,7 +17517,7 @@ VIMRuntime::make_get_set('VmDeployFailedEvent', 'destDatastore', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16342,7 +17541,7 @@ VIMRuntime::make_get_set('VmDeployedEvent', 'srcTemplate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16368,7 +17567,7 @@ VIMRuntime::make_get_set('VmMacChangedEvent', 'adapter', 'oldMac', 'newMac');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16393,7 +17592,7 @@ VIMRuntime::make_get_set('VmMacAssignedEvent', 'adapter', 'mac');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16418,7 +17617,7 @@ VIMRuntime::make_get_set('VmUuidConflictEvent', 'conflictedVm', 'uuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16443,7 +17642,7 @@ VIMRuntime::make_get_set('VmInstanceUuidConflictEvent', 'conflictedVm', 'instanc
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16469,7 +17668,7 @@ VIMRuntime::make_get_set('VmBeingMigratedEvent', 'destHost', 'destDatacenter', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16496,7 +17695,7 @@ VIMRuntime::make_get_set('VmFailedMigrateEvent', 'destHost', 'reason', 'destData
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16522,7 +17721,7 @@ VIMRuntime::make_get_set('VmMigratedEvent', 'sourceHost', 'sourceDatacenter', 's
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16546,7 +17745,7 @@ VIMRuntime::make_get_set('VmUnsupportedStartingEvent', 'guestId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16569,7 +17768,7 @@ VIMRuntime::make_get_set('DrsVmMigratedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16592,7 +17791,7 @@ VIMRuntime::make_get_set('DrsVmPoweredOnEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16615,7 +17814,7 @@ VIMRuntime::make_get_set('DrsRuleViolationEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16638,7 +17837,7 @@ VIMRuntime::make_get_set('DrsRuleComplianceEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16661,7 +17860,7 @@ VIMRuntime::make_get_set('VmRelocateSpecEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16687,7 +17886,7 @@ VIMRuntime::make_get_set('VmBeingRelocatedEvent', 'destHost', 'destDatacenter', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16713,7 +17912,7 @@ VIMRuntime::make_get_set('VmRelocatedEvent', 'sourceHost', 'sourceDatacenter', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16740,7 +17939,7 @@ VIMRuntime::make_get_set('VmRelocateFailedEvent', 'destHost', 'reason', 'destDat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16763,7 +17962,7 @@ VIMRuntime::make_get_set('VmEmigratingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16786,7 +17985,7 @@ VIMRuntime::make_get_set('VmCloneEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16812,7 +18011,7 @@ VIMRuntime::make_get_set('VmBeingClonedEvent', 'destFolder', 'destName', 'destHo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16837,7 +18036,7 @@ VIMRuntime::make_get_set('VmBeingClonedNoFolderEvent', 'destName', 'destHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16864,7 +18063,7 @@ VIMRuntime::make_get_set('VmCloneFailedEvent', 'destFolder', 'destName', 'destHo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16888,7 +18087,7 @@ VIMRuntime::make_get_set('VmClonedEvent', 'sourceVm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16911,7 +18110,7 @@ VIMRuntime::make_get_set('VmResourceReallocatedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16936,7 +18135,7 @@ VIMRuntime::make_get_set('VmRenamedEvent', 'oldName', 'newName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16959,7 +18158,7 @@ VIMRuntime::make_get_set('VmDateRolledBackEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -16983,7 +18182,7 @@ VIMRuntime::make_get_set('VmNoNetworkAccessEvent', 'destHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17008,7 +18207,7 @@ VIMRuntime::make_get_set('VmDiskFailedEvent', 'disk', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17032,7 +18231,7 @@ VIMRuntime::make_get_set('VmFailedToPowerOnEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17056,7 +18255,7 @@ VIMRuntime::make_get_set('VmFailedToPowerOffEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17080,7 +18279,7 @@ VIMRuntime::make_get_set('VmFailedToSuspendEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17104,7 +18303,7 @@ VIMRuntime::make_get_set('VmFailedToResetEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17128,7 +18327,7 @@ VIMRuntime::make_get_set('VmFailedToShutdownGuestEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17152,7 +18351,7 @@ VIMRuntime::make_get_set('VmFailedToRebootGuestEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17176,7 +18375,7 @@ VIMRuntime::make_get_set('VmFailedToStandbyGuestEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17199,7 +18398,7 @@ VIMRuntime::make_get_set('VmRemovedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17222,7 +18421,7 @@ VIMRuntime::make_get_set('VmGuestShutdownEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17245,7 +18444,7 @@ VIMRuntime::make_get_set('VmGuestRebootEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17268,7 +18467,7 @@ VIMRuntime::make_get_set('VmGuestStandbyEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17292,7 +18491,7 @@ VIMRuntime::make_get_set('VmUpgradingEvent', 'version');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17316,7 +18515,7 @@ VIMRuntime::make_get_set('VmUpgradeCompleteEvent', 'version');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17339,7 +18538,7 @@ VIMRuntime::make_get_set('VmUpgradeFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17363,7 +18562,7 @@ VIMRuntime::make_get_set('VmRestartedOnAlternateHostEvent', 'sourceHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17387,7 +18586,7 @@ VIMRuntime::make_get_set('VmReconfiguredEvent', 'configSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17412,7 +18611,7 @@ VIMRuntime::make_get_set('VmMessageEvent', 'message', 'messageInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17437,7 +18636,7 @@ VIMRuntime::make_get_set('VmMessageWarningEvent', 'message', 'messageInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17462,7 +18661,7 @@ VIMRuntime::make_get_set('VmMessageErrorEvent', 'message', 'messageInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17485,7 +18684,7 @@ VIMRuntime::make_get_set('VmConfigMissingEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17509,7 +18708,7 @@ VIMRuntime::make_get_set('VmPowerOffOnIsolationEvent', 'isolatedHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17534,7 +18733,7 @@ VIMRuntime::make_get_set('VmShutdownOnIsolationEvent', 'isolatedHost', 'shutdown
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17558,7 +18757,7 @@ VIMRuntime::make_get_set('VmFailoverFailed', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17582,7 +18781,7 @@ VIMRuntime::make_get_set('VmDasBeingResetEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17605,7 +18804,7 @@ VIMRuntime::make_get_set('VmDasResetFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17628,7 +18827,7 @@ VIMRuntime::make_get_set('VmMaxRestartCountReached');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17651,7 +18850,7 @@ VIMRuntime::make_get_set('VmMaxFTRestartCountReached');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17675,7 +18874,7 @@ VIMRuntime::make_get_set('VmDasBeingResetWithScreenshotEvent', 'screenshotFilePa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17698,7 +18897,7 @@ VIMRuntime::make_get_set('NotEnoughResourcesToStartVmEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17722,7 +18921,7 @@ VIMRuntime::make_get_set('VmUuidAssignedEvent', 'uuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17746,7 +18945,7 @@ VIMRuntime::make_get_set('VmInstanceUuidAssignedEvent', 'instanceUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17771,7 +18970,7 @@ VIMRuntime::make_get_set('VmUuidChangedEvent', 'oldUuid', 'newUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17796,7 +18995,7 @@ VIMRuntime::make_get_set('VmInstanceUuidChangedEvent', 'oldInstanceUuid', 'newIn
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17822,7 +19021,7 @@ VIMRuntime::make_get_set('VmWwnConflictEvent', 'conflictedVms', 'conflictedHosts
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17845,7 +19044,7 @@ VIMRuntime::make_get_set('VmAcquiredMksTicketEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17869,7 +19068,7 @@ VIMRuntime::make_get_set('VmAcquiredTicketEvent', 'ticketType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17895,7 +19094,7 @@ VIMRuntime::make_get_set('HostWwnConflictEvent', 'conflictedVms', 'conflictedHos
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17920,7 +19119,7 @@ VIMRuntime::make_get_set('VmWwnAssignedEvent', 'nodeWwns', 'portWwns');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17947,7 +19146,7 @@ VIMRuntime::make_get_set('VmWwnChangedEvent', 'oldNodeWwns', 'oldPortWwns', 'new
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17970,7 +19169,7 @@ VIMRuntime::make_get_set('VmSecondaryAddedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -17993,7 +19192,7 @@ VIMRuntime::make_get_set('VmFaultToleranceTurnedOffEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18018,7 +19217,7 @@ VIMRuntime::make_get_set('VmFaultToleranceStateChangedEvent', 'oldState', 'newSt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18041,7 +19240,7 @@ VIMRuntime::make_get_set('VmSecondaryDisabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18065,7 +19264,7 @@ VIMRuntime::make_get_set('VmSecondaryDisabledBySystemEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18088,7 +19287,7 @@ VIMRuntime::make_get_set('VmSecondaryEnabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18111,7 +19310,7 @@ VIMRuntime::make_get_set('VmStartingSecondaryEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18134,7 +19333,7 @@ VIMRuntime::make_get_set('VmSecondaryStartedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18157,7 +19356,7 @@ VIMRuntime::make_get_set('VmFailedUpdatingSecondaryConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18181,7 +19380,7 @@ VIMRuntime::make_get_set('VmFailedStartingSecondaryEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18205,7 +19404,7 @@ VIMRuntime::make_get_set('VmTimedoutStartingSecondaryEvent', 'timeout');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18228,7 +19427,7 @@ VIMRuntime::make_get_set('VmNoCompatibleHostForSecondaryEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18252,7 +19451,7 @@ VIMRuntime::make_get_set('VmPrimaryFailoverEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18276,7 +19475,7 @@ VIMRuntime::make_get_set('VmFaultToleranceVmTerminatedEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18303,7 +19502,7 @@ VIMRuntime::make_get_set('HostWwnChangedEvent', 'oldNodeWwns', 'oldPortWwns', 'n
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18326,7 +19525,7 @@ VIMRuntime::make_get_set('HostAdminDisableEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18349,7 +19548,7 @@ VIMRuntime::make_get_set('HostAdminEnableEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18373,7 +19572,7 @@ VIMRuntime::make_get_set('HostEnableAdminFailedEvent', 'permissions');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18396,7 +19595,7 @@ VIMRuntime::make_get_set('VmFailedRelayoutOnVmfs2DatastoreEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18420,7 +19619,7 @@ VIMRuntime::make_get_set('VmFailedRelayoutEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18443,7 +19642,7 @@ VIMRuntime::make_get_set('VmRelayoutSuccessfulEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18466,7 +19665,7 @@ VIMRuntime::make_get_set('VmRelayoutUpToDateEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18489,7 +19688,7 @@ VIMRuntime::make_get_set('VmConnectedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18513,7 +19712,7 @@ VIMRuntime::make_get_set('VmPoweringOnWithCustomizedDVPortEvent', 'vnic');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18536,7 +19735,7 @@ VIMRuntime::make_get_set('VmDasUpdateErrorEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18559,7 +19758,7 @@ VIMRuntime::make_get_set('NoMaintenanceModeDrsRecommendationForVM');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18582,7 +19781,7 @@ VIMRuntime::make_get_set('VmDasUpdateOkEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18607,7 +19806,7 @@ VIMRuntime::make_get_set('ScheduledTaskEvent', 'scheduledTask', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18630,7 +19829,7 @@ VIMRuntime::make_get_set('ScheduledTaskCreatedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18653,7 +19852,7 @@ VIMRuntime::make_get_set('ScheduledTaskStartedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18676,7 +19875,7 @@ VIMRuntime::make_get_set('ScheduledTaskRemovedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18699,7 +19898,7 @@ VIMRuntime::make_get_set('ScheduledTaskReconfiguredEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18722,7 +19921,7 @@ VIMRuntime::make_get_set('ScheduledTaskCompletedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18746,7 +19945,7 @@ VIMRuntime::make_get_set('ScheduledTaskFailedEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18770,7 +19969,7 @@ VIMRuntime::make_get_set('ScheduledTaskEmailCompletedEvent', 'to');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18795,7 +19994,7 @@ VIMRuntime::make_get_set('ScheduledTaskEmailFailedEvent', 'to', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18819,7 +20018,7 @@ VIMRuntime::make_get_set('AlarmEvent', 'alarm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18843,7 +20042,7 @@ VIMRuntime::make_get_set('AlarmCreatedEvent', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18870,7 +20069,7 @@ VIMRuntime::make_get_set('AlarmStatusChangedEvent', 'source', 'entity', 'from', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18895,7 +20094,7 @@ VIMRuntime::make_get_set('AlarmActionTriggeredEvent', 'source', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18920,7 +20119,7 @@ VIMRuntime::make_get_set('AlarmEmailCompletedEvent', 'entity', 'to');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18946,7 +20145,7 @@ VIMRuntime::make_get_set('AlarmEmailFailedEvent', 'entity', 'to', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18970,7 +20169,7 @@ VIMRuntime::make_get_set('AlarmSnmpCompletedEvent', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -18995,7 +20194,7 @@ VIMRuntime::make_get_set('AlarmSnmpFailedEvent', 'entity', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19020,7 +20219,7 @@ VIMRuntime::make_get_set('AlarmScriptCompleteEvent', 'entity', 'script');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19046,7 +20245,7 @@ VIMRuntime::make_get_set('AlarmScriptFailedEvent', 'entity', 'script', 'reason')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19070,7 +20269,7 @@ VIMRuntime::make_get_set('AlarmRemovedEvent', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19094,7 +20293,7 @@ VIMRuntime::make_get_set('AlarmReconfiguredEvent', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19119,7 +20318,7 @@ VIMRuntime::make_get_set('AlarmAcknowledgedEvent', 'source', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19145,7 +20344,7 @@ VIMRuntime::make_get_set('AlarmClearedEvent', 'source', 'entity', 'from');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19168,7 +20367,7 @@ VIMRuntime::make_get_set('CustomFieldEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19193,7 +20392,7 @@ VIMRuntime::make_get_set('CustomFieldDefEvent', 'fieldKey', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19216,7 +20415,7 @@ VIMRuntime::make_get_set('CustomFieldDefAddedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19239,7 +20438,7 @@ VIMRuntime::make_get_set('CustomFieldDefRemovedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19263,7 +20462,7 @@ VIMRuntime::make_get_set('CustomFieldDefRenamedEvent', 'newName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19290,7 +20489,7 @@ VIMRuntime::make_get_set('CustomFieldValueChangedEvent', 'entity', 'fieldKey', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19313,7 +20512,7 @@ VIMRuntime::make_get_set('AuthorizationEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19339,7 +20538,7 @@ VIMRuntime::make_get_set('PermissionEvent', 'entity', 'principal', 'group');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19364,7 +20563,7 @@ VIMRuntime::make_get_set('PermissionAddedEvent', 'role', 'propagate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19389,7 +20588,7 @@ VIMRuntime::make_get_set('PermissionUpdatedEvent', 'role', 'propagate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19412,7 +20611,7 @@ VIMRuntime::make_get_set('PermissionRemovedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19436,7 +20635,7 @@ VIMRuntime::make_get_set('RoleEvent', 'role');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19460,7 +20659,7 @@ VIMRuntime::make_get_set('RoleAddedEvent', 'privilegeList');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19484,7 +20683,7 @@ VIMRuntime::make_get_set('RoleUpdatedEvent', 'privilegeList');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19507,7 +20706,7 @@ VIMRuntime::make_get_set('RoleRemovedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19531,7 +20730,7 @@ VIMRuntime::make_get_set('DatastoreEvent', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19554,7 +20753,7 @@ VIMRuntime::make_get_set('DatastoreDestroyedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19579,7 +20778,7 @@ VIMRuntime::make_get_set('DatastoreRenamedEvent', 'oldName', 'newName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19604,7 +20803,7 @@ VIMRuntime::make_get_set('DatastoreCapacityIncreasedEvent', 'oldCapacity', 'newC
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19627,7 +20826,7 @@ VIMRuntime::make_get_set('DatastoreDuplicatedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19651,7 +20850,7 @@ VIMRuntime::make_get_set('DatastoreFileEvent', 'targetFile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19676,7 +20875,7 @@ VIMRuntime::make_get_set('DatastoreFileCopiedEvent', 'sourceDatastore', 'sourceF
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19701,7 +20900,7 @@ VIMRuntime::make_get_set('DatastoreFileMovedEvent', 'sourceDatastore', 'sourceFi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19724,7 +20923,7 @@ VIMRuntime::make_get_set('DatastoreFileDeletedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19747,7 +20946,7 @@ VIMRuntime::make_get_set('NonVIWorkloadDetectedOnDatastoreEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19770,7 +20969,7 @@ VIMRuntime::make_get_set('DatastoreIORMReconfiguredEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19794,7 +20993,7 @@ VIMRuntime::make_get_set('TaskEvent', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19817,7 +21016,7 @@ VIMRuntime::make_get_set('TaskTimeoutEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19840,7 +21039,7 @@ VIMRuntime::make_get_set('LicenseEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19864,7 +21063,7 @@ VIMRuntime::make_get_set('ServerLicenseExpiredEvent', 'product');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19887,7 +21086,7 @@ VIMRuntime::make_get_set('HostLicenseExpiredEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19910,7 +21109,7 @@ VIMRuntime::make_get_set('VMotionLicenseExpiredEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19934,7 +21133,7 @@ VIMRuntime::make_get_set('NoLicenseEvent', 'feature');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19958,7 +21157,7 @@ VIMRuntime::make_get_set('LicenseServerUnavailableEvent', 'licenseServer');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -19982,7 +21181,7 @@ VIMRuntime::make_get_set('LicenseServerAvailableEvent', 'licenseServer');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20006,7 +21205,7 @@ VIMRuntime::make_get_set('LicenseExpiredEvent', 'feature');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20030,7 +21229,7 @@ VIMRuntime::make_get_set('InvalidEditionEvent', 'feature');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20054,7 +21253,7 @@ VIMRuntime::make_get_set('HostInventoryFullEvent', 'capacity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20077,7 +21276,7 @@ VIMRuntime::make_get_set('LicenseRestrictedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20100,7 +21299,7 @@ VIMRuntime::make_get_set('IncorrectHostInformationEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20125,7 +21324,7 @@ VIMRuntime::make_get_set('UnlicensedVirtualMachinesEvent', 'unlicensed', 'availa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20149,7 +21348,7 @@ VIMRuntime::make_get_set('UnlicensedVirtualMachinesFoundEvent', 'available');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20172,7 +21371,7 @@ VIMRuntime::make_get_set('AllVirtualMachinesLicensedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20196,7 +21395,7 @@ VIMRuntime::make_get_set('LicenseNonComplianceEvent', 'url');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20220,7 +21419,7 @@ VIMRuntime::make_get_set('MigrationEvent', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20243,7 +21442,7 @@ VIMRuntime::make_get_set('MigrationWarningEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20266,7 +21465,7 @@ VIMRuntime::make_get_set('MigrationErrorEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20290,7 +21489,7 @@ VIMRuntime::make_get_set('MigrationHostWarningEvent', 'dstHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20314,7 +21513,7 @@ VIMRuntime::make_get_set('MigrationHostErrorEvent', 'dstHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20339,7 +21538,7 @@ VIMRuntime::make_get_set('MigrationResourceWarningEvent', 'dstPool', 'dstHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20364,7 +21563,7 @@ VIMRuntime::make_get_set('MigrationResourceErrorEvent', 'dstPool', 'dstHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20387,7 +21586,7 @@ VIMRuntime::make_get_set('ClusterEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20410,7 +21609,7 @@ VIMRuntime::make_get_set('DasEnabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20433,7 +21632,7 @@ VIMRuntime::make_get_set('DasDisabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20456,7 +21655,7 @@ VIMRuntime::make_get_set('DasAdmissionControlDisabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20479,7 +21678,7 @@ VIMRuntime::make_get_set('DasAdmissionControlEnabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20503,7 +21702,7 @@ VIMRuntime::make_get_set('DasHostFailedEvent', 'failedHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20527,7 +21726,7 @@ VIMRuntime::make_get_set('DasHostIsolatedEvent', 'isolatedHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20550,7 +21749,7 @@ VIMRuntime::make_get_set('DasClusterIsolatedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20573,7 +21772,7 @@ VIMRuntime::make_get_set('DasAgentUnavailableEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20596,7 +21795,7 @@ VIMRuntime::make_get_set('DasAgentFoundEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20619,7 +21818,7 @@ VIMRuntime::make_get_set('InsufficientFailoverResourcesEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20642,7 +21841,7 @@ VIMRuntime::make_get_set('FailoverLevelRestored');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20665,7 +21864,7 @@ VIMRuntime::make_get_set('ClusterOvercommittedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20688,7 +21887,7 @@ VIMRuntime::make_get_set('HostOvercommittedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20713,7 +21912,7 @@ VIMRuntime::make_get_set('ClusterStatusChangedEvent', 'oldStatus', 'newStatus');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20736,7 +21935,7 @@ VIMRuntime::make_get_set('HostStatusChangedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20760,7 +21959,7 @@ VIMRuntime::make_get_set('ClusterCreatedEvent', 'parent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20783,7 +21982,7 @@ VIMRuntime::make_get_set('ClusterDestroyedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20807,7 +22006,7 @@ VIMRuntime::make_get_set('DrsEnabledEvent', 'behavior');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20830,7 +22029,7 @@ VIMRuntime::make_get_set('DrsDisabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20853,7 +22052,7 @@ VIMRuntime::make_get_set('ClusterReconfiguredEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20877,7 +22076,7 @@ VIMRuntime::make_get_set('HostMonitoringStateChangedEvent', 'state');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20901,7 +22100,7 @@ VIMRuntime::make_get_set('VmHealthMonitoringStateChangedEvent', 'state');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20925,7 +22124,7 @@ VIMRuntime::make_get_set('ResourcePoolEvent', 'resourcePool');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20949,7 +22148,7 @@ VIMRuntime::make_get_set('ResourcePoolCreatedEvent', 'parent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20972,7 +22171,7 @@ VIMRuntime::make_get_set('ResourcePoolDestroyedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -20997,7 +22196,7 @@ VIMRuntime::make_get_set('ResourcePoolMovedEvent', 'oldParent', 'newParent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21020,7 +22219,7 @@ VIMRuntime::make_get_set('ResourcePoolReconfiguredEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21043,7 +22242,7 @@ VIMRuntime::make_get_set('ResourceViolatedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21068,7 +22267,7 @@ VIMRuntime::make_get_set('VmResourcePoolMovedEvent', 'oldParent', 'newParent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21092,7 +22291,7 @@ VIMRuntime::make_get_set('TemplateUpgradeEvent', 'legacyTemplate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21115,7 +22314,7 @@ VIMRuntime::make_get_set('TemplateBeingUpgradedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21139,7 +22338,7 @@ VIMRuntime::make_get_set('TemplateUpgradeFailedEvent', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21162,7 +22361,7 @@ VIMRuntime::make_get_set('TemplateUpgradedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21186,7 +22385,7 @@ VIMRuntime::make_get_set('CustomizationEvent', 'logLocation');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21209,7 +22408,7 @@ VIMRuntime::make_get_set('CustomizationStartedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21232,7 +22431,7 @@ VIMRuntime::make_get_set('CustomizationSucceeded');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21255,7 +22454,7 @@ VIMRuntime::make_get_set('CustomizationFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21278,7 +22477,7 @@ VIMRuntime::make_get_set('CustomizationUnknownFailure');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21303,7 +22502,7 @@ VIMRuntime::make_get_set('CustomizationSysprepFailed', 'sysprepVersion', 'system
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21326,7 +22525,7 @@ VIMRuntime::make_get_set('CustomizationLinuxIdentityFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21349,7 +22548,7 @@ VIMRuntime::make_get_set('CustomizationNetworkSetupFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21373,7 +22572,7 @@ VIMRuntime::make_get_set('LockerMisconfiguredEvent', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21398,7 +22597,7 @@ VIMRuntime::make_get_set('LockerReconfiguredEvent', 'oldDatastore', 'newDatastor
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21421,7 +22620,7 @@ VIMRuntime::make_get_set('NoDatastoresConfiguredEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21444,7 +22643,7 @@ VIMRuntime::make_get_set('AdminPasswordNotChangedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21467,7 +22666,7 @@ VIMRuntime::make_get_set('HostInAuditModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21490,7 +22689,7 @@ VIMRuntime::make_get_set('LocalTSMEnabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21513,7 +22712,7 @@ VIMRuntime::make_get_set('RemoteTSMEnabledEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21536,7 +22735,7 @@ VIMRuntime::make_get_set('VimAccountPasswordChangedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21559,7 +22758,7 @@ VIMRuntime::make_get_set('IScsiBootFailureEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21584,7 +22783,7 @@ VIMRuntime::make_get_set('DvsHealthStatusChangeEvent', 'switchUuid', 'healthResu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21609,7 +22808,7 @@ VIMRuntime::make_get_set('NetworkRollbackEvent', 'methodName', 'transactionId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21632,7 +22831,7 @@ VIMRuntime::make_get_set('UplinkPortVlanTrunkedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21655,7 +22854,7 @@ VIMRuntime::make_get_set('UplinkPortVlanUntrunkedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21678,7 +22877,7 @@ VIMRuntime::make_get_set('MtuMatchEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21701,7 +22900,7 @@ VIMRuntime::make_get_set('MtuMismatchEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21724,7 +22923,7 @@ VIMRuntime::make_get_set('UplinkPortMtuNotSupportEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21747,7 +22946,7 @@ VIMRuntime::make_get_set('UplinkPortMtuSupportEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21770,7 +22969,7 @@ VIMRuntime::make_get_set('TeamingMatchEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21793,7 +22992,7 @@ VIMRuntime::make_get_set('TeamingMisMatchEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21816,7 +23015,7 @@ VIMRuntime::make_get_set('DvsEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21840,7 +23039,7 @@ VIMRuntime::make_get_set('DvsCreatedEvent', 'parent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21865,7 +23064,7 @@ VIMRuntime::make_get_set('DvsRenamedEvent', 'oldName', 'newName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21889,7 +23088,7 @@ VIMRuntime::make_get_set('DvsReconfiguredEvent', 'configSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21913,7 +23112,7 @@ VIMRuntime::make_get_set('DvsUpgradeAvailableEvent', 'productInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21937,7 +23136,7 @@ VIMRuntime::make_get_set('DvsUpgradeInProgressEvent', 'productInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21961,7 +23160,7 @@ VIMRuntime::make_get_set('DvsUpgradeRejectedEvent', 'productInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -21985,7 +23184,7 @@ VIMRuntime::make_get_set('DvsUpgradedEvent', 'productInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22009,7 +23208,7 @@ VIMRuntime::make_get_set('DvsHostJoinedEvent', 'hostJoined');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22033,7 +23232,7 @@ VIMRuntime::make_get_set('DvsHostLeftEvent', 'hostLeft');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22058,7 +23257,7 @@ VIMRuntime::make_get_set('DvsOutOfSyncHostArgument', 'outOfSyncHost', 'configPar
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22082,7 +23281,7 @@ VIMRuntime::make_get_set('ArrayOfDvsOutOfSyncHostArgument', 'DvsOutOfSyncHostArg
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22106,7 +23305,7 @@ VIMRuntime::make_get_set('OutOfSyncDvsHost', 'hostOutOfSync');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22130,7 +23329,7 @@ VIMRuntime::make_get_set('DvsHostWentOutOfSyncEvent', 'hostOutOfSync');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22154,7 +23353,7 @@ VIMRuntime::make_get_set('DvsHostBackInSyncEvent', 'hostBackInSync');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22182,7 +23381,7 @@ VIMRuntime::make_get_set('DvsHostStatusUpdated', 'hostMember', 'oldStatus', 'new
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22206,7 +23405,7 @@ VIMRuntime::make_get_set('DvsPortCreatedEvent', 'portKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22230,7 +23429,7 @@ VIMRuntime::make_get_set('DvsPortReconfiguredEvent', 'portKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22254,7 +23453,7 @@ VIMRuntime::make_get_set('DvsPortDeletedEvent', 'portKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22279,7 +23478,7 @@ VIMRuntime::make_get_set('DvsPortConnectedEvent', 'portKey', 'connectee');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22304,7 +23503,7 @@ VIMRuntime::make_get_set('DvsPortDisconnectedEvent', 'portKey', 'connectee');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22328,7 +23527,7 @@ VIMRuntime::make_get_set('DvsPortVendorSpecificStateChangeEvent', 'portKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22353,7 +23552,7 @@ VIMRuntime::make_get_set('DvsPortRuntimeChangeEvent', 'portKey', 'runtimeInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22378,7 +23577,7 @@ VIMRuntime::make_get_set('DvsPortLinkUpEvent', 'portKey', 'runtimeInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22403,7 +23602,7 @@ VIMRuntime::make_get_set('DvsPortLinkDownEvent', 'portKey', 'runtimeInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22429,7 +23628,7 @@ VIMRuntime::make_get_set('DvsPortJoinPortgroupEvent', 'portKey', 'portgroupKey',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22455,7 +23654,7 @@ VIMRuntime::make_get_set('DvsPortLeavePortgroupEvent', 'portKey', 'portgroupKey'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22481,7 +23680,7 @@ VIMRuntime::make_get_set('DvsPortBlockedEvent', 'portKey', 'statusDetail', 'runt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22506,7 +23705,7 @@ VIMRuntime::make_get_set('DvsPortUnblockedEvent', 'portKey', 'runtimeInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22531,7 +23730,7 @@ VIMRuntime::make_get_set('DvsPortEnteredPassthruEvent', 'portKey', 'runtimeInfo'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22556,7 +23755,7 @@ VIMRuntime::make_get_set('DvsPortExitedPassthruEvent', 'portKey', 'runtimeInfo')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22579,7 +23778,7 @@ VIMRuntime::make_get_set('DvsDestroyedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22604,7 +23803,7 @@ VIMRuntime::make_get_set('DvsMergedEvent', 'sourceDvs', 'destinationDvs');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22628,7 +23827,7 @@ VIMRuntime::make_get_set('HostLocalPortCreatedEvent', 'hostLocalPort');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22653,7 +23852,7 @@ VIMRuntime::make_get_set('RollbackEvent', 'hostName', 'methodName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22680,7 +23879,7 @@ VIMRuntime::make_get_set('RecoveryEvent', 'hostName', 'portKey', 'dvsUuid', 'vni
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22704,7 +23903,7 @@ VIMRuntime::make_get_set('DvsImportEvent', 'importType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22727,7 +23926,7 @@ VIMRuntime::make_get_set('DvsRestoreEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22750,7 +23949,7 @@ VIMRuntime::make_get_set('DVPortgroupEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22773,7 +23972,7 @@ VIMRuntime::make_get_set('DVPortgroupCreatedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22798,7 +23997,7 @@ VIMRuntime::make_get_set('DVPortgroupRenamedEvent', 'oldName', 'newName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22822,7 +24021,7 @@ VIMRuntime::make_get_set('DVPortgroupReconfiguredEvent', 'configSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22845,7 +24044,7 @@ VIMRuntime::make_get_set('DVPortgroupDestroyedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22869,7 +24068,7 @@ VIMRuntime::make_get_set('DvpgImportEvent', 'importType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22892,7 +24091,7 @@ VIMRuntime::make_get_set('DvpgRestoreEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22915,7 +24114,7 @@ VIMRuntime::make_get_set('DrsInvocationFailedEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22938,7 +24137,7 @@ VIMRuntime::make_get_set('DrsRecoveredFromFailureEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22962,7 +24161,7 @@ VIMRuntime::make_get_set('VmReloadFromPathEvent', 'configPath');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -22986,7 +24185,7 @@ VIMRuntime::make_get_set('VmReloadFromPathFailedEvent', 'configPath');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23009,7 +24208,7 @@ VIMRuntime::make_get_set('VmRequirementsExceedCurrentEVCModeEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23032,7 +24231,7 @@ VIMRuntime::make_get_set('EventArgument');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23057,7 +24256,7 @@ VIMRuntime::make_get_set('RoleEventArgument', 'roleId', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23081,7 +24280,7 @@ VIMRuntime::make_get_set('EntityEventArgument', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23105,7 +24304,7 @@ VIMRuntime::make_get_set('ManagedEntityEventArgument', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23129,7 +24328,7 @@ VIMRuntime::make_get_set('FolderEventArgument', 'folder');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23153,7 +24352,7 @@ VIMRuntime::make_get_set('DatacenterEventArgument', 'datacenter');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23177,7 +24376,7 @@ VIMRuntime::make_get_set('ComputeResourceEventArgument', 'computeResource');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23201,7 +24400,7 @@ VIMRuntime::make_get_set('ResourcePoolEventArgument', 'resourcePool');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23225,7 +24424,7 @@ VIMRuntime::make_get_set('HostEventArgument', 'host');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23249,7 +24448,7 @@ VIMRuntime::make_get_set('ArrayOfHostEventArgument', 'HostEventArgument');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23273,7 +24472,7 @@ VIMRuntime::make_get_set('VmEventArgument', 'vm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23297,7 +24496,7 @@ VIMRuntime::make_get_set('ArrayOfVmEventArgument', 'VmEventArgument');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23321,7 +24520,7 @@ VIMRuntime::make_get_set('DatastoreEventArgument', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23345,7 +24544,7 @@ VIMRuntime::make_get_set('NetworkEventArgument', 'network');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23369,7 +24568,7 @@ VIMRuntime::make_get_set('AlarmEventArgument', 'alarm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23393,7 +24592,7 @@ VIMRuntime::make_get_set('ScheduledTaskEventArgument', 'scheduledTask');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23418,7 +24617,7 @@ VIMRuntime::make_get_set('ProfileEventArgument', 'profile', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23442,7 +24641,7 @@ VIMRuntime::make_get_set('DvsEventArgument', 'dvs');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23468,7 +24667,7 @@ VIMRuntime::make_get_set('EventArgDesc', 'name', 'type', 'description');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23492,7 +24691,7 @@ VIMRuntime::make_get_set('ArrayOfEventArgDesc', 'EventArgDesc');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23524,7 +24723,7 @@ VIMRuntime::make_get_set('EventDescriptionEventDetail', 'key', 'description', 'c
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23548,7 +24747,7 @@ VIMRuntime::make_get_set('ArrayOfEventDescriptionEventDetail', 'EventDescription
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23574,7 +24773,7 @@ VIMRuntime::make_get_set('EventDescription', 'category', 'eventInfo', 'enumerate
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23605,7 +24804,7 @@ VIMRuntime::make_get_set('EventEx', 'eventTypeId', 'severity', 'message', 'argum
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23630,7 +24829,7 @@ VIMRuntime::make_get_set('EventFilterSpecByEntity', 'entity', 'recursion');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23655,7 +24854,7 @@ VIMRuntime::make_get_set('EventFilterSpecByTime', 'beginTime', 'endTime');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23680,7 +24879,7 @@ VIMRuntime::make_get_set('EventFilterSpecByUsername', 'systemUser', 'userList');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23714,7 +24913,7 @@ VIMRuntime::make_get_set('EventFilterSpec', 'entity', 'time', 'userName', 'event
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23741,7 +24940,7 @@ VIMRuntime::make_get_set('ExtExtendedProductInfo', 'companyUrl', 'productUrl', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23766,7 +24965,7 @@ VIMRuntime::make_get_set('ManagedByInfo', 'extensionKey', 'type');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23793,7 +24992,7 @@ VIMRuntime::make_get_set('ExtManagedEntityInfo', 'type', 'smallIconUrl', 'iconUr
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23817,7 +25016,7 @@ VIMRuntime::make_get_set('ArrayOfExtManagedEntityInfo', 'ExtManagedEntityInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23842,7 +25041,7 @@ VIMRuntime::make_get_set('ExtSolutionManagerInfoTabInfo', 'label', 'url');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23866,7 +25065,7 @@ VIMRuntime::make_get_set('ArrayOfExtSolutionManagerInfoTabInfo', 'ExtSolutionMan
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23891,7 +25090,7 @@ VIMRuntime::make_get_set('ExtSolutionManagerInfo', 'tab', 'smallIconUrl');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23915,7 +25114,7 @@ VIMRuntime::make_get_set('ActiveDirectoryFault', 'errorCode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23938,7 +25137,7 @@ VIMRuntime::make_get_set('AdminDisabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23961,7 +25160,7 @@ VIMRuntime::make_get_set('AdminNotDisabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -23985,7 +25184,7 @@ VIMRuntime::make_get_set('AffinityConfigured', 'configuredAffinity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24011,7 +25210,7 @@ VIMRuntime::make_get_set('AgentInstallFailed', 'reason', 'statusCode', 'installe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24035,7 +25234,7 @@ VIMRuntime::make_get_set('AlreadyBeingManaged', 'ipAddress');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24059,7 +25258,7 @@ VIMRuntime::make_get_set('AlreadyConnected', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24083,7 +25282,7 @@ VIMRuntime::make_get_set('AlreadyExists', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24106,7 +25305,7 @@ VIMRuntime::make_get_set('AlreadyUpgraded');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24131,7 +25330,7 @@ VIMRuntime::make_get_set('AnswerFileUpdateFailure', 'userInputPath', 'errMsg');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24155,7 +25354,7 @@ VIMRuntime::make_get_set('ArrayOfAnswerFileUpdateFailure', 'AnswerFileUpdateFail
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24179,7 +25378,7 @@ VIMRuntime::make_get_set('AnswerFileUpdateFailed', 'failure');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24202,7 +25401,7 @@ VIMRuntime::make_get_set('ApplicationQuiesceFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24225,7 +25424,7 @@ VIMRuntime::make_get_set('AuthMinimumAdminPermission');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24251,7 +25450,7 @@ VIMRuntime::make_get_set('BackupBlobReadFailure', 'entityName', 'entityType', 'f
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24277,7 +25476,7 @@ VIMRuntime::make_get_set('BackupBlobWriteFailure', 'entityName', 'entityType', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24300,7 +25499,7 @@ VIMRuntime::make_get_set('BlockedByFirewall');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24323,7 +25522,7 @@ VIMRuntime::make_get_set('CAMServerRefusedConnection');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24346,7 +25545,7 @@ VIMRuntime::make_get_set('CannotAccessFile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24369,7 +25568,7 @@ VIMRuntime::make_get_set('CannotAccessLocalSource');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24392,7 +25591,7 @@ VIMRuntime::make_get_set('CannotAccessNetwork');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24415,7 +25614,7 @@ VIMRuntime::make_get_set('CannotAccessVmComponent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24439,7 +25638,7 @@ VIMRuntime::make_get_set('CannotAccessVmConfig', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24465,7 +25664,7 @@ VIMRuntime::make_get_set('CannotAccessVmDevice', 'device', 'backing', 'connected
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24489,7 +25688,7 @@ VIMRuntime::make_get_set('CannotAccessVmDisk', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24512,7 +25711,7 @@ VIMRuntime::make_get_set('CannotAddHostWithFTVmAsStandalone');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24535,7 +25734,7 @@ VIMRuntime::make_get_set('CannotAddHostWithFTVmToDifferentCluster');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24558,7 +25757,7 @@ VIMRuntime::make_get_set('CannotAddHostWithFTVmToNonHACluster');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24583,7 +25782,7 @@ VIMRuntime::make_get_set('CannotChangeDrsBehaviorForFtSecondary', 'vm', 'vmName'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24608,7 +25807,53 @@ VIMRuntime::make_get_set('CannotChangeHaSettingsForFtSecondary', 'vm', 'vmName')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package CannotChangeVsanClusterUuid;
+our @ISA = qw(VsanFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('CannotChangeVsanClusterUuid');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package CannotChangeVsanNodeUuid;
+our @ISA = qw(VsanFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('CannotChangeVsanNodeUuid');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24631,7 +25876,7 @@ VIMRuntime::make_get_set('CannotCreateFile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24654,7 +25899,7 @@ VIMRuntime::make_get_set('CannotDecryptPasswords');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24677,7 +25922,7 @@ VIMRuntime::make_get_set('CannotDeleteFile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24700,7 +25945,7 @@ VIMRuntime::make_get_set('CannotDisableDrsOnClustersWithVApps');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24723,7 +25968,7 @@ VIMRuntime::make_get_set('CannotDisableSnapshot');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24747,7 +25992,7 @@ VIMRuntime::make_get_set('CannotDisconnectHostWithFaultToleranceVm', 'hostName')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24770,7 +26015,7 @@ VIMRuntime::make_get_set('CannotModifyConfigCpuRequirements');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24795,7 +26040,7 @@ VIMRuntime::make_get_set('CannotMoveFaultToleranceVm', 'moveType', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24818,7 +26063,7 @@ VIMRuntime::make_get_set('CannotMoveHostWithFaultToleranceVm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24842,7 +26087,7 @@ VIMRuntime::make_get_set('CannotMoveVmWithDeltaDisk', 'device');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24865,7 +26110,30 @@ VIMRuntime::make_get_set('CannotMoveVmWithNativeDeltaDisk');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package CannotMoveVsanEnabledHost;
+our @ISA = qw(VsanFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('CannotMoveVsanEnabledHost');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24888,7 +26156,7 @@ VIMRuntime::make_get_set('CannotPlaceWithoutPrerequisiteMoves');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24914,7 +26182,57 @@ VIMRuntime::make_get_set('CannotPowerOffVmInCluster', 'operation', 'vm', 'vmName
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package CannotReconfigureVsanWhenHaEnabled;
+our @ISA = qw(VsanFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('CannotReconfigureVsanWhenHaEnabled');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package CannotUseNetwork;
+our @ISA = qw(VmConfigFault);
+
+our @property_list = (
+   ['device', undef, undef, 1],
+   ['backing', undef, undef, 1],
+   ['connected', 'boolean', undef, 1],
+   ['reason', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('CannotUseNetwork', 'device', 'backing', 'connected', 'reason');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24937,7 +26255,7 @@ VIMRuntime::make_get_set('ClockSkew');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24960,7 +26278,7 @@ VIMRuntime::make_get_set('CloneFromSnapshotNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -24983,7 +26301,7 @@ VIMRuntime::make_get_set('CollectorAddressUnset');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25006,7 +26324,80 @@ VIMRuntime::make_get_set('ConcurrentAccess');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ConflictingConfigurationConfig;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['entity', 'ManagedObjectReference', undef, 0],
+   ['propertyPath', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('ConflictingConfigurationConfig', 'entity', 'propertyPath');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfConflictingConfigurationConfig;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['ConflictingConfigurationConfig', 'ConflictingConfigurationConfig', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfConflictingConfigurationConfig', 'ConflictingConfigurationConfig');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ConflictingConfiguration;
+our @ISA = qw(DvsFault);
+
+our @property_list = (
+   ['configInConflict', 'ConflictingConfigurationConfig', 1, 1],
+);
+
+
+VIMRuntime::make_get_set('ConflictingConfiguration', 'configInConflict');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25031,7 +26422,7 @@ VIMRuntime::make_get_set('ConflictingDatastoreFound', 'name', 'url');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25056,7 +26447,7 @@ VIMRuntime::make_get_set('ConnectedIso', 'cdrom', 'filename');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25079,7 +26470,7 @@ VIMRuntime::make_get_set('CpuCompatibilityUnknown');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25102,7 +26493,7 @@ VIMRuntime::make_get_set('CpuHotPlugNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25130,7 +26521,7 @@ VIMRuntime::make_get_set('CpuIncompatible', 'level', 'registerName', 'registerBi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25161,7 +26552,7 @@ VIMRuntime::make_get_set('CpuIncompatible1ECX', 'sse3', 'pclmulqdq', 'ssse3', 's
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25190,7 +26581,7 @@ VIMRuntime::make_get_set('CpuIncompatible81EDX', 'nx', 'ffxsr', 'rdtscp', 'lm', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25213,7 +26604,7 @@ VIMRuntime::make_get_set('CustomizationFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25236,7 +26627,7 @@ VIMRuntime::make_get_set('CustomizationPending');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25259,7 +26650,7 @@ VIMRuntime::make_get_set('DVPortNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25285,7 +26676,7 @@ VIMRuntime::make_get_set('DasConfigFault', 'reason', 'output', 'event');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25308,7 +26699,7 @@ VIMRuntime::make_get_set('DatabaseError');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25333,7 +26724,7 @@ VIMRuntime::make_get_set('DatacenterMismatchArgument', 'entity', 'inputDatacente
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25357,7 +26748,7 @@ VIMRuntime::make_get_set('ArrayOfDatacenterMismatchArgument', 'DatacenterMismatc
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25382,7 +26773,7 @@ VIMRuntime::make_get_set('DatacenterMismatch', 'invalidArgument', 'expectedDatac
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25406,7 +26797,7 @@ VIMRuntime::make_get_set('DatastoreNotWritableOnHost', 'host');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25431,7 +26822,7 @@ VIMRuntime::make_get_set('DeltaDiskFormatNotSupported', 'datastore', 'deltaDiskF
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25454,7 +26845,31 @@ VIMRuntime::make_get_set('DestinationSwitchFull');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DestinationVsanDisabled;
+our @ISA = qw(CannotMoveVsanEnabledHost);
+
+our @property_list = (
+   ['destinationCluster', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('DestinationVsanDisabled', 'destinationCluster');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25478,7 +26893,7 @@ VIMRuntime::make_get_set('DeviceBackingNotSupported', 'backing');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25502,7 +26917,7 @@ VIMRuntime::make_get_set('DeviceControllerNotSupported', 'controller');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25525,7 +26940,7 @@ VIMRuntime::make_get_set('DeviceHotPlugNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25548,7 +26963,7 @@ VIMRuntime::make_get_set('DeviceNotFound');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25573,7 +26988,7 @@ VIMRuntime::make_get_set('DeviceNotSupported', 'device', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25596,7 +27011,7 @@ VIMRuntime::make_get_set('DeviceUnsupportedForVmPlatform');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25621,7 +27036,7 @@ VIMRuntime::make_get_set('DeviceUnsupportedForVmVersion', 'currentVersion', 'exp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25644,7 +27059,7 @@ VIMRuntime::make_get_set('DirectoryNotEmpty');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25667,7 +27082,7 @@ VIMRuntime::make_get_set('DisableAdminNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25692,7 +27107,7 @@ VIMRuntime::make_get_set('DisallowedChangeByService', 'serviceName', 'disallowed
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25715,7 +27130,7 @@ VIMRuntime::make_get_set('DisallowedDiskModeChange');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25739,7 +27154,7 @@ VIMRuntime::make_get_set('DisallowedMigrationDeviceAttached', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25764,7 +27179,99 @@ VIMRuntime::make_get_set('DisallowedOperationOnFailoverHost', 'host', 'hostname'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DiskHasPartitions;
+our @ISA = qw(VsanDiskFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DiskHasPartitions');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DiskIsLastRemainingNonSSD;
+our @ISA = qw(VsanDiskFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DiskIsLastRemainingNonSSD');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DiskIsNonLocal;
+our @ISA = qw(VsanDiskFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DiskIsNonLocal');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DiskIsUSB;
+our @ISA = qw(VsanDiskFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DiskIsUSB');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25787,7 +27294,7 @@ VIMRuntime::make_get_set('DiskMoveTypeNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25811,7 +27318,30 @@ VIMRuntime::make_get_set('DiskNotSupported', 'disk');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DiskTooSmall;
+our @ISA = qw(VsanDiskFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DiskTooSmall');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25835,7 +27365,7 @@ VIMRuntime::make_get_set('DomainNotFound', 'domainName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25858,7 +27388,7 @@ VIMRuntime::make_get_set('DrsDisabledOnVm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25882,7 +27412,30 @@ VIMRuntime::make_get_set('DrsVmotionIncompatibleFault', 'host');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DuplicateDisks;
+our @ISA = qw(VsanDiskFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('DuplicateDisks');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25907,7 +27460,31 @@ VIMRuntime::make_get_set('DuplicateName', 'name', 'object');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DuplicateVsanNetworkInterface;
+our @ISA = qw(VsanFault);
+
+our @property_list = (
+   ['device', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('DuplicateVsanNetworkInterface', 'device');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25933,7 +27510,7 @@ VIMRuntime::make_get_set('DvsApplyOperationFaultFaultOnObject', 'objectId', 'typ
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25957,7 +27534,7 @@ VIMRuntime::make_get_set('ArrayOfDvsApplyOperationFaultFaultOnObject', 'DvsApply
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -25981,7 +27558,7 @@ VIMRuntime::make_get_set('DvsApplyOperationFault', 'objectFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26004,7 +27581,7 @@ VIMRuntime::make_get_set('DvsFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26029,7 +27606,7 @@ VIMRuntime::make_get_set('DvsNotAuthorized', 'sessionExtensionKey', 'dvsExtensio
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26054,7 +27631,7 @@ VIMRuntime::make_get_set('DvsOperationBulkFaultFaultOnHost', 'host', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26078,7 +27655,7 @@ VIMRuntime::make_get_set('ArrayOfDvsOperationBulkFaultFaultOnHost', 'DvsOperatio
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26102,7 +27679,7 @@ VIMRuntime::make_get_set('DvsOperationBulkFault', 'hostFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26127,7 +27704,7 @@ VIMRuntime::make_get_set('DvsScopeViolated', 'scope', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26151,7 +27728,7 @@ VIMRuntime::make_get_set('EVCAdmissionFailed', 'faults');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26175,7 +27752,7 @@ VIMRuntime::make_get_set('EVCAdmissionFailedCPUFeaturesForMode', 'currentEVCMode
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26198,7 +27775,7 @@ VIMRuntime::make_get_set('EVCAdmissionFailedCPUModel');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26222,7 +27799,7 @@ VIMRuntime::make_get_set('EVCAdmissionFailedCPUModelForMode', 'currentEVCModeKey
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26247,7 +27824,7 @@ VIMRuntime::make_get_set('EVCAdmissionFailedCPUVendor', 'clusterCPUVendor', 'hos
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26270,7 +27847,7 @@ VIMRuntime::make_get_set('EVCAdmissionFailedCPUVendorUnknown');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26293,7 +27870,7 @@ VIMRuntime::make_get_set('EVCAdmissionFailedHostDisconnected');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26316,7 +27893,7 @@ VIMRuntime::make_get_set('EVCAdmissionFailedHostSoftware');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26339,7 +27916,7 @@ VIMRuntime::make_get_set('EVCAdmissionFailedHostSoftwareForMode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26362,7 +27939,7 @@ VIMRuntime::make_get_set('EVCAdmissionFailedVmActive');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26385,7 +27962,7 @@ VIMRuntime::make_get_set('EightHostLimitViolated');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26408,7 +27985,7 @@ VIMRuntime::make_get_set('ExpiredAddonLicense');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26431,7 +28008,7 @@ VIMRuntime::make_get_set('ExpiredEditionLicense');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26457,7 +28034,7 @@ VIMRuntime::make_get_set('ExpiredFeatureLicense', 'feature', 'count', 'expiratio
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26482,7 +28059,7 @@ VIMRuntime::make_get_set('ExtendedFault', 'faultTypeId', 'data');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26508,7 +28085,7 @@ VIMRuntime::make_get_set('FailToEnableSPBM', 'cs', 'csName', 'hostLicenseStates'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26534,7 +28111,7 @@ VIMRuntime::make_get_set('FailToLockFaultToleranceVMs', 'vmName', 'vm', 'already
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26559,7 +28136,7 @@ VIMRuntime::make_get_set('FaultToleranceAntiAffinityViolated', 'hostName', 'host
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26584,7 +28161,7 @@ VIMRuntime::make_get_set('FaultToleranceCannotEditMem', 'vmName', 'vm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26610,7 +28187,7 @@ VIMRuntime::make_get_set('FaultToleranceCpuIncompatible', 'model', 'family', 'st
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26634,7 +28211,7 @@ VIMRuntime::make_get_set('FaultToleranceNeedsThickDisk', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26658,7 +28235,7 @@ VIMRuntime::make_get_set('FaultToleranceNotLicensed', 'hostName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26682,7 +28259,7 @@ VIMRuntime::make_get_set('FaultToleranceNotSameBuild', 'build');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26707,7 +28284,7 @@ VIMRuntime::make_get_set('FaultTolerancePrimaryPowerOnNotAttempted', 'secondaryV
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26732,7 +28309,7 @@ VIMRuntime::make_get_set('FaultToleranceVmNotDasProtected', 'vm', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26755,7 +28332,7 @@ VIMRuntime::make_get_set('FcoeFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26779,7 +28356,7 @@ VIMRuntime::make_get_set('FcoeFaultPnicHasNoPortSet', 'nicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26805,7 +28382,7 @@ VIMRuntime::make_get_set('FeatureRequirementsNotMet', 'featureRequirement', 'vm'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26828,7 +28405,7 @@ VIMRuntime::make_get_set('FileAlreadyExists');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26851,7 +28428,7 @@ VIMRuntime::make_get_set('FileBackedPortNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26875,7 +28452,7 @@ VIMRuntime::make_get_set('FileFault', 'file');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26898,7 +28475,7 @@ VIMRuntime::make_get_set('FileLocked');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26921,7 +28498,7 @@ VIMRuntime::make_get_set('FileNameTooLong');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26944,7 +28521,7 @@ VIMRuntime::make_get_set('FileNotFound');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26967,7 +28544,7 @@ VIMRuntime::make_get_set('FileNotWritable');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -26993,7 +28570,7 @@ VIMRuntime::make_get_set('FileTooLarge', 'datastore', 'fileSize', 'maxFileSize')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27016,7 +28593,7 @@ VIMRuntime::make_get_set('FilesystemQuiesceFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27042,7 +28619,7 @@ VIMRuntime::make_get_set('FtIssuesOnHost', 'host', 'hostName', 'errors');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27065,7 +28642,7 @@ VIMRuntime::make_get_set('FullStorageVMotionNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27089,7 +28666,7 @@ VIMRuntime::make_get_set('GenericDrsFault', 'hostFaults');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27113,7 +28690,7 @@ VIMRuntime::make_get_set('GenericVmConfigFault', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27138,7 +28715,7 @@ VIMRuntime::make_get_set('GuestAuthenticationChallenge', 'serverChallenge', 'ses
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27161,7 +28738,7 @@ VIMRuntime::make_get_set('GuestComponentsOutOfDate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27184,7 +28761,7 @@ VIMRuntime::make_get_set('GuestOperationsFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27207,7 +28784,7 @@ VIMRuntime::make_get_set('GuestOperationsUnavailable');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27230,7 +28807,7 @@ VIMRuntime::make_get_set('GuestPermissionDenied');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27254,7 +28831,7 @@ VIMRuntime::make_get_set('GuestProcessNotFound', 'pid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27277,7 +28854,7 @@ VIMRuntime::make_get_set('HAErrorsAtDest');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27301,7 +28878,7 @@ VIMRuntime::make_get_set('HostAccessRestrictedToManagementServer', 'managementSe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27325,7 +28902,7 @@ VIMRuntime::make_get_set('HostConfigFailed', 'failure');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27348,7 +28925,7 @@ VIMRuntime::make_get_set('HostConfigFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27371,7 +28948,7 @@ VIMRuntime::make_get_set('HostConnectFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27394,7 +28971,7 @@ VIMRuntime::make_get_set('HostInDomain');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27419,7 +28996,7 @@ VIMRuntime::make_get_set('HostIncompatibleForFaultTolerance', 'hostName', 'reaso
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27444,7 +29021,7 @@ VIMRuntime::make_get_set('HostIncompatibleForRecordReplay', 'hostName', 'reason'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27468,7 +29045,7 @@ VIMRuntime::make_get_set('HostInventoryFull', 'capacity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27491,7 +29068,7 @@ VIMRuntime::make_get_set('HostPowerOpFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27514,7 +29091,7 @@ VIMRuntime::make_get_set('HotSnapshotMoveNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27537,7 +29114,7 @@ VIMRuntime::make_get_set('IDEDiskNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27563,7 +29140,7 @@ VIMRuntime::make_get_set('IORMNotSupportedHostOnDatastore', 'datastore', 'datast
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27587,7 +29164,7 @@ VIMRuntime::make_get_set('ImportHostAddFailure', 'hostIp');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27613,7 +29190,7 @@ VIMRuntime::make_get_set('ImportOperationBulkFaultFaultOnImport', 'entityType', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27637,7 +29214,7 @@ VIMRuntime::make_get_set('ArrayOfImportOperationBulkFaultFaultOnImport', 'Import
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27661,7 +29238,7 @@ VIMRuntime::make_get_set('ImportOperationBulkFault', 'importFaults');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27684,7 +29261,7 @@ VIMRuntime::make_get_set('InUseFeatureManipulationDisallowed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27708,7 +29285,31 @@ VIMRuntime::make_get_set('InaccessibleDatastore', 'detail');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package InaccessibleVFlashSource;
+our @ISA = qw(VimFault);
+
+our @property_list = (
+   ['hostName', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('InaccessibleVFlashSource', 'hostName');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27732,7 +29333,7 @@ VIMRuntime::make_get_set('IncompatibleDefaultDevice', 'device');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27757,7 +29358,7 @@ VIMRuntime::make_get_set('IncompatibleHostForFtSecondary', 'host', 'error');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27781,7 +29382,7 @@ VIMRuntime::make_get_set('IncompatibleSetting', 'conflictingProperty');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27804,7 +29405,7 @@ VIMRuntime::make_get_set('IncorrectFileType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27827,7 +29428,7 @@ VIMRuntime::make_get_set('IncorrectHostInformation');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27850,7 +29451,7 @@ VIMRuntime::make_get_set('IndependentDiskVMotionNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27876,7 +29477,7 @@ VIMRuntime::make_get_set('InsufficientAgentVmsDeployed', 'hostName', 'requiredNu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27901,7 +29502,30 @@ VIMRuntime::make_get_set('InsufficientCpuResourcesFault', 'unreserved', 'request
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package InsufficientDisks;
+our @ISA = qw(VsanDiskFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('InsufficientDisks');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27924,7 +29548,7 @@ VIMRuntime::make_get_set('InsufficientFailoverResourcesFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27948,7 +29572,7 @@ VIMRuntime::make_get_set('InsufficientHostCapacityFault', 'host');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27973,7 +29597,7 @@ VIMRuntime::make_get_set('InsufficientHostCpuCapacityFault', 'unreserved', 'requ
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -27998,7 +29622,7 @@ VIMRuntime::make_get_set('InsufficientHostMemoryCapacityFault', 'unreserved', 'r
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28023,7 +29647,7 @@ VIMRuntime::make_get_set('InsufficientMemoryResourcesFault', 'unreserved', 'requ
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28046,7 +29670,7 @@ VIMRuntime::make_get_set('InsufficientPerCpuCapacity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28069,7 +29693,7 @@ VIMRuntime::make_get_set('InsufficientResourcesFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28094,7 +29718,7 @@ VIMRuntime::make_get_set('InsufficientStandbyCpuResource', 'available', 'request
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28119,7 +29743,7 @@ VIMRuntime::make_get_set('InsufficientStandbyMemoryResource', 'available', 'requ
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28142,7 +29766,7 @@ VIMRuntime::make_get_set('InsufficientStandbyResource');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28165,7 +29789,32 @@ VIMRuntime::make_get_set('InsufficientStorageSpace');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package InsufficientVFlashResourcesFault;
+our @ISA = qw(InsufficientResourcesFault);
+
+our @property_list = (
+   ['freeSpace', undef, undef, 1],
+   ['requestedSpace', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('InsufficientVFlashResourcesFault', 'freeSpace', 'requestedSpace');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28188,7 +29837,7 @@ VIMRuntime::make_get_set('InvalidAffinitySettingFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28211,7 +29860,7 @@ VIMRuntime::make_get_set('InvalidBmcRole');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28234,7 +29883,7 @@ VIMRuntime::make_get_set('InvalidBundle');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28257,7 +29906,7 @@ VIMRuntime::make_get_set('InvalidCAMCertificate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28281,7 +29930,7 @@ VIMRuntime::make_get_set('InvalidCAMServer', 'camServer');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28304,7 +29953,7 @@ VIMRuntime::make_get_set('InvalidClientCertificate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28328,7 +29977,7 @@ VIMRuntime::make_get_set('InvalidController', 'controllerKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28353,7 +30002,7 @@ VIMRuntime::make_get_set('InvalidDasConfigArgument', 'entry', 'clusterName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28378,7 +30027,7 @@ VIMRuntime::make_get_set('InvalidDasRestartPriorityForFtVm', 'vm', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28403,7 +30052,7 @@ VIMRuntime::make_get_set('InvalidDatastore', 'datastore', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28427,7 +30076,7 @@ VIMRuntime::make_get_set('InvalidDatastorePath', 'datastorePath');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28451,7 +30100,7 @@ VIMRuntime::make_get_set('InvalidDatastoreState', 'datastoreName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28474,7 +30123,7 @@ VIMRuntime::make_get_set('InvalidDeviceBacking');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28499,7 +30148,7 @@ VIMRuntime::make_get_set('InvalidDeviceOperation', 'badOp', 'badFileOp');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28523,7 +30172,7 @@ VIMRuntime::make_get_set('InvalidDeviceSpec', 'deviceIndex');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28546,7 +30195,7 @@ VIMRuntime::make_get_set('InvalidDiskFormat');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28571,7 +30220,7 @@ VIMRuntime::make_get_set('InvalidDrsBehaviorForFtVm', 'vm', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28595,7 +30244,7 @@ VIMRuntime::make_get_set('InvalidEditionLicense', 'feature');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28618,7 +30267,7 @@ VIMRuntime::make_get_set('InvalidEvent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28642,7 +30291,7 @@ VIMRuntime::make_get_set('InvalidFolder', 'target');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28665,7 +30314,7 @@ VIMRuntime::make_get_set('InvalidFormat');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28688,7 +30337,7 @@ VIMRuntime::make_get_set('InvalidGuestLogin');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28711,7 +30360,7 @@ VIMRuntime::make_get_set('InvalidHostConnectionState');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28734,7 +30383,7 @@ VIMRuntime::make_get_set('InvalidHostName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28758,7 +30407,7 @@ VIMRuntime::make_get_set('InvalidHostState', 'host');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28782,7 +30431,7 @@ VIMRuntime::make_get_set('InvalidIndexArgument', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28806,7 +30455,7 @@ VIMRuntime::make_get_set('InvalidIpfixConfig', 'property');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28829,7 +30478,7 @@ VIMRuntime::make_get_set('InvalidIpmiLoginInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28854,7 +30503,7 @@ VIMRuntime::make_get_set('InvalidIpmiMacAddress', 'userProvidedMacAddress', 'obs
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28878,7 +30527,7 @@ VIMRuntime::make_get_set('InvalidLicense', 'licenseContent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28901,7 +30550,7 @@ VIMRuntime::make_get_set('InvalidLocale');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28924,7 +30573,7 @@ VIMRuntime::make_get_set('InvalidLogin');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28949,7 +30598,7 @@ VIMRuntime::make_get_set('InvalidName', 'name', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28973,7 +30622,7 @@ VIMRuntime::make_get_set('InvalidNasCredentials', 'userName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -28996,7 +30645,7 @@ VIMRuntime::make_get_set('InvalidNetworkInType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29021,7 +30670,7 @@ VIMRuntime::make_get_set('InvalidNetworkResource', 'remoteHost', 'remotePath');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29045,7 +30694,7 @@ VIMRuntime::make_get_set('InvalidOperationOnSecondaryVm', 'instanceUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29070,7 +30719,7 @@ VIMRuntime::make_get_set('InvalidPowerState', 'requestedState', 'existingState')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29094,7 +30743,7 @@ VIMRuntime::make_get_set('InvalidPrivilege', 'privilege');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29120,7 +30769,7 @@ VIMRuntime::make_get_set('InvalidProfileReferenceHost', 'reason', 'host', 'profi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29143,7 +30792,7 @@ VIMRuntime::make_get_set('InvalidPropertyType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29166,7 +30815,7 @@ VIMRuntime::make_get_set('InvalidPropertyValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29189,7 +30838,7 @@ VIMRuntime::make_get_set('InvalidResourcePoolStructureFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29212,7 +30861,7 @@ VIMRuntime::make_get_set('InvalidSnapshotFormat');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29235,7 +30884,7 @@ VIMRuntime::make_get_set('InvalidState');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29259,7 +30908,7 @@ VIMRuntime::make_get_set('InvalidVmConfig', 'property');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29283,7 +30932,7 @@ VIMRuntime::make_get_set('InventoryHasStandardAloneHosts', 'hosts');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29306,7 +30955,7 @@ VIMRuntime::make_get_set('IpHostnameGeneratorError');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29329,7 +30978,7 @@ VIMRuntime::make_get_set('IscsiFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29353,7 +31002,7 @@ VIMRuntime::make_get_set('IscsiFaultInvalidVnic', 'vnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29377,7 +31026,7 @@ VIMRuntime::make_get_set('IscsiFaultPnicInUse', 'pnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29401,7 +31050,7 @@ VIMRuntime::make_get_set('IscsiFaultVnicAlreadyBound', 'vnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29425,7 +31074,7 @@ VIMRuntime::make_get_set('IscsiFaultVnicHasActivePaths', 'vnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29449,7 +31098,7 @@ VIMRuntime::make_get_set('IscsiFaultVnicHasMultipleUplinks', 'vnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29473,7 +31122,7 @@ VIMRuntime::make_get_set('IscsiFaultVnicHasNoUplinks', 'vnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29497,7 +31146,7 @@ VIMRuntime::make_get_set('IscsiFaultVnicHasWrongUplink', 'vnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29521,7 +31170,7 @@ VIMRuntime::make_get_set('IscsiFaultVnicInUse', 'vnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29545,7 +31194,7 @@ VIMRuntime::make_get_set('IscsiFaultVnicIsLastPath', 'vnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29569,7 +31218,7 @@ VIMRuntime::make_get_set('IscsiFaultVnicNotBound', 'vnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29593,7 +31242,7 @@ VIMRuntime::make_get_set('IscsiFaultVnicNotFound', 'vnicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29617,7 +31266,7 @@ VIMRuntime::make_get_set('LargeRDMConversionNotSupported', 'device');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29643,7 +31292,7 @@ VIMRuntime::make_get_set('LargeRDMNotSupportedOnDatastore', 'device', 'datastore
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29666,7 +31315,7 @@ VIMRuntime::make_get_set('LegacyNetworkInterfaceInUse');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29690,7 +31339,7 @@ VIMRuntime::make_get_set('LicenseAssignmentFailed', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29716,7 +31365,7 @@ VIMRuntime::make_get_set('LicenseDowngradeDisallowed', 'edition', 'entityId', 'f
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29740,7 +31389,7 @@ VIMRuntime::make_get_set('LicenseEntityNotFound', 'entityId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29764,7 +31413,7 @@ VIMRuntime::make_get_set('LicenseExpired', 'licenseKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29787,7 +31436,7 @@ VIMRuntime::make_get_set('LicenseKeyEntityMismatch');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29810,7 +31459,7 @@ VIMRuntime::make_get_set('LicenseRestricted');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29834,7 +31483,7 @@ VIMRuntime::make_get_set('LicenseServerUnavailable', 'licenseServer');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29858,7 +31507,7 @@ VIMRuntime::make_get_set('LicenseSourceUnavailable', 'licenseSource');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29883,7 +31532,7 @@ VIMRuntime::make_get_set('LimitExceeded', 'property', 'limit');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29906,7 +31555,7 @@ VIMRuntime::make_get_set('LinuxVolumeNotClean');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29929,7 +31578,7 @@ VIMRuntime::make_get_set('LogBundlingFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29952,7 +31601,7 @@ VIMRuntime::make_get_set('MaintenanceModeFileMove');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -29975,7 +31624,7 @@ VIMRuntime::make_get_set('MemoryHotPlugNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30001,7 +31650,7 @@ VIMRuntime::make_get_set('MemorySizeNotRecommended', 'memorySizeMB', 'minMemoryS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30027,7 +31676,7 @@ VIMRuntime::make_get_set('MemorySizeNotSupported', 'memorySizeMB', 'minMemorySiz
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30053,7 +31702,7 @@ VIMRuntime::make_get_set('MemorySizeNotSupportedByDatastore', 'datastore', 'memo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30076,7 +31725,7 @@ VIMRuntime::make_get_set('MemorySnapshotOnIndependentDisk');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30100,7 +31749,7 @@ VIMRuntime::make_get_set('MethodAlreadyDisabledFault', 'sourceId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30124,7 +31773,7 @@ VIMRuntime::make_get_set('MethodDisabled', 'source');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30147,7 +31796,7 @@ VIMRuntime::make_get_set('MigrationDisabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30170,7 +31819,7 @@ VIMRuntime::make_get_set('MigrationFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30196,7 +31845,7 @@ VIMRuntime::make_get_set('MigrationFeatureNotSupported', 'atSourceHost', 'failed
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30220,7 +31869,7 @@ VIMRuntime::make_get_set('MigrationNotReady', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30247,7 +31896,7 @@ VIMRuntime::make_get_set('MismatchedBundle', 'bundleUuid', 'hostUuid', 'bundleBu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30273,7 +31922,7 @@ VIMRuntime::make_get_set('MismatchedNetworkPolicies', 'device', 'backing', 'conn
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30298,7 +31947,7 @@ VIMRuntime::make_get_set('MismatchedVMotionNetworkNames', 'sourceNetwork', 'dest
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30321,7 +31970,7 @@ VIMRuntime::make_get_set('MissingBmcSupport');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30344,7 +31993,7 @@ VIMRuntime::make_get_set('MissingController');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30367,7 +32016,7 @@ VIMRuntime::make_get_set('MissingIpPool');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30390,7 +32039,7 @@ VIMRuntime::make_get_set('MissingLinuxCustResources');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30413,7 +32062,7 @@ VIMRuntime::make_get_set('MissingNetworkIpConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30436,7 +32085,7 @@ VIMRuntime::make_get_set('MissingPowerOffConfiguration');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30459,7 +32108,7 @@ VIMRuntime::make_get_set('MissingPowerOnConfiguration');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30482,7 +32131,7 @@ VIMRuntime::make_get_set('MissingWindowsCustResources');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30506,7 +32155,7 @@ VIMRuntime::make_get_set('MksConnectionLimitReached', 'connectionLimit');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30531,7 +32180,7 @@ VIMRuntime::make_get_set('MountError', 'vm', 'diskIndex');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30556,7 +32205,7 @@ VIMRuntime::make_get_set('MultipleCertificatesVerifyFaultThumbprintData', 'port'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30580,7 +32229,7 @@ VIMRuntime::make_get_set('ArrayOfMultipleCertificatesVerifyFaultThumbprintData',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30604,7 +32253,7 @@ VIMRuntime::make_get_set('MultipleCertificatesVerifyFault', 'thumbprintData');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30627,7 +32276,7 @@ VIMRuntime::make_get_set('MultipleSnapshotsNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30653,7 +32302,7 @@ VIMRuntime::make_get_set('NamespaceFull', 'name', 'currentMaxSize', 'requiredSiz
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30677,7 +32326,7 @@ VIMRuntime::make_get_set('NamespaceLimitReached', 'limit');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30701,7 +32350,7 @@ VIMRuntime::make_get_set('NamespaceWriteProtected', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30725,7 +32374,7 @@ VIMRuntime::make_get_set('NasConfigFault', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30750,7 +32399,7 @@ VIMRuntime::make_get_set('NasConnectionLimitReached', 'remoteHost', 'remotePath'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30776,7 +32425,7 @@ VIMRuntime::make_get_set('NasSessionCredentialConflict', 'remoteHost', 'remotePa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30801,7 +32450,7 @@ VIMRuntime::make_get_set('NasVolumeNotMounted', 'remoteHost', 'remotePath');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30824,7 +32473,7 @@ VIMRuntime::make_get_set('NetworkCopyFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30848,7 +32497,7 @@ VIMRuntime::make_get_set('NetworkDisruptedAndConfigRolledBack', 'host');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30871,7 +32520,7 @@ VIMRuntime::make_get_set('NetworkInaccessible');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30895,7 +32544,7 @@ VIMRuntime::make_get_set('NetworksMayNotBeTheSame', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30920,7 +32569,7 @@ VIMRuntime::make_get_set('NicSettingMismatch', 'numberOfNicsInSpec', 'numberOfNi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30944,7 +32593,7 @@ VIMRuntime::make_get_set('NoActiveHostInCluster', 'computeResource');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30968,7 +32617,7 @@ VIMRuntime::make_get_set('NoAvailableIp', 'network');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -30991,7 +32640,7 @@ VIMRuntime::make_get_set('NoClientCertificate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31014,7 +32663,7 @@ VIMRuntime::make_get_set('NoCompatibleDatastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31038,7 +32687,7 @@ VIMRuntime::make_get_set('NoCompatibleHardAffinityHost', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31063,7 +32712,7 @@ VIMRuntime::make_get_set('NoCompatibleHost', 'host', 'error');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31086,7 +32735,7 @@ VIMRuntime::make_get_set('NoCompatibleHostWithAccessToDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31110,7 +32759,7 @@ VIMRuntime::make_get_set('NoCompatibleSoftAffinityHost', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31133,7 +32782,7 @@ VIMRuntime::make_get_set('NoConnectedDatastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31156,7 +32805,7 @@ VIMRuntime::make_get_set('NoDiskFound');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31180,7 +32829,7 @@ VIMRuntime::make_get_set('NoDiskSpace', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31203,7 +32852,7 @@ VIMRuntime::make_get_set('NoDisksToCustomize');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31226,7 +32875,7 @@ VIMRuntime::make_get_set('NoGateway');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31249,7 +32898,7 @@ VIMRuntime::make_get_set('NoGuestHeartbeat');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31273,7 +32922,7 @@ VIMRuntime::make_get_set('NoHost', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31298,7 +32947,7 @@ VIMRuntime::make_get_set('NoHostSuitableForFtSecondary', 'vm', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31321,7 +32970,7 @@ VIMRuntime::make_get_set('NoLicenseServerConfigured');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31344,7 +32993,7 @@ VIMRuntime::make_get_set('NoPeerHostFound');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31369,7 +33018,7 @@ VIMRuntime::make_get_set('NoPermission', 'object', 'privilegeId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31392,7 +33041,7 @@ VIMRuntime::make_get_set('NoPermissionOnAD');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31415,7 +33064,7 @@ VIMRuntime::make_get_set('NoPermissionOnHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31439,7 +33088,7 @@ VIMRuntime::make_get_set('NoPermissionOnNasVolume', 'userName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31462,7 +33111,7 @@ VIMRuntime::make_get_set('NoSubjectName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31485,7 +33134,7 @@ VIMRuntime::make_get_set('NoVcManagedIpConfigured');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31508,7 +33157,7 @@ VIMRuntime::make_get_set('NoVirtualNic');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31531,7 +33180,7 @@ VIMRuntime::make_get_set('NoVmInVApp');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31554,7 +33203,7 @@ VIMRuntime::make_get_set('NonADUserRequired');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31578,7 +33227,7 @@ VIMRuntime::make_get_set('NonHomeRDMVMotionNotSupported', 'device');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31601,7 +33250,7 @@ VIMRuntime::make_get_set('NonPersistentDisksNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31625,7 +33274,7 @@ VIMRuntime::make_get_set('NonVmwareOuiMacNotSupportedHost', 'hostName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31648,7 +33297,7 @@ VIMRuntime::make_get_set('NotADirectory');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31671,7 +33320,7 @@ VIMRuntime::make_get_set('NotAFile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31694,7 +33343,7 @@ VIMRuntime::make_get_set('NotAuthenticated');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31719,7 +33368,7 @@ VIMRuntime::make_get_set('NotEnoughCpus', 'numCpuDest', 'numCpuVm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31743,7 +33392,7 @@ VIMRuntime::make_get_set('NotEnoughLogicalCpus', 'host');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31766,7 +33415,7 @@ VIMRuntime::make_get_set('NotFound');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31795,7 +33444,7 @@ VIMRuntime::make_get_set('NotSupportedDeviceForFT', 'host', 'hostName', 'vm', 'v
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31820,7 +33469,55 @@ VIMRuntime::make_get_set('NotSupportedHost', 'productName', 'productVersion');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package NotSupportedHostForVFlash;
+our @ISA = qw(NotSupportedHost);
+
+our @property_list = (
+   ['hostName', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('NotSupportedHostForVFlash', 'hostName');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package NotSupportedHostForVsan;
+our @ISA = qw(NotSupportedHost);
+
+our @property_list = (
+   ['hostName', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('NotSupportedHostForVsan', 'hostName');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31843,7 +33540,7 @@ VIMRuntime::make_get_set('NotSupportedHostInCluster');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31867,7 +33564,7 @@ VIMRuntime::make_get_set('NotSupportedHostInDvs', 'switchProductSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31892,7 +33589,7 @@ VIMRuntime::make_get_set('NotSupportedHostInHACluster', 'hostName', 'build');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31915,7 +33612,7 @@ VIMRuntime::make_get_set('NotUserConfigurableProperty');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31940,7 +33637,7 @@ VIMRuntime::make_get_set('NumVirtualCoresPerSocketNotSupported', 'maxSupportedCo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31964,7 +33661,7 @@ VIMRuntime::make_get_set('NumVirtualCpusExceedsLimit', 'maxSupportedVcpus');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -31989,7 +33686,7 @@ VIMRuntime::make_get_set('NumVirtualCpusIncompatible', 'reason', 'numCpu');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32014,7 +33711,7 @@ VIMRuntime::make_get_set('NumVirtualCpusNotSupported', 'maxSupportedVcpusDest', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32037,7 +33734,7 @@ VIMRuntime::make_get_set('OperationDisabledByGuest');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32060,7 +33757,7 @@ VIMRuntime::make_get_set('OperationDisallowedOnHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32083,7 +33780,7 @@ VIMRuntime::make_get_set('OperationNotSupportedByGuest');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32107,7 +33804,7 @@ VIMRuntime::make_get_set('OutOfBounds', 'argumentName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32132,7 +33829,7 @@ VIMRuntime::make_get_set('OvfAttribute', 'elementName', 'attributeName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32155,7 +33852,7 @@ VIMRuntime::make_get_set('OvfConnectedDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32179,7 +33876,7 @@ VIMRuntime::make_get_set('OvfConnectedDeviceFloppy', 'filename');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32203,7 +33900,7 @@ VIMRuntime::make_get_set('OvfConnectedDeviceIso', 'filename');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32227,7 +33924,7 @@ VIMRuntime::make_get_set('OvfConstraint', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32252,7 +33949,7 @@ VIMRuntime::make_get_set('OvfConsumerCallbackFault', 'extensionKey', 'extensionN
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32276,7 +33973,7 @@ VIMRuntime::make_get_set('OvfConsumerCommunicationError', 'description');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32302,7 +33999,7 @@ VIMRuntime::make_get_set('OvfConsumerFault', 'errorKey', 'message', 'params');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32327,7 +34024,7 @@ VIMRuntime::make_get_set('OvfConsumerInvalidSection', 'lineNumber', 'description
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32353,7 +34050,7 @@ VIMRuntime::make_get_set('OvfConsumerPowerOnFault', 'extensionKey', 'extensionNa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32377,7 +34074,7 @@ VIMRuntime::make_get_set('OvfConsumerUndeclaredSection', 'qualifiedSectionType')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32401,7 +34098,7 @@ VIMRuntime::make_get_set('OvfConsumerUndefinedPrefix', 'prefix');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32427,7 +34124,7 @@ VIMRuntime::make_get_set('OvfConsumerValidationFault', 'extensionKey', 'extensio
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32454,7 +34151,7 @@ VIMRuntime::make_get_set('OvfCpuCompatibility', 'registerName', 'level', 'regist
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32477,7 +34174,7 @@ VIMRuntime::make_get_set('OvfCpuCompatibilityCheckNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32502,7 +34199,7 @@ VIMRuntime::make_get_set('OvfDiskMappingNotFound', 'diskName', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32525,7 +34222,7 @@ VIMRuntime::make_get_set('OvfDiskOrderConstraint');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32548,7 +34245,7 @@ VIMRuntime::make_get_set('OvfDuplicateElement');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32572,7 +34269,7 @@ VIMRuntime::make_get_set('OvfDuplicatedElementBoundary', 'boundary');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32596,7 +34293,7 @@ VIMRuntime::make_get_set('OvfDuplicatedPropertyIdExport', 'fqid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32619,7 +34316,7 @@ VIMRuntime::make_get_set('OvfDuplicatedPropertyIdImport');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32643,7 +34340,7 @@ VIMRuntime::make_get_set('OvfElement', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32667,7 +34364,7 @@ VIMRuntime::make_get_set('OvfElementInvalidValue', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32690,7 +34387,7 @@ VIMRuntime::make_get_set('OvfExport');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32713,7 +34410,7 @@ VIMRuntime::make_get_set('OvfExportFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32736,7 +34433,7 @@ VIMRuntime::make_get_set('OvfFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32759,7 +34456,7 @@ VIMRuntime::make_get_set('OvfHardwareCheck');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32784,7 +34481,7 @@ VIMRuntime::make_get_set('OvfHardwareExport', 'device', 'vmPath');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32808,7 +34505,7 @@ VIMRuntime::make_get_set('OvfHostResourceConstraint', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32833,7 +34530,7 @@ VIMRuntime::make_get_set('OvfHostValueNotParsed', 'property', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32856,7 +34553,7 @@ VIMRuntime::make_get_set('OvfImport');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32879,7 +34576,7 @@ VIMRuntime::make_get_set('OvfImportFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32902,7 +34599,7 @@ VIMRuntime::make_get_set('OvfInternalError');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32926,7 +34623,7 @@ VIMRuntime::make_get_set('OvfInvalidPackage', 'lineNumber');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32950,7 +34647,7 @@ VIMRuntime::make_get_set('OvfInvalidValue', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32973,7 +34670,7 @@ VIMRuntime::make_get_set('OvfInvalidValueConfiguration');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -32996,7 +34693,7 @@ VIMRuntime::make_get_set('OvfInvalidValueEmpty');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33019,7 +34716,7 @@ VIMRuntime::make_get_set('OvfInvalidValueFormatMalformed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33042,7 +34739,7 @@ VIMRuntime::make_get_set('OvfInvalidValueReference');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33066,7 +34763,7 @@ VIMRuntime::make_get_set('OvfInvalidVmName', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33092,7 +34789,7 @@ VIMRuntime::make_get_set('OvfMappedOsId', 'ovfId', 'ovfDescription', 'targetDesc
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33115,7 +34812,7 @@ VIMRuntime::make_get_set('OvfMissingAttribute');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33138,7 +34835,7 @@ VIMRuntime::make_get_set('OvfMissingElement');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33162,7 +34859,7 @@ VIMRuntime::make_get_set('OvfMissingElementNormalBoundary', 'boundary');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33187,7 +34884,7 @@ VIMRuntime::make_get_set('OvfMissingHardware', 'name', 'resourceType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33210,7 +34907,7 @@ VIMRuntime::make_get_set('OvfNetworkMappingNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33233,7 +34930,7 @@ VIMRuntime::make_get_set('OvfNoHostNic');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33257,7 +34954,7 @@ VIMRuntime::make_get_set('OvfNoSpaceOnController', 'parent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33281,7 +34978,7 @@ VIMRuntime::make_get_set('OvfNoSupportedHardwareFamily', 'version');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33306,7 +35003,7 @@ VIMRuntime::make_get_set('OvfProperty', 'type', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33331,7 +35028,7 @@ VIMRuntime::make_get_set('OvfPropertyExport', 'type', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33354,7 +35051,7 @@ VIMRuntime::make_get_set('OvfPropertyNetwork');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33378,7 +35075,7 @@ VIMRuntime::make_get_set('OvfPropertyNetworkExport', 'network');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33402,7 +35099,7 @@ VIMRuntime::make_get_set('OvfPropertyQualifier', 'qualifier');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33426,7 +35123,7 @@ VIMRuntime::make_get_set('OvfPropertyQualifierDuplicate', 'qualifier');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33450,7 +35147,7 @@ VIMRuntime::make_get_set('OvfPropertyQualifierIgnored', 'qualifier');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33473,7 +35170,7 @@ VIMRuntime::make_get_set('OvfPropertyType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33496,7 +35193,7 @@ VIMRuntime::make_get_set('OvfPropertyValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33519,7 +35216,7 @@ VIMRuntime::make_get_set('OvfSystemFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33543,7 +35240,7 @@ VIMRuntime::make_get_set('OvfToXmlUnsupportedElement', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33567,7 +35264,7 @@ VIMRuntime::make_get_set('OvfUnableToExportDisk', 'diskName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33590,7 +35287,7 @@ VIMRuntime::make_get_set('OvfUnexpectedElement');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33615,7 +35312,7 @@ VIMRuntime::make_get_set('OvfUnknownDevice', 'device', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33639,7 +35336,7 @@ VIMRuntime::make_get_set('OvfUnknownDeviceBacking', 'backing');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33663,7 +35360,7 @@ VIMRuntime::make_get_set('OvfUnknownEntity', 'lineNumber');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33688,7 +35385,7 @@ VIMRuntime::make_get_set('OvfUnsupportedAttribute', 'elementName', 'attributeNam
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33712,7 +35409,7 @@ VIMRuntime::make_get_set('OvfUnsupportedAttributeValue', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33739,7 +35436,7 @@ VIMRuntime::make_get_set('OvfUnsupportedDeviceBackingInfo', 'elementName', 'inst
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33766,7 +35463,7 @@ VIMRuntime::make_get_set('OvfUnsupportedDeviceBackingOption', 'elementName', 'in
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33789,7 +35486,7 @@ VIMRuntime::make_get_set('OvfUnsupportedDeviceExport');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33814,7 +35511,7 @@ VIMRuntime::make_get_set('OvfUnsupportedDiskProvisioning', 'diskProvisioning', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33838,7 +35535,7 @@ VIMRuntime::make_get_set('OvfUnsupportedElement', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33862,7 +35559,7 @@ VIMRuntime::make_get_set('OvfUnsupportedElementValue', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33886,7 +35583,7 @@ VIMRuntime::make_get_set('OvfUnsupportedPackage', 'lineNumber');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33910,7 +35607,7 @@ VIMRuntime::make_get_set('OvfUnsupportedSection', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33937,7 +35634,7 @@ VIMRuntime::make_get_set('OvfUnsupportedSubType', 'elementName', 'instanceId', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33963,7 +35660,7 @@ VIMRuntime::make_get_set('OvfUnsupportedType', 'name', 'instanceId', 'deviceType
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -33986,7 +35683,7 @@ VIMRuntime::make_get_set('OvfWrongElement');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34010,7 +35707,7 @@ VIMRuntime::make_get_set('OvfWrongNamespace', 'namespaceName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34034,7 +35731,7 @@ VIMRuntime::make_get_set('OvfXmlFormat', 'description');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34057,7 +35754,7 @@ VIMRuntime::make_get_set('PatchAlreadyInstalled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34082,7 +35779,7 @@ VIMRuntime::make_get_set('PatchBinariesNotFound', 'patchID', 'binary');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34106,7 +35803,7 @@ VIMRuntime::make_get_set('PatchInstallFailed', 'rolledBack');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34129,7 +35826,7 @@ VIMRuntime::make_get_set('PatchIntegrityError');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34152,7 +35849,7 @@ VIMRuntime::make_get_set('PatchMetadataCorrupted');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34177,7 +35874,7 @@ VIMRuntime::make_get_set('PatchMetadataInvalid', 'patchID', 'metaData');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34200,7 +35897,7 @@ VIMRuntime::make_get_set('PatchMetadataNotFound');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34225,7 +35922,7 @@ VIMRuntime::make_get_set('PatchMissingDependencies', 'prerequisitePatch', 'prere
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34249,7 +35946,7 @@ VIMRuntime::make_get_set('PatchNotApplicable', 'patchID');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34273,7 +35970,7 @@ VIMRuntime::make_get_set('PatchSuperseded', 'supersede');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34296,7 +35993,7 @@ VIMRuntime::make_get_set('PhysCompatRDMNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34320,7 +36017,7 @@ VIMRuntime::make_get_set('PlatformConfigFault', 'text');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34348,7 +36045,7 @@ VIMRuntime::make_get_set('PowerOnFtSecondaryFailed', 'vm', 'vmName', 'hostSelect
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34374,7 +36071,7 @@ VIMRuntime::make_get_set('PowerOnFtSecondaryTimedout', 'vm', 'vmName', 'timeout'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34399,7 +36096,7 @@ VIMRuntime::make_get_set('ProfileUpdateFailedUpdateFailure', 'profilePath', 'err
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34423,7 +36120,7 @@ VIMRuntime::make_get_set('ArrayOfProfileUpdateFailedUpdateFailure', 'ProfileUpda
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34447,7 +36144,7 @@ VIMRuntime::make_get_set('ProfileUpdateFailed', 'failure');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34471,7 +36168,7 @@ VIMRuntime::make_get_set('QuestionPending', 'text');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34498,7 +36195,7 @@ VIMRuntime::make_get_set('QuiesceDatastoreIOForHAFailed', 'host', 'hostName', 'd
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34522,7 +36219,7 @@ VIMRuntime::make_get_set('RDMConversionNotSupported', 'device');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34546,7 +36243,7 @@ VIMRuntime::make_get_set('RDMNotPreserved', 'device');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34569,7 +36266,7 @@ VIMRuntime::make_get_set('RDMNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34595,7 +36292,7 @@ VIMRuntime::make_get_set('RDMNotSupportedOnDatastore', 'device', 'datastore', 'd
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34618,7 +36315,7 @@ VIMRuntime::make_get_set('RDMPointsToInaccessibleDisk');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34641,7 +36338,7 @@ VIMRuntime::make_get_set('RawDiskNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34664,7 +36361,7 @@ VIMRuntime::make_get_set('ReadHostResourcePoolTreeFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34689,7 +36386,7 @@ VIMRuntime::make_get_set('ReadOnlyDisksWithLegacyDestination', 'roDiskCount', 't
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34713,7 +36410,7 @@ VIMRuntime::make_get_set('RebootRequired', 'patch');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34736,7 +36433,7 @@ VIMRuntime::make_get_set('RecordReplayDisabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34759,7 +36456,7 @@ VIMRuntime::make_get_set('RemoteDeviceNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34782,7 +36479,7 @@ VIMRuntime::make_get_set('RemoveFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34805,7 +36502,7 @@ VIMRuntime::make_get_set('ReplicationConfigFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34831,7 +36528,7 @@ VIMRuntime::make_get_set('ReplicationDiskConfigFault', 'reason', 'vmRef', 'key')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34854,7 +36551,7 @@ VIMRuntime::make_get_set('ReplicationFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34877,7 +36574,7 @@ VIMRuntime::make_get_set('ReplicationIncompatibleWithFT');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34902,7 +36599,7 @@ VIMRuntime::make_get_set('ReplicationInvalidOptions', 'options', 'entity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34925,7 +36622,7 @@ VIMRuntime::make_get_set('ReplicationNotSupportedOnHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34950,7 +36647,7 @@ VIMRuntime::make_get_set('ReplicationVmConfigFault', 'reason', 'vmRef');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -34977,7 +36674,7 @@ VIMRuntime::make_get_set('ReplicationVmFault', 'reason', 'state', 'instanceId', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35002,7 +36699,7 @@ VIMRuntime::make_get_set('ResourceInUse', 'type', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35028,7 +36725,7 @@ VIMRuntime::make_get_set('ResourceNotAvailable', 'containerType', 'containerName
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35051,7 +36748,7 @@ VIMRuntime::make_get_set('RestrictedVersion');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35076,7 +36773,7 @@ VIMRuntime::make_get_set('RollbackFailure', 'entityName', 'entityType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35101,7 +36798,7 @@ VIMRuntime::make_get_set('RuleViolation', 'host', 'rule');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35124,7 +36821,7 @@ VIMRuntime::make_get_set('SSLDisabledFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35149,7 +36846,7 @@ VIMRuntime::make_get_set('SSLVerifyFault', 'selfSigned', 'thumbprint');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35173,7 +36870,7 @@ VIMRuntime::make_get_set('SSPIChallenge', 'base64Token');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35197,7 +36894,7 @@ VIMRuntime::make_get_set('SecondaryVmAlreadyDisabled', 'instanceUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35221,7 +36918,7 @@ VIMRuntime::make_get_set('SecondaryVmAlreadyEnabled', 'instanceUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35245,7 +36942,7 @@ VIMRuntime::make_get_set('SecondaryVmAlreadyRegistered', 'instanceUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35269,7 +36966,7 @@ VIMRuntime::make_get_set('SecondaryVmNotRegistered', 'instanceUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35292,7 +36989,7 @@ VIMRuntime::make_get_set('SharedBusControllerNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35316,7 +37013,7 @@ VIMRuntime::make_get_set('ShrinkDiskFault', 'diskId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35339,7 +37036,7 @@ VIMRuntime::make_get_set('SnapshotCloneNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35362,7 +37059,7 @@ VIMRuntime::make_get_set('SnapshotCopyNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35385,7 +37082,7 @@ VIMRuntime::make_get_set('SnapshotDisabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35408,7 +37105,7 @@ VIMRuntime::make_get_set('SnapshotFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35432,7 +37129,7 @@ VIMRuntime::make_get_set('SnapshotIncompatibleDeviceInVm', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35455,7 +37152,7 @@ VIMRuntime::make_get_set('SnapshotLocked');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35478,7 +37175,7 @@ VIMRuntime::make_get_set('SnapshotMoveFromNonHomeNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35501,7 +37198,7 @@ VIMRuntime::make_get_set('SnapshotMoveNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35524,7 +37221,7 @@ VIMRuntime::make_get_set('SnapshotMoveToNonHomeNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35547,7 +37244,7 @@ VIMRuntime::make_get_set('SnapshotNoChange');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35573,7 +37270,7 @@ VIMRuntime::make_get_set('SnapshotRevertIssue', 'snapshotName', 'event', 'errors
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35597,7 +37294,7 @@ VIMRuntime::make_get_set('SoftRuleVioCorrectionDisallowed', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35621,7 +37318,31 @@ VIMRuntime::make_get_set('SoftRuleVioCorrectionImpact', 'vmName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package SsdDiskNotAvailable;
+our @ISA = qw(VimFault);
+
+our @property_list = (
+   ['devicePath', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('SsdDiskNotAvailable', 'devicePath');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35644,7 +37365,7 @@ VIMRuntime::make_get_set('StorageDrsCannotMoveDiskInMultiWriterMode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35667,7 +37388,7 @@ VIMRuntime::make_get_set('StorageDrsCannotMoveFTVm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35690,7 +37411,7 @@ VIMRuntime::make_get_set('StorageDrsCannotMoveIndependentDisk');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35713,7 +37434,7 @@ VIMRuntime::make_get_set('StorageDrsCannotMoveManuallyPlacedSwapFile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35736,7 +37457,7 @@ VIMRuntime::make_get_set('StorageDrsCannotMoveManuallyPlacedVm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35759,7 +37480,7 @@ VIMRuntime::make_get_set('StorageDrsCannotMoveSharedDisk');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35782,7 +37503,7 @@ VIMRuntime::make_get_set('StorageDrsCannotMoveTemplate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35805,7 +37526,7 @@ VIMRuntime::make_get_set('StorageDrsCannotMoveVmInUserFolder');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35828,7 +37549,7 @@ VIMRuntime::make_get_set('StorageDrsCannotMoveVmWithMountedCDROM');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35851,7 +37572,30 @@ VIMRuntime::make_get_set('StorageDrsCannotMoveVmWithNoFilesInLayout');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package StorageDrsDatacentersCannotShareDatastore;
+our @ISA = qw(VimFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('StorageDrsDatacentersCannotShareDatastore');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35874,7 +37618,7 @@ VIMRuntime::make_get_set('StorageDrsDisabledOnVm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35897,7 +37641,7 @@ VIMRuntime::make_get_set('StorageDrsIolbDisabledInternally');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35920,7 +37664,7 @@ VIMRuntime::make_get_set('StorageDrsUnableToMoveFiles');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35943,7 +37687,7 @@ VIMRuntime::make_get_set('StorageVMotionNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35967,7 +37711,7 @@ VIMRuntime::make_get_set('StorageVmotionIncompatible', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -35990,7 +37734,7 @@ VIMRuntime::make_get_set('SuspendedRelocateNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36013,7 +37757,7 @@ VIMRuntime::make_get_set('SwapDatastoreNotWritableOnHost');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36036,7 +37780,7 @@ VIMRuntime::make_get_set('SwapDatastoreUnset');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36059,7 +37803,7 @@ VIMRuntime::make_get_set('SwapPlacementOverrideNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36082,7 +37826,7 @@ VIMRuntime::make_get_set('SwitchIpUnset');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36105,7 +37849,7 @@ VIMRuntime::make_get_set('SwitchNotInUpgradeMode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36129,7 +37873,7 @@ VIMRuntime::make_get_set('TaskInProgress', 'task');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36155,7 +37899,7 @@ VIMRuntime::make_get_set('ThirdPartyLicenseAssignmentFailed', 'host', 'module', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36178,7 +37922,7 @@ VIMRuntime::make_get_set('Timedout');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36201,7 +37945,7 @@ VIMRuntime::make_get_set('TooManyConcurrentNativeClones');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36224,7 +37968,7 @@ VIMRuntime::make_get_set('TooManyConsecutiveOverrides');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36247,7 +37991,7 @@ VIMRuntime::make_get_set('TooManyDevices');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36272,7 +38016,7 @@ VIMRuntime::make_get_set('TooManyDisksOnLegacyHost', 'diskCount', 'timeoutDanger
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36295,7 +38039,7 @@ VIMRuntime::make_get_set('TooManyGuestLogons');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36318,7 +38062,7 @@ VIMRuntime::make_get_set('TooManyHosts');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36341,7 +38085,7 @@ VIMRuntime::make_get_set('TooManyNativeCloneLevels');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36364,7 +38108,7 @@ VIMRuntime::make_get_set('TooManyNativeClonesOnFile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36387,7 +38131,7 @@ VIMRuntime::make_get_set('TooManySnapshotLevels');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36410,7 +38154,7 @@ VIMRuntime::make_get_set('ToolsAlreadyUpgraded');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36433,7 +38177,7 @@ VIMRuntime::make_get_set('ToolsAutoUpgradeNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36456,7 +38200,7 @@ VIMRuntime::make_get_set('ToolsImageCopyFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36479,7 +38223,7 @@ VIMRuntime::make_get_set('ToolsImageNotAvailable');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36502,7 +38246,7 @@ VIMRuntime::make_get_set('ToolsImageSignatureCheckFailed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36525,7 +38269,7 @@ VIMRuntime::make_get_set('ToolsInstallationInProgress');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36548,7 +38292,7 @@ VIMRuntime::make_get_set('ToolsUnavailable');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36571,7 +38315,32 @@ VIMRuntime::make_get_set('ToolsUpgradeCancelled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package UnSupportedDatastoreForVFlash;
+our @ISA = qw(UnsupportedDatastore);
+
+our @property_list = (
+   ['datastoreName', undef, undef, 1],
+   ['type', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('UnSupportedDatastoreForVFlash', 'datastoreName', 'type');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36594,7 +38363,7 @@ VIMRuntime::make_get_set('UncommittedUndoableDisk');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36617,7 +38386,7 @@ VIMRuntime::make_get_set('UnconfiguredPropertyValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36641,7 +38410,7 @@ VIMRuntime::make_get_set('UncustomizableGuest', 'uncustomizableGuestOS');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36664,7 +38433,7 @@ VIMRuntime::make_get_set('UnexpectedCustomizationFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36688,7 +38457,7 @@ VIMRuntime::make_get_set('UnrecognizedHost', 'hostName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36711,7 +38480,7 @@ VIMRuntime::make_get_set('UnsharedSwapVMotionNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36735,7 +38504,7 @@ VIMRuntime::make_get_set('UnsupportedDatastore', 'datastore');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36759,7 +38528,7 @@ VIMRuntime::make_get_set('UnsupportedGuest', 'unsupportedGuestOS');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36783,7 +38552,7 @@ VIMRuntime::make_get_set('UnsupportedVimApiVersion', 'version');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36806,7 +38575,7 @@ VIMRuntime::make_get_set('UnsupportedVmxLocation');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36829,7 +38598,7 @@ VIMRuntime::make_get_set('UnusedVirtualDiskBlocksNotScrubbed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36854,7 +38623,7 @@ VIMRuntime::make_get_set('UserNotFound', 'principal', 'unresolved');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36877,7 +38646,7 @@ VIMRuntime::make_get_set('VAppConfigFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36900,7 +38669,7 @@ VIMRuntime::make_get_set('VAppNotRunning');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36923,7 +38692,7 @@ VIMRuntime::make_get_set('VAppOperationInProgress');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36951,7 +38720,7 @@ VIMRuntime::make_get_set('VAppPropertyFault', 'id', 'category', 'label', 'type',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36974,7 +38743,61 @@ VIMRuntime::make_get_set('VAppTaskInProgress');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VFlashModuleNotSupported;
+our @ISA = qw(VmConfigFault);
+
+our @property_list = (
+   ['vmName', undef, undef, 1],
+   ['moduleName', undef, undef, 1],
+   ['reason', undef, undef, 1],
+   ['hostName', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VFlashModuleNotSupported', 'vmName', 'moduleName', 'reason', 'hostName');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VFlashModuleVersionIncompatible;
+our @ISA = qw(VimFault);
+
+our @property_list = (
+   ['moduleName', undef, undef, 1],
+   ['vmRequestModuleVersion', undef, undef, 1],
+   ['hostMinSupportedVerson', undef, undef, 1],
+   ['hostModuleVersion', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VFlashModuleVersionIncompatible', 'moduleName', 'vmRequestModuleVersion', 'hostMinSupportedVerson', 'hostModuleVersion');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -36997,7 +38820,7 @@ VIMRuntime::make_get_set('VMINotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37020,7 +38843,7 @@ VIMRuntime::make_get_set('VMOnConflictDVPort');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37043,7 +38866,30 @@ VIMRuntime::make_get_set('VMOnVirtualIntranet');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VMotionAcrossNetworkNotSupported;
+our @ISA = qw(MigrationFeatureNotSupported);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VMotionAcrossNetworkNotSupported');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37069,7 +38915,7 @@ VIMRuntime::make_get_set('VMotionInterfaceIssue', 'atSourceHost', 'failedHost', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37093,7 +38939,7 @@ VIMRuntime::make_get_set('VMotionLinkCapacityLow', 'network');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37117,7 +38963,7 @@ VIMRuntime::make_get_set('VMotionLinkDown', 'network');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37140,7 +38986,7 @@ VIMRuntime::make_get_set('VMotionNotConfigured');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37163,7 +39009,7 @@ VIMRuntime::make_get_set('VMotionNotLicensed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37186,7 +39032,7 @@ VIMRuntime::make_get_set('VMotionNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37209,7 +39055,7 @@ VIMRuntime::make_get_set('VMotionProtocolIncompatible');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37232,7 +39078,7 @@ VIMRuntime::make_get_set('VimFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37255,7 +39101,7 @@ VIMRuntime::make_get_set('VirtualDiskBlocksNotFullyProvisioned');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37279,7 +39125,7 @@ VIMRuntime::make_get_set('VirtualDiskModeNotSupported', 'mode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37302,7 +39148,7 @@ VIMRuntime::make_get_set('VirtualEthernetCardNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37325,7 +39171,7 @@ VIMRuntime::make_get_set('VirtualHardwareCompatibilityIssue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37350,7 +39196,7 @@ VIMRuntime::make_get_set('VirtualHardwareVersionNotSupported', 'hostName', 'host
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37376,7 +39222,7 @@ VIMRuntime::make_get_set('VmAlreadyExistsInDatacenter', 'host', 'hostname', 'vm'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37399,7 +39245,7 @@ VIMRuntime::make_get_set('VmConfigFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37423,7 +39269,7 @@ VIMRuntime::make_get_set('VmConfigIncompatibleForFaultTolerance', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37447,7 +39293,7 @@ VIMRuntime::make_get_set('VmConfigIncompatibleForRecordReplay', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37473,7 +39319,7 @@ VIMRuntime::make_get_set('VmFaultToleranceConfigIssue', 'reason', 'entityName', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37499,7 +39345,7 @@ VIMRuntime::make_get_set('VmFaultToleranceConfigIssueWrapper', 'entityName', 'en
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37524,7 +39370,7 @@ VIMRuntime::make_get_set('VmFaultToleranceInvalidFileBacking', 'backingType', 'b
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37547,7 +39393,7 @@ VIMRuntime::make_get_set('VmFaultToleranceIssue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37572,7 +39418,7 @@ VIMRuntime::make_get_set('VmFaultToleranceOpIssuesList', 'errors', 'warnings');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37597,7 +39443,7 @@ VIMRuntime::make_get_set('VmFaultToleranceTooManyVMsOnHost', 'hostName', 'maxNum
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37622,7 +39468,7 @@ VIMRuntime::make_get_set('VmHostAffinityRuleViolation', 'vmName', 'hostName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37646,7 +39492,30 @@ VIMRuntime::make_get_set('VmLimitLicense', 'limit');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VmMetadataManagerFault;
+our @ISA = qw(VimFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VmMetadataManagerFault');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37669,7 +39538,7 @@ VIMRuntime::make_get_set('VmMonitorIncompatibleForFaultTolerance');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37692,7 +39561,7 @@ VIMRuntime::make_get_set('VmPowerOnDisabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37715,7 +39584,7 @@ VIMRuntime::make_get_set('VmToolsUpgradeFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37741,7 +39610,7 @@ VIMRuntime::make_get_set('VmValidateMaxDevice', 'device', 'max', 'count');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37768,7 +39637,7 @@ VIMRuntime::make_get_set('VmWwnConflict', 'vm', 'host', 'name', 'wwn');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37791,7 +39660,7 @@ VIMRuntime::make_get_set('VmfsAlreadyMounted');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37814,7 +39683,7 @@ VIMRuntime::make_get_set('VmfsAmbiguousMount');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37838,7 +39707,7 @@ VIMRuntime::make_get_set('VmfsMountFault', 'uuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37861,7 +39730,7 @@ VIMRuntime::make_get_set('VmotionInterfaceNotEnabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37884,7 +39753,7 @@ VIMRuntime::make_get_set('VolumeEditorError');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37908,7 +39777,79 @@ VIMRuntime::make_get_set('VramLimitLicense', 'limit');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanClusterUuidMismatch;
+our @ISA = qw(CannotMoveVsanEnabledHost);
+
+our @property_list = (
+   ['hostClusterUuid', undef, undef, 1],
+   ['destinationClusterUuid', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VsanClusterUuidMismatch', 'hostClusterUuid', 'destinationClusterUuid');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanDiskFault;
+our @ISA = qw(VsanFault);
+
+our @property_list = (
+   ['device', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanDiskFault', 'device');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanFault;
+our @ISA = qw(VimFault);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VsanFault');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37934,7 +39875,7 @@ VIMRuntime::make_get_set('VspanDestPortConflict', 'vspanSessionKey1', 'vspanSess
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37960,7 +39901,7 @@ VIMRuntime::make_get_set('VspanPortConflict', 'vspanSessionKey1', 'vspanSessionK
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -37986,7 +39927,7 @@ VIMRuntime::make_get_set('VspanPortMoveFault', 'srcPortgroupName', 'destPortgrou
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38010,7 +39951,7 @@ VIMRuntime::make_get_set('VspanPortPromiscChangeFault', 'portKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38034,7 +39975,7 @@ VIMRuntime::make_get_set('VspanPortgroupPromiscChangeFault', 'portgroupName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38058,7 +39999,7 @@ VIMRuntime::make_get_set('VspanPortgroupTypeChangeFault', 'portgroupName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38083,7 +40024,7 @@ VIMRuntime::make_get_set('VspanPromiscuousPortNotSupported', 'vspanSessionKey', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38108,7 +40049,7 @@ VIMRuntime::make_get_set('VspanSameSessionPortConflict', 'vspanSessionKey', 'por
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38131,7 +40072,7 @@ VIMRuntime::make_get_set('WakeOnLanNotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38154,7 +40095,7 @@ VIMRuntime::make_get_set('WakeOnLanNotSupportedByVmotionNIC');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38178,7 +40119,7 @@ VIMRuntime::make_get_set('WillLoseHAProtection', 'resolution');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38201,7 +40142,7 @@ VIMRuntime::make_get_set('WillModifyConfigCpuRequirements');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38224,7 +40165,7 @@ VIMRuntime::make_get_set('WillResetSnapshotDirectory');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38247,7 +40188,7 @@ VIMRuntime::make_get_set('WipeDiskFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38273,7 +40214,7 @@ VIMRuntime::make_get_set('HostActiveDirectoryInfo', 'joinedDomain', 'trustedDoma
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38301,7 +40242,7 @@ VIMRuntime::make_get_set('HostActiveDirectorySpec', 'domainName', 'userName', 'p
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38326,7 +40267,7 @@ VIMRuntime::make_get_set('HostActiveDirectory', 'changeOperation', 'spec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38350,7 +40291,7 @@ VIMRuntime::make_get_set('ArrayOfHostActiveDirectory', 'HostActiveDirectory');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38374,7 +40315,7 @@ VIMRuntime::make_get_set('HostAuthenticationManagerInfo', 'authConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38398,7 +40339,7 @@ VIMRuntime::make_get_set('HostAuthenticationStoreInfo', 'enabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38422,7 +40363,7 @@ VIMRuntime::make_get_set('ArrayOfHostAuthenticationStoreInfo', 'HostAuthenticati
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38450,7 +40391,7 @@ VIMRuntime::make_get_set('AutoStartDefaults', 'enabled', 'startDelay', 'stopDela
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38480,7 +40421,7 @@ VIMRuntime::make_get_set('AutoStartPowerInfo', 'key', 'startOrder', 'startDelay'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38504,7 +40445,7 @@ VIMRuntime::make_get_set('ArrayOfAutoStartPowerInfo', 'AutoStartPowerInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38529,7 +40470,7 @@ VIMRuntime::make_get_set('HostAutoStartManagerConfig', 'defaults', 'powerInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38554,7 +40495,7 @@ VIMRuntime::make_get_set('HostBootDeviceInfo', 'bootDevices', 'currentBootDevice
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38579,7 +40520,7 @@ VIMRuntime::make_get_set('HostBootDevice', 'key', 'description');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38603,7 +40544,7 @@ VIMRuntime::make_get_set('ArrayOfHostBootDevice', 'HostBootDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38628,7 +40569,7 @@ VIMRuntime::make_get_set('HostCacheConfigurationSpec', 'datastore', 'swapSize');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38653,7 +40594,7 @@ VIMRuntime::make_get_set('HostCacheConfigurationInfo', 'key', 'swapSize');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38677,7 +40618,7 @@ VIMRuntime::make_get_set('ArrayOfHostCacheConfigurationInfo', 'HostCacheConfigur
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38721,6 +40662,7 @@ our @property_list = (
    ['scaledScreenshotSupported', 'boolean', undef, 1],
    ['storageVMotionSupported', 'boolean', undef, 0],
    ['vmotionWithStorageVMotionSupported', 'boolean', undef, 0],
+   ['vmotionAcrossNetworkSupported', 'boolean', undef, 0],
    ['hbrNicSelectionSupported', 'boolean', undef, 0],
    ['recordReplaySupported', 'boolean', undef, 0],
    ['ftSupported', 'boolean', undef, 0],
@@ -38753,17 +40695,22 @@ our @property_list = (
    ['scheduledHardwareUpgradeSupported', 'boolean', undef, 0],
    ['featureCapabilitiesSupported', 'boolean', undef, 0],
    ['latencySensitivitySupported', 'boolean', undef, 0],
+   ['storagePolicySupported', 'boolean', undef, 0],
    ['accel3dSupported', 'boolean', undef, 0],
+   ['reliableMemoryAware', 'boolean', undef, 0],
+   ['multipleNetworkStackInstanceSupported', 'boolean', undef, 0],
+   ['vsanSupported', 'boolean', undef, 0],
+   ['vFlashSupported', 'boolean', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('HostCapability', 'recursiveResourcePoolsSupported', 'cpuMemoryResourceConfigurationSupported', 'rebootSupported', 'shutdownSupported', 'vmotionSupported', 'standbySupported', 'ipmiSupported', 'maxSupportedVMs', 'maxRunningVMs', 'maxSupportedVcpus', 'maxRegisteredVMs', 'datastorePrincipalSupported', 'sanSupported', 'nfsSupported', 'iscsiSupported', 'vlanTaggingSupported', 'nicTeamingSupported', 'highGuestMemSupported', 'maintenanceModeSupported', 'suspendedRelocateSupported', 'restrictedSnapshotRelocateSupported', 'perVmSwapFiles', 'localSwapDatastoreSupported', 'unsharedSwapVMotionSupported', 'backgroundSnapshotsSupported', 'preAssignedPCIUnitNumbersSupported', 'screenshotSupported', 'scaledScreenshotSupported', 'storageVMotionSupported', 'vmotionWithStorageVMotionSupported', 'hbrNicSelectionSupported', 'recordReplaySupported', 'ftSupported', 'replayUnsupportedReason', 'replayCompatibilityIssues', 'ftCompatibilityIssues', 'loginBySSLThumbprintSupported', 'cloneFromSnapshotSupported', 'deltaDiskBackingsSupported', 'perVMNetworkTrafficShapingSupported', 'tpmSupported', 'supportedCpuFeature', 'virtualExecUsageSupported', 'storageIORMSupported', 'vmDirectPathGen2Supported', 'vmDirectPathGen2UnsupportedReason', 'vmDirectPathGen2UnsupportedReasonExtended', 'supportedVmfsMajorVersion', 'vStorageCapable', 'snapshotRelayoutSupported', 'firewallIpRulesSupported', 'servicePackageInfoSupported', 'maxHostRunningVms', 'maxHostSupportedVcpus', 'vmfsDatastoreMountCapable', 'eightPlusHostVmfsSharedAccessSupported', 'nestedHVSupported', 'vPMCSupported', 'interVMCommunicationThroughVMCISupported', 'scheduledHardwareUpgradeSupported', 'featureCapabilitiesSupported', 'latencySensitivitySupported', 'accel3dSupported');
+VIMRuntime::make_get_set('HostCapability', 'recursiveResourcePoolsSupported', 'cpuMemoryResourceConfigurationSupported', 'rebootSupported', 'shutdownSupported', 'vmotionSupported', 'standbySupported', 'ipmiSupported', 'maxSupportedVMs', 'maxRunningVMs', 'maxSupportedVcpus', 'maxRegisteredVMs', 'datastorePrincipalSupported', 'sanSupported', 'nfsSupported', 'iscsiSupported', 'vlanTaggingSupported', 'nicTeamingSupported', 'highGuestMemSupported', 'maintenanceModeSupported', 'suspendedRelocateSupported', 'restrictedSnapshotRelocateSupported', 'perVmSwapFiles', 'localSwapDatastoreSupported', 'unsharedSwapVMotionSupported', 'backgroundSnapshotsSupported', 'preAssignedPCIUnitNumbersSupported', 'screenshotSupported', 'scaledScreenshotSupported', 'storageVMotionSupported', 'vmotionWithStorageVMotionSupported', 'vmotionAcrossNetworkSupported', 'hbrNicSelectionSupported', 'recordReplaySupported', 'ftSupported', 'replayUnsupportedReason', 'replayCompatibilityIssues', 'ftCompatibilityIssues', 'loginBySSLThumbprintSupported', 'cloneFromSnapshotSupported', 'deltaDiskBackingsSupported', 'perVMNetworkTrafficShapingSupported', 'tpmSupported', 'supportedCpuFeature', 'virtualExecUsageSupported', 'storageIORMSupported', 'vmDirectPathGen2Supported', 'vmDirectPathGen2UnsupportedReason', 'vmDirectPathGen2UnsupportedReasonExtended', 'supportedVmfsMajorVersion', 'vStorageCapable', 'snapshotRelayoutSupported', 'firewallIpRulesSupported', 'servicePackageInfoSupported', 'maxHostRunningVms', 'maxHostSupportedVcpus', 'vmfsDatastoreMountCapable', 'eightPlusHostVmfsSharedAccessSupported', 'nestedHVSupported', 'vPMCSupported', 'interVMCommunicationThroughVMCISupported', 'scheduledHardwareUpgradeSupported', 'featureCapabilitiesSupported', 'latencySensitivitySupported', 'storagePolicySupported', 'accel3dSupported', 'reliableMemoryAware', 'multipleNetworkStackInstanceSupported', 'vsanSupported', 'vFlashSupported');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38786,7 +40733,7 @@ VIMRuntime::make_get_set('HostConfigChange');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38841,16 +40788,19 @@ our @property_list = (
    ['wakeOnLanCapable', 'boolean', undef, 0],
    ['featureCapability', 'HostFeatureCapability', 1, 0],
    ['maskedFeatureCapability', 'HostFeatureCapability', 1, 0],
+   ['vFlashConfigInfo', 'HostVFlashManagerVFlashConfigInfo', undef, 0],
+   ['vsanHostConfig', 'VsanHostConfigInfo', undef, 0],
+   ['graphicsInfo', 'HostGraphicsInfo', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('HostConfigInfo', 'host', 'product', 'hyperThread', 'consoleReservation', 'virtualMachineReservation', 'storageDevice', 'multipathState', 'fileSystemVolume', 'systemFile', 'network', 'vmotion', 'virtualNicManagerInfo', 'capabilities', 'datastoreCapabilities', 'offloadCapabilities', 'service', 'firewall', 'autoStart', 'activeDiagnosticPartition', 'option', 'optionDef', 'datastorePrincipal', 'localSwapDatastore', 'systemSwapConfiguration', 'systemResources', 'dateTimeInfo', 'flags', 'adminDisabled', 'ipmi', 'sslThumbprintInfo', 'sslThumbprintData', 'certificate', 'pciPassthruInfo', 'authenticationManagerInfo', 'featureVersion', 'powerSystemCapability', 'powerSystemInfo', 'cacheConfigurationInfo', 'wakeOnLanCapable', 'featureCapability', 'maskedFeatureCapability');
+VIMRuntime::make_get_set('HostConfigInfo', 'host', 'product', 'hyperThread', 'consoleReservation', 'virtualMachineReservation', 'storageDevice', 'multipathState', 'fileSystemVolume', 'systemFile', 'network', 'vmotion', 'virtualNicManagerInfo', 'capabilities', 'datastoreCapabilities', 'offloadCapabilities', 'service', 'firewall', 'autoStart', 'activeDiagnosticPartition', 'option', 'optionDef', 'datastorePrincipal', 'localSwapDatastore', 'systemSwapConfiguration', 'systemResources', 'dateTimeInfo', 'flags', 'adminDisabled', 'ipmi', 'sslThumbprintInfo', 'sslThumbprintData', 'certificate', 'pciPassthruInfo', 'authenticationManagerInfo', 'featureVersion', 'powerSystemCapability', 'powerSystemInfo', 'cacheConfigurationInfo', 'wakeOnLanCapable', 'featureCapability', 'maskedFeatureCapability', 'vFlashConfigInfo', 'vsanHostConfig', 'graphicsInfo');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38891,16 +40841,20 @@ our @property_list = (
    ['cacheConfigurationManager', 'ManagedObjectReference', undef, 0],
    ['esxAgentHostManager', 'ManagedObjectReference', undef, 0],
    ['iscsiManager', 'ManagedObjectReference', undef, 0],
+   ['vFlashManager', 'ManagedObjectReference', undef, 0],
+   ['vsanSystem', 'ManagedObjectReference', undef, 0],
+   ['graphicsManager', 'ManagedObjectReference', undef, 0],
+   ['vsanInternalSystem', 'ManagedObjectReference', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('HostConfigManager', 'cpuScheduler', 'datastoreSystem', 'memoryManager', 'storageSystem', 'networkSystem', 'vmotionSystem', 'virtualNicManager', 'serviceSystem', 'firewallSystem', 'advancedOption', 'diagnosticSystem', 'autoStartManager', 'snmpSystem', 'dateTimeSystem', 'patchManager', 'imageConfigManager', 'bootDeviceSystem', 'firmwareSystem', 'healthStatusSystem', 'pciPassthruSystem', 'licenseManager', 'kernelModuleSystem', 'authenticationManager', 'powerSystem', 'cacheConfigurationManager', 'esxAgentHostManager', 'iscsiManager');
+VIMRuntime::make_get_set('HostConfigManager', 'cpuScheduler', 'datastoreSystem', 'memoryManager', 'storageSystem', 'networkSystem', 'vmotionSystem', 'virtualNicManager', 'serviceSystem', 'firewallSystem', 'advancedOption', 'diagnosticSystem', 'autoStartManager', 'snmpSystem', 'dateTimeSystem', 'patchManager', 'imageConfigManager', 'bootDeviceSystem', 'firmwareSystem', 'healthStatusSystem', 'pciPassthruSystem', 'licenseManager', 'kernelModuleSystem', 'authenticationManager', 'powerSystem', 'cacheConfigurationManager', 'esxAgentHostManager', 'iscsiManager', 'vFlashManager', 'vsanSystem', 'graphicsManager', 'vsanInternalSystem');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38940,7 +40894,7 @@ VIMRuntime::make_get_set('HostConfigSpec', 'nasDatastore', 'network', 'nicTypeSe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38964,7 +40918,7 @@ VIMRuntime::make_get_set('HostConnectInfoNetworkInfo', 'summary');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -38988,7 +40942,7 @@ VIMRuntime::make_get_set('ArrayOfHostConnectInfoNetworkInfo', 'HostConnectInfoNe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39011,7 +40965,7 @@ VIMRuntime::make_get_set('HostNewNetworkConnectInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39035,7 +40989,7 @@ VIMRuntime::make_get_set('HostDatastoreConnectInfo', 'summary');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39059,7 +41013,7 @@ VIMRuntime::make_get_set('ArrayOfHostDatastoreConnectInfo', 'HostDatastoreConnec
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39083,7 +41037,7 @@ VIMRuntime::make_get_set('HostDatastoreExistsConnectInfo', 'newDatastoreName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39107,7 +41061,7 @@ VIMRuntime::make_get_set('HostDatastoreNameConflictConnectInfo', 'newDatastoreNa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39133,7 +41087,7 @@ VIMRuntime::make_get_set('HostLicenseConnectInfo', 'license', 'evaluation', 'res
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39165,7 +41119,7 @@ VIMRuntime::make_get_set('HostConnectInfo', 'serverIp', 'inDasCluster', 'host', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39198,7 +41152,7 @@ VIMRuntime::make_get_set('HostConnectSpec', 'hostName', 'port', 'sslThumbprint',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39227,7 +41181,7 @@ VIMRuntime::make_get_set('HostCpuIdInfo', 'level', 'vendor', 'eax', 'ebx', 'ecx'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39251,7 +41205,7 @@ VIMRuntime::make_get_set('ArrayOfHostCpuIdInfo', 'HostCpuIdInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39277,7 +41231,7 @@ VIMRuntime::make_get_set('HostHyperThreadScheduleInfo', 'available', 'active', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39304,7 +41258,7 @@ VIMRuntime::make_get_set('FileQueryFlags', 'fileType', 'fileSize', 'modification
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39331,7 +41285,7 @@ VIMRuntime::make_get_set('FileInfo', 'path', 'fileSize', 'modification', 'owner'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39355,7 +41309,7 @@ VIMRuntime::make_get_set('ArrayOfFileInfo', 'FileInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39378,7 +41332,7 @@ VIMRuntime::make_get_set('FileQuery');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39402,7 +41356,7 @@ VIMRuntime::make_get_set('ArrayOfFileQuery', 'FileQuery');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39426,7 +41380,7 @@ VIMRuntime::make_get_set('VmConfigFileQueryFilter', 'matchConfigVersion');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39450,7 +41404,7 @@ VIMRuntime::make_get_set('VmConfigFileQueryFlags', 'configVersion');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39475,7 +41429,7 @@ VIMRuntime::make_get_set('VmConfigFileQuery', 'filter', 'details');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39498,7 +41452,7 @@ VIMRuntime::make_get_set('TemplateConfigFileQuery');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39525,7 +41479,7 @@ VIMRuntime::make_get_set('VmDiskFileQueryFilter', 'diskType', 'matchHardwareVers
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39554,7 +41508,7 @@ VIMRuntime::make_get_set('VmDiskFileQueryFlags', 'diskType', 'capacityKb', 'hard
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39579,7 +41533,7 @@ VIMRuntime::make_get_set('VmDiskFileQuery', 'filter', 'details');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39602,7 +41556,7 @@ VIMRuntime::make_get_set('FolderFileQuery');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39625,7 +41579,7 @@ VIMRuntime::make_get_set('VmSnapshotFileQuery');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39648,7 +41602,7 @@ VIMRuntime::make_get_set('IsoImageFileQuery');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39671,7 +41625,7 @@ VIMRuntime::make_get_set('FloppyImageFileQuery');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39694,7 +41648,7 @@ VIMRuntime::make_get_set('VmNvramFileQuery');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39717,7 +41671,7 @@ VIMRuntime::make_get_set('VmLogFileQuery');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39741,7 +41695,7 @@ VIMRuntime::make_get_set('VmConfigFileInfo', 'configVersion');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39764,7 +41718,7 @@ VIMRuntime::make_get_set('TemplateConfigFileInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39793,7 +41747,7 @@ VIMRuntime::make_get_set('VmDiskFileInfo', 'diskType', 'capacityKb', 'hardwareVe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39816,7 +41770,7 @@ VIMRuntime::make_get_set('FolderFileInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39839,7 +41793,7 @@ VIMRuntime::make_get_set('VmSnapshotFileInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39862,7 +41816,7 @@ VIMRuntime::make_get_set('IsoImageFileInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39885,7 +41839,7 @@ VIMRuntime::make_get_set('FloppyImageFileInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39908,7 +41862,7 @@ VIMRuntime::make_get_set('VmNvramFileInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39931,7 +41885,7 @@ VIMRuntime::make_get_set('VmLogFileInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39959,7 +41913,7 @@ VIMRuntime::make_get_set('HostDatastoreBrowserSearchSpec', 'query', 'details', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -39985,7 +41939,7 @@ VIMRuntime::make_get_set('HostDatastoreBrowserSearchResults', 'datastore', 'fold
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40009,7 +41963,7 @@ VIMRuntime::make_get_set('ArrayOfHostDatastoreBrowserSearchResults', 'HostDatast
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40036,7 +41990,7 @@ VIMRuntime::make_get_set('HostDatastoreSystemCapabilities', 'nfsMountCreationReq
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40062,7 +42016,7 @@ VIMRuntime::make_get_set('VmfsDatastoreInfo', 'maxPhysicalRDMFileSize', 'maxVirt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40086,7 +42040,7 @@ VIMRuntime::make_get_set('NasDatastoreInfo', 'nas');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40110,7 +42064,7 @@ VIMRuntime::make_get_set('LocalDatastoreInfo', 'path');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40134,7 +42088,7 @@ VIMRuntime::make_get_set('VmfsDatastoreSpec', 'diskUuid');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40160,7 +42114,7 @@ VIMRuntime::make_get_set('VmfsDatastoreCreateSpec', 'partition', 'vmfs', 'extent
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40185,7 +42139,7 @@ VIMRuntime::make_get_set('VmfsDatastoreExtendSpec', 'partition', 'extent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40210,7 +42164,7 @@ VIMRuntime::make_get_set('VmfsDatastoreExpandSpec', 'partition', 'extent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40235,7 +42189,7 @@ VIMRuntime::make_get_set('VmfsDatastoreBaseOption', 'layout', 'partitionFormatCh
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40259,7 +42213,7 @@ VIMRuntime::make_get_set('VmfsDatastoreSingleExtentOption', 'vmfsExtent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40282,7 +42236,7 @@ VIMRuntime::make_get_set('VmfsDatastoreAllExtentOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40306,7 +42260,7 @@ VIMRuntime::make_get_set('VmfsDatastoreMultipleExtentOption', 'vmfsExtent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40331,7 +42285,7 @@ VIMRuntime::make_get_set('VmfsDatastoreOption', 'info', 'spec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40355,7 +42309,7 @@ VIMRuntime::make_get_set('ArrayOfVmfsDatastoreOption', 'VmfsDatastoreOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40380,7 +42334,7 @@ VIMRuntime::make_get_set('HostDateTimeConfig', 'timeZone', 'ntpConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40405,7 +42359,7 @@ VIMRuntime::make_get_set('HostDateTimeInfo', 'timeZone', 'ntpConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40432,7 +42386,7 @@ VIMRuntime::make_get_set('HostDateTimeSystemTimeZone', 'key', 'name', 'descripti
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40456,7 +42410,7 @@ VIMRuntime::make_get_set('ArrayOfHostDateTimeSystemTimeZone', 'HostDateTimeSyste
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40481,7 +42435,7 @@ VIMRuntime::make_get_set('HostDevice', 'deviceName', 'deviceType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40512,7 +42466,7 @@ VIMRuntime::make_get_set('HostDhcpServiceSpec', 'virtualSwitch', 'defaultLeaseDu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40538,7 +42492,7 @@ VIMRuntime::make_get_set('HostDhcpServiceConfig', 'changeOperation', 'key', 'spe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40562,7 +42516,7 @@ VIMRuntime::make_get_set('ArrayOfHostDhcpServiceConfig', 'HostDhcpServiceConfig'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40587,7 +42541,7 @@ VIMRuntime::make_get_set('HostDhcpService', 'key', 'spec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40611,7 +42565,7 @@ VIMRuntime::make_get_set('ArrayOfHostDhcpService', 'HostDhcpService');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40637,7 +42591,7 @@ VIMRuntime::make_get_set('HostDiagnosticPartitionCreateOption', 'storageType', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40661,7 +42615,7 @@ VIMRuntime::make_get_set('ArrayOfHostDiagnosticPartitionCreateOption', 'HostDiag
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40689,7 +42643,7 @@ VIMRuntime::make_get_set('HostDiagnosticPartitionCreateSpec', 'storageType', 'di
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40715,7 +42669,7 @@ VIMRuntime::make_get_set('HostDiagnosticPartitionCreateDescription', 'layout', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40742,7 +42696,7 @@ VIMRuntime::make_get_set('HostDiagnosticPartition', 'storageType', 'diagnosticTy
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40766,7 +42720,7 @@ VIMRuntime::make_get_set('ArrayOfHostDiagnosticPartition', 'HostDiagnosticPartit
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40789,7 +42743,57 @@ VIMRuntime::make_get_set('HostDirectoryStoreInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostDiskConfigurationResult;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['devicePath', undef, undef, 0],
+   ['success', 'boolean', undef, 0],
+   ['fault', 'LocalizedMethodFault', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('HostDiskConfigurationResult', 'devicePath', 'success', 'fault');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfHostDiskConfigurationResult;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['HostDiskConfigurationResult', 'HostDiskConfigurationResult', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfHostDiskConfigurationResult', 'HostDiskConfigurationResult');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40815,7 +42819,7 @@ VIMRuntime::make_get_set('HostDiskDimensionsChs', 'cylinder', 'head', 'sector');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40840,7 +42844,7 @@ VIMRuntime::make_get_set('HostDiskDimensionsLba', 'blockSize', 'block');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40863,7 +42867,7 @@ VIMRuntime::make_get_set('HostDiskDimensions');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40894,7 +42898,7 @@ VIMRuntime::make_get_set('HostDiskPartitionAttributes', 'partition', 'startSecto
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40918,7 +42922,7 @@ VIMRuntime::make_get_set('ArrayOfHostDiskPartitionAttributes', 'HostDiskPartitio
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40945,7 +42949,7 @@ VIMRuntime::make_get_set('HostDiskPartitionBlockRange', 'partition', 'type', 'st
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40969,7 +42973,7 @@ VIMRuntime::make_get_set('ArrayOfHostDiskPartitionBlockRange', 'HostDiskPartitio
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -40996,7 +43000,7 @@ VIMRuntime::make_get_set('HostDiskPartitionSpec', 'partitionFormat', 'chs', 'tot
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41021,7 +43025,7 @@ VIMRuntime::make_get_set('HostDiskPartitionLayout', 'total', 'partition');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41047,7 +43051,7 @@ VIMRuntime::make_get_set('HostDiskPartitionInfo', 'deviceName', 'spec', 'layout'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41071,7 +43075,7 @@ VIMRuntime::make_get_set('ArrayOfHostDiskPartitionInfo', 'HostDiskPartitionInfo'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41100,7 +43104,7 @@ VIMRuntime::make_get_set('HostDnsConfig', 'dhcp', 'virtualNicDevice', 'hostName'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41124,7 +43128,7 @@ VIMRuntime::make_get_set('HostDnsConfigSpec', 'virtualNicConnection');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41149,7 +43153,7 @@ VIMRuntime::make_get_set('HostEsxAgentHostManagerConfigInfo', 'agentVmDatastore'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41174,7 +43178,7 @@ VIMRuntime::make_get_set('FcoeConfigVlanRange', 'vlanLow', 'vlanHigh');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41198,7 +43202,7 @@ VIMRuntime::make_get_set('ArrayOfFcoeConfigVlanRange', 'FcoeConfigVlanRange');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41224,7 +43228,7 @@ VIMRuntime::make_get_set('FcoeConfigFcoeCapabilities', 'priorityClass', 'sourceM
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41251,7 +43255,7 @@ VIMRuntime::make_get_set('FcoeConfigFcoeSpecification', 'underlyingPnic', 'prior
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41279,7 +43283,7 @@ VIMRuntime::make_get_set('FcoeConfig', 'priorityClass', 'sourceMac', 'vlanRange'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41305,7 +43309,7 @@ VIMRuntime::make_get_set('HostFeatureCapability', 'key', 'featureName', 'value')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41329,7 +43333,7 @@ VIMRuntime::make_get_set('ArrayOfHostFeatureCapability', 'HostFeatureCapability'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41355,7 +43359,7 @@ VIMRuntime::make_get_set('HostFeatureMask', 'key', 'featureName', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41379,7 +43383,7 @@ VIMRuntime::make_get_set('ArrayOfHostFeatureMask', 'HostFeatureMask');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41404,7 +43408,7 @@ VIMRuntime::make_get_set('HostFeatureVersionInfo', 'key', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41428,7 +43432,7 @@ VIMRuntime::make_get_set('ArrayOfHostFeatureVersionInfo', 'HostFeatureVersionInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41457,7 +43461,7 @@ VIMRuntime::make_get_set('ModeInfo', 'browse', 'read', 'modify', 'use', 'admin',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41482,7 +43486,7 @@ VIMRuntime::make_get_set('HostFileAccess', 'who', 'what');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41507,7 +43511,7 @@ VIMRuntime::make_get_set('HostFileSystemVolumeInfo', 'volumeTypeList', 'mountInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41533,7 +43537,7 @@ VIMRuntime::make_get_set('HostFileSystemMountInfo', 'mountInfo', 'volume', 'vSto
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41557,7 +43561,7 @@ VIMRuntime::make_get_set('ArrayOfHostFileSystemMountInfo', 'HostFileSystemMountI
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41583,7 +43587,7 @@ VIMRuntime::make_get_set('HostFileSystemVolume', 'type', 'name', 'capacity');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41613,7 +43617,7 @@ VIMRuntime::make_get_set('HostNasVolumeSpec', 'remoteHost', 'remotePath', 'local
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41638,7 +43642,7 @@ VIMRuntime::make_get_set('HostNasVolumeConfig', 'changeOperation', 'spec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41662,7 +43666,7 @@ VIMRuntime::make_get_set('ArrayOfHostNasVolumeConfig', 'HostNasVolumeConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41688,7 +43692,7 @@ VIMRuntime::make_get_set('HostNasVolume', 'remoteHost', 'remotePath', 'userName'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41713,7 +43717,7 @@ VIMRuntime::make_get_set('HostLocalFileSystemVolumeSpec', 'device', 'localPath')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41737,7 +43741,7 @@ VIMRuntime::make_get_set('HostLocalFileSystemVolume', 'device');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41760,7 +43764,7 @@ VIMRuntime::make_get_set('HostVfatVolume');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41786,7 +43790,7 @@ VIMRuntime::make_get_set('HostFirewallConfigRuleSetConfig', 'rulesetId', 'enable
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41810,7 +43814,7 @@ VIMRuntime::make_get_set('ArrayOfHostFirewallConfigRuleSetConfig', 'HostFirewall
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41835,7 +43839,7 @@ VIMRuntime::make_get_set('HostFirewallConfig', 'rule', 'defaultBlockingPolicy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41860,7 +43864,7 @@ VIMRuntime::make_get_set('HostFirewallDefaultPolicy', 'incomingBlocked', 'outgoi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41885,7 +43889,7 @@ VIMRuntime::make_get_set('HostFirewallInfo', 'defaultPolicy', 'ruleset');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41909,7 +43913,7 @@ VIMRuntime::make_get_set('HostFlagInfo', 'backgroundSnapshotsEnabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41934,7 +43938,60 @@ VIMRuntime::make_get_set('HostForceMountedInfo', 'persist', 'mounted');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostGraphicsInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['deviceName', undef, undef, 1],
+   ['vendorName', undef, undef, 1],
+   ['pciId', undef, undef, 1],
+   ['graphicsType', undef, undef, 1],
+   ['memorySizeInKB', undef, undef, 1],
+   ['vm', 'ManagedObjectReference', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('HostGraphicsInfo', 'deviceName', 'vendorName', 'pciId', 'graphicsType', 'memorySizeInKB', 'vm');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfHostGraphicsInfo;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['HostGraphicsInfo', 'HostGraphicsInfo', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfHostGraphicsInfo', 'HostGraphicsInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41958,16 +44015,17 @@ our @property_list = (
    ['pciDevice', 'HostPciDevice', 1, 0],
    ['cpuFeature', 'HostCpuIdInfo', 1, 0],
    ['biosInfo', 'HostBIOSInfo', undef, 0],
+   ['reliableMemoryInfo', 'HostReliableMemoryInfo', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('HostHardwareInfo', 'systemInfo', 'cpuPowerManagementInfo', 'cpuInfo', 'cpuPkg', 'memorySize', 'numaInfo', 'smcPresent', 'pciDevice', 'cpuFeature', 'biosInfo');
+VIMRuntime::make_get_set('HostHardwareInfo', 'systemInfo', 'cpuPowerManagementInfo', 'cpuInfo', 'cpuPkg', 'memorySize', 'numaInfo', 'smcPresent', 'pciDevice', 'cpuFeature', 'biosInfo', 'reliableMemoryInfo');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -41994,7 +44052,7 @@ VIMRuntime::make_get_set('HostSystemInfo', 'vendor', 'model', 'uuid', 'otherIden
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42019,7 +44077,7 @@ VIMRuntime::make_get_set('HostCpuPowerManagementInfo', 'currentPolicy', 'hardwar
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42046,7 +44104,7 @@ VIMRuntime::make_get_set('HostCpuInfo', 'numCpuPackages', 'numCpuCores', 'numCpu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42076,7 +44134,7 @@ VIMRuntime::make_get_set('HostCpuPackage', 'index', 'vendor', 'hz', 'busHz', 'de
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42100,7 +44158,7 @@ VIMRuntime::make_get_set('ArrayOfHostCpuPackage', 'HostCpuPackage');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42126,7 +44184,7 @@ VIMRuntime::make_get_set('HostNumaInfo', 'type', 'numNodes', 'numaNode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42153,7 +44211,7 @@ VIMRuntime::make_get_set('HostNumaNode', 'typeId', 'cpuID', 'memoryRangeBegin', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42177,7 +44235,7 @@ VIMRuntime::make_get_set('ArrayOfHostNumaNode', 'HostNumaNode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42202,7 +44260,31 @@ VIMRuntime::make_get_set('HostBIOSInfo', 'biosVersion', 'releaseDate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostReliableMemoryInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['memorySize', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('HostReliableMemoryInfo', 'memorySize');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42227,7 +44309,7 @@ VIMRuntime::make_get_set('HostHardwareElementInfo', 'name', 'status');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42251,7 +44333,7 @@ VIMRuntime::make_get_set('ArrayOfHostHardwareElementInfo', 'HostHardwareElementI
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42276,7 +44358,7 @@ VIMRuntime::make_get_set('HostStorageOperationalInfo', 'property', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42300,7 +44382,7 @@ VIMRuntime::make_get_set('ArrayOfHostStorageOperationalInfo', 'HostStorageOperat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42324,7 +44406,7 @@ VIMRuntime::make_get_set('HostStorageElementInfo', 'operationalInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42348,7 +44430,7 @@ VIMRuntime::make_get_set('ArrayOfHostStorageElementInfo', 'HostStorageElementInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42374,7 +44456,7 @@ VIMRuntime::make_get_set('HostHardwareStatusInfo', 'memoryStatusInfo', 'cpuStatu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42399,7 +44481,7 @@ VIMRuntime::make_get_set('HealthSystemRuntime', 'systemHealthInfo', 'hardwareSta
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42429,7 +44511,7 @@ VIMRuntime::make_get_set('HostHostBusAdapter', 'key', 'device', 'bus', 'status',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42453,7 +44535,7 @@ VIMRuntime::make_get_set('ArrayOfHostHostBusAdapter', 'HostHostBusAdapter');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42476,7 +44558,7 @@ VIMRuntime::make_get_set('HostParallelScsiHba');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42499,7 +44581,7 @@ VIMRuntime::make_get_set('HostBlockHba');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42526,7 +44608,7 @@ VIMRuntime::make_get_set('HostFibreChannelHba', 'portWorldWideName', 'nodeWorldW
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42550,7 +44632,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaParamValue', 'isInherited');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42574,7 +44656,7 @@ VIMRuntime::make_get_set('ArrayOfHostInternetScsiHbaParamValue', 'HostInternetSc
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42601,7 +44683,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaDiscoveryCapabilities', 'iSnsDiscov
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42632,7 +44714,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaDiscoveryProperties', 'iSnsDiscover
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42662,7 +44744,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaAuthenticationCapabilities', 'chapA
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42694,7 +44776,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaAuthenticationProperties', 'chapAut
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42721,7 +44803,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaDigestCapabilities', 'headerDigestS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42748,7 +44830,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaDigestProperties', 'headerDigestTyp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42782,7 +44864,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaIPCapabilities', 'addressSettable',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42818,7 +44900,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaIPProperties', 'mac', 'address', 'd
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42848,7 +44930,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaSendTarget', 'address', 'port', 'au
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42872,7 +44954,7 @@ VIMRuntime::make_get_set('ArrayOfHostInternetScsiHbaSendTarget', 'HostInternetSc
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42904,7 +44986,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaStaticTarget', 'address', 'port', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42928,7 +45010,7 @@ VIMRuntime::make_get_set('ArrayOfHostInternetScsiHbaStaticTarget', 'HostInternet
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42953,7 +45035,7 @@ VIMRuntime::make_get_set('HostInternetScsiHbaTargetSet', 'staticTargets', 'sendT
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -42995,7 +45077,7 @@ VIMRuntime::make_get_set('HostInternetScsiHba', 'isSoftwareBased', 'canBeDisable
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43021,7 +45103,7 @@ VIMRuntime::make_get_set('HostFibreChannelOverEthernetHbaLinkInfo', 'vnportMac',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43048,7 +45130,7 @@ VIMRuntime::make_get_set('HostFibreChannelOverEthernetHba', 'underlyingNic', 'li
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43072,7 +45154,7 @@ VIMRuntime::make_get_set('HostProxySwitchSpec', 'backing');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43098,7 +45180,7 @@ VIMRuntime::make_get_set('HostProxySwitchConfig', 'changeOperation', 'uuid', 'sp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43122,7 +45204,57 @@ VIMRuntime::make_get_set('ArrayOfHostProxySwitchConfig', 'HostProxySwitchConfig'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostProxySwitchHostLagConfig;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['lagKey', undef, undef, 1],
+   ['lagName', undef, undef, 0],
+   ['uplinkPort', 'KeyValue', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('HostProxySwitchHostLagConfig', 'lagKey', 'lagName', 'uplinkPort');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfHostProxySwitchHostLagConfig;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['HostProxySwitchHostLagConfig', 'HostProxySwitchHostLagConfig', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfHostProxySwitchHostLagConfig', 'HostProxySwitchHostLagConfig');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43146,16 +45278,18 @@ our @property_list = (
    ['mtu', undef, undef, 0],
    ['pnic', undef, 1, 0],
    ['spec', 'HostProxySwitchSpec', undef, 1],
+   ['hostLag', 'HostProxySwitchHostLagConfig', 1, 0],
+   ['networkReservationSupported', 'boolean', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('HostProxySwitch', 'dvsUuid', 'dvsName', 'key', 'numPorts', 'configNumPorts', 'numPortsAvailable', 'uplinkPort', 'mtu', 'pnic', 'spec');
+VIMRuntime::make_get_set('HostProxySwitch', 'dvsUuid', 'dvsName', 'key', 'numPorts', 'configNumPorts', 'numPortsAvailable', 'uplinkPort', 'mtu', 'pnic', 'spec', 'hostLag', 'networkReservationSupported');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43179,7 +45313,7 @@ VIMRuntime::make_get_set('ArrayOfHostProxySwitch', 'HostProxySwitch');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43204,7 +45338,7 @@ VIMRuntime::make_get_set('HostImageProfileSummary', 'name', 'vendor');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43233,7 +45367,7 @@ VIMRuntime::make_get_set('HostIpConfigIpV6Address', 'ipAddress', 'prefixLength',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43257,7 +45391,7 @@ VIMRuntime::make_get_set('ArrayOfHostIpConfigIpV6Address', 'HostIpConfigIpV6Addr
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43283,7 +45417,7 @@ VIMRuntime::make_get_set('HostIpConfigIpV6AddressConfiguration', 'ipV6Address', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43310,7 +45444,7 @@ VIMRuntime::make_get_set('HostIpConfig', 'dhcp', 'ipAddress', 'subnetMask', 'ipV
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43337,7 +45471,7 @@ VIMRuntime::make_get_set('HostIpRouteConfig', 'defaultGateway', 'gatewayDevice',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43362,7 +45496,7 @@ VIMRuntime::make_get_set('HostIpRouteConfigSpec', 'gatewayDeviceConnection', 'ip
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43389,7 +45523,7 @@ VIMRuntime::make_get_set('HostIpRouteEntry', 'network', 'prefixLength', 'gateway
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43413,7 +45547,7 @@ VIMRuntime::make_get_set('ArrayOfHostIpRouteEntry', 'HostIpRouteEntry');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43438,7 +45572,7 @@ VIMRuntime::make_get_set('HostIpRouteOp', 'changeOperation', 'route');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43462,7 +45596,7 @@ VIMRuntime::make_get_set('ArrayOfHostIpRouteOp', 'HostIpRouteOp');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43487,7 +45621,7 @@ VIMRuntime::make_get_set('HostIpRouteTableConfig', 'ipRoute', 'ipv6Route');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43512,7 +45646,7 @@ VIMRuntime::make_get_set('HostIpRouteTableInfo', 'ipRoute', 'ipv6Route');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43539,7 +45673,7 @@ VIMRuntime::make_get_set('HostIpmiInfo', 'bmcIpAddress', 'bmcMacAddress', 'login
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43563,7 +45697,7 @@ VIMRuntime::make_get_set('IscsiStatus', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43597,7 +45731,7 @@ VIMRuntime::make_get_set('IscsiPortInfo', 'vnicDevice', 'vnic', 'pnicDevice', 'p
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43621,7 +45755,7 @@ VIMRuntime::make_get_set('ArrayOfIscsiPortInfo', 'IscsiPortInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43647,7 +45781,7 @@ VIMRuntime::make_get_set('IscsiDependencyEntity', 'pnicDevice', 'vnicDevice', 'v
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43671,7 +45805,7 @@ VIMRuntime::make_get_set('ArrayOfIscsiDependencyEntity', 'IscsiDependencyEntity'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43697,7 +45831,7 @@ VIMRuntime::make_get_set('IscsiMigrationDependency', 'migrationAllowed', 'disall
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43722,7 +45856,7 @@ VIMRuntime::make_get_set('KernelModuleSectionInfo', 'address', 'length');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43758,7 +45892,7 @@ VIMRuntime::make_get_set('KernelModuleInfo', 'id', 'name', 'version', 'filename'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43782,7 +45916,7 @@ VIMRuntime::make_get_set('ArrayOfKernelModuleInfo', 'KernelModuleInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43809,7 +45943,7 @@ VIMRuntime::make_get_set('HostLicenseSpec', 'source', 'editionKey', 'disabledFea
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43834,7 +45968,7 @@ VIMRuntime::make_get_set('LinkDiscoveryProtocolConfig', 'protocol', 'operation')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43860,7 +45994,7 @@ VIMRuntime::make_get_set('HostAccountSpec', 'id', 'password', 'description');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43884,7 +46018,7 @@ VIMRuntime::make_get_set('ArrayOfHostAccountSpec', 'HostAccountSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43909,7 +46043,7 @@ VIMRuntime::make_get_set('HostPosixAccountSpec', 'posixId', 'shellAccess');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43932,7 +46066,7 @@ VIMRuntime::make_get_set('HostLocalAuthenticationInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43959,7 +46093,7 @@ VIMRuntime::make_get_set('HostLowLevelProvisioningManagerVmRecoveryInfo', 'versi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -43986,7 +46120,7 @@ VIMRuntime::make_get_set('HostLowLevelProvisioningManagerVmMigrationStatus', 'mi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44014,7 +46148,7 @@ VIMRuntime::make_get_set('HostLowLevelProvisioningManagerDiskLayoutSpec', 'contr
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44038,7 +46172,7 @@ VIMRuntime::make_get_set('ArrayOfHostLowLevelProvisioningManagerDiskLayoutSpec',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44065,7 +46199,7 @@ VIMRuntime::make_get_set('HostLowLevelProvisioningManagerSnapshotLayoutSpec', 'i
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44089,7 +46223,31 @@ VIMRuntime::make_get_set('ArrayOfHostLowLevelProvisioningManagerSnapshotLayoutSp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostMaintenanceSpec;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['vsanMode', 'VsanHostDecommissionMode', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('HostMaintenanceSpec', 'vsanMode');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44115,7 +46273,7 @@ VIMRuntime::make_get_set('ServiceConsoleReservationInfo', 'serviceConsoleReserve
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44142,7 +46300,7 @@ VIMRuntime::make_get_set('VirtualMachineMemoryReservationInfo', 'virtualMachineM
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44167,7 +46325,7 @@ VIMRuntime::make_get_set('VirtualMachineMemoryReservationSpec', 'virtualMachineR
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44191,7 +46349,7 @@ VIMRuntime::make_get_set('HostMemorySpec', 'serviceConsoleReservation');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44219,7 +46377,7 @@ VIMRuntime::make_get_set('HostMountInfo', 'path', 'accessMode', 'mounted', 'acce
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44243,7 +46401,7 @@ VIMRuntime::make_get_set('HostMultipathInfoLogicalUnitPolicy', 'policy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44267,7 +46425,7 @@ VIMRuntime::make_get_set('HostMultipathInfoLogicalUnitStorageArrayTypePolicy', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44291,7 +46449,7 @@ VIMRuntime::make_get_set('HostMultipathInfoFixedLogicalUnitPolicy', 'prefer');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44320,7 +46478,7 @@ VIMRuntime::make_get_set('HostMultipathInfoLogicalUnit', 'key', 'id', 'lun', 'pa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44344,7 +46502,7 @@ VIMRuntime::make_get_set('ArrayOfHostMultipathInfoLogicalUnit', 'HostMultipathIn
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44375,7 +46533,7 @@ VIMRuntime::make_get_set('HostMultipathInfoPath', 'key', 'name', 'pathState', 's
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44399,7 +46557,7 @@ VIMRuntime::make_get_set('ArrayOfHostMultipathInfoPath', 'HostMultipathInfoPath'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44423,7 +46581,7 @@ VIMRuntime::make_get_set('HostMultipathInfo', 'lun');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44448,7 +46606,7 @@ VIMRuntime::make_get_set('HostMultipathStateInfoPath', 'name', 'pathState');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44472,7 +46630,7 @@ VIMRuntime::make_get_set('ArrayOfHostMultipathStateInfoPath', 'HostMultipathStat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44496,7 +46654,7 @@ VIMRuntime::make_get_set('HostMultipathStateInfo', 'path');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44524,7 +46682,7 @@ VIMRuntime::make_get_set('HostNatServicePortForwardSpec', 'type', 'name', 'hostP
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44548,7 +46706,7 @@ VIMRuntime::make_get_set('ArrayOfHostNatServicePortForwardSpec', 'HostNatService
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44579,7 +46737,7 @@ VIMRuntime::make_get_set('HostNatServiceNameServiceSpec', 'dnsAutoDetect', 'dnsP
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44610,7 +46768,7 @@ VIMRuntime::make_get_set('HostNatServiceSpec', 'virtualSwitch', 'activeFtp', 'al
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44636,7 +46794,7 @@ VIMRuntime::make_get_set('HostNatServiceConfig', 'changeOperation', 'key', 'spec
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44660,7 +46818,7 @@ VIMRuntime::make_get_set('ArrayOfHostNatServiceConfig', 'HostNatServiceConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44685,7 +46843,7 @@ VIMRuntime::make_get_set('HostNatService', 'key', 'spec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44709,7 +46867,7 @@ VIMRuntime::make_get_set('ArrayOfHostNatService', 'HostNatService');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44745,7 +46903,7 @@ VIMRuntime::make_get_set('HostNetCapabilities', 'canSetPhysicalNicLinkSpeed', 's
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44771,7 +46929,62 @@ VIMRuntime::make_get_set('HostNetOffloadCapabilities', 'csumOffload', 'tcpSegmen
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostNetStackInstance;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['key', undef, undef, 0],
+   ['name', undef, undef, 0],
+   ['dnsConfig', 'HostDnsConfig', undef, 0],
+   ['ipRouteConfig', 'HostIpRouteConfig', undef, 0],
+   ['requestedMaxNumberOfConnections', undef, undef, 0],
+   ['congestionControlAlgorithm', undef, undef, 0],
+   ['ipV6Enabled', 'boolean', undef, 0],
+   ['routeTableConfig', 'HostIpRouteTableConfig', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('HostNetStackInstance', 'key', 'name', 'dnsConfig', 'ipRouteConfig', 'requestedMaxNumberOfConnections', 'congestionControlAlgorithm', 'ipV6Enabled', 'routeTableConfig');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfHostNetStackInstance;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['HostNetStackInstance', 'HostNetStackInstance', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfHostNetStackInstance', 'HostNetStackInstance');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44796,7 +47009,56 @@ VIMRuntime::make_get_set('HostNetworkConfigResult', 'vnicDevice', 'consoleVnicDe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostNetworkConfigNetStackSpec;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['netStackInstance', 'HostNetStackInstance', undef, 1],
+   ['operation', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('HostNetworkConfigNetStackSpec', 'netStackInstance', 'operation');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfHostNetworkConfigNetStackSpec;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['HostNetworkConfigNetStackSpec', 'HostNetworkConfigNetStackSpec', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfHostNetworkConfigNetStackSpec', 'HostNetworkConfigNetStackSpec');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44823,16 +47085,17 @@ our @property_list = (
    ['dhcp', 'HostDhcpServiceConfig', 1, 0],
    ['nat', 'HostNatServiceConfig', 1, 0],
    ['ipV6Enabled', 'boolean', undef, 0],
+   ['netStackSpec', 'HostNetworkConfigNetStackSpec', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('HostNetworkConfig', 'vswitch', 'proxySwitch', 'portgroup', 'pnic', 'vnic', 'consoleVnic', 'dnsConfig', 'ipRouteConfig', 'consoleIpRouteConfig', 'routeTableConfig', 'dhcp', 'nat', 'ipV6Enabled');
+VIMRuntime::make_get_set('HostNetworkConfig', 'vswitch', 'proxySwitch', 'portgroup', 'pnic', 'vnic', 'consoleVnic', 'dnsConfig', 'ipRouteConfig', 'consoleIpRouteConfig', 'routeTableConfig', 'dhcp', 'nat', 'ipV6Enabled', 'netStackSpec');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44860,16 +47123,19 @@ our @property_list = (
    ['nat', 'HostNatService', 1, 0],
    ['ipV6Enabled', 'boolean', undef, 0],
    ['atBootIpV6Enabled', 'boolean', undef, 0],
+   ['netStackInstance', 'HostNetStackInstance', 1, 0],
+   ['opaqueSwitch', 'HostOpaqueSwitch', 1, 0],
+   ['opaqueNetwork', 'HostOpaqueNetworkInfo', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('HostNetworkInfo', 'vswitch', 'proxySwitch', 'portgroup', 'pnic', 'vnic', 'consoleVnic', 'dnsConfig', 'ipRouteConfig', 'consoleIpRouteConfig', 'routeTableInfo', 'dhcp', 'nat', 'ipV6Enabled', 'atBootIpV6Enabled');
+VIMRuntime::make_get_set('HostNetworkInfo', 'vswitch', 'proxySwitch', 'portgroup', 'pnic', 'vnic', 'consoleVnic', 'dnsConfig', 'ipRouteConfig', 'consoleIpRouteConfig', 'routeTableInfo', 'dhcp', 'nat', 'ipV6Enabled', 'atBootIpV6Enabled', 'netStackInstance', 'opaqueSwitch', 'opaqueNetwork');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44895,7 +47161,7 @@ VIMRuntime::make_get_set('HostNetworkSecurityPolicy', 'allowPromiscuous', 'macCh
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44922,7 +47188,7 @@ VIMRuntime::make_get_set('HostNetworkTrafficShapingPolicy', 'enabled', 'averageB
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44952,7 +47218,7 @@ VIMRuntime::make_get_set('HostNicFailureCriteria', 'checkSpeed', 'speed', 'check
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -44977,7 +47243,7 @@ VIMRuntime::make_get_set('HostNicOrderPolicy', 'activeNic', 'standbyNic');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45006,7 +47272,7 @@ VIMRuntime::make_get_set('HostNicTeamingPolicy', 'policy', 'reversePolicy', 'not
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45033,7 +47299,7 @@ VIMRuntime::make_get_set('HostNetworkPolicy', 'security', 'nicTeaming', 'offload
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45057,7 +47323,7 @@ VIMRuntime::make_get_set('HostNtpConfig', 'server');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45087,7 +47353,7 @@ VIMRuntime::make_get_set('HostNumericSensorInfo', 'name', 'healthState', 'curren
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45111,7 +47377,107 @@ VIMRuntime::make_get_set('ArrayOfHostNumericSensorInfo', 'HostNumericSensorInfo'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostOpaqueNetworkInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['opaqueNetworkId', undef, undef, 1],
+   ['opaqueNetworkName', undef, undef, 1],
+   ['opaqueNetworkType', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('HostOpaqueNetworkInfo', 'opaqueNetworkId', 'opaqueNetworkName', 'opaqueNetworkType');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfHostOpaqueNetworkInfo;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['HostOpaqueNetworkInfo', 'HostOpaqueNetworkInfo', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfHostOpaqueNetworkInfo', 'HostOpaqueNetworkInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostOpaqueSwitch;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['key', undef, undef, 1],
+   ['name', undef, undef, 0],
+   ['pnic', undef, 1, 0],
+);
+
+
+VIMRuntime::make_get_set('HostOpaqueSwitch', 'key', 'name', 'pnic');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfHostOpaqueSwitch;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['HostOpaqueSwitch', 'HostOpaqueSwitch', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfHostOpaqueSwitch', 'HostOpaqueSwitch');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45137,7 +47503,7 @@ VIMRuntime::make_get_set('HostPatchManagerResult', 'version', 'status', 'xmlResu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45162,7 +47528,7 @@ VIMRuntime::make_get_set('HostPatchManagerStatusPrerequisitePatch', 'id', 'insta
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45186,7 +47552,7 @@ VIMRuntime::make_get_set('ArrayOfHostPatchManagerStatusPrerequisitePatch', 'Host
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45220,7 +47586,7 @@ VIMRuntime::make_get_set('HostPatchManagerStatus', 'id', 'applicable', 'reason',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45244,7 +47610,7 @@ VIMRuntime::make_get_set('ArrayOfHostPatchManagerStatus', 'HostPatchManagerStatu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45269,7 +47635,7 @@ VIMRuntime::make_get_set('HostPatchManagerLocator', 'url', 'proxy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45297,7 +47663,7 @@ VIMRuntime::make_get_set('HostPatchManagerPatchManagerOperationSpec', 'proxy', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45321,7 +47687,7 @@ VIMRuntime::make_get_set('HostPathSelectionPolicyOption', 'policy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45345,7 +47711,7 @@ VIMRuntime::make_get_set('ArrayOfHostPathSelectionPolicyOption', 'HostPathSelect
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45380,7 +47746,7 @@ VIMRuntime::make_get_set('HostPciDevice', 'id', 'classId', 'bus', 'slot', 'funct
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45404,7 +47770,7 @@ VIMRuntime::make_get_set('ArrayOfHostPciDevice', 'HostPciDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45429,7 +47795,7 @@ VIMRuntime::make_get_set('HostPciPassthruConfig', 'id', 'passthruEnabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45453,7 +47819,7 @@ VIMRuntime::make_get_set('ArrayOfHostPciPassthruConfig', 'HostPciPassthruConfig'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45481,7 +47847,7 @@ VIMRuntime::make_get_set('HostPciPassthruInfo', 'id', 'dependentDevice', 'passth
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45505,7 +47871,7 @@ VIMRuntime::make_get_set('ArrayOfHostPciPassthruInfo', 'HostPciPassthruInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45530,7 +47896,7 @@ VIMRuntime::make_get_set('PhysicalNicSpec', 'ip', 'linkSpeed');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45555,7 +47921,7 @@ VIMRuntime::make_get_set('PhysicalNicConfig', 'device', 'spec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45579,7 +47945,7 @@ VIMRuntime::make_get_set('ArrayOfPhysicalNicConfig', 'PhysicalNicConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45604,7 +47970,7 @@ VIMRuntime::make_get_set('PhysicalNicLinkInfo', 'speedMb', 'duplex');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45628,7 +47994,7 @@ VIMRuntime::make_get_set('ArrayOfPhysicalNicLinkInfo', 'PhysicalNicLinkInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45652,7 +48018,7 @@ VIMRuntime::make_get_set('PhysicalNicHint', 'vlanId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45676,7 +48042,7 @@ VIMRuntime::make_get_set('PhysicalNicIpHint', 'ipSubnet');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45700,7 +48066,7 @@ VIMRuntime::make_get_set('ArrayOfPhysicalNicIpHint', 'PhysicalNicIpHint');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45724,7 +48090,7 @@ VIMRuntime::make_get_set('PhysicalNicNameHint', 'network');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45748,7 +48114,7 @@ VIMRuntime::make_get_set('ArrayOfPhysicalNicNameHint', 'PhysicalNicNameHint');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45776,7 +48142,7 @@ VIMRuntime::make_get_set('PhysicalNicHintInfo', 'device', 'subnet', 'network', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45800,7 +48166,7 @@ VIMRuntime::make_get_set('ArrayOfPhysicalNicHintInfo', 'PhysicalNicHintInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45830,7 +48196,7 @@ VIMRuntime::make_get_set('PhysicalNicCdpDeviceCapability', 'router', 'transparen
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45872,7 +48238,7 @@ VIMRuntime::make_get_set('PhysicalNicCdpInfo', 'cdpVersion', 'timeout', 'ttl', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45899,7 +48265,7 @@ VIMRuntime::make_get_set('LinkLayerDiscoveryProtocolInfo', 'chassisId', 'portId'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45937,7 +48303,7 @@ VIMRuntime::make_get_set('PhysicalNic', 'key', 'device', 'pci', 'driver', 'linkS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45961,7 +48327,7 @@ VIMRuntime::make_get_set('ArrayOfPhysicalNic', 'PhysicalNic');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -45987,7 +48353,7 @@ VIMRuntime::make_get_set('HostPlugStoreTopologyAdapter', 'key', 'adapter', 'path
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46011,7 +48377,7 @@ VIMRuntime::make_get_set('ArrayOfHostPlugStoreTopologyAdapter', 'HostPlugStoreTo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46042,7 +48408,7 @@ VIMRuntime::make_get_set('HostPlugStoreTopologyPath', 'key', 'name', 'channelNum
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46066,7 +48432,7 @@ VIMRuntime::make_get_set('ArrayOfHostPlugStoreTopologyPath', 'HostPlugStoreTopol
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46092,7 +48458,7 @@ VIMRuntime::make_get_set('HostPlugStoreTopologyDevice', 'key', 'lun', 'path');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46116,7 +48482,7 @@ VIMRuntime::make_get_set('ArrayOfHostPlugStoreTopologyDevice', 'HostPlugStoreTop
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46143,7 +48509,7 @@ VIMRuntime::make_get_set('HostPlugStoreTopologyPlugin', 'key', 'name', 'device',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46167,7 +48533,7 @@ VIMRuntime::make_get_set('ArrayOfHostPlugStoreTopologyPlugin', 'HostPlugStoreTop
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46192,7 +48558,7 @@ VIMRuntime::make_get_set('HostPlugStoreTopologyTarget', 'key', 'transport');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46216,7 +48582,7 @@ VIMRuntime::make_get_set('ArrayOfHostPlugStoreTopologyTarget', 'HostPlugStoreTop
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46244,7 +48610,7 @@ VIMRuntime::make_get_set('HostPlugStoreTopology', 'adapter', 'path', 'target', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46271,7 +48637,7 @@ VIMRuntime::make_get_set('HostPortGroupSpec', 'name', 'vlanId', 'vswitchName', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46296,7 +48662,7 @@ VIMRuntime::make_get_set('HostPortGroupConfig', 'changeOperation', 'spec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46320,7 +48686,7 @@ VIMRuntime::make_get_set('ArrayOfHostPortGroupConfig', 'HostPortGroupConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46346,7 +48712,7 @@ VIMRuntime::make_get_set('HostPortGroupPort', 'key', 'mac', 'type');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46370,7 +48736,7 @@ VIMRuntime::make_get_set('ArrayOfHostPortGroupPort', 'HostPortGroupPort');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46398,7 +48764,7 @@ VIMRuntime::make_get_set('HostPortGroup', 'key', 'port', 'vswitch', 'computedPol
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46422,7 +48788,7 @@ VIMRuntime::make_get_set('ArrayOfHostPortGroup', 'HostPortGroup');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46449,7 +48815,7 @@ VIMRuntime::make_get_set('HostPowerPolicy', 'key', 'name', 'shortName', 'descrip
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46473,7 +48839,7 @@ VIMRuntime::make_get_set('ArrayOfHostPowerPolicy', 'HostPowerPolicy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46497,7 +48863,7 @@ VIMRuntime::make_get_set('PowerSystemCapability', 'availablePolicy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46521,7 +48887,7 @@ VIMRuntime::make_get_set('PowerSystemInfo', 'currentPolicy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46546,7 +48912,7 @@ VIMRuntime::make_get_set('HostResignatureRescanResult', 'rescan', 'result');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46571,7 +48937,7 @@ VIMRuntime::make_get_set('HostFirewallRulesetIpNetwork', 'network', 'prefixLengt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46595,7 +48961,7 @@ VIMRuntime::make_get_set('ArrayOfHostFirewallRulesetIpNetwork', 'HostFirewallRul
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46621,7 +48987,7 @@ VIMRuntime::make_get_set('HostFirewallRulesetIpList', 'ipAddress', 'ipNetwork', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46645,7 +49011,7 @@ VIMRuntime::make_get_set('HostFirewallRulesetRulesetSpec', 'allowedHosts');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46673,7 +49039,7 @@ VIMRuntime::make_get_set('HostFirewallRule', 'port', 'endPort', 'direction', 'po
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46697,7 +49063,7 @@ VIMRuntime::make_get_set('ArrayOfHostFirewallRule', 'HostFirewallRule');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46727,7 +49093,7 @@ VIMRuntime::make_get_set('HostFirewallRuleset', 'key', 'label', 'required', 'rul
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46751,7 +49117,83 @@ VIMRuntime::make_get_set('ArrayOfHostFirewallRuleset', 'HostFirewallRuleset');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostRuntimeInfoNetStackInstanceRuntimeInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['netStackInstanceKey', undef, undef, 1],
+   ['state', undef, undef, 0],
+   ['vmknicKeys', undef, 1, 0],
+   ['maxNumberOfConnections', undef, undef, 0],
+   ['currentIpV6Enabled', 'boolean', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('HostRuntimeInfoNetStackInstanceRuntimeInfo', 'netStackInstanceKey', 'state', 'vmknicKeys', 'maxNumberOfConnections', 'currentIpV6Enabled');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfHostRuntimeInfoNetStackInstanceRuntimeInfo;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['HostRuntimeInfoNetStackInstanceRuntimeInfo', 'HostRuntimeInfoNetStackInstanceRuntimeInfo', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfHostRuntimeInfoNetStackInstanceRuntimeInfo', 'HostRuntimeInfoNetStackInstanceRuntimeInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostRuntimeInfoNetworkRuntimeInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['netStackInstanceRuntimeInfo', 'HostRuntimeInfoNetStackInstanceRuntimeInfo', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('HostRuntimeInfoNetworkRuntimeInfo', 'netStackInstanceRuntimeInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46773,16 +49215,20 @@ our @property_list = (
    ['healthSystemRuntime', 'HealthSystemRuntime', undef, 0],
    ['dasHostState', 'ClusterDasFdmHostState', undef, 0],
    ['tpmPcrValues', 'HostTpmDigestInfo', 1, 0],
+   ['vsanRuntimeInfo', 'VsanHostRuntimeInfo', undef, 0],
+   ['networkRuntimeInfo', 'HostRuntimeInfoNetworkRuntimeInfo', undef, 0],
+   ['vFlashResourceRuntimeInfo', 'HostVFlashManagerVFlashResourceRunTimeInfo', undef, 0],
+   ['hostMaxVirtualDiskCapacity', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('HostRuntimeInfo', 'connectionState', 'powerState', 'standbyMode', 'inMaintenanceMode', 'bootTime', 'healthSystemRuntime', 'dasHostState', 'tpmPcrValues');
+VIMRuntime::make_get_set('HostRuntimeInfo', 'connectionState', 'powerState', 'standbyMode', 'inMaintenanceMode', 'bootTime', 'healthSystemRuntime', 'dasHostState', 'tpmPcrValues', 'vsanRuntimeInfo', 'networkRuntimeInfo', 'vFlashResourceRuntimeInfo', 'hostMaxVirtualDiskCapacity');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46807,7 +49253,7 @@ VIMRuntime::make_get_set('HostScsiDiskPartition', 'diskName', 'partition');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46831,7 +49277,7 @@ VIMRuntime::make_get_set('ArrayOfHostScsiDiskPartition', 'HostScsiDiskPartition'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46857,7 +49303,7 @@ VIMRuntime::make_get_set('HostScsiDisk', 'capacity', 'devicePath', 'ssd');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46881,7 +49327,7 @@ VIMRuntime::make_get_set('ArrayOfHostScsiDisk', 'HostScsiDisk');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46905,7 +49351,7 @@ VIMRuntime::make_get_set('ScsiLunCapabilities', 'updateDisplayNameSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46931,7 +49377,7 @@ VIMRuntime::make_get_set('ScsiLunDurableName', 'namespace', 'namespaceId', 'data
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46955,7 +49401,7 @@ VIMRuntime::make_get_set('ArrayOfScsiLunDurableName', 'ScsiLunDurableName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -46980,7 +49426,7 @@ VIMRuntime::make_get_set('ScsiLunDescriptor', 'quality', 'id');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47004,7 +49450,7 @@ VIMRuntime::make_get_set('ArrayOfScsiLunDescriptor', 'ScsiLunDescriptor');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47045,7 +49491,7 @@ VIMRuntime::make_get_set('ScsiLun', 'key', 'uuid', 'descriptor', 'canonicalName'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47069,7 +49515,7 @@ VIMRuntime::make_get_set('ArrayOfScsiLun', 'ScsiLun');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47095,7 +49541,7 @@ VIMRuntime::make_get_set('HostScsiTopologyInterface', 'key', 'adapter', 'target'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47119,7 +49565,7 @@ VIMRuntime::make_get_set('ArrayOfHostScsiTopologyInterface', 'HostScsiTopologyIn
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47146,7 +49592,7 @@ VIMRuntime::make_get_set('HostScsiTopologyTarget', 'key', 'target', 'lun', 'tran
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47170,7 +49616,7 @@ VIMRuntime::make_get_set('ArrayOfHostScsiTopologyTarget', 'HostScsiTopologyTarge
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47196,7 +49642,7 @@ VIMRuntime::make_get_set('HostScsiTopologyLun', 'key', 'lun', 'scsiLun');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47220,7 +49666,7 @@ VIMRuntime::make_get_set('ArrayOfHostScsiTopologyLun', 'HostScsiTopologyLun');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47244,7 +49690,7 @@ VIMRuntime::make_get_set('HostScsiTopology', 'adapter');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47270,7 +49716,7 @@ VIMRuntime::make_get_set('HostSecuritySpec', 'adminPassword', 'removePermission'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47295,7 +49741,7 @@ VIMRuntime::make_get_set('HostServiceSourcePackage', 'sourcePackageName', 'descr
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47326,7 +49772,7 @@ VIMRuntime::make_get_set('HostService', 'key', 'label', 'required', 'uninstallab
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47350,7 +49796,7 @@ VIMRuntime::make_get_set('ArrayOfHostService', 'HostService');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47375,7 +49821,7 @@ VIMRuntime::make_get_set('HostServiceConfig', 'serviceId', 'startupPolicy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47399,7 +49845,7 @@ VIMRuntime::make_get_set('ArrayOfHostServiceConfig', 'HostServiceConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47423,7 +49869,7 @@ VIMRuntime::make_get_set('HostServiceInfo', 'service');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47449,7 +49895,7 @@ VIMRuntime::make_get_set('HostSnmpDestination', 'hostName', 'port', 'community')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47473,7 +49919,7 @@ VIMRuntime::make_get_set('ArrayOfHostSnmpDestination', 'HostSnmpDestination');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47501,7 +49947,7 @@ VIMRuntime::make_get_set('HostSnmpConfigSpec', 'enabled', 'port', 'readOnlyCommu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47529,7 +49975,61 @@ VIMRuntime::make_get_set('HostSnmpSystemAgentLimits', 'maxReadOnlyCommunities', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostSriovConfig;
+our @ISA = qw(HostPciPassthruConfig);
+
+our @property_list = (
+   ['sriovEnabled', 'boolean', undef, 1],
+   ['numVirtualFunction', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('HostSriovConfig', 'sriovEnabled', 'numVirtualFunction');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostSriovInfo;
+our @ISA = qw(HostPciPassthruInfo);
+
+our @property_list = (
+   ['sriovEnabled', 'boolean', undef, 1],
+   ['sriovCapable', 'boolean', undef, 1],
+   ['sriovActive', 'boolean', undef, 1],
+   ['numVirtualFunctionRequested', undef, undef, 1],
+   ['numVirtualFunction', undef, undef, 1],
+   ['maxVirtualFunctionSupported', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('HostSriovInfo', 'sriovEnabled', 'sriovCapable', 'sriovActive', 'numVirtualFunctionRequested', 'numVirtualFunction', 'maxVirtualFunctionSupported');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47555,7 +50055,7 @@ VIMRuntime::make_get_set('HostSslThumbprintInfo', 'principal', 'ownerTag', 'sslT
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47579,7 +50079,7 @@ VIMRuntime::make_get_set('ArrayOfHostSslThumbprintInfo', 'HostSslThumbprintInfo'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47603,7 +50103,7 @@ VIMRuntime::make_get_set('HostStorageArrayTypePolicyOption', 'policy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47627,7 +50127,7 @@ VIMRuntime::make_get_set('ArrayOfHostStorageArrayTypePolicyOption', 'HostStorage
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47656,7 +50156,7 @@ VIMRuntime::make_get_set('HostStorageDeviceInfo', 'hostBusAdapter', 'scsiLun', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47691,7 +50191,7 @@ VIMRuntime::make_get_set('HostHardwareSummary', 'vendor', 'model', 'uuid', 'othe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47719,7 +50219,7 @@ VIMRuntime::make_get_set('HostListSummaryQuickStats', 'overallCpuUsage', 'overal
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47751,7 +50251,7 @@ VIMRuntime::make_get_set('HostConfigSummary', 'name', 'port', 'sslThumbprint', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47785,7 +50285,7 @@ VIMRuntime::make_get_set('HostListSummary', 'host', 'hardware', 'runtime', 'conf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47809,7 +50309,7 @@ VIMRuntime::make_get_set('HostSystemHealthInfo', 'numericSensorInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47834,7 +50334,7 @@ VIMRuntime::make_get_set('HostSystemIdentificationInfo', 'identifierValue', 'ide
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47858,7 +50358,7 @@ VIMRuntime::make_get_set('ArrayOfHostSystemIdentificationInfo', 'HostSystemIdent
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47884,7 +50384,7 @@ VIMRuntime::make_get_set('HostSystemResourceInfo', 'key', 'config', 'child');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47908,7 +50408,7 @@ VIMRuntime::make_get_set('ArrayOfHostSystemResourceInfo', 'HostSystemResourceInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47932,7 +50432,7 @@ VIMRuntime::make_get_set('HostSystemSwapConfigurationSystemSwapOption', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47956,7 +50456,7 @@ VIMRuntime::make_get_set('ArrayOfHostSystemSwapConfigurationSystemSwapOption', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -47979,7 +50479,7 @@ VIMRuntime::make_get_set('HostSystemSwapConfigurationDisabledOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48002,7 +50502,7 @@ VIMRuntime::make_get_set('HostSystemSwapConfigurationHostCacheOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48025,7 +50525,7 @@ VIMRuntime::make_get_set('HostSystemSwapConfigurationHostLocalSwapOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48049,7 +50549,7 @@ VIMRuntime::make_get_set('HostSystemSwapConfigurationDatastoreOption', 'datastor
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48073,7 +50573,7 @@ VIMRuntime::make_get_set('HostSystemSwapConfiguration', 'option');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48096,7 +50596,7 @@ VIMRuntime::make_get_set('HostTargetTransport');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48119,7 +50619,7 @@ VIMRuntime::make_get_set('HostParallelScsiTargetTransport');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48142,7 +50642,7 @@ VIMRuntime::make_get_set('HostBlockAdapterTargetTransport');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48167,7 +50667,7 @@ VIMRuntime::make_get_set('HostFibreChannelTargetTransport', 'portWorldWideName',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48193,7 +50693,7 @@ VIMRuntime::make_get_set('HostInternetScsiTargetTransport', 'iScsiName', 'iScsiA
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48219,7 +50719,7 @@ VIMRuntime::make_get_set('HostFibreChannelOverEthernetTargetTransport', 'vnportM
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48245,7 +50745,7 @@ VIMRuntime::make_get_set('HostTpmAttestationReport', 'tpmPcrValues', 'tpmEvents'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48269,7 +50769,7 @@ VIMRuntime::make_get_set('HostTpmBootSecurityOptionEventDetails', 'bootSecurityO
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48293,7 +50793,7 @@ VIMRuntime::make_get_set('HostTpmCommandEventDetails', 'commandLine');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48319,7 +50819,7 @@ VIMRuntime::make_get_set('HostDigestInfo', 'digestMethod', 'digestValue', 'objec
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48343,7 +50843,7 @@ VIMRuntime::make_get_set('HostTpmDigestInfo', 'pcrNumber');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48367,7 +50867,7 @@ VIMRuntime::make_get_set('ArrayOfHostTpmDigestInfo', 'HostTpmDigestInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48391,7 +50891,7 @@ VIMRuntime::make_get_set('HostTpmEventDetails', 'dataHash');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48416,7 +50916,7 @@ VIMRuntime::make_get_set('HostTpmEventLogEntry', 'pcrIndex', 'eventDetails');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48440,7 +50940,7 @@ VIMRuntime::make_get_set('ArrayOfHostTpmEventLogEntry', 'HostTpmEventLogEntry');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48465,7 +50965,7 @@ VIMRuntime::make_get_set('HostTpmOptionEventDetails', 'optionsFileName', 'bootOp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48492,7 +50992,7 @@ VIMRuntime::make_get_set('HostTpmSoftwareComponentEventDetails', 'componentName'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48523,7 +51023,7 @@ VIMRuntime::make_get_set('HostUnresolvedVmfsExtent', 'device', 'devicePath', 'vm
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48547,7 +51047,7 @@ VIMRuntime::make_get_set('ArrayOfHostUnresolvedVmfsExtent', 'HostUnresolvedVmfsE
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48571,7 +51071,7 @@ VIMRuntime::make_get_set('HostUnresolvedVmfsResignatureSpec', 'extentDevicePath'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48597,7 +51097,7 @@ VIMRuntime::make_get_set('HostUnresolvedVmfsResolutionResult', 'spec', 'vmfs', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48621,7 +51121,7 @@ VIMRuntime::make_get_set('ArrayOfHostUnresolvedVmfsResolutionResult', 'HostUnres
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48646,7 +51146,7 @@ VIMRuntime::make_get_set('HostUnresolvedVmfsResolutionSpec', 'extentDevicePath',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48670,7 +51170,7 @@ VIMRuntime::make_get_set('ArrayOfHostUnresolvedVmfsResolutionSpec', 'HostUnresol
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48696,7 +51196,7 @@ VIMRuntime::make_get_set('HostUnresolvedVmfsVolumeResolveStatus', 'resolvable', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48724,7 +51224,7 @@ VIMRuntime::make_get_set('HostUnresolvedVmfsVolume', 'extent', 'vmfsLabel', 'vmf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48748,7 +51248,241 @@ VIMRuntime::make_get_set('ArrayOfHostUnresolvedVmfsVolume', 'HostUnresolvedVmfsV
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVFlashManagerVFlashResourceConfigSpec;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['vffsUuid', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('HostVFlashManagerVFlashResourceConfigSpec', 'vffsUuid');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVFlashManagerVFlashResourceConfigInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['vffs', 'HostVffsVolume', undef, 0],
+   ['capacity', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('HostVFlashManagerVFlashResourceConfigInfo', 'vffs', 'capacity');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVFlashManagerVFlashResourceRunTimeInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['usage', undef, undef, 1],
+   ['capacity', undef, undef, 1],
+   ['accessible', 'boolean', undef, 1],
+   ['capacityForVmCache', undef, undef, 1],
+   ['freeForVmCache', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('HostVFlashManagerVFlashResourceRunTimeInfo', 'usage', 'capacity', 'accessible', 'capacityForVmCache', 'freeForVmCache');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVFlashManagerVFlashCacheConfigSpec;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['defaultVFlashModule', undef, undef, 1],
+   ['swapCacheReservationInGB', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('HostVFlashManagerVFlashCacheConfigSpec', 'defaultVFlashModule', 'swapCacheReservationInGB');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVFlashManagerVFlashCacheConfigInfoVFlashModuleConfigOption;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['vFlashModule', undef, undef, 1],
+   ['vFlashModuleVersion', undef, undef, 1],
+   ['minSupportedModuleVersion', undef, undef, 1],
+   ['cacheConsistencyType', 'ChoiceOption', undef, 1],
+   ['cacheMode', 'ChoiceOption', undef, 1],
+   ['blockSizeInKBOption', 'LongOption', undef, 1],
+   ['reservationInMBOption', 'LongOption', undef, 1],
+   ['maxDiskSizeInKB', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('HostVFlashManagerVFlashCacheConfigInfoVFlashModuleConfigOption', 'vFlashModule', 'vFlashModuleVersion', 'minSupportedModuleVersion', 'cacheConsistencyType', 'cacheMode', 'blockSizeInKBOption', 'reservationInMBOption', 'maxDiskSizeInKB');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfHostVFlashManagerVFlashCacheConfigInfoVFlashModuleConfigOption;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['HostVFlashManagerVFlashCacheConfigInfoVFlashModuleConfigOption', 'HostVFlashManagerVFlashCacheConfigInfoVFlashModuleConfigOption', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfHostVFlashManagerVFlashCacheConfigInfoVFlashModuleConfigOption', 'HostVFlashManagerVFlashCacheConfigInfoVFlashModuleConfigOption');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVFlashManagerVFlashCacheConfigInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['vFlashModuleConfigOption', 'HostVFlashManagerVFlashCacheConfigInfoVFlashModuleConfigOption', 1, 0],
+   ['defaultVFlashModule', undef, undef, 0],
+   ['swapCacheReservationInGB', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('HostVFlashManagerVFlashCacheConfigInfo', 'vFlashModuleConfigOption', 'defaultVFlashModule', 'swapCacheReservationInGB');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVFlashManagerVFlashConfigInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['vFlashResourceConfigInfo', 'HostVFlashManagerVFlashResourceConfigInfo', undef, 0],
+   ['vFlashCacheConfigInfo', 'HostVFlashManagerVFlashCacheConfigInfo', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('HostVFlashManagerVFlashConfigInfo', 'vFlashResourceConfigInfo', 'vFlashCacheConfigInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVFlashResourceConfigurationResult;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['devicePath', undef, 1, 0],
+   ['vffs', 'HostVffsVolume', undef, 0],
+   ['diskConfigurationResult', 'HostDiskConfigurationResult', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('HostVFlashResourceConfigurationResult', 'devicePath', 'vffs', 'diskConfigurationResult');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48773,7 +51507,7 @@ VIMRuntime::make_get_set('HostVMotionConfig', 'vmotionNicKey', 'enabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48798,7 +51532,7 @@ VIMRuntime::make_get_set('HostVMotionInfo', 'netConfig', 'ipConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48823,7 +51557,61 @@ VIMRuntime::make_get_set('HostVMotionNetConfig', 'candidateVnic', 'selectedVnic'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVffsSpec;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['devicePath', undef, undef, 1],
+   ['partition', 'HostDiskPartitionSpec', undef, 0],
+   ['majorVersion', undef, undef, 1],
+   ['volumeName', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('HostVffsSpec', 'devicePath', 'partition', 'majorVersion', 'volumeName');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVffsVolume;
+our @ISA = qw(HostFileSystemVolume);
+
+our @property_list = (
+   ['majorVersion', undef, undef, 1],
+   ['version', undef, undef, 1],
+   ['uuid', undef, undef, 1],
+   ['extent', 'HostScsiDiskPartition', 1, 1],
+);
+
+
+VIMRuntime::make_get_set('HostVffsVolume', 'majorVersion', 'version', 'uuid', 'extent');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48843,16 +51631,17 @@ our @property_list = (
    ['portgroup', undef, undef, 0],
    ['mtu', undef, undef, 0],
    ['tsoEnabled', 'boolean', undef, 0],
+   ['netStackInstanceKey', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('HostVirtualNicSpec', 'ip', 'mac', 'distributedVirtualPort', 'portgroup', 'mtu', 'tsoEnabled');
+VIMRuntime::make_get_set('HostVirtualNicSpec', 'ip', 'mac', 'distributedVirtualPort', 'portgroup', 'mtu', 'tsoEnabled', 'netStackInstanceKey');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48879,7 +51668,7 @@ VIMRuntime::make_get_set('HostVirtualNicConfig', 'changeOperation', 'device', 'p
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48903,7 +51692,7 @@ VIMRuntime::make_get_set('ArrayOfHostVirtualNicConfig', 'HostVirtualNicConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48931,7 +51720,7 @@ VIMRuntime::make_get_set('HostVirtualNic', 'device', 'key', 'portgroup', 'spec',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48955,7 +51744,7 @@ VIMRuntime::make_get_set('ArrayOfHostVirtualNic', 'HostVirtualNic');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -48980,7 +51769,7 @@ VIMRuntime::make_get_set('HostVirtualNicConnection', 'portgroup', 'dvPort');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49005,7 +51794,7 @@ VIMRuntime::make_get_set('HostVirtualNicManagerNicTypeSelection', 'vnic', 'nicTy
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49029,7 +51818,7 @@ VIMRuntime::make_get_set('ArrayOfHostVirtualNicManagerNicTypeSelection', 'HostVi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49056,7 +51845,7 @@ VIMRuntime::make_get_set('VirtualNicManagerNetConfig', 'nicType', 'multiSelectAl
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49080,7 +51869,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualNicManagerNetConfig', 'VirtualNicManager
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49104,7 +51893,7 @@ VIMRuntime::make_get_set('HostVirtualNicManagerInfo', 'netConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49127,7 +51916,7 @@ VIMRuntime::make_get_set('HostVirtualSwitchBridge');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49151,7 +51940,7 @@ VIMRuntime::make_get_set('HostVirtualSwitchAutoBridge', 'excludedNicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49175,7 +51964,7 @@ VIMRuntime::make_get_set('HostVirtualSwitchSimpleBridge', 'nicDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49201,7 +51990,7 @@ VIMRuntime::make_get_set('HostVirtualSwitchBondBridge', 'nicDevice', 'beacon', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49225,7 +52014,7 @@ VIMRuntime::make_get_set('HostVirtualSwitchBeaconConfig', 'interval');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49252,7 +52041,7 @@ VIMRuntime::make_get_set('HostVirtualSwitchSpec', 'numPorts', 'bridge', 'policy'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49278,7 +52067,7 @@ VIMRuntime::make_get_set('HostVirtualSwitchConfig', 'changeOperation', 'name', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49302,7 +52091,7 @@ VIMRuntime::make_get_set('ArrayOfHostVirtualSwitchConfig', 'HostVirtualSwitchCon
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49333,7 +52122,7 @@ VIMRuntime::make_get_set('HostVirtualSwitch', 'name', 'key', 'numPorts', 'numPor
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49357,7 +52146,7 @@ VIMRuntime::make_get_set('ArrayOfHostVirtualSwitch', 'HostVirtualSwitch');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49383,7 +52172,7 @@ VIMRuntime::make_get_set('HostVmciAccessManagerAccessSpec', 'vm', 'services', 'm
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49407,7 +52196,7 @@ VIMRuntime::make_get_set('ArrayOfHostVmciAccessManagerAccessSpec', 'HostVmciAcce
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49432,7 +52221,7 @@ VIMRuntime::make_get_set('HostVmfsRescanResult', 'host', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49456,7 +52245,7 @@ VIMRuntime::make_get_set('ArrayOfHostVmfsRescanResult', 'HostVmfsRescanResult');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49483,7 +52272,7 @@ VIMRuntime::make_get_set('HostVmfsSpec', 'extent', 'blockSizeMb', 'majorVersion'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49506,16 +52295,67 @@ our @property_list = (
    ['vmfsUpgradable', 'boolean', undef, 1],
    ['forceMountedInfo', 'HostForceMountedInfo', undef, 0],
    ['ssd', 'boolean', undef, 0],
+   ['local', 'boolean', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('HostVmfsVolume', 'blockSizeMb', 'maxBlocks', 'majorVersion', 'version', 'uuid', 'extent', 'vmfsUpgradable', 'forceMountedInfo', 'ssd');
+VIMRuntime::make_get_set('HostVmfsVolume', 'blockSizeMb', 'maxBlocks', 'majorVersion', 'version', 'uuid', 'extent', 'vmfsUpgradable', 'forceMountedInfo', 'ssd', 'local');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostVsanInternalSystemCmmdsQuery;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['type', undef, undef, 0],
+   ['uuid', undef, undef, 0],
+   ['owner', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('HostVsanInternalSystemCmmdsQuery', 'type', 'uuid', 'owner');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfHostVsanInternalSystemCmmdsQuery;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['HostVsanInternalSystemCmmdsQuery', 'HostVsanInternalSystemCmmdsQuery', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfHostVsanInternalSystemCmmdsQuery', 'HostVsanInternalSystemCmmdsQuery');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49540,7 +52380,7 @@ VIMRuntime::make_get_set('NetDhcpConfigInfoDhcpOptions', 'enable', 'config');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49565,7 +52405,7 @@ VIMRuntime::make_get_set('NetDhcpConfigInfo', 'ipv6', 'ipv4');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49591,7 +52431,7 @@ VIMRuntime::make_get_set('NetDhcpConfigSpecDhcpOptionsSpec', 'enable', 'config',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49616,7 +52456,7 @@ VIMRuntime::make_get_set('NetDhcpConfigSpec', 'ipv6', 'ipv4');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49644,7 +52484,7 @@ VIMRuntime::make_get_set('NetDnsConfigInfo', 'dhcp', 'hostName', 'domainName', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49672,7 +52512,7 @@ VIMRuntime::make_get_set('NetDnsConfigSpec', 'dhcp', 'hostName', 'domainName', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49700,7 +52540,7 @@ VIMRuntime::make_get_set('NetIpConfigInfoIpAddress', 'ipAddress', 'prefixLength'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49724,7 +52564,7 @@ VIMRuntime::make_get_set('ArrayOfNetIpConfigInfoIpAddress', 'NetIpConfigInfoIpAd
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49750,7 +52590,7 @@ VIMRuntime::make_get_set('NetIpConfigInfo', 'ipAddress', 'dhcp', 'autoConfigurat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49776,7 +52616,7 @@ VIMRuntime::make_get_set('NetIpConfigSpecIpAddressSpec', 'ipAddress', 'prefixLen
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49800,7 +52640,7 @@ VIMRuntime::make_get_set('ArrayOfNetIpConfigSpecIpAddressSpec', 'NetIpConfigSpec
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49826,7 +52666,7 @@ VIMRuntime::make_get_set('NetIpConfigSpec', 'ipAddress', 'dhcp', 'autoConfigurat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49851,7 +52691,7 @@ VIMRuntime::make_get_set('NetIpRouteConfigInfoGateway', 'ipAddress', 'device');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49877,7 +52717,7 @@ VIMRuntime::make_get_set('NetIpRouteConfigInfoIpRoute', 'network', 'prefixLength
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49901,7 +52741,7 @@ VIMRuntime::make_get_set('ArrayOfNetIpRouteConfigInfoIpRoute', 'NetIpRouteConfig
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49925,7 +52765,7 @@ VIMRuntime::make_get_set('NetIpRouteConfigInfo', 'ipRoute');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49950,7 +52790,7 @@ VIMRuntime::make_get_set('NetIpRouteConfigSpecGatewaySpec', 'ipAddress', 'device
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -49977,7 +52817,7 @@ VIMRuntime::make_get_set('NetIpRouteConfigSpecIpRouteSpec', 'network', 'prefixLe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50001,7 +52841,7 @@ VIMRuntime::make_get_set('ArrayOfNetIpRouteConfigSpecIpRouteSpec', 'NetIpRouteCo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50025,7 +52865,7 @@ VIMRuntime::make_get_set('NetIpRouteConfigSpec', 'ipRoute');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50052,7 +52892,7 @@ VIMRuntime::make_get_set('NetIpStackInfoNetToMedia', 'ipAddress', 'physicalAddre
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50076,7 +52916,7 @@ VIMRuntime::make_get_set('ArrayOfNetIpStackInfoNetToMedia', 'NetIpStackInfoNetTo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50103,7 +52943,7 @@ VIMRuntime::make_get_set('NetIpStackInfoDefaultRouter', 'ipAddress', 'device', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50127,7 +52967,7 @@ VIMRuntime::make_get_set('ArrayOfNetIpStackInfoDefaultRouter', 'NetIpStackInfoDe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50152,7 +52992,7 @@ VIMRuntime::make_get_set('NetIpStackInfo', 'neighbor', 'defaultRouter');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50176,7 +53016,7 @@ VIMRuntime::make_get_set('NetBIOSConfigInfo', 'mode');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50201,7 +53041,7 @@ VIMRuntime::make_get_set('WinNetBIOSConfigInfo', 'primaryWINS', 'secondaryWINS')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50226,7 +53066,7 @@ VIMRuntime::make_get_set('ArrayUpdateSpec', 'operation', 'removeKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50251,7 +53091,7 @@ VIMRuntime::make_get_set('BoolOption', 'supported', 'defaultValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50276,7 +53116,7 @@ VIMRuntime::make_get_set('ChoiceOption', 'choiceInfo', 'defaultIndex');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50302,7 +53142,7 @@ VIMRuntime::make_get_set('FloatOption', 'min', 'max', 'defaultValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50328,7 +53168,7 @@ VIMRuntime::make_get_set('IntOption', 'min', 'max', 'defaultValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50354,7 +53194,7 @@ VIMRuntime::make_get_set('LongOption', 'min', 'max', 'defaultValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50378,7 +53218,7 @@ VIMRuntime::make_get_set('OptionDef', 'optionType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50402,7 +53242,7 @@ VIMRuntime::make_get_set('ArrayOfOptionDef', 'OptionDef');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50426,7 +53266,7 @@ VIMRuntime::make_get_set('OptionType', 'valueIsReadonly');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50451,7 +53291,7 @@ VIMRuntime::make_get_set('OptionValue', 'key', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50475,7 +53315,7 @@ VIMRuntime::make_get_set('ArrayOfOptionValue', 'OptionValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50500,7 +53340,7 @@ VIMRuntime::make_get_set('StringOption', 'defaultValue', 'validCharacters');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50528,7 +53368,7 @@ VIMRuntime::make_get_set('ApplyProfile', 'enabled', 'policy', 'profileTypeName',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50552,7 +53392,7 @@ VIMRuntime::make_get_set('ArrayOfApplyProfile', 'ApplyProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50576,7 +53416,7 @@ VIMRuntime::make_get_set('ProfileApplyProfileElement', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50602,7 +53442,7 @@ VIMRuntime::make_get_set('ProfileApplyProfileProperty', 'propertyName', 'array',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50626,7 +53466,7 @@ VIMRuntime::make_get_set('ArrayOfProfileApplyProfileProperty', 'ProfileApplyProf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50651,7 +53491,7 @@ VIMRuntime::make_get_set('ComplianceLocator', 'expressionName', 'applyPath');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50675,7 +53515,7 @@ VIMRuntime::make_get_set('ArrayOfComplianceLocator', 'ComplianceLocator');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50700,7 +53540,7 @@ VIMRuntime::make_get_set('ComplianceProfile', 'expression', 'rootExpression');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50726,7 +53566,7 @@ VIMRuntime::make_get_set('ComplianceFailure', 'failureType', 'message', 'express
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50750,7 +53590,7 @@ VIMRuntime::make_get_set('ArrayOfComplianceFailure', 'ComplianceFailure');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50778,7 +53618,7 @@ VIMRuntime::make_get_set('ComplianceResult', 'profile', 'complianceStatus', 'ent
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50802,7 +53642,7 @@ VIMRuntime::make_get_set('ArrayOfComplianceResult', 'ComplianceResult');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50827,7 +53667,7 @@ VIMRuntime::make_get_set('ProfileDeferredPolicyOptionParameter', 'inputPath', 'p
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50851,7 +53691,7 @@ VIMRuntime::make_get_set('ArrayOfProfileDeferredPolicyOptionParameter', 'Profile
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50877,7 +53717,7 @@ VIMRuntime::make_get_set('ProfileExpression', 'id', 'displayName', 'negated');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50901,7 +53741,7 @@ VIMRuntime::make_get_set('ArrayOfProfileExpression', 'ProfileExpression');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50926,7 +53766,7 @@ VIMRuntime::make_get_set('ProfileSimpleExpression', 'expressionType', 'parameter
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50951,7 +53791,7 @@ VIMRuntime::make_get_set('ProfileCompositeExpression', 'operator', 'expressionNa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -50976,7 +53816,7 @@ VIMRuntime::make_get_set('ProfileExpressionMetadata', 'expressionId', 'parameter
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51000,7 +53840,7 @@ VIMRuntime::make_get_set('ArrayOfProfileExpressionMetadata', 'ProfileExpressionM
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51027,7 +53867,7 @@ VIMRuntime::make_get_set('ProfileParameterMetadata', 'id', 'type', 'optional', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51051,7 +53891,7 @@ VIMRuntime::make_get_set('ArrayOfProfileParameterMetadata', 'ProfileParameterMet
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51076,7 +53916,7 @@ VIMRuntime::make_get_set('ProfilePolicy', 'id', 'policyOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51100,7 +53940,7 @@ VIMRuntime::make_get_set('ArrayOfProfilePolicy', 'ProfilePolicy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51125,7 +53965,7 @@ VIMRuntime::make_get_set('ProfilePolicyOptionMetadata', 'id', 'parameter');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51149,7 +53989,7 @@ VIMRuntime::make_get_set('ArrayOfProfilePolicyOptionMetadata', 'ProfilePolicyOpt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51173,7 +54013,7 @@ VIMRuntime::make_get_set('ProfileCompositePolicyOptionMetadata', 'option');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51197,7 +54037,7 @@ VIMRuntime::make_get_set('UserInputRequiredParameterMetadata', 'userInputParamet
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51222,7 +54062,7 @@ VIMRuntime::make_get_set('ProfilePolicyMetadata', 'id', 'possibleOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51246,7 +54086,7 @@ VIMRuntime::make_get_set('ArrayOfProfilePolicyMetadata', 'ProfilePolicyMetadata'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51271,7 +54111,7 @@ VIMRuntime::make_get_set('PolicyOption', 'id', 'parameter');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51295,7 +54135,7 @@ VIMRuntime::make_get_set('ArrayOfPolicyOption', 'PolicyOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51319,7 +54159,7 @@ VIMRuntime::make_get_set('CompositePolicyOption', 'option');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51345,7 +54185,7 @@ VIMRuntime::make_get_set('ProfileCreateSpec', 'name', 'annotation', 'enabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51369,7 +54209,7 @@ VIMRuntime::make_get_set('ProfileSerializedCreateSpec', 'profileConfigString');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51395,7 +54235,7 @@ VIMRuntime::make_get_set('ProfileConfigInfo', 'name', 'annotation', 'enabled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51420,7 +54260,7 @@ VIMRuntime::make_get_set('ProfileDescriptionSection', 'description', 'message');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51444,7 +54284,7 @@ VIMRuntime::make_get_set('ArrayOfProfileDescriptionSection', 'ProfileDescription
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51468,7 +54308,7 @@ VIMRuntime::make_get_set('ProfileDescription', 'section');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51493,7 +54333,7 @@ VIMRuntime::make_get_set('ProfileMetadataProfileSortSpec', 'policyId', 'paramete
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51517,7 +54357,7 @@ VIMRuntime::make_get_set('ArrayOfProfileMetadataProfileSortSpec', 'ProfileMetada
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51546,7 +54386,7 @@ VIMRuntime::make_get_set('ProfileMetadata', 'key', 'profileTypeName', 'descripti
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51570,7 +54410,7 @@ VIMRuntime::make_get_set('ArrayOfProfileMetadata', 'ProfileMetadata');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51596,7 +54436,7 @@ VIMRuntime::make_get_set('ProfilePropertyPath', 'profilePath', 'policyId', 'para
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51620,7 +54460,7 @@ VIMRuntime::make_get_set('ArrayOfProfilePropertyPath', 'ProfilePropertyPath');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51645,7 +54485,7 @@ VIMRuntime::make_get_set('ProfileProfileStructure', 'profileTypeName', 'child');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51671,7 +54511,7 @@ VIMRuntime::make_get_set('ProfileProfileStructureProperty', 'propertyName', 'arr
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51695,7 +54535,7 @@ VIMRuntime::make_get_set('ArrayOfProfileProfileStructureProperty', 'ProfileProfi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51719,7 +54559,7 @@ VIMRuntime::make_get_set('ClusterProfileConfigInfo', 'complyProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51742,7 +54582,7 @@ VIMRuntime::make_get_set('ClusterProfileCreateSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51765,7 +54605,7 @@ VIMRuntime::make_get_set('ClusterProfileConfigSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51789,7 +54629,7 @@ VIMRuntime::make_get_set('ClusterProfileCompleteConfigSpec', 'complyProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51813,7 +54653,7 @@ VIMRuntime::make_get_set('ClusterProfileConfigServiceCreateSpec', 'serviceType')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51839,7 +54679,7 @@ VIMRuntime::make_get_set('AnswerFile', 'userInput', 'createdTime', 'modifiedTime
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51864,7 +54704,7 @@ VIMRuntime::make_get_set('AnswerFileStatusError', 'userInputPath', 'errMsg');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51888,7 +54728,7 @@ VIMRuntime::make_get_set('ArrayOfAnswerFileStatusError', 'AnswerFileStatusError'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51915,7 +54755,7 @@ VIMRuntime::make_get_set('AnswerFileStatusResult', 'checkedTime', 'host', 'statu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51939,7 +54779,7 @@ VIMRuntime::make_get_set('ArrayOfAnswerFileStatusResult', 'AnswerFileStatusResul
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51964,7 +54804,7 @@ VIMRuntime::make_get_set('ProfileExecuteError', 'path', 'message');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -51988,7 +54828,7 @@ VIMRuntime::make_get_set('ArrayOfProfileExecuteError', 'ProfileExecuteError');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52016,7 +54856,7 @@ VIMRuntime::make_get_set('ProfileExecuteResult', 'status', 'configSpec', 'inappl
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52050,7 +54890,7 @@ VIMRuntime::make_get_set('HostApplyProfile', 'memory', 'storage', 'network', 'da
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52074,7 +54914,7 @@ VIMRuntime::make_get_set('PhysicalNicProfile', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52098,7 +54938,7 @@ VIMRuntime::make_get_set('ArrayOfPhysicalNicProfile', 'PhysicalNicProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52121,7 +54961,7 @@ VIMRuntime::make_get_set('HostMemoryProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52145,7 +54985,7 @@ VIMRuntime::make_get_set('UserProfile', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52169,7 +55009,7 @@ VIMRuntime::make_get_set('ArrayOfUserProfile', 'UserProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52193,7 +55033,7 @@ VIMRuntime::make_get_set('UserGroupProfile', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52217,7 +55057,7 @@ VIMRuntime::make_get_set('ArrayOfUserGroupProfile', 'UserGroupProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52241,7 +55081,7 @@ VIMRuntime::make_get_set('SecurityProfile', 'permission');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52265,7 +55105,7 @@ VIMRuntime::make_get_set('OptionProfile', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52289,7 +55129,7 @@ VIMRuntime::make_get_set('ArrayOfOptionProfile', 'OptionProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52312,7 +55152,7 @@ VIMRuntime::make_get_set('DateTimeProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52336,7 +55176,7 @@ VIMRuntime::make_get_set('ServiceProfile', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52360,7 +55200,7 @@ VIMRuntime::make_get_set('ArrayOfServiceProfile', 'ServiceProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52384,7 +55224,7 @@ VIMRuntime::make_get_set('FirewallProfileRulesetProfile', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52408,7 +55248,7 @@ VIMRuntime::make_get_set('ArrayOfFirewallProfileRulesetProfile', 'FirewallProfil
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52432,7 +55272,7 @@ VIMRuntime::make_get_set('FirewallProfile', 'ruleset');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52456,7 +55296,7 @@ VIMRuntime::make_get_set('NasStorageProfile', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52480,7 +55320,7 @@ VIMRuntime::make_get_set('ArrayOfNasStorageProfile', 'NasStorageProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52504,7 +55344,7 @@ VIMRuntime::make_get_set('StorageProfile', 'nasStorage');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52527,7 +55367,7 @@ VIMRuntime::make_get_set('NetworkProfileDnsConfigProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52552,16 +55392,17 @@ our @property_list = (
    ['dvswitch', 'DvsProfile', 1, 0],
    ['dvsServiceConsoleNic', 'DvsServiceConsoleVNicProfile', 1, 0],
    ['dvsHostNic', 'DvsHostVNicProfile', 1, 0],
+   ['netStackInstance', 'NetStackInstanceProfile', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('NetworkProfile', 'vswitch', 'vmPortGroup', 'hostPortGroup', 'serviceConsolePortGroup', 'dnsConfig', 'ipRouteConfig', 'consoleIpRouteConfig', 'pnic', 'dvswitch', 'dvsServiceConsoleNic', 'dvsHostNic');
+VIMRuntime::make_get_set('NetworkProfile', 'vswitch', 'vmPortGroup', 'hostPortGroup', 'serviceConsolePortGroup', 'dnsConfig', 'ipRouteConfig', 'consoleIpRouteConfig', 'pnic', 'dvswitch', 'dvsServiceConsoleNic', 'dvsHostNic', 'netStackInstance');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52586,7 +55427,7 @@ VIMRuntime::make_get_set('DvsVNicProfile', 'key', 'ipConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52609,7 +55450,7 @@ VIMRuntime::make_get_set('DvsServiceConsoleVNicProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52633,7 +55474,7 @@ VIMRuntime::make_get_set('ArrayOfDvsServiceConsoleVNicProfile', 'DvsServiceConso
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52656,7 +55497,7 @@ VIMRuntime::make_get_set('DvsHostVNicProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52680,7 +55521,7 @@ VIMRuntime::make_get_set('ArrayOfDvsHostVNicProfile', 'DvsHostVNicProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52706,7 +55547,7 @@ VIMRuntime::make_get_set('DvsProfile', 'key', 'name', 'uplink');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52730,7 +55571,7 @@ VIMRuntime::make_get_set('ArrayOfDvsProfile', 'DvsProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52754,7 +55595,7 @@ VIMRuntime::make_get_set('PnicUplinkProfile', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52778,7 +55619,7 @@ VIMRuntime::make_get_set('ArrayOfPnicUplinkProfile', 'PnicUplinkProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52802,7 +55643,7 @@ VIMRuntime::make_get_set('IpRouteProfile', 'staticRoute');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52826,7 +55667,7 @@ VIMRuntime::make_get_set('StaticRouteProfile', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52850,7 +55691,7 @@ VIMRuntime::make_get_set('ArrayOfStaticRouteProfile', 'StaticRouteProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52873,7 +55714,7 @@ VIMRuntime::make_get_set('LinkProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52896,7 +55737,7 @@ VIMRuntime::make_get_set('NumPortsProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52924,7 +55765,7 @@ VIMRuntime::make_get_set('VirtualSwitchProfile', 'key', 'name', 'link', 'numPort
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52948,7 +55789,57 @@ VIMRuntime::make_get_set('ArrayOfVirtualSwitchProfile', 'VirtualSwitchProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package NetStackInstanceProfile;
+our @ISA = qw(ApplyProfile);
+
+our @property_list = (
+   ['key', undef, undef, 1],
+   ['dnsConfig', 'NetworkProfileDnsConfigProfile', undef, 1],
+   ['ipRouteConfig', 'IpRouteProfile', undef, 1],
+);
+
+
+VIMRuntime::make_get_set('NetStackInstanceProfile', 'key', 'dnsConfig', 'ipRouteConfig');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfNetStackInstanceProfile;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['NetStackInstanceProfile', 'NetStackInstanceProfile', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfNetStackInstanceProfile', 'NetStackInstanceProfile');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52971,7 +55862,7 @@ VIMRuntime::make_get_set('VlanProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -52994,7 +55885,7 @@ VIMRuntime::make_get_set('VirtualSwitchSelectionProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53022,7 +55913,7 @@ VIMRuntime::make_get_set('PortGroupProfile', 'key', 'name', 'vlan', 'vswitch', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53045,7 +55936,7 @@ VIMRuntime::make_get_set('VmPortGroupProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53069,7 +55960,7 @@ VIMRuntime::make_get_set('ArrayOfVmPortGroupProfile', 'VmPortGroupProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53093,7 +55984,7 @@ VIMRuntime::make_get_set('HostPortGroupProfile', 'ipConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53117,7 +56008,7 @@ VIMRuntime::make_get_set('ArrayOfHostPortGroupProfile', 'HostPortGroupProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53141,7 +56032,7 @@ VIMRuntime::make_get_set('ServiceConsolePortGroupProfile', 'ipConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53165,7 +56056,7 @@ VIMRuntime::make_get_set('ArrayOfServiceConsolePortGroupProfile', 'ServiceConsol
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53188,7 +56079,7 @@ VIMRuntime::make_get_set('NetworkPolicyProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53211,7 +56102,7 @@ VIMRuntime::make_get_set('IpAddressProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53235,7 +56126,7 @@ VIMRuntime::make_get_set('AuthenticationProfile', 'activeDirectory');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53258,7 +56149,7 @@ VIMRuntime::make_get_set('ActiveDirectoryProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53282,7 +56173,7 @@ VIMRuntime::make_get_set('PermissionProfile', 'key');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53306,7 +56197,7 @@ VIMRuntime::make_get_set('ArrayOfPermissionProfile', 'PermissionProfile');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53334,7 +56225,7 @@ VIMRuntime::make_get_set('HostProfileConfigInfo', 'applyProfile', 'defaultComply
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53357,7 +56248,7 @@ VIMRuntime::make_get_set('HostProfileConfigSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53381,7 +56272,7 @@ VIMRuntime::make_get_set('HostProfileSerializedHostProfileSpec', 'validatorHost'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53409,7 +56300,7 @@ VIMRuntime::make_get_set('HostProfileCompleteConfigSpec', 'applyProfile', 'custo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53434,7 +56325,7 @@ VIMRuntime::make_get_set('HostProfileHostBasedConfigSpec', 'host', 'useHostProfi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53459,7 +56350,7 @@ VIMRuntime::make_get_set('HostProfileManagerConfigTaskList', 'configSpec', 'task
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53482,7 +56373,7 @@ VIMRuntime::make_get_set('AnswerFileCreateSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53506,7 +56397,7 @@ VIMRuntime::make_get_set('AnswerFileOptionsCreateSpec', 'userInput');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53530,7 +56421,7 @@ VIMRuntime::make_get_set('AnswerFileSerializedCreateSpec', 'answerFileConfigStri
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53554,7 +56445,7 @@ VIMRuntime::make_get_set('ScheduledTaskDetail', 'frequency');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53578,7 +56469,7 @@ VIMRuntime::make_get_set('ArrayOfScheduledTaskDetail', 'ScheduledTaskDetail');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53606,7 +56497,7 @@ VIMRuntime::make_get_set('ScheduledTaskDescription', 'action', 'schedulerInfo', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53641,7 +56532,7 @@ VIMRuntime::make_get_set('ScheduledTaskInfo', 'scheduledTask', 'entity', 'lastMo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53666,7 +56557,7 @@ VIMRuntime::make_get_set('TaskScheduler', 'activeTime', 'expireTime');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53690,7 +56581,7 @@ VIMRuntime::make_get_set('AfterStartupTaskScheduler', 'minute');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53714,7 +56605,7 @@ VIMRuntime::make_get_set('OnceTaskScheduler', 'runAt');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53738,7 +56629,7 @@ VIMRuntime::make_get_set('RecurrentTaskScheduler', 'interval');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53762,7 +56653,7 @@ VIMRuntime::make_get_set('HourlyTaskScheduler', 'minute');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53786,7 +56677,7 @@ VIMRuntime::make_get_set('DailyTaskScheduler', 'hour');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53816,7 +56707,7 @@ VIMRuntime::make_get_set('WeeklyTaskScheduler', 'sunday', 'monday', 'tuesday', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53839,7 +56730,7 @@ VIMRuntime::make_get_set('MonthlyTaskScheduler');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53863,7 +56754,7 @@ VIMRuntime::make_get_set('MonthlyByDayTaskScheduler', 'day');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53888,7 +56779,7 @@ VIMRuntime::make_get_set('MonthlyByWeekdayTaskScheduler', 'offset', 'weekday');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53917,7 +56808,7 @@ VIMRuntime::make_get_set('ScheduledTaskSpec', 'name', 'description', 'enabled', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53941,7 +56832,7 @@ VIMRuntime::make_get_set('ApplyStorageRecommendationResult', 'vm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53966,7 +56857,7 @@ VIMRuntime::make_get_set('StorageDrsConfigInfo', 'podConfig', 'vmConfig');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -53991,7 +56882,7 @@ VIMRuntime::make_get_set('StorageDrsConfigSpec', 'podConfigSpec', 'vmConfigSpec'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54015,7 +56906,7 @@ VIMRuntime::make_get_set('StorageDrsVmConfigSpec', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54039,7 +56930,7 @@ VIMRuntime::make_get_set('ArrayOfStorageDrsVmConfigSpec', 'StorageDrsVmConfigSpe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54071,7 +56962,7 @@ VIMRuntime::make_get_set('StorageDrsPodConfigInfo', 'enabled', 'ioLoadBalanceEna
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54096,7 +56987,7 @@ VIMRuntime::make_get_set('StorageDrsSpaceLoadBalanceConfig', 'spaceUtilizationTh
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54121,7 +57012,7 @@ VIMRuntime::make_get_set('StorageDrsIoLoadBalanceConfig', 'ioLatencyThreshold', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54153,7 +57044,7 @@ VIMRuntime::make_get_set('StorageDrsPodConfigSpec', 'enabled', 'ioLoadBalanceEna
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54177,7 +57068,7 @@ VIMRuntime::make_get_set('StorageDrsOptionSpec', 'option');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54201,7 +57092,7 @@ VIMRuntime::make_get_set('ArrayOfStorageDrsOptionSpec', 'StorageDrsOptionSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54228,7 +57119,7 @@ VIMRuntime::make_get_set('VmPodConfigForPlacement', 'storagePod', 'disk', 'vmCon
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54252,7 +57143,7 @@ VIMRuntime::make_get_set('ArrayOfVmPodConfigForPlacement', 'VmPodConfigForPlacem
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54269,16 +57160,17 @@ our @property_list = (
    ['diskId', undef, undef, 1],
    ['diskMoveType', undef, undef, 0],
    ['diskBackingInfo', 'VirtualDeviceBackingInfo', undef, 0],
+   ['profile', 'VirtualMachineProfileSpec', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('PodDiskLocator', 'diskId', 'diskMoveType', 'diskBackingInfo');
+VIMRuntime::make_get_set('PodDiskLocator', 'diskId', 'diskMoveType', 'diskBackingInfo', 'profile');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54302,7 +57194,7 @@ VIMRuntime::make_get_set('ArrayOfPodDiskLocator', 'PodDiskLocator');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54327,7 +57219,7 @@ VIMRuntime::make_get_set('StorageDrsPodSelectionSpec', 'initialVmConfig', 'stora
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54361,7 +57253,7 @@ VIMRuntime::make_get_set('StorageMigrationAction', 'vm', 'relocateSpec', 'source
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54390,7 +57282,7 @@ VIMRuntime::make_get_set('StoragePlacementAction', 'vm', 'relocateSpec', 'destin
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54416,7 +57308,7 @@ VIMRuntime::make_get_set('StoragePlacementResult', 'recommendations', 'drsFault'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54452,7 +57344,7 @@ VIMRuntime::make_get_set('StoragePlacementSpec', 'type', 'priority', 'vm', 'podS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54476,7 +57368,7 @@ VIMRuntime::make_get_set('VirtualDiskAntiAffinityRuleSpec', 'diskId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54504,7 +57396,7 @@ VIMRuntime::make_get_set('StorageDrsVmConfigInfo', 'vm', 'enabled', 'behavior', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54528,7 +57420,7 @@ VIMRuntime::make_get_set('ArrayOfStorageDrsVmConfigInfo', 'StorageDrsVmConfigInf
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54553,7 +57445,7 @@ VIMRuntime::make_get_set('VAppCloneSpecNetworkMappingPair', 'source', 'destinati
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54577,7 +57469,7 @@ VIMRuntime::make_get_set('ArrayOfVAppCloneSpecNetworkMappingPair', 'VAppCloneSpe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54604,7 +57496,7 @@ VIMRuntime::make_get_set('VAppCloneSpecResourceMap', 'source', 'parent', 'resour
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54628,7 +57520,7 @@ VIMRuntime::make_get_set('ArrayOfVAppCloneSpecResourceMap', 'VAppCloneSpecResour
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54659,7 +57551,7 @@ VIMRuntime::make_get_set('VAppCloneSpec', 'location', 'host', 'resourceSpec', 'v
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54691,7 +57583,7 @@ VIMRuntime::make_get_set('VAppEntityConfigInfo', 'key', 'tag', 'startOrder', 'st
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54715,7 +57607,7 @@ VIMRuntime::make_get_set('ArrayOfVAppEntityConfigInfo', 'VAppEntityConfigInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54742,7 +57634,7 @@ VIMRuntime::make_get_set('VAppIPAssignmentInfo', 'supportedAllocationScheme', 'i
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54772,7 +57664,7 @@ VIMRuntime::make_get_set('IpPoolIpPoolConfigInfo', 'subnetAddress', 'netmask', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54797,7 +57689,7 @@ VIMRuntime::make_get_set('IpPoolAssociation', 'network', 'networkName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54821,7 +57713,7 @@ VIMRuntime::make_get_set('ArrayOfIpPoolAssociation', 'IpPoolAssociation');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54857,7 +57749,7 @@ VIMRuntime::make_get_set('IpPool', 'id', 'name', 'ipv4Config', 'ipv6Config', 'dn
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54881,7 +57773,7 @@ VIMRuntime::make_get_set('ArrayOfIpPool', 'IpPool');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54909,7 +57801,7 @@ VIMRuntime::make_get_set('VAppOvfSectionInfo', 'key', 'namespace', 'type', 'atEn
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54933,7 +57825,7 @@ VIMRuntime::make_get_set('ArrayOfVAppOvfSectionInfo', 'VAppOvfSectionInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54966,7 +57858,7 @@ VIMRuntime::make_get_set('VAppProductInfo', 'key', 'classId', 'instanceId', 'nam
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -54990,7 +57882,7 @@ VIMRuntime::make_get_set('ArrayOfVAppProductInfo', 'VAppProductInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55025,7 +57917,7 @@ VIMRuntime::make_get_set('VAppPropertyInfo', 'key', 'classId', 'instanceId', 'id
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55049,7 +57941,7 @@ VIMRuntime::make_get_set('ArrayOfVAppPropertyInfo', 'VAppPropertyInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55076,7 +57968,7 @@ VIMRuntime::make_get_set('VAppConfigInfo', 'entityConfig', 'annotation', 'instan
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55103,7 +57995,7 @@ VIMRuntime::make_get_set('VAppConfigSpec', 'entityConfig', 'annotation', 'instan
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55130,7 +58022,7 @@ VIMRuntime::make_get_set('VirtualAppImportSpec', 'name', 'vAppConfigSpec', 'reso
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55161,7 +58053,7 @@ VIMRuntime::make_get_set('VmConfigInfo', 'product', 'property', 'ipAssignment', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55192,7 +58084,7 @@ VIMRuntime::make_get_set('VmConfigSpec', 'product', 'property', 'ipAssignment', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55216,7 +58108,7 @@ VIMRuntime::make_get_set('VAppProductSpec', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55240,7 +58132,7 @@ VIMRuntime::make_get_set('ArrayOfVAppProductSpec', 'VAppProductSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55264,7 +58156,7 @@ VIMRuntime::make_get_set('VAppPropertySpec', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55288,7 +58180,7 @@ VIMRuntime::make_get_set('ArrayOfVAppPropertySpec', 'VAppPropertySpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55312,7 +58204,7 @@ VIMRuntime::make_get_set('VAppOvfSectionSpec', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55336,7 +58228,7 @@ VIMRuntime::make_get_set('ArrayOfVAppOvfSectionSpec', 'VAppOvfSectionSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55360,7 +58252,7 @@ VIMRuntime::make_get_set('VirtualMachineAffinityInfo', 'affinitySet');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55383,7 +58275,7 @@ VIMRuntime::make_get_set('VirtualMachineBootOptionsBootableDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55407,7 +58299,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineBootOptionsBootableDevice', 'Virt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55431,7 +58323,7 @@ VIMRuntime::make_get_set('VirtualMachineBootOptionsBootableDiskDevice', 'deviceK
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55455,7 +58347,7 @@ VIMRuntime::make_get_set('VirtualMachineBootOptionsBootableEthernetDevice', 'dev
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55478,7 +58370,7 @@ VIMRuntime::make_get_set('VirtualMachineBootOptionsBootableFloppyDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55501,7 +58393,7 @@ VIMRuntime::make_get_set('VirtualMachineBootOptionsBootableCdromDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55529,7 +58421,7 @@ VIMRuntime::make_get_set('VirtualMachineBootOptions', 'bootDelay', 'enterBIOSSet
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55589,7 +58481,7 @@ VIMRuntime::make_get_set('VirtualMachineCapability', 'snapshotOperationsSupporte
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55612,7 +58504,7 @@ VIMRuntime::make_get_set('VirtualMachineCdromInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55636,7 +58528,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineCdromInfo', 'VirtualMachineCdromI
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55656,16 +58548,17 @@ our @property_list = (
    ['customization', 'CustomizationSpec', undef, 0],
    ['powerOn', 'boolean', undef, 1],
    ['snapshot', 'ManagedObjectReference', undef, 0],
+   ['memory', 'boolean', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualMachineCloneSpec', 'location', 'template', 'config', 'customization', 'powerOn', 'snapshot');
+VIMRuntime::make_get_set('VirtualMachineCloneSpec', 'location', 'template', 'config', 'customization', 'powerOn', 'snapshot', 'memory');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55690,7 +58583,7 @@ VIMRuntime::make_get_set('VirtualMachineConfigInfoDatastoreUrlPair', 'name', 'ur
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55714,7 +58607,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineConfigInfoDatastoreUrlPair', 'Vir
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55739,7 +58632,7 @@ VIMRuntime::make_get_set('VirtualMachineConfigInfoOverheadInfo', 'initialMemoryR
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55807,16 +58700,17 @@ our @property_list = (
    ['nestedHVEnabled', 'boolean', undef, 0],
    ['vPMCEnabled', 'boolean', undef, 0],
    ['scheduledHardwareUpgradeInfo', 'ScheduledHardwareUpgradeInfo', undef, 0],
+   ['vFlashCacheReservation', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualMachineConfigInfo', 'changeVersion', 'modified', 'name', 'guestFullName', 'version', 'uuid', 'instanceUuid', 'npivNodeWorldWideName', 'npivPortWorldWideName', 'npivWorldWideNameType', 'npivDesiredNodeWwns', 'npivDesiredPortWwns', 'npivTemporaryDisabled', 'npivOnNonRdmDisks', 'locationId', 'template', 'guestId', 'alternateGuestName', 'annotation', 'files', 'tools', 'flags', 'consolePreferences', 'defaultPowerOps', 'hardware', 'cpuAllocation', 'memoryAllocation', 'latencySensitivity', 'memoryHotAddEnabled', 'cpuHotAddEnabled', 'cpuHotRemoveEnabled', 'hotPlugMemoryLimit', 'hotPlugMemoryIncrementSize', 'cpuAffinity', 'memoryAffinity', 'networkShaper', 'extraConfig', 'cpuFeatureMask', 'datastoreUrl', 'swapPlacement', 'bootOptions', 'ftInfo', 'vAppConfig', 'vAssertsEnabled', 'changeTrackingEnabled', 'firmware', 'maxMksConnections', 'guestAutoLockEnabled', 'managedBy', 'memoryReservationLockedToMax', 'initialOverhead', 'nestedHVEnabled', 'vPMCEnabled', 'scheduledHardwareUpgradeInfo');
+VIMRuntime::make_get_set('VirtualMachineConfigInfo', 'changeVersion', 'modified', 'name', 'guestFullName', 'version', 'uuid', 'instanceUuid', 'npivNodeWorldWideName', 'npivPortWorldWideName', 'npivWorldWideNameType', 'npivDesiredNodeWwns', 'npivDesiredPortWwns', 'npivTemporaryDisabled', 'npivOnNonRdmDisks', 'locationId', 'template', 'guestId', 'alternateGuestName', 'annotation', 'files', 'tools', 'flags', 'consolePreferences', 'defaultPowerOps', 'hardware', 'cpuAllocation', 'memoryAllocation', 'latencySensitivity', 'memoryHotAddEnabled', 'cpuHotAddEnabled', 'cpuHotRemoveEnabled', 'hotPlugMemoryLimit', 'hotPlugMemoryIncrementSize', 'cpuAffinity', 'memoryAffinity', 'networkShaper', 'extraConfig', 'cpuFeatureMask', 'datastoreUrl', 'swapPlacement', 'bootOptions', 'ftInfo', 'vAppConfig', 'vAssertsEnabled', 'changeTrackingEnabled', 'firmware', 'maxMksConnections', 'guestAutoLockEnabled', 'managedBy', 'memoryReservationLockedToMax', 'initialOverhead', 'nestedHVEnabled', 'vPMCEnabled', 'scheduledHardwareUpgradeInfo', 'vFlashCacheReservation');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55850,7 +58744,7 @@ VIMRuntime::make_get_set('VirtualMachineConfigOption', 'version', 'description',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55880,7 +58774,7 @@ VIMRuntime::make_get_set('VirtualMachineConfigOptionDescriptor', 'key', 'descrip
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55904,7 +58798,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineConfigOptionDescriptor', 'Virtual
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55928,7 +58822,7 @@ VIMRuntime::make_get_set('VirtualMachineCpuIdInfoSpec', 'info');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -55952,7 +58846,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineCpuIdInfoSpec', 'VirtualMachineCp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56020,16 +58914,17 @@ our @property_list = (
    ['nestedHVEnabled', 'boolean', undef, 0],
    ['vPMCEnabled', 'boolean', undef, 0],
    ['scheduledHardwareUpgradeInfo', 'ScheduledHardwareUpgradeInfo', undef, 0],
+   ['vmProfile', 'VirtualMachineProfileSpec', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualMachineConfigSpec', 'changeVersion', 'name', 'version', 'uuid', 'instanceUuid', 'npivNodeWorldWideName', 'npivPortWorldWideName', 'npivWorldWideNameType', 'npivDesiredNodeWwns', 'npivDesiredPortWwns', 'npivTemporaryDisabled', 'npivOnNonRdmDisks', 'npivWorldWideNameOp', 'locationId', 'guestId', 'alternateGuestName', 'annotation', 'files', 'tools', 'flags', 'consolePreferences', 'powerOpInfo', 'numCPUs', 'numCoresPerSocket', 'memoryMB', 'memoryHotAddEnabled', 'cpuHotAddEnabled', 'cpuHotRemoveEnabled', 'virtualICH7MPresent', 'virtualSMCPresent', 'deviceChange', 'cpuAllocation', 'memoryAllocation', 'latencySensitivity', 'cpuAffinity', 'memoryAffinity', 'networkShaper', 'cpuFeatureMask', 'extraConfig', 'swapPlacement', 'bootOptions', 'vAppConfig', 'ftInfo', 'vAppConfigRemoved', 'vAssertsEnabled', 'changeTrackingEnabled', 'firmware', 'maxMksConnections', 'guestAutoLockEnabled', 'managedBy', 'memoryReservationLockedToMax', 'nestedHVEnabled', 'vPMCEnabled', 'scheduledHardwareUpgradeInfo');
+VIMRuntime::make_get_set('VirtualMachineConfigSpec', 'changeVersion', 'name', 'version', 'uuid', 'instanceUuid', 'npivNodeWorldWideName', 'npivPortWorldWideName', 'npivWorldWideNameType', 'npivDesiredNodeWwns', 'npivDesiredPortWwns', 'npivTemporaryDisabled', 'npivOnNonRdmDisks', 'npivWorldWideNameOp', 'locationId', 'guestId', 'alternateGuestName', 'annotation', 'files', 'tools', 'flags', 'consolePreferences', 'powerOpInfo', 'numCPUs', 'numCoresPerSocket', 'memoryMB', 'memoryHotAddEnabled', 'cpuHotAddEnabled', 'cpuHotRemoveEnabled', 'virtualICH7MPresent', 'virtualSMCPresent', 'deviceChange', 'cpuAllocation', 'memoryAllocation', 'latencySensitivity', 'cpuAffinity', 'memoryAffinity', 'networkShaper', 'cpuFeatureMask', 'extraConfig', 'swapPlacement', 'bootOptions', 'vAppConfig', 'ftInfo', 'vAppConfigRemoved', 'vAssertsEnabled', 'changeTrackingEnabled', 'firmware', 'maxMksConnections', 'guestAutoLockEnabled', 'managedBy', 'memoryReservationLockedToMax', 'nestedHVEnabled', 'vPMCEnabled', 'scheduledHardwareUpgradeInfo', 'vmProfile');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56049,6 +58944,7 @@ our @property_list = (
    ['smcPresent', 'boolean', undef, 0],
    ['datastore', 'VirtualMachineDatastoreInfo', 1, 0],
    ['network', 'VirtualMachineNetworkInfo', 1, 0],
+   ['opaqueNetwork', 'OpaqueNetworkTargetInfo', 1, 0],
    ['distributedVirtualPortgroup', 'DistributedVirtualPortgroupInfo', 1, 0],
    ['distributedVirtualSwitch', 'DistributedVirtualSwitchInfo', 1, 0],
    ['cdRom', 'VirtualMachineCdromInfo', 1, 0],
@@ -56065,16 +58961,18 @@ our @property_list = (
    ['resourcePool', 'ResourcePoolRuntimeInfo', undef, 0],
    ['autoVmotion', 'boolean', undef, 0],
    ['pciPassthrough', 'VirtualMachinePciPassthroughInfo', 1, 0],
+   ['sriov', 'VirtualMachineSriovInfo', 1, 0],
+   ['vFlashModule', 'VirtualMachineVFlashModuleInfo', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('ConfigTarget', 'numCpus', 'numCpuCores', 'numNumaNodes', 'smcPresent', 'datastore', 'network', 'distributedVirtualPortgroup', 'distributedVirtualSwitch', 'cdRom', 'serial', 'parallel', 'sound', 'usb', 'floppy', 'legacyNetworkInfo', 'scsiPassthrough', 'scsiDisk', 'ideDisk', 'maxMemMBOptimalPerf', 'resourcePool', 'autoVmotion', 'pciPassthrough');
+VIMRuntime::make_get_set('ConfigTarget', 'numCpus', 'numCpuCores', 'numNumaNodes', 'smcPresent', 'datastore', 'network', 'opaqueNetwork', 'distributedVirtualPortgroup', 'distributedVirtualSwitch', 'cdRom', 'serial', 'parallel', 'sound', 'usb', 'floppy', 'legacyNetworkInfo', 'scsiPassthrough', 'scsiDisk', 'ideDisk', 'maxMemMBOptimalPerf', 'resourcePool', 'autoVmotion', 'pciPassthrough', 'sriov', 'vFlashModule');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56100,7 +58998,7 @@ VIMRuntime::make_get_set('VirtualMachineConsolePreferences', 'powerOnWhenOpened'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56117,18 +59015,19 @@ our @property_list = (
    ['datastore', 'DatastoreSummary', undef, 1],
    ['capability', 'DatastoreCapability', undef, 1],
    ['maxFileSize', undef, undef, 1],
+   ['maxVirtualDiskCapacity', undef, undef, 0],
    ['mode', undef, undef, 1],
    ['vStorageSupport', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualMachineDatastoreInfo', 'datastore', 'capability', 'maxFileSize', 'mode', 'vStorageSupport');
+VIMRuntime::make_get_set('VirtualMachineDatastoreInfo', 'datastore', 'capability', 'maxFileSize', 'maxVirtualDiskCapacity', 'mode', 'vStorageSupport');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56152,7 +59051,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineDatastoreInfo', 'VirtualMachineDa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56177,7 +59076,7 @@ VIMRuntime::make_get_set('VirtualMachineDatastoreVolumeOption', 'fileSystemType'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56201,7 +59100,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineDatastoreVolumeOption', 'VirtualM
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56225,7 +59124,7 @@ VIMRuntime::make_get_set('DatastoreOption', 'unsupportedVolumes');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56255,7 +59154,32 @@ VIMRuntime::make_get_set('VirtualMachineDefaultPowerOpInfo', 'powerOffType', 'su
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineDefinedProfileSpec;
+our @ISA = qw(VirtualMachineProfileSpec);
+
+our @property_list = (
+   ['profileId', undef, undef, 1],
+   ['profileData', 'VirtualMachineProfileRawData', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VirtualMachineDefinedProfileSpec', 'profileId', 'profileData');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56278,7 +59202,7 @@ VIMRuntime::make_get_set('VirtualMachineDeviceRuntimeInfoDeviceRuntimeState');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56296,16 +59220,17 @@ our @property_list = (
    ['vmDirectPathGen2InactiveReasonVm', undef, 1, 0],
    ['vmDirectPathGen2InactiveReasonOther', undef, 1, 0],
    ['vmDirectPathGen2InactiveReasonExtended', undef, undef, 0],
+   ['reservationStatus', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualMachineDeviceRuntimeInfoVirtualEthernetCardRuntimeState', 'vmDirectPathGen2Active', 'vmDirectPathGen2InactiveReasonVm', 'vmDirectPathGen2InactiveReasonOther', 'vmDirectPathGen2InactiveReasonExtended');
+VIMRuntime::make_get_set('VirtualMachineDeviceRuntimeInfoVirtualEthernetCardRuntimeState', 'vmDirectPathGen2Active', 'vmDirectPathGen2InactiveReasonVm', 'vmDirectPathGen2InactiveReasonOther', 'vmDirectPathGen2InactiveReasonExtended', 'reservationStatus');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56330,7 +59255,7 @@ VIMRuntime::make_get_set('VirtualMachineDeviceRuntimeInfo', 'runtimeState', 'key
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56354,7 +59279,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineDeviceRuntimeInfo', 'VirtualMachi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56379,7 +59304,30 @@ VIMRuntime::make_get_set('VirtualMachineDiskDeviceInfo', 'capacity', 'vm');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineEmptyProfileSpec;
+our @ISA = qw(VirtualMachineProfileSpec);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VirtualMachineEmptyProfileSpec');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56405,7 +59353,7 @@ VIMRuntime::make_get_set('FaultToleranceConfigInfo', 'role', 'instanceUuids', 'c
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56429,7 +59377,7 @@ VIMRuntime::make_get_set('FaultTolerancePrimaryConfigInfo', 'secondaries');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56453,7 +59401,7 @@ VIMRuntime::make_get_set('FaultToleranceSecondaryConfigInfo', 'primaryVM');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56479,7 +59427,7 @@ VIMRuntime::make_get_set('FaultToleranceSecondaryOpResult', 'vm', 'powerOnAttemp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56505,7 +59453,7 @@ VIMRuntime::make_get_set('VirtualMachineFeatureRequirement', 'key', 'featureName
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56529,7 +59477,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineFeatureRequirement', 'VirtualMach
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56556,7 +59504,7 @@ VIMRuntime::make_get_set('VirtualMachineFileInfo', 'vmPathName', 'snapshotDirect
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56581,7 +59529,7 @@ VIMRuntime::make_get_set('VirtualMachineFileLayoutDiskLayout', 'key', 'diskFile'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56605,7 +59553,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineFileLayoutDiskLayout', 'VirtualMa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56630,7 +59578,7 @@ VIMRuntime::make_get_set('VirtualMachineFileLayoutSnapshotLayout', 'key', 'snaps
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56654,7 +59602,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineFileLayoutSnapshotLayout', 'Virtu
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56682,7 +59630,7 @@ VIMRuntime::make_get_set('VirtualMachineFileLayout', 'configFile', 'logFile', 'd
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56710,7 +59658,7 @@ VIMRuntime::make_get_set('VirtualMachineFileLayoutExFileInfo', 'key', 'name', 't
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56734,7 +59682,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineFileLayoutExFileInfo', 'VirtualMa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56758,7 +59706,7 @@ VIMRuntime::make_get_set('VirtualMachineFileLayoutExDiskUnit', 'fileKey');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56782,7 +59730,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineFileLayoutExDiskUnit', 'VirtualMa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56807,7 +59755,7 @@ VIMRuntime::make_get_set('VirtualMachineFileLayoutExDiskLayout', 'key', 'chain')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56831,7 +59779,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineFileLayoutExDiskLayout', 'Virtual
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56857,7 +59805,7 @@ VIMRuntime::make_get_set('VirtualMachineFileLayoutExSnapshotLayout', 'key', 'dat
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56881,7 +59829,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineFileLayoutExSnapshotLayout', 'Vir
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56908,7 +59856,7 @@ VIMRuntime::make_get_set('VirtualMachineFileLayoutEx', 'file', 'disk', 'snapshot
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56944,7 +59892,7 @@ VIMRuntime::make_get_set('VirtualMachineFlagInfo', 'disableAcceleration', 'enabl
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56967,7 +59915,7 @@ VIMRuntime::make_get_set('VirtualMachineFloppyInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -56991,7 +59939,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineFloppyInfo', 'VirtualMachineFlopp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57017,7 +59965,7 @@ VIMRuntime::make_get_set('GuestDiskInfo', 'diskPath', 'capacity', 'freeSpace');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57041,7 +59989,7 @@ VIMRuntime::make_get_set('ArrayOfGuestDiskInfo', 'GuestDiskInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57072,7 +60020,7 @@ VIMRuntime::make_get_set('GuestNicInfo', 'network', 'ipAddress', 'macAddress', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57096,7 +60044,7 @@ VIMRuntime::make_get_set('ArrayOfGuestNicInfo', 'GuestNicInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57123,7 +60071,7 @@ VIMRuntime::make_get_set('GuestStackInfo', 'dnsConfig', 'ipRouteConfig', 'ipStac
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57147,7 +60095,7 @@ VIMRuntime::make_get_set('ArrayOfGuestStackInfo', 'GuestStackInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57172,7 +60120,7 @@ VIMRuntime::make_get_set('GuestScreenInfo', 'width', 'height');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57197,7 +60145,7 @@ VIMRuntime::make_get_set('GuestInfoNamespaceGenerationInfo', 'key', 'generationN
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57221,7 +60169,7 @@ VIMRuntime::make_get_set('ArrayOfGuestInfoNamespaceGenerationInfo', 'GuestInfoNa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57251,19 +60199,20 @@ our @property_list = (
    ['screen', 'GuestScreenInfo', undef, 0],
    ['guestState', undef, undef, 1],
    ['appHeartbeatStatus', undef, undef, 0],
+   ['appState', undef, undef, 0],
    ['guestOperationsReady', 'boolean', undef, 0],
    ['interactiveGuestOperationsReady', 'boolean', undef, 0],
    ['generationInfo', 'GuestInfoNamespaceGenerationInfo', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('GuestInfo', 'toolsStatus', 'toolsVersionStatus', 'toolsVersionStatus2', 'toolsRunningStatus', 'toolsVersion', 'guestId', 'guestFamily', 'guestFullName', 'hostName', 'ipAddress', 'net', 'ipStack', 'disk', 'screen', 'guestState', 'appHeartbeatStatus', 'guestOperationsReady', 'interactiveGuestOperationsReady', 'generationInfo');
+VIMRuntime::make_get_set('GuestInfo', 'toolsStatus', 'toolsVersionStatus', 'toolsVersionStatus2', 'toolsRunningStatus', 'toolsVersion', 'guestId', 'guestFamily', 'guestFullName', 'hostName', 'ipAddress', 'net', 'ipStack', 'disk', 'screen', 'guestState', 'appHeartbeatStatus', 'appState', 'guestOperationsReady', 'interactiveGuestOperationsReady', 'generationInfo');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57292,6 +60241,7 @@ our @property_list = (
    ['recommendedDiskController', undef, undef, 1],
    ['supportedNumDisks', undef, undef, 1],
    ['recommendedDiskSizeMB', undef, undef, 1],
+   ['recommendedCdromController', undef, undef, 0],
    ['supportedEthernetCard', undef, 1, 1],
    ['recommendedEthernetCard', undef, undef, 0],
    ['supportsSlaveDisk', 'boolean', undef, 0],
@@ -57317,13 +60267,13 @@ our @property_list = (
 );
 
 
-VIMRuntime::make_get_set('GuestOsDescriptor', 'id', 'family', 'fullName', 'supportedMaxCPUs', 'numSupportedPhysicalSockets', 'numSupportedCoresPerSocket', 'supportedMinMemMB', 'supportedMaxMemMB', 'recommendedMemMB', 'recommendedColorDepth', 'supportedDiskControllerList', 'recommendedSCSIController', 'recommendedDiskController', 'supportedNumDisks', 'recommendedDiskSizeMB', 'supportedEthernetCard', 'recommendedEthernetCard', 'supportsSlaveDisk', 'cpuFeatureMask', 'smcRequired', 'supportsWakeOnLan', 'supportsVMI', 'supportsMemoryHotAdd', 'supportsCpuHotAdd', 'supportsCpuHotRemove', 'supportedFirmware', 'recommendedFirmware', 'supportedUSBControllerList', 'recommendedUSBController', 'supports3D', 'recommended3D', 'smcRecommended', 'ich7mRecommended', 'usbRecommended', 'supportLevel', 'supportedForCreate', 'vRAMSizeInKB');
+VIMRuntime::make_get_set('GuestOsDescriptor', 'id', 'family', 'fullName', 'supportedMaxCPUs', 'numSupportedPhysicalSockets', 'numSupportedCoresPerSocket', 'supportedMinMemMB', 'supportedMaxMemMB', 'recommendedMemMB', 'recommendedColorDepth', 'supportedDiskControllerList', 'recommendedSCSIController', 'recommendedDiskController', 'supportedNumDisks', 'recommendedDiskSizeMB', 'recommendedCdromController', 'supportedEthernetCard', 'recommendedEthernetCard', 'supportsSlaveDisk', 'cpuFeatureMask', 'smcRequired', 'supportsWakeOnLan', 'supportsVMI', 'supportsMemoryHotAdd', 'supportsCpuHotAdd', 'supportsCpuHotRemove', 'supportedFirmware', 'recommendedFirmware', 'supportedUSBControllerList', 'recommendedUSBController', 'supports3D', 'recommended3D', 'smcRecommended', 'ich7mRecommended', 'usbRecommended', 'supportLevel', 'supportedForCreate', 'vRAMSizeInKB');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57347,7 +60297,7 @@ VIMRuntime::make_get_set('ArrayOfGuestOsDescriptor', 'GuestOsDescriptor');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57372,7 +60322,7 @@ VIMRuntime::make_get_set('VirtualMachineIdeDiskDevicePartitionInfo', 'id', 'capa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57396,7 +60346,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineIdeDiskDevicePartitionInfo', 'Vir
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57420,7 +60370,7 @@ VIMRuntime::make_get_set('VirtualMachineIdeDiskDeviceInfo', 'partitionTable');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57444,7 +60394,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineIdeDiskDeviceInfo', 'VirtualMachi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57468,7 +60418,7 @@ VIMRuntime::make_get_set('VirtualMachineLegacyNetworkSwitchInfo', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57492,7 +60442,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineLegacyNetworkSwitchInfo', 'Virtua
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57518,7 +60468,7 @@ VIMRuntime::make_get_set('VirtualMachineMessage', 'id', 'argument', 'text');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57542,7 +60492,154 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineMessage', 'VirtualMachineMessage'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineMetadataManagerVmMetadataOwner;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['name', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VirtualMachineMetadataManagerVmMetadataOwner', 'name');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineMetadataManagerVmMetadata;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['vmId', undef, undef, 1],
+   ['metadata', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VirtualMachineMetadataManagerVmMetadata', 'vmId', 'metadata');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineMetadataManagerVmMetadataInput;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['operation', undef, undef, 1],
+   ['vmMetadata', 'VirtualMachineMetadataManagerVmMetadata', undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VirtualMachineMetadataManagerVmMetadataInput', 'operation', 'vmMetadata');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVirtualMachineMetadataManagerVmMetadataInput;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VirtualMachineMetadataManagerVmMetadataInput', 'VirtualMachineMetadataManagerVmMetadataInput', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVirtualMachineMetadataManagerVmMetadataInput', 'VirtualMachineMetadataManagerVmMetadataInput');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineMetadataManagerVmMetadataResult;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['vmMetadata', 'VirtualMachineMetadataManagerVmMetadata', undef, 1],
+   ['error', 'LocalizedMethodFault', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VirtualMachineMetadataManagerVmMetadataResult', 'vmMetadata', 'error');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVirtualMachineMetadataManagerVmMetadataResult;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VirtualMachineMetadataManagerVmMetadataResult', 'VirtualMachineMetadataManagerVmMetadataResult', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVirtualMachineMetadataManagerVmMetadataResult', 'VirtualMachineMetadataManagerVmMetadataResult');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57566,7 +60663,7 @@ VIMRuntime::make_get_set('VirtualMachineNetworkInfo', 'network');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57590,7 +60687,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineNetworkInfo', 'VirtualMachineNetw
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57617,7 +60714,55 @@ VIMRuntime::make_get_set('VirtualMachineNetworkShaperInfo', 'enabled', 'peakBps'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package OpaqueNetworkTargetInfo;
+our @ISA = qw(VirtualMachineTargetInfo);
+
+our @property_list = (
+   ['network', 'OpaqueNetworkSummary', undef, 1],
+);
+
+
+VIMRuntime::make_get_set('OpaqueNetworkTargetInfo', 'network');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfOpaqueNetworkTargetInfo;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['OpaqueNetworkTargetInfo', 'OpaqueNetworkTargetInfo', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfOpaqueNetworkTargetInfo', 'OpaqueNetworkTargetInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57640,7 +60785,7 @@ VIMRuntime::make_get_set('VirtualMachineParallelInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57664,7 +60809,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineParallelInfo', 'VirtualMachinePar
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57689,7 +60834,7 @@ VIMRuntime::make_get_set('VirtualMachinePciPassthroughInfo', 'pciDevice', 'syste
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57713,7 +60858,79 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachinePciPassthroughInfo', 'VirtualMach
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineProfileRawData;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['extensionKey', undef, undef, 1],
+   ['objectData', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VirtualMachineProfileRawData', 'extensionKey', 'objectData');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineProfileSpec;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VirtualMachineProfileSpec');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVirtualMachineProfileSpec;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VirtualMachineProfileSpec', 'VirtualMachineProfileSpec', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVirtualMachineProfileSpec', 'VirtualMachineProfileSpec');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57740,7 +60957,7 @@ VIMRuntime::make_get_set('VirtualMachineQuestionInfo', 'id', 'text', 'choice', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57758,16 +60975,17 @@ our @property_list = (
    ['datastore', 'ManagedObjectReference', undef, 1],
    ['diskMoveType', undef, undef, 0],
    ['diskBackingInfo', 'VirtualDeviceBackingInfo', undef, 0],
+   ['profile', 'VirtualMachineProfileSpec', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualMachineRelocateSpecDiskLocator', 'diskId', 'datastore', 'diskMoveType', 'diskBackingInfo');
+VIMRuntime::make_get_set('VirtualMachineRelocateSpecDiskLocator', 'diskId', 'datastore', 'diskMoveType', 'diskBackingInfo', 'profile');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57791,7 +61009,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineRelocateSpecDiskLocator', 'Virtua
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57811,16 +61029,18 @@ our @property_list = (
    ['host', 'ManagedObjectReference', undef, 0],
    ['disk', 'VirtualMachineRelocateSpecDiskLocator', 1, 0],
    ['transform', 'VirtualMachineRelocateTransformation', undef, 0],
+   ['deviceChange', 'VirtualDeviceConfigSpec', 1, 0],
+   ['profile', 'VirtualMachineProfileSpec', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualMachineRelocateSpec', 'datastore', 'diskMoveType', 'pool', 'host', 'disk', 'transform');
+VIMRuntime::make_get_set('VirtualMachineRelocateSpec', 'datastore', 'diskMoveType', 'pool', 'host', 'disk', 'transform', 'deviceChange', 'profile');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57845,7 +61065,7 @@ VIMRuntime::make_get_set('ReplicationInfoDiskSettings', 'key', 'diskReplicationI
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57869,7 +61089,7 @@ VIMRuntime::make_get_set('ArrayOfReplicationInfoDiskSettings', 'ReplicationInfoD
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57893,7 +61113,7 @@ VIMRuntime::make_get_set('VirtualMachineRuntimeInfoDasProtectionState', 'dasProt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57931,16 +61151,17 @@ our @property_list = (
    ['offlineFeatureRequirement', 'VirtualMachineFeatureRequirement', 1, 0],
    ['featureRequirement', 'VirtualMachineFeatureRequirement', 1, 0],
    ['featureMask', 'HostFeatureMask', 1, 0],
+   ['vFlashCacheAllocation', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualMachineRuntimeInfo', 'device', 'host', 'connectionState', 'powerState', 'faultToleranceState', 'dasVmProtection', 'toolsInstallerMounted', 'suspendTime', 'bootTime', 'suspendInterval', 'question', 'memoryOverhead', 'maxCpuUsage', 'maxMemoryUsage', 'numMksConnections', 'recordReplayState', 'cleanPowerOff', 'needSecondaryReason', 'onlineStandby', 'minRequiredEVCModeKey', 'consolidationNeeded', 'offlineFeatureRequirement', 'featureRequirement', 'featureMask');
+VIMRuntime::make_get_set('VirtualMachineRuntimeInfo', 'device', 'host', 'connectionState', 'powerState', 'faultToleranceState', 'dasVmProtection', 'toolsInstallerMounted', 'suspendTime', 'bootTime', 'suspendInterval', 'question', 'memoryOverhead', 'maxCpuUsage', 'maxMemoryUsage', 'numMksConnections', 'recordReplayState', 'cleanPowerOff', 'needSecondaryReason', 'onlineStandby', 'minRequiredEVCModeKey', 'consolidationNeeded', 'offlineFeatureRequirement', 'featureRequirement', 'featureMask', 'vFlashCacheAllocation');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57967,7 +61188,7 @@ VIMRuntime::make_get_set('ScheduledHardwareUpgradeInfo', 'upgradePolicy', 'versi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -57993,7 +61214,7 @@ VIMRuntime::make_get_set('VirtualMachineScsiDiskDeviceInfo', 'disk', 'transportH
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58017,7 +61238,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineScsiDiskDeviceInfo', 'VirtualMach
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58043,7 +61264,7 @@ VIMRuntime::make_get_set('VirtualMachineScsiPassthroughInfo', 'scsiClass', 'vend
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58067,7 +61288,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineScsiPassthroughInfo', 'VirtualMac
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58090,7 +61311,7 @@ VIMRuntime::make_get_set('VirtualMachineSerialInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58114,7 +61335,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineSerialInfo', 'VirtualMachineSeria
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58139,7 +61360,7 @@ VIMRuntime::make_get_set('VirtualMachineSnapshotInfo', 'currentSnapshot', 'rootS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58173,7 +61394,7 @@ VIMRuntime::make_get_set('VirtualMachineSnapshotTree', 'snapshot', 'vm', 'name',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58197,7 +61418,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineSnapshotTree', 'VirtualMachineSna
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58220,7 +61441,7 @@ VIMRuntime::make_get_set('VirtualMachineSoundInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58244,7 +61465,56 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineSoundInfo', 'VirtualMachineSoundI
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineSriovInfo;
+our @ISA = qw(VirtualMachinePciPassthroughInfo);
+
+our @property_list = (
+   ['virtualFunction', 'boolean', undef, 1],
+   ['pnic', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VirtualMachineSriovInfo', 'virtualFunction', 'pnic');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVirtualMachineSriovInfo;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VirtualMachineSriovInfo', 'VirtualMachineSriovInfo', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVirtualMachineSriovInfo', 'VirtualMachineSriovInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58271,7 +61541,7 @@ VIMRuntime::make_get_set('VirtualMachineUsageOnDatastore', 'datastore', 'committ
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58295,7 +61565,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineUsageOnDatastore', 'VirtualMachin
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58320,7 +61590,7 @@ VIMRuntime::make_get_set('VirtualMachineStorageInfo', 'perDatastoreUsage', 'time
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58361,7 +61631,7 @@ VIMRuntime::make_get_set('VirtualMachineConfigSummary', 'name', 'template', 'vmP
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58404,7 +61674,7 @@ VIMRuntime::make_get_set('VirtualMachineQuickStats', 'overallCpuUsage', 'overall
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58435,7 +61705,7 @@ VIMRuntime::make_get_set('VirtualMachineGuestSummary', 'guestId', 'guestFullName
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58462,7 +61732,7 @@ VIMRuntime::make_get_set('VirtualMachineStorageSummary', 'committed', 'uncommitt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58493,7 +61763,7 @@ VIMRuntime::make_get_set('VirtualMachineSummary', 'vm', 'runtime', 'guest', 'con
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58517,7 +61787,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineSummary', 'VirtualMachineSummary'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58542,7 +61812,7 @@ VIMRuntime::make_get_set('VirtualMachineTargetInfo', 'name', 'configurationTag')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58567,7 +61837,7 @@ VIMRuntime::make_get_set('ToolsConfigInfoToolsLastInstallInfo', 'counter', 'faul
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58600,7 +61870,7 @@ VIMRuntime::make_get_set('ToolsConfigInfo', 'toolsVersion', 'afterPowerOn', 'aft
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58630,7 +61900,7 @@ VIMRuntime::make_get_set('VirtualMachineUsbInfo', 'description', 'vendor', 'prod
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58654,7 +61924,55 @@ VIMRuntime::make_get_set('ArrayOfVirtualMachineUsbInfo', 'VirtualMachineUsbInfo'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineVFlashModuleInfo;
+our @ISA = qw(VirtualMachineTargetInfo);
+
+our @property_list = (
+   ['vFlashModule', 'HostVFlashManagerVFlashCacheConfigInfoVFlashModuleConfigOption', undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VirtualMachineVFlashModuleInfo', 'vFlashModule');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVirtualMachineVFlashModuleInfo;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VirtualMachineVFlashModuleInfo', 'VirtualMachineVFlashModuleInfo', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVirtualMachineVFlashModuleInfo', 'VirtualMachineVFlashModuleInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58683,7 +62001,7 @@ VIMRuntime::make_get_set('VirtualHardware', 'numCPU', 'numCoresPerSocket', 'memo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58723,7 +62041,7 @@ VIMRuntime::make_get_set('VirtualHardwareOption', 'hwVersion', 'virtualDeviceOpt
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58748,7 +62066,7 @@ VIMRuntime::make_get_set('VirtualMachineImportSpec', 'configSpec', 'resPoolEntit
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58775,7 +62093,7 @@ VIMRuntime::make_get_set('CheckResult', 'vm', 'host', 'warning', 'error');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58799,7 +62117,7 @@ VIMRuntime::make_get_set('ArrayOfCheckResult', 'CheckResult');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58824,7 +62142,7 @@ VIMRuntime::make_get_set('CustomizationIPSettingsIpV6AddressSpec', 'ip', 'gatewa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58856,7 +62174,7 @@ VIMRuntime::make_get_set('CustomizationIPSettings', 'ip', 'subnetMask', 'gateway
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58884,7 +62202,7 @@ VIMRuntime::make_get_set('CustomizationSpec', 'options', 'identity', 'globalIPSe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58907,7 +62225,7 @@ VIMRuntime::make_get_set('CustomizationName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58931,7 +62249,7 @@ VIMRuntime::make_get_set('CustomizationFixedName', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58955,7 +62273,7 @@ VIMRuntime::make_get_set('CustomizationPrefixName', 'base');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -58978,7 +62296,7 @@ VIMRuntime::make_get_set('CustomizationVirtualMachineName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59001,7 +62319,7 @@ VIMRuntime::make_get_set('CustomizationUnknownName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59025,7 +62343,7 @@ VIMRuntime::make_get_set('CustomizationCustomName', 'argument');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59050,7 +62368,7 @@ VIMRuntime::make_get_set('CustomizationPassword', 'value', 'plainText');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59073,7 +62391,7 @@ VIMRuntime::make_get_set('CustomizationOptions');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59099,7 +62417,7 @@ VIMRuntime::make_get_set('CustomizationWinOptions', 'changeSID', 'deleteAccounts
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59122,7 +62440,7 @@ VIMRuntime::make_get_set('CustomizationLinuxOptions');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59149,7 +62467,7 @@ VIMRuntime::make_get_set('CustomizationGuiUnattended', 'password', 'timeZone', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59176,7 +62494,7 @@ VIMRuntime::make_get_set('CustomizationUserData', 'fullName', 'orgName', 'comput
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59200,7 +62518,7 @@ VIMRuntime::make_get_set('CustomizationGuiRunOnce', 'commandList');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59227,7 +62545,7 @@ VIMRuntime::make_get_set('CustomizationIdentification', 'joinWorkgroup', 'joinDo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59252,7 +62570,7 @@ VIMRuntime::make_get_set('CustomizationLicenseFilePrintData', 'autoMode', 'autoU
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59275,7 +62593,7 @@ VIMRuntime::make_get_set('CustomizationIdentitySettings');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59299,7 +62617,7 @@ VIMRuntime::make_get_set('CustomizationSysprepText', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59327,7 +62645,7 @@ VIMRuntime::make_get_set('CustomizationSysprep', 'guiUnattended', 'userData', 'g
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59354,7 +62672,7 @@ VIMRuntime::make_get_set('CustomizationLinuxPrep', 'hostName', 'domain', 'timeZo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59379,7 +62697,7 @@ VIMRuntime::make_get_set('CustomizationGlobalIPSettings', 'dnsSuffixList', 'dnsS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59402,7 +62720,7 @@ VIMRuntime::make_get_set('CustomizationIpGenerator');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59425,7 +62743,7 @@ VIMRuntime::make_get_set('CustomizationDhcpIpGenerator');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59449,7 +62767,7 @@ VIMRuntime::make_get_set('CustomizationFixedIp', 'ipAddress');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59472,7 +62790,7 @@ VIMRuntime::make_get_set('CustomizationUnknownIpGenerator');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59496,7 +62814,7 @@ VIMRuntime::make_get_set('CustomizationCustomIpGenerator', 'argument');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59519,7 +62837,7 @@ VIMRuntime::make_get_set('CustomizationIpV6Generator');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59543,7 +62861,7 @@ VIMRuntime::make_get_set('ArrayOfCustomizationIpV6Generator', 'CustomizationIpV6
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59566,7 +62884,7 @@ VIMRuntime::make_get_set('CustomizationDhcpIpV6Generator');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59589,7 +62907,7 @@ VIMRuntime::make_get_set('CustomizationStatelessIpV6Generator');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59614,7 +62932,7 @@ VIMRuntime::make_get_set('CustomizationFixedIpV6', 'ipAddress', 'subnetMask');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59637,7 +62955,7 @@ VIMRuntime::make_get_set('CustomizationAutoIpV6Generator');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59660,7 +62978,7 @@ VIMRuntime::make_get_set('CustomizationUnknownIpV6Generator');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59684,7 +63002,7 @@ VIMRuntime::make_get_set('CustomizationCustomIpV6Generator', 'argument');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59709,7 +63027,7 @@ VIMRuntime::make_get_set('CustomizationAdapterMapping', 'macAddress', 'adapter')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59733,7 +63051,7 @@ VIMRuntime::make_get_set('ArrayOfCustomizationAdapterMapping', 'CustomizationAda
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59759,7 +63077,7 @@ VIMRuntime::make_get_set('HostDiskMappingPartitionInfo', 'name', 'fileSystem', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59785,7 +63103,7 @@ VIMRuntime::make_get_set('HostDiskMappingInfo', 'physicalPartition', 'name', 'ex
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59811,7 +63129,7 @@ VIMRuntime::make_get_set('HostDiskMappingPartitionOption', 'name', 'fileSystem',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59835,7 +63153,7 @@ VIMRuntime::make_get_set('ArrayOfHostDiskMappingPartitionOption', 'HostDiskMappi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59860,7 +63178,7 @@ VIMRuntime::make_get_set('HostDiskMappingOption', 'physicalPartition', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59883,7 +63201,7 @@ VIMRuntime::make_get_set('ParaVirtualSCSIController');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59906,7 +63224,53 @@ VIMRuntime::make_get_set('ParaVirtualSCSIControllerOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualAHCIController;
+our @ISA = qw(VirtualSATAController);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VirtualAHCIController');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualAHCIControllerOption;
+our @ISA = qw(VirtualSATAControllerOption);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VirtualAHCIControllerOption');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59929,7 +63293,7 @@ VIMRuntime::make_get_set('VirtualBusLogicController');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59952,7 +63316,7 @@ VIMRuntime::make_get_set('VirtualBusLogicControllerOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59975,7 +63339,7 @@ VIMRuntime::make_get_set('VirtualCdromIsoBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -59999,7 +63363,7 @@ VIMRuntime::make_get_set('VirtualCdromPassthroughBackingInfo', 'exclusive');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60023,7 +63387,7 @@ VIMRuntime::make_get_set('VirtualCdromRemotePassthroughBackingInfo', 'exclusive'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60046,7 +63410,7 @@ VIMRuntime::make_get_set('VirtualCdromAtapiBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60069,7 +63433,7 @@ VIMRuntime::make_get_set('VirtualCdromRemoteAtapiBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60092,7 +63456,7 @@ VIMRuntime::make_get_set('VirtualCdrom');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60115,7 +63479,7 @@ VIMRuntime::make_get_set('VirtualCdromIsoBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60139,7 +63503,7 @@ VIMRuntime::make_get_set('VirtualCdromPassthroughBackingOption', 'exclusive');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60163,7 +63527,7 @@ VIMRuntime::make_get_set('VirtualCdromRemotePassthroughBackingOption', 'exclusiv
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60186,7 +63550,7 @@ VIMRuntime::make_get_set('VirtualCdromAtapiBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60209,7 +63573,7 @@ VIMRuntime::make_get_set('VirtualCdromRemoteAtapiBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60232,7 +63596,7 @@ VIMRuntime::make_get_set('VirtualCdromOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60257,7 +63621,7 @@ VIMRuntime::make_get_set('VirtualController', 'busNumber', 'device');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60282,7 +63646,7 @@ VIMRuntime::make_get_set('VirtualControllerOption', 'devices', 'supportedDevice'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60305,7 +63669,7 @@ VIMRuntime::make_get_set('VirtualDeviceBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60321,16 +63685,17 @@ our @ISA = qw(VirtualDeviceBackingInfo);
 our @property_list = (
    ['fileName', undef, undef, 1],
    ['datastore', 'ManagedObjectReference', undef, 0],
+   ['backingObjectId', undef, undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualDeviceFileBackingInfo', 'fileName', 'datastore');
+VIMRuntime::make_get_set('VirtualDeviceFileBackingInfo', 'fileName', 'datastore', 'backingObjectId');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60355,7 +63720,7 @@ VIMRuntime::make_get_set('VirtualDeviceDeviceBackingInfo', 'deviceName', 'useAut
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60380,7 +63745,7 @@ VIMRuntime::make_get_set('VirtualDeviceRemoteDeviceBackingInfo', 'deviceName', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60404,7 +63769,7 @@ VIMRuntime::make_get_set('VirtualDevicePipeBackingInfo', 'pipeName');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60430,7 +63795,7 @@ VIMRuntime::make_get_set('VirtualDeviceURIBackingInfo', 'serviceURI', 'direction
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60457,7 +63822,7 @@ VIMRuntime::make_get_set('VirtualDeviceConnectInfo', 'startConnected', 'allowGue
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60480,7 +63845,7 @@ VIMRuntime::make_get_set('VirtualDeviceBusSlotInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60504,7 +63869,7 @@ VIMRuntime::make_get_set('VirtualDevicePciBusSlotInfo', 'pciSlotNumber');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60534,7 +63899,7 @@ VIMRuntime::make_get_set('VirtualDevice', 'key', 'deviceInfo', 'backing', 'conne
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60558,7 +63923,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualDevice', 'VirtualDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60582,7 +63947,7 @@ VIMRuntime::make_get_set('VirtualDeviceBackingOption', 'type');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60606,7 +63971,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualDeviceBackingOption', 'VirtualDeviceBack
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60630,7 +63995,7 @@ VIMRuntime::make_get_set('VirtualDeviceFileBackingOption', 'fileNameExtensions')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60654,7 +64019,7 @@ VIMRuntime::make_get_set('VirtualDeviceDeviceBackingOption', 'autoDetectAvailabl
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60678,7 +64043,7 @@ VIMRuntime::make_get_set('VirtualDeviceRemoteDeviceBackingOption', 'autoDetectAv
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60701,7 +64066,7 @@ VIMRuntime::make_get_set('VirtualDevicePipeBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60725,7 +64090,7 @@ VIMRuntime::make_get_set('VirtualDeviceURIBackingOption', 'directions');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60750,7 +64115,7 @@ VIMRuntime::make_get_set('VirtualDeviceConnectOption', 'startConnected', 'allowG
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60774,7 +64139,7 @@ VIMRuntime::make_get_set('VirtualDeviceBusSlotOption', 'type');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60808,7 +64173,7 @@ VIMRuntime::make_get_set('VirtualDeviceOption', 'type', 'connectOption', 'busSlo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60832,7 +64197,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualDeviceOption', 'VirtualDeviceOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60849,16 +64214,17 @@ our @property_list = (
    ['operation', 'VirtualDeviceConfigSpecOperation', undef, 0],
    ['fileOperation', 'VirtualDeviceConfigSpecFileOperation', undef, 0],
    ['device', 'VirtualDevice', undef, 1],
+   ['profile', 'VirtualMachineProfileSpec', 1, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualDeviceConfigSpec', 'operation', 'fileOperation', 'device');
+VIMRuntime::make_get_set('VirtualDeviceConfigSpec', 'operation', 'fileOperation', 'device', 'profile');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60882,7 +64248,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualDeviceConfigSpec', 'VirtualDeviceConfigS
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60911,7 +64277,7 @@ VIMRuntime::make_get_set('VirtualDiskSparseVer1BackingInfo', 'diskMode', 'split'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60942,7 +64308,7 @@ VIMRuntime::make_get_set('VirtualDiskSparseVer2BackingInfo', 'diskMode', 'split'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -60970,7 +64336,7 @@ VIMRuntime::make_get_set('VirtualDiskFlatVer1BackingInfo', 'diskMode', 'split', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61005,7 +64371,7 @@ VIMRuntime::make_get_set('VirtualDiskFlatVer2BackingInfo', 'diskMode', 'split', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61037,7 +64403,7 @@ VIMRuntime::make_get_set('VirtualDiskSeSparseBackingInfo', 'diskMode', 'writeThr
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61063,7 +64429,7 @@ VIMRuntime::make_get_set('VirtualDiskRawDiskVer2BackingInfo', 'descriptorFileNam
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61087,7 +64453,7 @@ VIMRuntime::make_get_set('VirtualDiskPartitionedRawDiskVer2BackingInfo', 'partit
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61118,7 +64484,35 @@ VIMRuntime::make_get_set('VirtualDiskRawDiskMappingVer1BackingInfo', 'lunUuid', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualDiskVFlashCacheConfigInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['vFlashModule', undef, undef, 0],
+   ['reservationInMB', undef, undef, 0],
+   ['cacheConsistencyType', undef, undef, 0],
+   ['cacheMode', undef, undef, 0],
+   ['blockSizeInKB', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VirtualDiskVFlashCacheConfigInfo', 'vFlashModule', 'reservationInMB', 'cacheConsistencyType', 'cacheMode', 'blockSizeInKB');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61133,18 +64527,21 @@ our @ISA = qw(VirtualDevice);
 
 our @property_list = (
    ['capacityInKB', undef, undef, 1],
+   ['capacityInBytes', undef, undef, 0],
    ['shares', 'SharesInfo', undef, 0],
    ['storageIOAllocation', 'StorageIOAllocationInfo', undef, 0],
+   ['diskObjectId', undef, undef, 0],
+   ['vFlashCacheConfigInfo', 'VirtualDiskVFlashCacheConfigInfo', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualDisk', 'capacityInKB', 'shares', 'storageIOAllocation');
+VIMRuntime::make_get_set('VirtualDisk', 'capacityInKB', 'capacityInBytes', 'shares', 'storageIOAllocation', 'diskObjectId', 'vFlashCacheConfigInfo');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61168,7 +64565,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualDisk', 'VirtualDisk');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61193,7 +64590,7 @@ VIMRuntime::make_get_set('VirtualDiskId', 'vm', 'diskId');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61220,7 +64617,7 @@ VIMRuntime::make_get_set('VirtualDiskSparseVer1BackingOption', 'diskModes', 'spl
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61249,7 +64646,7 @@ VIMRuntime::make_get_set('VirtualDiskSparseVer2BackingOption', 'diskMode', 'spli
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61276,7 +64673,7 @@ VIMRuntime::make_get_set('VirtualDiskFlatVer1BackingOption', 'diskMode', 'split'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61301,7 +64698,7 @@ VIMRuntime::make_get_set('VirtualDiskDeltaDiskFormatsSupported', 'datastoreType'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61325,7 +64722,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualDiskDeltaDiskFormatsSupported', 'Virtual
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61358,7 +64755,7 @@ VIMRuntime::make_get_set('VirtualDiskFlatVer2BackingOption', 'diskMode', 'split'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61387,7 +64784,7 @@ VIMRuntime::make_get_set('VirtualDiskSeSparseBackingOption', 'diskMode', 'writeT
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61412,7 +64809,7 @@ VIMRuntime::make_get_set('VirtualDiskRawDiskVer2BackingOption', 'descriptorFileN
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61435,7 +64832,7 @@ VIMRuntime::make_get_set('VirtualDiskPartitionedRawDiskVer2BackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61462,7 +64859,34 @@ VIMRuntime::make_get_set('VirtualDiskRawDiskMappingVer1BackingOption', 'descript
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualDiskOptionVFlashCacheConfigOption;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['cacheConsistencyType', 'ChoiceOption', undef, 1],
+   ['cacheMode', 'ChoiceOption', undef, 1],
+   ['reservationInMB', 'LongOption', undef, 1],
+   ['blockSizeInKB', 'LongOption', undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VirtualDiskOptionVFlashCacheConfigOption', 'cacheConsistencyType', 'cacheMode', 'reservationInMB', 'blockSizeInKB');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61478,16 +64902,41 @@ our @ISA = qw(VirtualDeviceOption);
 our @property_list = (
    ['capacityInKB', 'LongOption', undef, 1],
    ['ioAllocationOption', 'StorageIOAllocationOption', undef, 0],
+   ['vFlashCacheConfigOption', 'VirtualDiskOptionVFlashCacheConfigOption', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualDiskOption', 'capacityInKB', 'ioAllocationOption');
+VIMRuntime::make_get_set('VirtualDiskOption', 'capacityInKB', 'ioAllocationOption', 'vFlashCacheConfigOption');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualDiskConfigSpec;
+our @ISA = qw(VirtualDeviceConfigSpec);
+
+our @property_list = (
+   ['migrateCache', 'boolean', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VirtualDiskConfigSpec', 'migrateCache');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61510,7 +64959,7 @@ VIMRuntime::make_get_set('VirtualE1000');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61533,7 +64982,7 @@ VIMRuntime::make_get_set('VirtualE1000Option');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61556,7 +65005,7 @@ VIMRuntime::make_get_set('VirtualE1000e');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61579,7 +65028,7 @@ VIMRuntime::make_get_set('VirtualE1000eOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61602,7 +65051,7 @@ VIMRuntime::make_get_set('VirtualEnsoniq1371');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61625,7 +65074,7 @@ VIMRuntime::make_get_set('VirtualEnsoniq1371Option');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61650,7 +65099,7 @@ VIMRuntime::make_get_set('VirtualEthernetCardNetworkBackingInfo', 'network', 'in
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61673,7 +65122,7 @@ VIMRuntime::make_get_set('VirtualEthernetCardLegacyNetworkBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61697,7 +65146,32 @@ VIMRuntime::make_get_set('VirtualEthernetCardDistributedVirtualPortBackingInfo',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualEthernetCardOpaqueNetworkBackingInfo;
+our @ISA = qw(VirtualDeviceBackingInfo);
+
+our @property_list = (
+   ['opaqueNetworkId', undef, undef, 1],
+   ['opaqueNetworkType', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VirtualEthernetCardOpaqueNetworkBackingInfo', 'opaqueNetworkId', 'opaqueNetworkType');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61723,7 +65197,7 @@ VIMRuntime::make_get_set('VirtualEthernetCard', 'addressType', 'macAddress', 'wa
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61746,7 +65220,30 @@ VIMRuntime::make_get_set('VirtualEthernetCardNetworkBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualEthernetCardOpaqueNetworkBackingOption;
+our @ISA = qw(VirtualDeviceBackingOption);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VirtualEthernetCardOpaqueNetworkBackingOption');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61769,7 +65266,7 @@ VIMRuntime::make_get_set('VirtualEthernetCardLegacyNetworkBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61792,7 +65289,7 @@ VIMRuntime::make_get_set('VirtualEthernetCardDVPortBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61819,7 +65316,7 @@ VIMRuntime::make_get_set('VirtualEthernetCardOption', 'supportedOUI', 'macType',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61842,7 +65339,7 @@ VIMRuntime::make_get_set('VirtualFloppyImageBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61865,7 +65362,7 @@ VIMRuntime::make_get_set('VirtualFloppyDeviceBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61888,7 +65385,7 @@ VIMRuntime::make_get_set('VirtualFloppyRemoteDeviceBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61911,7 +65408,7 @@ VIMRuntime::make_get_set('VirtualFloppy');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61934,7 +65431,7 @@ VIMRuntime::make_get_set('VirtualFloppyImageBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61957,7 +65454,7 @@ VIMRuntime::make_get_set('VirtualFloppyDeviceBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -61980,7 +65477,7 @@ VIMRuntime::make_get_set('VirtualFloppyRemoteDeviceBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62003,7 +65500,7 @@ VIMRuntime::make_get_set('VirtualFloppyOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62026,7 +65523,7 @@ VIMRuntime::make_get_set('VirtualHdAudioCard');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62049,7 +65546,7 @@ VIMRuntime::make_get_set('VirtualHdAudioCardOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62072,7 +65569,7 @@ VIMRuntime::make_get_set('VirtualIDEController');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62097,7 +65594,7 @@ VIMRuntime::make_get_set('VirtualIDEControllerOption', 'numIDEDisks', 'numIDECdr
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62120,7 +65617,7 @@ VIMRuntime::make_get_set('VirtualKeyboard');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62143,7 +65640,7 @@ VIMRuntime::make_get_set('VirtualKeyboardOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62166,7 +65663,7 @@ VIMRuntime::make_get_set('VirtualLsiLogicController');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62189,7 +65686,7 @@ VIMRuntime::make_get_set('VirtualLsiLogicControllerOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62212,7 +65709,7 @@ VIMRuntime::make_get_set('VirtualLsiLogicSASController');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62235,7 +65732,7 @@ VIMRuntime::make_get_set('VirtualLsiLogicSASControllerOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62258,7 +65755,7 @@ VIMRuntime::make_get_set('VirtualPCIController');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62282,16 +65779,17 @@ our @property_list = (
    ['numSasSCSIControllers', 'IntOption', undef, 0],
    ['numVmxnet3EthernetCards', 'IntOption', undef, 0],
    ['numParaVirtualSCSIControllers', 'IntOption', undef, 0],
+   ['numSATAControllers', 'IntOption', undef, 0],
 );
 
 
-VIMRuntime::make_get_set('VirtualPCIControllerOption', 'numSCSIControllers', 'numEthernetCards', 'numVideoCards', 'numSoundCards', 'numVmiRoms', 'numVmciDevices', 'numPCIPassthroughDevices', 'numSasSCSIControllers', 'numVmxnet3EthernetCards', 'numParaVirtualSCSIControllers');
+VIMRuntime::make_get_set('VirtualPCIControllerOption', 'numSCSIControllers', 'numEthernetCards', 'numVideoCards', 'numSoundCards', 'numVmiRoms', 'numVmciDevices', 'numPCIPassthroughDevices', 'numSasSCSIControllers', 'numVmxnet3EthernetCards', 'numParaVirtualSCSIControllers', 'numSATAControllers');
 
 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62318,7 +65816,7 @@ VIMRuntime::make_get_set('VirtualPCIPassthroughDeviceBackingInfo', 'id', 'device
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62341,7 +65839,7 @@ VIMRuntime::make_get_set('VirtualPCIPassthrough');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62364,7 +65862,7 @@ VIMRuntime::make_get_set('VirtualPCIPassthroughDeviceBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62387,7 +65885,7 @@ VIMRuntime::make_get_set('VirtualPCIPassthroughOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62410,7 +65908,7 @@ VIMRuntime::make_get_set('VirtualPCNet32');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62434,7 +65932,7 @@ VIMRuntime::make_get_set('VirtualPCNet32Option', 'supportsMorphing');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62457,7 +65955,7 @@ VIMRuntime::make_get_set('VirtualPS2Controller');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62482,7 +65980,7 @@ VIMRuntime::make_get_set('VirtualPS2ControllerOption', 'numKeyboards', 'numPoint
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62505,7 +66003,7 @@ VIMRuntime::make_get_set('VirtualParallelPortFileBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62528,7 +66026,7 @@ VIMRuntime::make_get_set('VirtualParallelPortDeviceBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62551,7 +66049,7 @@ VIMRuntime::make_get_set('VirtualParallelPort');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62574,7 +66072,7 @@ VIMRuntime::make_get_set('VirtualParallelPortFileBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62597,7 +66095,7 @@ VIMRuntime::make_get_set('VirtualParallelPortDeviceBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62620,7 +66118,7 @@ VIMRuntime::make_get_set('VirtualParallelPortOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62644,7 +66142,7 @@ VIMRuntime::make_get_set('VirtualPointingDeviceDeviceBackingInfo', 'hostPointing
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62667,7 +66165,7 @@ VIMRuntime::make_get_set('VirtualPointingDevice');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62691,7 +66189,7 @@ VIMRuntime::make_get_set('VirtualPointingDeviceBackingOption', 'hostPointingDevi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62714,7 +66212,55 @@ VIMRuntime::make_get_set('VirtualPointingDeviceOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualSATAController;
+our @ISA = qw(VirtualController);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VirtualSATAController');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualSATAControllerOption;
+our @ISA = qw(VirtualControllerOption);
+
+our @property_list = (
+   ['numSATADisks', 'IntOption', undef, 1],
+   ['numSATACdroms', 'IntOption', undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VirtualSATAControllerOption', 'numSATADisks', 'numSATACdroms');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62738,7 +66284,7 @@ VIMRuntime::make_get_set('ArrayOfVirtualSCSISharing', 'VirtualSCSISharing');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62764,7 +66310,7 @@ VIMRuntime::make_get_set('VirtualSCSIController', 'hotAddRemove', 'sharedBus', '
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62794,7 +66340,7 @@ VIMRuntime::make_get_set('VirtualSCSIControllerOption', 'numSCSIDisks', 'numSCSI
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62817,7 +66363,7 @@ VIMRuntime::make_get_set('VirtualSCSIPassthroughDeviceBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62840,7 +66386,7 @@ VIMRuntime::make_get_set('VirtualSCSIPassthrough');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62863,7 +66409,7 @@ VIMRuntime::make_get_set('VirtualSCSIPassthroughDeviceBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62886,7 +66432,7 @@ VIMRuntime::make_get_set('VirtualSCSIPassthroughOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62909,7 +66455,7 @@ VIMRuntime::make_get_set('VirtualSIOController');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62935,7 +66481,7 @@ VIMRuntime::make_get_set('VirtualSIOControllerOption', 'numFloppyDrives', 'numSe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62958,7 +66504,7 @@ VIMRuntime::make_get_set('VirtualSerialPortFileBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -62981,7 +66527,7 @@ VIMRuntime::make_get_set('VirtualSerialPortDeviceBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63006,7 +66552,7 @@ VIMRuntime::make_get_set('VirtualSerialPortPipeBackingInfo', 'endpoint', 'noRxLo
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63029,7 +66575,7 @@ VIMRuntime::make_get_set('VirtualSerialPortURIBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63052,7 +66598,7 @@ VIMRuntime::make_get_set('VirtualSerialPortThinPrintBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63076,7 +66622,7 @@ VIMRuntime::make_get_set('VirtualSerialPort', 'yieldOnPoll');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63099,7 +66645,7 @@ VIMRuntime::make_get_set('VirtualSerialPortFileBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63122,7 +66668,7 @@ VIMRuntime::make_get_set('VirtualSerialPortDeviceBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63147,7 +66693,7 @@ VIMRuntime::make_get_set('VirtualSerialPortPipeBackingOption', 'endpoint', 'noRx
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63170,7 +66716,7 @@ VIMRuntime::make_get_set('VirtualSerialPortURIBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63193,7 +66739,7 @@ VIMRuntime::make_get_set('VirtualSerialPortThinPrintBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63217,7 +66763,7 @@ VIMRuntime::make_get_set('VirtualSerialPortOption', 'yieldOnPoll');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63240,7 +66786,7 @@ VIMRuntime::make_get_set('VirtualSoundBlaster16');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63263,7 +66809,7 @@ VIMRuntime::make_get_set('VirtualSoundBlaster16Option');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63286,7 +66832,7 @@ VIMRuntime::make_get_set('VirtualSoundCardDeviceBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63309,7 +66855,7 @@ VIMRuntime::make_get_set('VirtualSoundCard');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63332,7 +66878,7 @@ VIMRuntime::make_get_set('VirtualSoundCardDeviceBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63355,7 +66901,104 @@ VIMRuntime::make_get_set('VirtualSoundCardOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualSriovEthernetCardSriovBackingInfo;
+our @ISA = qw(VirtualDeviceBackingInfo);
+
+our @property_list = (
+   ['physicalFunctionBacking', 'VirtualPCIPassthroughDeviceBackingInfo', undef, 0],
+   ['virtualFunctionBacking', 'VirtualPCIPassthroughDeviceBackingInfo', undef, 0],
+   ['virtualFunctionIndex', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VirtualSriovEthernetCardSriovBackingInfo', 'physicalFunctionBacking', 'virtualFunctionBacking', 'virtualFunctionIndex');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualSriovEthernetCard;
+our @ISA = qw(VirtualEthernetCard);
+
+our @property_list = (
+   ['allowGuestOSMtuChange', 'boolean', undef, 0],
+   ['sriovBacking', 'VirtualSriovEthernetCardSriovBackingInfo', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VirtualSriovEthernetCard', 'allowGuestOSMtuChange', 'sriovBacking');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualSriovEthernetCardSriovBackingOption;
+our @ISA = qw(VirtualDeviceBackingOption);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VirtualSriovEthernetCardSriovBackingOption');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualSriovEthernetCardOption;
+our @ISA = qw(VirtualEthernetCardOption);
+
+our @property_list = (
+);
+
+
+VIMRuntime::make_get_set('VirtualSriovEthernetCardOption');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63378,7 +67021,7 @@ VIMRuntime::make_get_set('VirtualUSBUSBBackingInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63402,7 +67045,7 @@ VIMRuntime::make_get_set('VirtualUSBRemoteHostBackingInfo', 'hostname');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63426,7 +67069,7 @@ VIMRuntime::make_get_set('VirtualUSBRemoteClientBackingInfo', 'hostname');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63454,7 +67097,7 @@ VIMRuntime::make_get_set('VirtualUSB', 'connected', 'vendor', 'product', 'family
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63478,7 +67121,7 @@ VIMRuntime::make_get_set('VirtualUSBControllerPciBusSlotInfo', 'ehciPciSlotNumbe
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63503,7 +67146,7 @@ VIMRuntime::make_get_set('VirtualUSBController', 'autoConnectDevices', 'ehciEnab
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63529,7 +67172,7 @@ VIMRuntime::make_get_set('VirtualUSBControllerOption', 'autoConnectDevices', 'eh
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63552,7 +67195,7 @@ VIMRuntime::make_get_set('VirtualUSBUSBBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63575,7 +67218,7 @@ VIMRuntime::make_get_set('VirtualUSBRemoteHostBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63598,7 +67241,7 @@ VIMRuntime::make_get_set('VirtualUSBRemoteClientBackingOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63621,7 +67264,7 @@ VIMRuntime::make_get_set('VirtualUSBOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63645,7 +67288,7 @@ VIMRuntime::make_get_set('VirtualUSBXHCIController', 'autoConnectDevices');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63670,7 +67313,7 @@ VIMRuntime::make_get_set('VirtualUSBXHCIControllerOption', 'autoConnectDevices',
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63695,7 +67338,7 @@ VIMRuntime::make_get_set('VirtualMachineVMCIDevice', 'id', 'allowUnrestrictedCom
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63719,7 +67362,7 @@ VIMRuntime::make_get_set('VirtualMachineVMCIDeviceOption', 'allowUnrestrictedCom
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63742,7 +67385,7 @@ VIMRuntime::make_get_set('VirtualMachineVMIROM');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63765,7 +67408,7 @@ VIMRuntime::make_get_set('VirtualVMIROMOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63793,7 +67436,7 @@ VIMRuntime::make_get_set('VirtualMachineVideoCard', 'videoRamSizeInKB', 'numDisp
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63821,7 +67464,7 @@ VIMRuntime::make_get_set('VirtualVideoCardOption', 'videoRamSizeInKB', 'numDispl
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63844,7 +67487,7 @@ VIMRuntime::make_get_set('VirtualVmxnet');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63867,7 +67510,7 @@ VIMRuntime::make_get_set('VirtualVmxnet2');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63890,7 +67533,7 @@ VIMRuntime::make_get_set('VirtualVmxnet2Option');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63913,7 +67556,7 @@ VIMRuntime::make_get_set('VirtualVmxnet3');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63936,7 +67579,7 @@ VIMRuntime::make_get_set('VirtualVmxnet3Option');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63959,7 +67602,7 @@ VIMRuntime::make_get_set('VirtualVmxnetOption');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -63985,7 +67628,7 @@ VIMRuntime::make_get_set('GuestFileAttributes', 'modificationTime', 'accessTime'
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64011,7 +67654,7 @@ VIMRuntime::make_get_set('GuestPosixFileAttributes', 'ownerId', 'groupId', 'perm
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64037,7 +67680,7 @@ VIMRuntime::make_get_set('GuestWindowsFileAttributes', 'hidden', 'readOnly', 'cr
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64064,7 +67707,7 @@ VIMRuntime::make_get_set('GuestFileInfo', 'path', 'type', 'size', 'attributes');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64088,7 +67731,7 @@ VIMRuntime::make_get_set('ArrayOfGuestFileInfo', 'GuestFileInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64113,7 +67756,7 @@ VIMRuntime::make_get_set('GuestListFileInfo', 'files', 'remaining');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64139,7 +67782,7 @@ VIMRuntime::make_get_set('FileTransferInformation', 'attributes', 'size', 'url')
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64163,7 +67806,7 @@ VIMRuntime::make_get_set('GuestAuthentication', 'interactiveSession');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64188,7 +67831,7 @@ VIMRuntime::make_get_set('NamePasswordAuthentication', 'username', 'password');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64215,7 +67858,7 @@ VIMRuntime::make_get_set('GuestProgramSpec', 'programPath', 'arguments', 'workin
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64239,7 +67882,7 @@ VIMRuntime::make_get_set('GuestWindowsProgramSpec', 'startMinimized');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64269,7 +67912,7 @@ VIMRuntime::make_get_set('GuestProcessInfo', 'name', 'pid', 'owner', 'cmdLine', 
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64293,7 +67936,7 @@ VIMRuntime::make_get_set('ArrayOfGuestProcessInfo', 'GuestProcessInfo');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64317,7 +67960,7 @@ VIMRuntime::make_get_set('SSPIAuthentication', 'sspiToken');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64341,7 +67984,633 @@ VIMRuntime::make_get_set('TicketedSessionAuthentication', 'ticket');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanClusterConfigInfoHostDefaultInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['uuid', undef, undef, 0],
+   ['autoClaimStorage', 'boolean', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanClusterConfigInfoHostDefaultInfo', 'uuid', 'autoClaimStorage');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanClusterConfigInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['enabled', 'boolean', undef, 0],
+   ['defaultConfig', 'VsanClusterConfigInfoHostDefaultInfo', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanClusterConfigInfo', 'enabled', 'defaultConfig');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostClusterStatusStateCompletionEstimate;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['completeTime', undef, undef, 0],
+   ['percentComplete', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanHostClusterStatusStateCompletionEstimate', 'completeTime', 'percentComplete');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostClusterStatusState;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['state', undef, undef, 1],
+   ['completion', 'VsanHostClusterStatusStateCompletionEstimate', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanHostClusterStatusState', 'state', 'completion');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostClusterStatus;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['uuid', undef, undef, 0],
+   ['nodeUuid', undef, undef, 0],
+   ['health', undef, undef, 1],
+   ['nodeState', 'VsanHostClusterStatusState', undef, 1],
+   ['memberUuid', undef, 1, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanHostClusterStatus', 'uuid', 'nodeUuid', 'health', 'nodeState', 'memberUuid');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostConfigInfoStorageInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['autoClaimStorage', 'boolean', undef, 0],
+   ['diskMapping', 'VsanHostDiskMapping', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanHostConfigInfoStorageInfo', 'autoClaimStorage', 'diskMapping');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostConfigInfoClusterInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['uuid', undef, undef, 0],
+   ['nodeUuid', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanHostConfigInfoClusterInfo', 'uuid', 'nodeUuid');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostConfigInfoNetworkInfoPortConfig;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['ipConfig', 'VsanHostIpConfig', undef, 0],
+   ['device', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VsanHostConfigInfoNetworkInfoPortConfig', 'ipConfig', 'device');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVsanHostConfigInfoNetworkInfoPortConfig;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VsanHostConfigInfoNetworkInfoPortConfig', 'VsanHostConfigInfoNetworkInfoPortConfig', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVsanHostConfigInfoNetworkInfoPortConfig', 'VsanHostConfigInfoNetworkInfoPortConfig');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostConfigInfoNetworkInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['port', 'VsanHostConfigInfoNetworkInfoPortConfig', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanHostConfigInfoNetworkInfo', 'port');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostConfigInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['enabled', 'boolean', undef, 0],
+   ['hostSystem', 'ManagedObjectReference', undef, 0],
+   ['clusterInfo', 'VsanHostConfigInfoClusterInfo', undef, 0],
+   ['storageInfo', 'VsanHostConfigInfoStorageInfo', undef, 0],
+   ['networkInfo', 'VsanHostConfigInfoNetworkInfo', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanHostConfigInfo', 'enabled', 'hostSystem', 'clusterInfo', 'storageInfo', 'networkInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVsanHostConfigInfo;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VsanHostConfigInfo', 'VsanHostConfigInfo', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVsanHostConfigInfo', 'VsanHostConfigInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostDecommissionMode;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['objectAction', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VsanHostDecommissionMode', 'objectAction');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostDiskMapResult;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['mapping', 'VsanHostDiskMapping', undef, 1],
+   ['diskResult', 'VsanHostDiskResult', 1, 0],
+   ['error', 'LocalizedMethodFault', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanHostDiskMapResult', 'mapping', 'diskResult', 'error');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVsanHostDiskMapResult;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VsanHostDiskMapResult', 'VsanHostDiskMapResult', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVsanHostDiskMapResult', 'VsanHostDiskMapResult');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostDiskMapping;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['ssd', 'HostScsiDisk', undef, 1],
+   ['nonSsd', 'HostScsiDisk', 1, 1],
+);
+
+
+VIMRuntime::make_get_set('VsanHostDiskMapping', 'ssd', 'nonSsd');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVsanHostDiskMapping;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VsanHostDiskMapping', 'VsanHostDiskMapping', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVsanHostDiskMapping', 'VsanHostDiskMapping');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostDiskResult;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['disk', 'HostScsiDisk', undef, 1],
+   ['state', undef, undef, 1],
+   ['vsanUuid', undef, undef, 0],
+   ['error', 'LocalizedMethodFault', undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanHostDiskResult', 'disk', 'state', 'vsanUuid', 'error');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVsanHostDiskResult;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VsanHostDiskResult', 'VsanHostDiskResult', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVsanHostDiskResult', 'VsanHostDiskResult');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostIpConfig;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['upstreamIpAddress', undef, undef, 1],
+   ['downstreamIpAddress', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VsanHostIpConfig', 'upstreamIpAddress', 'downstreamIpAddress');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostMembershipInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['nodeUuid', undef, undef, 1],
+   ['hostname', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VsanHostMembershipInfo', 'nodeUuid', 'hostname');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVsanHostMembershipInfo;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VsanHostMembershipInfo', 'VsanHostMembershipInfo', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVsanHostMembershipInfo', 'VsanHostMembershipInfo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostRuntimeInfoDiskIssue;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['diskId', undef, undef, 1],
+   ['issue', undef, undef, 1],
+);
+
+
+VIMRuntime::make_get_set('VsanHostRuntimeInfoDiskIssue', 'diskId', 'issue');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package ArrayOfVsanHostRuntimeInfoDiskIssue;
+our @ISA = qw(ComplexType);
+
+our @property_list = (
+   ['VsanHostRuntimeInfoDiskIssue', 'VsanHostRuntimeInfoDiskIssue', 1, 0],
+);
+
+
+VIMRuntime::make_get_set('ArrayOfVsanHostRuntimeInfoDiskIssue', 'VsanHostRuntimeInfoDiskIssue');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
+}
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostRuntimeInfo;
+our @ISA = qw(DynamicData);
+
+our @property_list = (
+   ['membershipList', 'VsanHostMembershipInfo', 1, 0],
+   ['diskIssues', 'VsanHostRuntimeInfoDiskIssue', 1, 0],
+   ['accessGenNo', undef, undef, 0],
+);
+
+
+VIMRuntime::make_get_set('VsanHostRuntimeInfo', 'membershipList', 'diskIssues', 'accessGenNo');
+
+
+sub get_property_list {
+   my $class = shift;
+   my @super_list = $class->SUPER::get_property_list();
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64366,7 +68635,7 @@ VIMRuntime::make_get_set('DynamicArray', 'dynamicType', 'val');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64391,7 +68660,7 @@ VIMRuntime::make_get_set('DynamicData', 'dynamicType', 'dynamicProperty');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64416,7 +68685,7 @@ VIMRuntime::make_get_set('DynamicProperty', 'name', 'val');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64440,7 +68709,7 @@ VIMRuntime::make_get_set('ArrayOfDynamicProperty', 'DynamicProperty');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64465,7 +68734,7 @@ VIMRuntime::make_get_set('KeyAnyValue', 'key', 'value');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64489,7 +68758,7 @@ VIMRuntime::make_get_set('ArrayOfKeyAnyValue', 'KeyAnyValue');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64515,7 +68784,7 @@ VIMRuntime::make_get_set('LocalizableMessage', 'key', 'arg', 'message');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64539,7 +68808,7 @@ VIMRuntime::make_get_set('ArrayOfLocalizableMessage', 'LocalizableMessage');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64564,7 +68833,7 @@ VIMRuntime::make_get_set('LocalizedMethodFault', 'fault', 'localizedMessage');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64591,7 +68860,7 @@ VIMRuntime::make_get_set('MethodFault', 'dynamicType', 'dynamicProperty', 'fault
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64615,7 +68884,7 @@ VIMRuntime::make_get_set('ArrayOfMethodFault', 'MethodFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64638,7 +68907,7 @@ VIMRuntime::make_get_set('RuntimeFault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64661,7 +68930,7 @@ VIMRuntime::make_get_set('HostCommunication');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64684,7 +68953,7 @@ VIMRuntime::make_get_set('HostNotConnected');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64707,7 +68976,7 @@ VIMRuntime::make_get_set('HostNotReachable');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64731,7 +69000,7 @@ VIMRuntime::make_get_set('InvalidArgument', 'invalidProperty');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64754,7 +69023,7 @@ VIMRuntime::make_get_set('InvalidRequest');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64778,7 +69047,7 @@ VIMRuntime::make_get_set('InvalidType', 'argument');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64802,7 +69071,7 @@ VIMRuntime::make_get_set('ManagedObjectNotFound', 'obj');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64827,7 +69096,7 @@ VIMRuntime::make_get_set('MethodNotFound', 'receiver', 'method');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64850,7 +69119,7 @@ VIMRuntime::make_get_set('NotEnoughLicenses');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64873,7 +69142,7 @@ VIMRuntime::make_get_set('NotImplemented');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64896,7 +69165,7 @@ VIMRuntime::make_get_set('NotSupported');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64919,7 +69188,7 @@ VIMRuntime::make_get_set('RequestCanceled');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64942,7 +69211,7 @@ VIMRuntime::make_get_set('SecurityError');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64966,7 +69235,7 @@ VIMRuntime::make_get_set('SystemError', 'reason');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -64991,7 +69260,7 @@ VIMRuntime::make_get_set('UnexpectedFault', 'faultName', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65014,7 +69283,7 @@ VIMRuntime::make_get_set('InvalidCollectorVersion');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65038,7 +69307,7 @@ VIMRuntime::make_get_set('InvalidProperty', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65064,7 +69333,7 @@ VIMRuntime::make_get_set('PropertyFilterSpec', 'propSet', 'objectSet', 'reportMi
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65088,7 +69357,7 @@ VIMRuntime::make_get_set('ArrayOfPropertyFilterSpec', 'PropertyFilterSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65114,7 +69383,7 @@ VIMRuntime::make_get_set('PropertySpec', 'type', 'all', 'pathSet');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65138,7 +69407,7 @@ VIMRuntime::make_get_set('ArrayOfPropertySpec', 'PropertySpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65164,7 +69433,7 @@ VIMRuntime::make_get_set('ObjectSpec', 'obj', 'skip', 'selectSet');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65188,7 +69457,7 @@ VIMRuntime::make_get_set('ArrayOfObjectSpec', 'ObjectSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65212,7 +69481,7 @@ VIMRuntime::make_get_set('SelectionSpec', 'name');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65236,7 +69505,7 @@ VIMRuntime::make_get_set('ArrayOfSelectionSpec', 'SelectionSpec');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65263,7 +69532,7 @@ VIMRuntime::make_get_set('TraversalSpec', 'type', 'path', 'skip', 'selectSet');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65289,7 +69558,7 @@ VIMRuntime::make_get_set('ObjectContent', 'obj', 'propSet', 'missingSet');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65313,7 +69582,7 @@ VIMRuntime::make_get_set('ArrayOfObjectContent', 'ObjectContent');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65339,7 +69608,7 @@ VIMRuntime::make_get_set('UpdateSet', 'version', 'filterSet', 'truncated');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65365,7 +69634,7 @@ VIMRuntime::make_get_set('PropertyFilterUpdate', 'filter', 'objectSet', 'missing
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65389,7 +69658,7 @@ VIMRuntime::make_get_set('ArrayOfPropertyFilterUpdate', 'PropertyFilterUpdate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65416,7 +69685,7 @@ VIMRuntime::make_get_set('ObjectUpdate', 'kind', 'obj', 'changeSet', 'missingSet
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65440,7 +69709,7 @@ VIMRuntime::make_get_set('ArrayOfObjectUpdate', 'ObjectUpdate');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65466,7 +69735,7 @@ VIMRuntime::make_get_set('PropertyChange', 'name', 'op', 'val');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65490,7 +69759,7 @@ VIMRuntime::make_get_set('ArrayOfPropertyChange', 'PropertyChange');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65515,7 +69784,7 @@ VIMRuntime::make_get_set('MissingProperty', 'path', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65539,7 +69808,7 @@ VIMRuntime::make_get_set('ArrayOfMissingProperty', 'MissingProperty');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65564,7 +69833,7 @@ VIMRuntime::make_get_set('MissingObject', 'obj', 'fault');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65588,7 +69857,7 @@ VIMRuntime::make_get_set('ArrayOfMissingObject', 'MissingObject');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65613,7 +69882,7 @@ VIMRuntime::make_get_set('WaitOptions', 'maxWaitSeconds', 'maxObjectUpdates');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65637,7 +69906,7 @@ VIMRuntime::make_get_set('RetrieveOptions', 'maxObjects');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65662,7 +69931,7 @@ VIMRuntime::make_get_set('RetrieveResult', 'token', 'objects');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65686,7 +69955,7 @@ VIMRuntime::make_get_set('ArrayOfString', 'string');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65710,7 +69979,7 @@ VIMRuntime::make_get_set('ArrayOfAnyType', 'anyType');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65734,7 +70003,7 @@ VIMRuntime::make_get_set('ArrayOfManagedObjectReference', 'ManagedObjectReferenc
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65758,7 +70027,7 @@ VIMRuntime::make_get_set('ArrayOfBoolean', 'boolean');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65782,7 +70051,7 @@ VIMRuntime::make_get_set('ArrayOfByte', 'byte');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65806,7 +70075,7 @@ VIMRuntime::make_get_set('ArrayOfDouble', 'double');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65830,7 +70099,7 @@ VIMRuntime::make_get_set('ArrayOfInt', 'int');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65854,7 +70123,7 @@ VIMRuntime::make_get_set('ArrayOfLong', 'long');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65878,7 +70147,7 @@ VIMRuntime::make_get_set('ArrayOfShort', 'short');
 sub get_property_list {
    my $class = shift;
    my @super_list = $class->SUPER::get_property_list();
-   return (@super_list, @property_list);
+   return (@super_list, @property_list);   
 }
 
 1;
@@ -65959,6 +70228,16 @@ our @ISA = qw(SimpleType);
 
 ##################################################################################
 package DistributedVirtualSwitchNicTeamingPolicyMode;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package DistributedVirtualSwitchHostInfrastructureTrafficClass;
 our @ISA = qw(SimpleType);
 
 1;
@@ -66578,6 +70857,16 @@ our @ISA = qw(SimpleType);
 
 
 ##################################################################################
+package DvsFilterOnFailure;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
 package DVPortStatusVmDirectPathGen2InactiveReasonNetwork;
 our @ISA = qw(SimpleType);
 
@@ -66658,6 +70947,16 @@ our @ISA = qw(SimpleType);
 
 
 ##################################################################################
+package DvsNetworkRuleDirectionType;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
 package VmwareDistributedVirtualSwitchPvlanPortType;
 our @ISA = qw(SimpleType);
 
@@ -66689,6 +70988,26 @@ our @ISA = qw(SimpleType);
 
 ##################################################################################
 package VMwareUplinkLacpMode;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VMwareDvsLacpLoadBalanceAlgorithm;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VMwareDvsLacpApiVersion;
 our @ISA = qw(SimpleType);
 
 1;
@@ -66809,6 +71128,16 @@ our @ISA = qw(SimpleType);
 
 ##################################################################################
 package CannotPowerOffVmInClusterOperation;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package CannotUseNetworkReason;
 our @ISA = qw(SimpleType);
 
 1;
@@ -66959,6 +71288,16 @@ our @ISA = qw(SimpleType);
 
 ##################################################################################
 package ThirdPartyLicenseAssignmentFailedReason;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VFlashModuleNotSupportedReason;
 our @ISA = qw(SimpleType);
 
 1;
@@ -67129,6 +71468,16 @@ our @ISA = qw(SimpleType);
 
 ##################################################################################
 package FileSystemMountInfoVStorageSupportStatus;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostGraphicsInfoGraphicsType;
 our @ISA = qw(SimpleType);
 
 1;
@@ -67348,6 +71697,26 @@ our @ISA = qw(SimpleType);
 
 
 ##################################################################################
+package HostNetStackInstanceSystemStackKey;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostNetStackInstanceCongestionControlAlgorithmType;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
 package HostNumericSensorHealthState;
 our @ISA = qw(SimpleType);
 
@@ -67449,6 +71818,16 @@ our @ISA = qw(SimpleType);
 
 ##################################################################################
 package HostFirewallRuleProtocol;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package HostRuntimeInfoNetStackInstanceRuntimeInfoState;
 our @ISA = qw(SimpleType);
 
 1;
@@ -67948,6 +72327,16 @@ our @ISA = qw(SimpleType);
 
 
 ##################################################################################
+package GuestInfoAppStateType;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
 package VirtualMachineGuestOsFamily;
 our @ISA = qw(SimpleType);
 
@@ -67979,6 +72368,26 @@ our @ISA = qw(SimpleType);
 
 ##################################################################################
 package GuestOsDescriptorSupportLevel;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineMetadataManagerVmMetadataOwnerOwner;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualMachineMetadataManagerVmMetadataOp;
 our @ISA = qw(SimpleType);
 
 1;
@@ -68178,6 +72587,26 @@ our @ISA = qw(SimpleType);
 
 
 ##################################################################################
+package VirtualDiskVFlashCacheConfigInfoCacheConsistencyType;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VirtualDiskVFlashCacheConfigInfoCacheMode;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
 package VirtualDiskMode;
 our @ISA = qw(SimpleType);
 
@@ -68268,6 +72697,56 @@ our @ISA = qw(SimpleType);
 
 
 ##################################################################################
+package VsanHostDecommissionModeObjectAction;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostDiskResultState;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostHealthState;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanHostNodeState;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
+package VsanDiskIssueType;
+our @ISA = qw(SimpleType);
+
+1;
+##################################################################################
+
+
+
+
+##################################################################################
 package ObjectUpdateKind;
 our @ISA = qw(SimpleType);
 
@@ -68341,15 +72820,15 @@ sub deserialize_response {
    my ($result, $fault, $class_name, $isarray) = @_;
    my $response = SoapResponse->new;
    if ($fault) {
-      my $soap_faut = new SoapFault($fault);
-      $response->fault($soap_faut);
+      my $soap_faut = new SoapFault($fault);      
+      $response->fault($soap_faut);      
    } elsif ($result) {
       if ($isarray) {
          my @return_array;
          foreach (@$result) {
             if ($class_name) {
                my $obj = $class_name->deserialize($_);
-               push @return_array, $obj;
+               push @return_array, $obj;      
             } else {
                if ($_) {
                   push @return_array, $_->textContent;
@@ -68359,7 +72838,7 @@ sub deserialize_response {
          $response->result(\@return_array);
       } else {
          if ($class_name) {
-            $response->result($class_name->deserialize(shift @$result));
+            $response->result($class_name->deserialize(shift @$result));     
          } else {
             my $node = shift @$result;
             if ($node) {
@@ -68368,18 +72847,18 @@ sub deserialize_response {
          }
       }
    } else {
-      # void return
+      # void return      
    }
    return $response;
 }
 
-sub get_arg_string {
+sub get_arg_string {   
     my ($arg, $arg_name, $expected_type) = @_;
     my $arg_string = "";
 
     if ($expected_type) {
-        # complex type
-        my $arg_type = ref $arg;
+        # complex type                  
+        my $arg_type = ref $arg;                  
         if ($arg_type &&
             $arg_type->isa("ViewBase") &&
             $expected_type eq 'ManagedObjectReference') {
@@ -68410,7 +72889,7 @@ sub get_arg_string {
     return $arg_string;
 }
 
-sub build_arg_string {
+sub build_arg_string {   
    my ($arg_list, $arg_hash) = @_;
    my $arg_string;
    foreach (@$arg_list) {
@@ -68543,6 +73022,16 @@ sub HasPrivilegeOnEntity {
    my $soap_action = '"urn:vim25/test"';
    my ($result, $fault) = $vim_soap->request('HasPrivilegeOnEntity', $arg_string, $soap_action);
    return deserialize_response($result, $fault, undef, 1);
+}
+
+sub HasPrivilegeOnEntities {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['entity', 'ManagedObjectReference'],['sessionId', undef],['privId', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('HasPrivilegeOnEntities', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'EntityPrivilege', 1);
 }
 
 sub ReconfigureCluster_Task {
@@ -68903,6 +73392,26 @@ sub DatastoreExitMaintenanceMode_Task {
    my $soap_action = '"urn:vim25/test"';
    my ($result, $fault) = $vim_soap->request('DatastoreExitMaintenanceMode_Task', $arg_string, $soap_action);
    return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
+}
+
+sub CreateDirectory {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['datastore', 'ManagedObjectReference'],['displayName', undef],['policy', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('CreateDirectory', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub DeleteDirectory {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['datacenter', 'ManagedObjectReference'],['datastorePath', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('DeleteDirectory', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
 }
 
 sub QueryDescriptions {
@@ -69538,7 +74047,7 @@ sub DisconnectHost_Task {
 sub EnterMaintenanceMode_Task {
    my ($self, %args) = @_;
    my $vim_soap = $self->{vim_soap};
-   my @arg_list = (['_this', 'ManagedObjectReference'],['timeout', undef],['evacuatePoweredOffVms', undef],);
+   my @arg_list = (['_this', 'ManagedObjectReference'],['timeout', undef],['evacuatePoweredOffVms', undef],['maintenanceSpec', 'HostMaintenanceSpec'],);
    my $arg_string = build_arg_string(\@arg_list, \%args);
    my $soap_action = '"urn:vim25/test"';
    my ($result, $fault) = $vim_soap->request('EnterMaintenanceMode_Task', $arg_string, $soap_action);
@@ -70878,7 +75387,7 @@ sub DeleteVirtualDisk_Task {
 sub MoveVirtualDisk_Task {
    my ($self, %args) = @_;
    my $vim_soap = $self->{vim_soap};
-   my @arg_list = (['_this', 'ManagedObjectReference'],['sourceName', undef],['sourceDatacenter', 'ManagedObjectReference'],['destName', undef],['destDatacenter', 'ManagedObjectReference'],['force', undef],);
+   my @arg_list = (['_this', 'ManagedObjectReference'],['sourceName', undef],['sourceDatacenter', 'ManagedObjectReference'],['destName', undef],['destDatacenter', 'ManagedObjectReference'],['force', undef],['profile', 'VirtualMachineProfileSpec'],);
    my $arg_string = build_arg_string(\@arg_list, \%args);
    my $soap_action = '"urn:vim25/test"';
    my ($result, $fault) = $vim_soap->request('MoveVirtualDisk_Task', $arg_string, $soap_action);
@@ -71735,6 +76244,16 @@ sub DVSManagerLookupDvPortGroup {
    return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
 }
 
+sub UpdateDVSLacpGroupConfig_Task {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['lacpGroupSpec', 'VMwareDvsLacpGroupSpec'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('UpdateDVSLacpGroupConfig_Task', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
+}
+
 sub ReadNextEvents {
    my ($self, %args) = @_;
    my $vim_soap = $self->{vim_soap};
@@ -72292,6 +76811,26 @@ sub RestoreFirmwareConfiguration {
    my $arg_string = build_arg_string(\@arg_list, \%args);
    my $soap_action = '"urn:vim25/test"';
    my ($result, $fault) = $vim_soap->request('RestoreFirmwareConfiguration', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub RefreshGraphicsManager {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('RefreshGraphicsManager', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub IsSharedGraphicsActive {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('IsSharedGraphicsActive', $arg_string, $soap_action);
    return deserialize_response($result, $fault, undef, 0);
 }
 
@@ -73085,6 +77624,16 @@ sub ResolveMultipleUnresolvedVmfsVolumes {
    return deserialize_response($result, $fault, 'HostUnresolvedVmfsResolutionResult', 1);
 }
 
+sub ResolveMultipleUnresolvedVmfsVolumesEx_Task {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['resolutionSpec', 'HostUnresolvedVmfsResolutionSpec'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('ResolveMultipleUnresolvedVmfsVolumesEx_Task', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
+}
+
 sub UnmountForceMountedVmfsVolume {
    my ($self, %args) = @_;
    my $vim_soap = $self->{vim_soap};
@@ -73355,6 +77904,136 @@ sub MarkForRemoval {
    return deserialize_response($result, $fault, undef, 0);
 }
 
+sub FormatVffs {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['createSpec', 'HostVffsSpec'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('FormatVffs', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'HostVffsVolume', 0);
+}
+
+sub ExtendVffs {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['vffsPath', undef],['devicePath', undef],['spec', 'HostDiskPartitionSpec'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('ExtendVffs', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub DestroyVffs {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['vffsPath', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('DestroyVffs', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub MountVffsVolume {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['vffsUuid', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('MountVffsVolume', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub UnmountVffsVolume {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['vffsUuid', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('UnmountVffsVolume', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub DeleteVffsVolumeState {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['vffsUuid', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('DeleteVffsVolumeState', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub RescanVffs {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('RescanVffs', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub QueryAvailableSsds {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['vffsPath', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('QueryAvailableSsds', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'HostScsiDisk', 1);
+}
+
+sub ConfigureVFlashResourceEx_Task {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['devicePath', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('ConfigureVFlashResourceEx_Task', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
+}
+
+sub HostConfigureVFlashResource {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['spec', 'HostVFlashManagerVFlashResourceConfigSpec'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('HostConfigureVFlashResource', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub HostRemoveVFlashResource {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('HostRemoveVFlashResource', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub HostConfigVFlashCache {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['spec', 'HostVFlashManagerVFlashCacheConfigSpec'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('HostConfigVFlashCache', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub HostGetVFlashModuleDefaultConfig {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['vFlashModule', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('HostGetVFlashModuleDefaultConfig', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'VirtualDiskVFlashCacheConfigInfo', 0);
+}
+
 sub UpdateIpConfig {
    my ($self, %args) = @_;
    my $vim_soap = $self->{vim_soap};
@@ -73413,6 +78092,116 @@ sub DeselectVnicForNicType {
    my $soap_action = '"urn:vim25/test"';
    my ($result, $fault) = $vim_soap->request('DeselectVnicForNicType', $arg_string, $soap_action);
    return deserialize_response($result, $fault, undef, 0);
+}
+
+sub QueryCmmds {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['queries', 'HostVsanInternalSystemCmmdsQuery'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('QueryCmmds', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub QueryPhysicalVsanDisks {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['props', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('QueryPhysicalVsanDisks', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub QueryVsanObjects {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['uuids', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('QueryVsanObjects', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub QueryObjectsOnPhysicalVsanDisk {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['disks', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('QueryObjectsOnPhysicalVsanDisk', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, undef, 0);
+}
+
+sub QueryDisksForVsan {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['canonicalName', undef],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('QueryDisksForVsan', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'VsanHostDiskResult', 1);
+}
+
+sub AddDisks_Task {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['disk', 'HostScsiDisk'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('AddDisks_Task', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
+}
+
+sub InitializeDisks_Task {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['mapping', 'VsanHostDiskMapping'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('InitializeDisks_Task', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
+}
+
+sub RemoveDisk_Task {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['disk', 'HostScsiDisk'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('RemoveDisk_Task', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
+}
+
+sub RemoveDiskMapping_Task {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['mapping', 'VsanHostDiskMapping'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('RemoveDiskMapping_Task', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
+}
+
+sub UpdateVsan_Task {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['config', 'VsanHostConfigInfo'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('UpdateVsan_Task', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
+}
+
+sub QueryHostStatus {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('QueryHostStatus', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'VsanHostClusterStatus', 0);
 }
 
 sub QueryOptions {
@@ -73623,6 +78412,16 @@ sub GenerateConfigTaskList {
    my $soap_action = '"urn:vim25/test"';
    my ($result, $fault) = $vim_soap->request('GenerateConfigTaskList', $arg_string, $soap_action);
    return deserialize_response($result, $fault, 'HostProfileManagerConfigTaskList', 0);
+}
+
+sub GenerateHostProfileTaskList_Task {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],['configSpec', 'HostConfigSpec'],['host', 'ManagedObjectReference'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('GenerateHostProfileTaskList_Task', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
 }
 
 sub QueryHostProfileMetadata {
@@ -73913,6 +78712,16 @@ sub RenameSnapshot {
    my $soap_action = '"urn:vim25/test"';
    my ($result, $fault) = $vim_soap->request('RenameSnapshot', $arg_string, $soap_action);
    return deserialize_response($result, $fault, undef, 0);
+}
+
+sub ExportSnapshot {
+   my ($self, %args) = @_;
+   my $vim_soap = $self->{vim_soap};
+   my @arg_list = (['_this', 'ManagedObjectReference'],);
+   my $arg_string = build_arg_string(\@arg_list, \%args);
+   my $soap_action = '"urn:vim25/test"';
+   my ($result, $fault) = $vim_soap->request('ExportSnapshot', $arg_string, $soap_action);
+   return deserialize_response($result, $fault, 'ManagedObjectReference', 0);
 }
 
 sub CheckCompatibility_Task {
@@ -74276,7 +79085,7 @@ VMware::VIStub - Perl binding for VMware Infrastructure API
   # get service content
   my $mo = ManagedObjectReference->new(type => 'ServiceInstance', value => 'ServiceInstance');
   my $service_content = $vim_service->RetrieveServiceContent(_this => $mo)->result;
-
+  
 
 =head1 DESCRIPTION
 
@@ -74297,18 +79106,19 @@ VI API Programming guide and reference guide is available for download at
 =head1 COPYRIGHT AND LICENSE
 
 
-The Original Software is licensed under the CDDL v. 1.0 only and cannot
-be distributed or otherwise made available under any subsequent version
-of the license.  This License hall be governed by and construed in
-accordance with the laws of the State of California, excluding its
-conflict-of-law provisions.  Any litigation relating to this License
-will be brought solely in the federal court in the Northern District
-of California or the state court in the County of Santa Clara.
+The Original Software is licensed under the CDDL v. 1.0 only and cannot 
+be distributed or otherwise made available under any subsequent version 
+of the license.  This License hall be governed by and construed in 
+accordance with the laws of the State of California, excluding its 
+conflict-of-law provisions.  Any litigation relating to this License 
+will be brought solely in the federal court in the Northern District 
+of California or the state court in the County of Santa Clara.  
 
 A copy of the CDDL license is included in this distribution.
 
 
-Copyright (c) 2006, VMware, Inc.  All rights not expressly granted herein
-are reserved.
+Copyright (c) 2006, VMware, Inc.  All rights not expressly granted herein 
+are reserved. 
 
 =cut
+

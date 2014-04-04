@@ -27,7 +27,7 @@ sub check_fault {
    my $result = shift;
    if ($result->fault) {
       Carp::confess($result->fault);
-   }
+   }   
    return $result->result;
 }
 
@@ -51,15 +51,15 @@ sub fail {
 sub connect {
    # url should be <protocol>://<hostname>/sdk
    my ($url, $username, $password) = @_;
-
+   
    # bug 217340
    @_ = ();
    my $retval = undef;
-
+   
    if (!defined($url)) {
       $url = Opts::get_option('url');
    }
-
+   
    if (Opts::option_is_set('sessionfile')) {
       my $sessionfile = Opts::get_option('sessionfile');
       $retval = Vim::load_session(service_url => $url, session_file => $sessionfile);
@@ -67,11 +67,11 @@ sub connect {
       if (!defined($username)) {
          $username = Opts::get_option('username');
       }
-
+      
       if (!defined($password)) {
          $password = Opts::get_option('password');
       }
-
+      
       eval {
          $retval = Vim::login(service_url => $url, user_name => $username, password => $password);
       };
@@ -83,7 +83,7 @@ sub connect {
             Util::fail("$error: Bad hostname");
          } elsif ($@ =~ /Connect failed/) {
             Util::fail("$error: Perhaps host is not a vCenter or ESX server");
-         } elsif ($@ =~ /Login failed/) {
+         } elsif ($@ =~ /Login failed/) { 
             Util::fail("$error: Login failed due to a bad username or password");
          } elsif (ref $@ eq "SoapFault" && defined $@->{fault_string}) {
             Util::fail("$error: " . $@->{fault_string});
@@ -199,7 +199,7 @@ sub connect {
       }
    } else {
       Util::fail("Error: No session file or username/password provided.");
-   }
+   }   
    $is_connected = 1;
    return $retval;
 }
@@ -230,7 +230,7 @@ sub create_entity_info {
 }
 
 # --------------------------------------------------------------------------------
-# Description: Return the inventory path for the specified managed entity.
+# Description: Return the inventory path for the specified managed entity.  
 # Input: subroutine style:  Util::get_inventory_path($entity, $vim})
 #        where
 #           $entity   - a managed entity view
@@ -264,7 +264,7 @@ sub get_inventory_path {
                type => "ManagedEntity",
                path => "parent",
                selectSet => [
-                  SelectionSpec->new(name => "ParentTraversalSpec")
+                  SelectionSpec->new(name => "ParentTraversalSpec") 
                ]
             )
              ]
@@ -281,7 +281,7 @@ sub get_inventory_path {
    foreach (@$objectContents) {
       my $objectContent = $_;
       if (defined $objectContent->missingSet) {
-         die $objectContent->missingSet . "\n";
+         die $objectContent->missingSet . "\n";         
       }
       $entityMap{$objectContent->obj->value} = create_entity_info($objectContent);
    }
@@ -300,7 +300,7 @@ sub get_inventory_path {
       $current = $entityMap{$parent->value};
       $parent = $current->{parent};
       if (! defined $parent) {
-          last;
+	 last;
       }
    }
    return join "/", @path
@@ -344,8 +344,8 @@ our $global_vim_saved_to_file = undef;
 sub get_server_version { $server_version };
 sub get_vim_namespace { $vim_namespace };
 
-sub set_server_version {
-   my ($arg) = @_;
+sub set_server_version { 
+   my ($arg) = @_; 
    $server_version = $arg;
 }
 
@@ -360,7 +360,7 @@ sub new {
    my $url = delete($args{service_url});
 
    if (keys %args) {
-      croak "Unrecognized arg(s) " .
+      croak "Unrecognized arg(s) " . 
             join(', ', sort keys %args) . " to 'Vim::new'";
    }
 
@@ -383,7 +383,7 @@ sub new {
 
 #
 # _select_vim - internal subroutine to distinguish between Vim::xxx and
-# $vim->xxx call syntax, and return the appropriate Vim object. Place
+# $vim->xxx call syntax, and return the appropriate Vim object. Place 
 # at the top of sub xxx like:
 #    sub xxx {
 #       my $self = &_select_vim;   # <-- this EXACT syntax, w/ & and w/o ()
@@ -393,7 +393,7 @@ sub new {
 # the first argument is not a Vim object, then the global Vim object will
 # be returned, or if there is no global Vim, an exception will be thrown.
 #
-# If it isn't desired to throw an exception for a missing global Vim,
+# If it isn't desired to throw an exception for a missing global Vim, 
 # use this instead:
 #   my $self = ref($_[0] eq 'Vim') ? shift : $vim_global;
 #
@@ -413,7 +413,7 @@ sub _select_vim {
 # --------------------------------------------------------------------------------
 # Description: Return the current Vim object instance.
 # Input:  none
-# Output: $self       if called as vim->get_vim()
+# Output: $self       if called as vim->get_vim() 
 #         $vim_global if called as Vim::get_vim()
 # --------------------------------------------------------------------------------
 sub get_vim {
@@ -423,10 +423,10 @@ sub get_vim {
 sub query_api_supported {
    my $url = shift;
    my %supportedapiversions;
-   if ($url =~ s|http(s?)://(.*)/sdk.*|http$1://$2/sdk/vimService.wsdl|i) {
+   if ($url =~ s|http(s?)://(.*)/sdk.*|http$1://$2/sdk/vimService.wsdl|i) {      
       if ($1 eq "s") {
-         eval {
-            require Crypt::SSLeay;
+         eval {  
+            require Crypt::SSLeay;  
             Crypt::SSLeay->import();
          };
          if ($@) {
@@ -444,16 +444,16 @@ sub query_api_supported {
       my $xmlurl = substr $url, 0, index($url, '/sdk');
       $xmlurl = $xmlurl . '/sdk/vimServiceVersions.xml';
 
-      my $user_agent = LWP::UserAgent->new(agent => "VI Perl", ssl_opts => { SSL_verify_mode => 'SSL_VERIFY_NONE', verify_hostname => 0 });
+      my $user_agent = LWP::UserAgent->new(agent => "VI Perl");
       my $cookie_jar = HTTP::Cookies->new(ignore_discard => 1);
       $user_agent->cookie_jar($cookie_jar);
       $user_agent->protocols_allowed(['http', 'https']);
-
+  
       my $http_header = HTTP::Headers->new(Content_Type => 'text/xml');
       my $request = HTTP::Request->new('GET', $xmlurl);
-
-      my $response = $user_agent->request($request);
-
+     
+      my $response = $user_agent->request($request);   
+     
       if ($response->content =~ /Connection refused/) {
          die $response->content . "\n";
       } elsif ($response->content =~ /Bad hostname/) {
@@ -500,15 +500,21 @@ sub query_api_supported {
 }
 
 sub query_server_version {
+   BEGIN {
+      #To remove SSL Warning, switching from IO::Socket::SSL to Net::SSL
+      $ENV{PERL_NET_HTTPS_SSL_SOCKET_CLASS} = "Net::SSL";
+	  #To remove host verification
+      $ENV{PERL_LWP_SSL_VERIFY_HOSTNAME} = 0;
+   }
    my $url = shift;
    if ($url =~ s|http(s?)://(.*)/sdk.*|http$1://$2/sdk/vimService.wsdl|i) {
       # bug 288336
       if ($1 eq "s") {
-         eval {
-            require Crypt::SSLeay;
+         eval {  
+            require Crypt::SSLeay;  
             Crypt::SSLeay->import();
          };
-         if ($@) {
+         if ($@) { 
             die "Crypt::SSLeay is required for https connections, but could not be loaded: $@";
          }
       }
@@ -519,16 +525,16 @@ sub query_server_version {
             die "Unsupported IP address format\n";
          }
       }
-      my $user_agent = LWP::UserAgent->new(agent => "VI Perl", ssl_opts => { SSL_verify_mode => 'SSL_VERIFY_NONE', verify_hostname => 0 });
+      my $user_agent = LWP::UserAgent->new(agent => "VI Perl");
       my $cookie_jar = HTTP::Cookies->new(ignore_discard => 1);
       $user_agent->cookie_jar($cookie_jar);
       $user_agent->protocols_allowed(['http', 'https']);
-
+  
       my $http_header = HTTP::Headers->new(Content_Type => 'text/xml');
       my $request = HTTP::Request->new('GET', $url);
-
-      my $response = $user_agent->request($request);
-
+     
+      my $response = $user_agent->request($request);   
+     
       if ($response->content =~ /Connection refused/) {
          die $response->content . "\n";
       } elsif ($response->content =~ /Bad hostname/) {
@@ -536,25 +542,25 @@ sub query_server_version {
       } elsif ($response->content =~ /Connect failed/) {
          die $response->content . "\n";
       }
-
-      my $xml_parser = XML::LibXML->new;
-      my $result;
+      
+      my $xml_parser = XML::LibXML->new;   
+      my $result;   
 
       eval { $result = $xml_parser->parse_string($response->content) };
       if ($@) {
          die "Server version unavailable at '$url'";
-      }
-
+      }   
+   
       my $targetNamespace = $result->documentElement()->getAttribute('targetNamespace');
-
+      
       if (!defined($targetNamespace)) {
          # bug 462362
          $targetNamespace = "";
       }
-
-      my ($server_version) = $targetNamespace =~
+      
+      my ($server_version) = $targetNamespace =~ 
                             /(?:urn:vim)([0-9a-zA-Z]+)(?:Service)/;
-
+                      
       if ($server_version) {
          return $server_version;
       } else {
@@ -598,7 +604,7 @@ sub login {
       my $service_url = delete $args{service_url};
       Carp::croak("The required service_url argument to login() is missing or undefined.")
          unless defined $service_url;
-      $self = Vim->new(service_url => $service_url);
+      $self = Vim->new(service_url => $service_url);      
    }
 
    my $username = delete $args{user_name};
@@ -614,7 +620,7 @@ sub login {
    my $service_url = $self->{service_url};
 
    if (keys %args) {
-      croak "Unrecognized arg(s) " .
+      croak "Unrecognized arg(s) " . 
             join(', ', sort keys %args) . " to 'Vim::login'";
    }
 
@@ -625,14 +631,14 @@ sub login {
    unless ($server_version) {
       $server_version = query_server_version($service_url);
    }
-
+      
    unless ($vim_namespace) {
       $vim_namespace = "vim$server_version";
       eval qq(require VMware::VIMRuntime);
       die "$@\n" if $@;
       VIMRuntime->initialize($server_version);
    }
-
+      
    my $si_mo_ref = ManagedObjectReference->new(type => 'ServiceInstance',
                                                value => 'ServiceInstance');
    $self->{vim_service} = VimService->new($service_url);
@@ -664,11 +670,11 @@ sub login {
 sub login_by_sspi {
    my ($first_arg) = @_;
    if ($first_arg && ref $first_arg eq 'Vim') {
-      # object reference
+      # object reference 
       my ($self, %args) = @_;
       my $service_url = $self->{service_url};
       my $token = $args{token};
-
+      
       #
       # Load the appropriate Runtime/Stubs if not done yet, and
       # set the default namespace.
@@ -676,15 +682,15 @@ sub login_by_sspi {
       unless ($server_version) {
          $server_version = query_server_version($service_url);
       }
-
+      
       unless ($vim_namespace) {
          $vim_namespace = "vim$server_version";
          eval qq(require VMware::VIMRuntime);
          die "$@\n" if $@;
          VIMRuntime->initialize($server_version);
       }
-
-      if (!defined $self->{vim_service}) {
+      
+      if (!defined $self->{vim_service}) {           
          my $si_moref = ManagedObjectReference->new(type => 'ServiceInstance',
                                                     value => 'ServiceInstance');
          $self->{vim_service} = VimService->new($service_url);
@@ -699,7 +705,7 @@ sub login_by_sspi {
       if (!defined($vim_global)) {
          my $service_url = $args{service_url};
          $vim_global = Vim->new(service_url => $service_url);
-      }
+      }      
       my $token = $args{token};
       $vim_global->login_by_sspi(token => $token);
    }
@@ -712,7 +718,7 @@ sub disconnect {
    if ($self) {
       #
       # Disconnect called on an already disconnected/cleared session?
-      # Do a clear again in case we somehow got here with an inconsistent
+      # Do a clear again in case we somehow got here with an inconsistent 
       # state, then return.
       #
       unless ($self->{vim_service}) {
@@ -791,8 +797,8 @@ sub save_session {
 # Input: subroutine style:  Vim::get_session_status(%{sessionfile})
 #        method call style: vim->get_session_status(%{$url,sessionfile})
 #        where
-#           sessionfile - full path file name where session is saved
-# Output: status
+#           sessionfile - full path file name where session is saved 
+# Output: status 
 # --------------------------------------------------------------------------------
 
 sub get_session_status {
@@ -828,8 +834,8 @@ sub get_session_status {
 # Input: subroutine style:  Vim::get_session_id_status(%{sessionid})
 #        method call style: vim->get_session_id_status(%{$url,sessionid})
 #        where
-#           session - session id of a particular session
-# Output: status
+#           session - session id of a particular session 
+# Output: status 
 # --------------------------------------------------------------------------------
 
 sub get_session_id_status {
@@ -882,7 +888,7 @@ sub validate_vim_soap {
    my $response = $vim_soap->{user_agent}->request($request);
    my $xml_parser = XML::LibXML->new;
    my $parsed_response;
-   my $connection_error_message =
+   my $connection_error_message = 
       "Error while testing status of connection '$url': ";
 
    eval { $parsed_response = $xml_parser->parse_string($response->content) };
@@ -942,7 +948,7 @@ sub is_logout_on_disconnect {
 #              as a cookie file
 #        or
 #           session_id - session id token (equivalent of cookie file contents)
-#        Also,
+#        Also, 
 #           service_url - the URL of the server to which the client connects
 #              (host name in session file will replace one in service_url)
 #           server, protocol, path, port - alternative to specifying
@@ -974,7 +980,7 @@ sub load_session {
    }
 
    if (keys %args) {
-      croak "Unrecognized arg(s) " .
+      croak "Unrecognized arg(s) " . 
             join(', ', sort keys %args) . " to 'load_session'";
    }
    unless (defined $file or defined $session_id) {
@@ -984,11 +990,11 @@ sub load_session {
    if (defined $file) {
       local *SFILE;
       my $line;
-
+      
       open SFILE, $file or die "Can't open session file \'$file\'\n";
       $line = <SFILE>;
       $line = <SFILE>;
-
+   
       unless (defined $line) {
          croak "Session file ended unexpectedly";
       }
@@ -1006,7 +1012,7 @@ sub load_session {
    );
 
    #
-   # reuse the Vim object if we started with one - otherwise we wind
+   # reuse the Vim object if we started with one - otherwise we wind 
    # up returning a different Vim than the one we were called with, = bad...
    #
    if (defined $self) {
@@ -1019,7 +1025,7 @@ sub load_session {
       $vim_global = $self;
       Opts::set_option('url', $url);
    }
-
+   
    #
    # Load the appropriate Runtime/Stubs if not done yet, and
    # set the default namespace.
@@ -1027,13 +1033,13 @@ sub load_session {
    unless ($server_version) {
       $server_version = query_server_version($url);
    }
-
+      
    unless ($vim_namespace) {
       $vim_namespace = "vim$server_version";
       require VMware::VIMRuntime;
-      VIMRuntime->initialize($server_version);
+      VIMRuntime->initialize($server_version);         
    }
-
+      
    my $si_mo_ref = ManagedObjectReference->new(
       type => 'ServiceInstance',
       value => 'ServiceInstance'
@@ -1053,7 +1059,7 @@ sub load_session {
       }
    } else {
       my $status = Vim::get_session_status(
-        service_url => $url,
+        service_url => $url, 
         session_file => $file,
       );
       if ($status eq $SESSION_STATUS_OK) {
@@ -1147,10 +1153,10 @@ sub get_service_content {
 
 sub match {
    my ($pat, $str) = @_;
-
+   
    # bug 178470
    $str = uri_unescape($str);
-
+   
    if (!ref($pat)) {
       return $str eq $pat;
    } elsif (ref($pat) ne 'Regexp') {
@@ -1161,10 +1167,10 @@ sub match {
 
 sub mismatch {
    my ($pat, $str) = @_;
-
+   
    # bug 178470
    $str = uri_unescape($str);
-
+   
    if (!ref($pat)) {
       return $str ne $pat;
    } elsif (ref($pat) ne 'Regexp') {
@@ -1174,8 +1180,8 @@ sub mismatch {
 }
 
 # ----------------------------------------------------------------------------------
-# Description: Search the inventory tree for 1st managed entity that matches the
-#              specified entity type.  The search begins with the root folder
+# Description: Search the inventory tree for 1st managed entity that matches the 
+#              specified entity type.  The search begins with the root folder 
 #              unless the begin_entity parameter is specified.
 # Input: subroutine style:  Vim::find_entity_view(%{view_type, begin_entity, filter})
 #        method call style: vim->find_entity_view(%{view_type, begin_entity, filter})
@@ -1203,7 +1209,7 @@ sub find_entity_view {
    if ($@) {
       Carp::croak "Unable to load class '$view_type' for find_entity_view(): Perhaps it is not a valid managed entity type";
    }
-
+   
    delete $args{view_type};
    if (! $view_type->isa('EntityViewBase')) {
       Carp::confess("$view_type is not a ManagedEntity");
@@ -1219,13 +1225,13 @@ sub find_entity_view {
    if (exists ($args{begin_entity})) {
       $begin_entity = $args{begin_entity};
       delete $args{begin_entity};
-   }
+   }   
    my $filter = {};
    if (exists ($args{filter})) {
       $filter = $args{filter};
       delete $args{filter};
    }
-
+   
    my @remaining = keys %args;
    if (@remaining > 0) {
       Carp::confess("Unexpected argument @remaining");
@@ -1249,18 +1255,18 @@ sub find_entity_view {
    my $is_exists_vimversion_xml = $result{"supported"};
    my $property_filter_spec;
    if($is_exists_vimversion_xml eq '1') {
-      $property_filter_spec =
+      $property_filter_spec = 
          $view_type->get_search_filter_spec_v40($begin_entity, [$property_spec], %result);
    }
    else {
-      $property_filter_spec =
+      $property_filter_spec = 
          $view_type->get_search_filter_spec($begin_entity, [$property_spec]);
    }
 
    my $obj_contents =
       $service->RetrieveProperties(_this => $sc->propertyCollector,
-                                   specSet => $property_filter_spec);
-   my $result = Util::check_fault($obj_contents);
+                                   specSet => $property_filter_spec);   
+   my $result = Util::check_fault($obj_contents);   
    my $filtered_obj;
    foreach (@$result) {
       my $obj_content = $_;
@@ -1269,7 +1275,7 @@ sub find_entity_view {
          last;
       }
 
-      my %prop_hash;
+      my %prop_hash;    
       my $prop_set = $obj_content->propSet;
       if (! $prop_set) {
          next;
@@ -1286,7 +1292,7 @@ sub find_entity_view {
             $_ = substr($_,1);
             $flag=1;
          }
-         if (exists ($prop_hash{$_})) {
+         if (exists ($prop_hash{$_})) {         
             my $val;
             if (ref $prop_hash{$_}) {
                my $class = ref $prop_hash{$_};
@@ -1298,7 +1304,7 @@ sub find_entity_view {
             } else {
                $val = $prop_hash{$_};
             }
-
+            
             if($flag == 0) {
                if (not match($regex,$val)) {
                   $matched = 0;
@@ -1327,8 +1333,8 @@ sub find_entity_view {
 }
 
 # ----------------------------------------------------------------------------------
-# Description: Search the inventory tree for all managed entity that matches the
-#              specified entity type.  The search begins with the root folder
+# Description: Search the inventory tree for all managed entity that matches the 
+#              specified entity type.  The search begins with the root folder 
 #              unless the begin_entity parameter is specified.
 # Input: subroutine style:  Vim::find_entity_views(%{view_type, begin_entity, filter})
 #        method call style: vim->find_entity_views(%{view_type, begin_entity, filter})
@@ -1343,20 +1349,20 @@ sub find_entity_views {
    my $self = &_select_vim;
    my %args = @_;
    my $service = $self->{vim_service};
-   my $sc = $self->{service_content};
-
+   my $sc = $self->{service_content};   
+   
    if (! exists($args{view_type})) {
       Carp::confess('view_type argument is required');
    }
    my $view_type = $args{view_type};
-
+   
    eval {
       VIMRuntime::load($view_type);
    };
    if ($@) {
       Carp::croak "Unable to load class '$view_type' for find_entity_views(): Perhaps it is not a valid managed entity type";
-   }
-
+   }   
+   
    delete $args{view_type};
    if (! $view_type->isa('EntityViewBase')) {
       Carp::confess("$view_type is not a ManagedEntity");
@@ -1382,7 +1388,7 @@ sub find_entity_views {
    if (@remaining > 0) {
       Carp::confess("Unexpected argument @remaining");
    }
-
+   
    my %filter_hash;
    foreach (keys %$filter) {
       my $key = $_;
@@ -1393,7 +1399,7 @@ sub find_entity_views {
       }
       $filter_hash{$key} = $keyvalue;
    }
-
+   
    my $property_spec = PropertySpec->new(all => 0,
                                          type => $view_type->get_backing_type(),
                                          pathSet => [keys %filter_hash]);
@@ -1403,18 +1409,18 @@ sub find_entity_views {
    my $is_exists_vimversion_xml = $result{"supported"};
    my $property_filter_spec;
    if($is_exists_vimversion_xml eq '1') {
-      $property_filter_spec =
+      $property_filter_spec = 
          $view_type->get_search_filter_spec_v40($begin_entity, [$property_spec], %result);
    }
    else {
-      $property_filter_spec =
+      $property_filter_spec = 
          $view_type->get_search_filter_spec($begin_entity, [$property_spec]);
    }
 
    my $obj_contents =
       $service->RetrieveProperties(_this => $sc->propertyCollector,
-                                   specSet => $property_filter_spec);
-   my $result = Util::check_fault($obj_contents);
+                                   specSet => $property_filter_spec);   
+   my $result = Util::check_fault($obj_contents);   
    my @filtered_objs;
    foreach (@$result) {
       my $obj_content = $_;
@@ -1423,7 +1429,7 @@ sub find_entity_views {
          next;
       }
 
-      my %prop_hash;
+      my %prop_hash;    
       my $prop_set = $obj_content->propSet;
       if (! $prop_set) {
          next;
@@ -1452,7 +1458,7 @@ sub find_entity_views {
             } else {
                $val = $prop_hash{$_};
             }
-
+	    
             if($flag == 0) {
                if (not match($regex,$val)) {
                   $matched = 0;
@@ -1477,11 +1483,11 @@ sub find_entity_views {
       return $self->get_views(mo_ref_array => \@filtered_objs,
                               view_type => $view_type,
                               properties => $properties);
-   }
+   }   
 }
 
 # ----------------------------------------------------------------------------------
-# Description: Retrieve the properties of a single managed object.
+# Description: Retrieve the properties of a single managed object. 
 # Input: subroutine style:  Vim::get_view(%{mo_ref, view_type})
 #        method call style: vim->get_view(%{mo_ref, view_type})
 #        where
@@ -1493,7 +1499,7 @@ sub get_view {
    my $self = &_select_vim;
    my %args = @_;
    my $service = $self->{vim_service};
-
+   
    if (! exists($args{mo_ref})) {
       Carp::confess("mo_ref argument is required");
    }
@@ -1503,8 +1509,8 @@ sub get_view {
       $view_type = $args{view_type};
    }
    my $properties = "";
-   if (exists($args{properties}) &&
-       defined($args{properties}) &&
+   if (exists($args{properties}) && 
+       defined($args{properties}) && 
        $args{properties} ne "") {
       $properties = $args{properties};
    }
@@ -1514,7 +1520,7 @@ sub get_view {
 }
 
 # ----------------------------------------------------------------------------------
-# Description: Retrieve the properties of a set of managed object.
+# Description: Retrieve the properties of a set of managed object. 
 # Input: subroutine style:  Vim::get_views(%{mo_ref_array, view_type})
 #        method call style: vim->get_views(%{mo_ref_array, view_type})
 #        where
@@ -1541,7 +1547,7 @@ sub get_views {
    if (exists ($args{view_type})) {
       $view_type = $args{view_type};
    }
-
+     
    my $property_spec = $view_type->get_property_spec();
    my @object_specs;
    foreach (@$mo_refs) {
@@ -1553,13 +1559,13 @@ sub get_views {
    my $propertyCollector = $sc->propertyCollector;
 
    my $properties = "";
-   if (exists($args{properties}) &&
-       defined($args{properties}) &&
+   if (exists($args{properties}) && 
+       defined($args{properties}) && 
        $args{properties} ne "") {
       $properties = $args{properties};
       my $ptr = $prop_filter_spec->propSet;
       my $obj = $$ptr[0];
-      $obj->all(0);
+      $obj->all(0);  
       $obj->pathSet ($args{properties});
    }
 
@@ -1583,7 +1589,7 @@ sub get_views {
 # --------------------------------------------------------------------------------
 sub logout {
    my $self = ref($_[0]) eq 'Vim' ? $_[0] : $vim_global;
-   if (defined $self and
+   if (defined $self and 
        $self->{vim_service} and
        $self->{vim_service}->get_session_loaded and
        $self->{service_content}) {
@@ -1618,7 +1624,7 @@ sub serialize {
    my ($self, $tag, $show_type) = @_;
    my $mo_ref = $self->{mo_ref};
    if($show_type) {
-      return $mo_ref->serialize($tag, $show_type);
+      return $mo_ref->serialize($tag, $show_type);   
    } else {
       return $mo_ref->serialize($tag);
    }
@@ -1645,7 +1651,7 @@ sub get_property_filter_spec {
    my $property_spec = $class->get_property_spec();
    my $object_spec = ObjectSpec->new(obj => $mo_ref);
    return PropertyFilterSpec->new(propSet => $property_spec,
-                                  objectSet => [ $object_spec ]);
+                                  objectSet => [ $object_spec ]);   
 }
 
 sub update_view_data {
@@ -1657,7 +1663,7 @@ sub update_view_data {
    if (defined($properties) && $properties ne "") {
       my $ptr = $property_filter_spec->propSet;
       my $obj = $$ptr[0];
-      $obj->all(0);
+      $obj->all(0);  
       $obj->pathSet ($properties);
    }
    my $obj_contents =
@@ -1797,7 +1803,7 @@ sub get_search_filter_spec_v40 {
    push(@arr_select_set, $folderTraversalSpec);
    push(@arr_select_set, $datacenterDatastoreTraversalSpec);
    push(@arr_select_set, $datacenterNetworkTraversalSpec);
-
+   
    foreach (@$arr) {
       if (!($_->name eq "folderTraversalSpec")) {
          push(@arr_select_set, $_);
@@ -1812,7 +1818,7 @@ sub get_search_filter_spec_v40 {
                                   objectSet => [$obj_spec]);
 }
 
-sub get_search_filter_spec {
+sub get_search_filter_spec {   
    my ($class, $mo_ref, $property_spec) = @_;
    my $resourcePoolTraversalSpec =
       TraversalSpec->new(name => 'resourcePoolTraversalSpec',
@@ -1820,13 +1826,13 @@ sub get_search_filter_spec {
                          path => 'resourcePool',
                          skip => 0,
                          selectSet => [SelectionSpec->new(name => 'resourcePoolTraversalSpec'),
-                                       SelectionSpec->new(name => 'resourcePoolVmTraversalSpec')]);
+                                       SelectionSpec->new(name => 'resourcePoolVmTraversalSpec')]);      
 
    my $resourcePoolVmTraversalSpec =
       TraversalSpec->new(name => 'resourcePoolVmTraversalSpec',
                          type => 'ResourcePool',
                          path => 'vm',
-                         skip => 0);
+                         skip => 0);   
 
    my $computeResourceRpTraversalSpec =
       TraversalSpec->new(name => 'computeResourceRpTraversalSpec',
@@ -1834,22 +1840,22 @@ sub get_search_filter_spec {
                          path => 'resourcePool',
                          skip => 0,
                          selectSet => [SelectionSpec->new(name => 'resourcePoolTraversalSpec'),
-                                       SelectionSpec->new(name => 'resourcePoolVmTraversalSpec')]);
-
-
+                                       SelectionSpec->new(name => 'resourcePoolVmTraversalSpec')]);      
+      
+   
    my $computeResourceHostTraversalSpec =
       TraversalSpec->new(name => 'computeResourceHostTraversalSpec',
                          type => 'ComputeResource',
                          path => 'host',
                          skip => 0);
-
+         
    my $datacenterHostTraversalSpec =
       TraversalSpec->new(name => 'datacenterHostTraversalSpec',
                          type => 'Datacenter',
                          path => 'hostFolder',
                          skip => 0,
                          selectSet => [SelectionSpec->new(name => "folderTraversalSpec")]);
-
+   
    my $datacenterVmTraversalSpec =
       TraversalSpec->new(name => 'datacenterVmTraversalSpec',
                          type => 'Datacenter',
@@ -1863,7 +1869,7 @@ sub get_search_filter_spec {
                          path => 'vm',
                          skip => 0,
                          selectSet => [SelectionSpec->new(name => "folderTraversalSpec")]);
-
+      
    my $folderTraversalSpec =
       TraversalSpec->new(name => 'folderTraversalSpec',
                          type => 'Folder',
@@ -1877,7 +1883,7 @@ sub get_search_filter_spec {
                                        SelectionSpec->new(name => 'hostVmTraversalSpec'),
                                        SelectionSpec->new(name => 'resourcePoolVmTraversalSpec'),
                                        ]);
-
+   
    my $obj_spec = ObjectSpec->new(obj => $mo_ref,
                                   skip => 0,
                                   selectSet => [$folderTraversalSpec,
@@ -1888,7 +1894,7 @@ sub get_search_filter_spec {
                                                 $resourcePoolTraversalSpec,
                                                 $hostVmTraversalSpec,
                                                 $resourcePoolVmTraversalSpec]);
-
+   
    return PropertyFilterSpec->new(propSet => $property_spec,
                                   objectSet => [$obj_spec]);
 }
@@ -1904,7 +1910,7 @@ sub get_task_collector_view {
                                   recursion => TaskFilterSpecRecursionOption->new($recursion_option)));
    my $task_mgr_view = $self->{vim}->get_view(mo_ref => $self->{vim}->get_service_content()->taskManager);
    my $task_collector = $task_mgr_view->CreateCollectorForTasks(filter => $task_filter_spec);
-   return $self->{vim}->get_view(mo_ref => $task_collector);
+   return $self->{vim}->get_view(mo_ref => $task_collector);   
 }
 
 sub get_entity_only_tasks_collector_view {
@@ -1914,7 +1920,7 @@ sub get_entity_only_tasks_collector_view {
 
 sub get_all_tasks_view {
    my ($self, %args) = @_;
-   return $self->get_task_collector_view('all', %args);
+   return $self->get_task_collector_view('all', %args);   
 }
 
 sub get_event_collector_view {
@@ -1996,7 +2002,7 @@ sub new {
    if (! $fault_node) {
       return bless $self, $class;
    }
-
+   
    my $detail_node = $fault_node->getChildrenByTagName('detail')->shift;
    if (defined($detail_node)) {
       my $fault_detail_child = XmlUtil::get_first_child_element($detail_node);
@@ -2004,12 +2010,12 @@ sub new {
       $faultName =~ /(.*)Fault/;
       $self->{detail} = $1->deserialize($fault_detail_child);
       # bug 194241
-      $self->{name} = $faultName;
+      $self->{name} = $faultName;     
    } else {
       my $fault_code_node = $fault_node->getChildrenByTagName('faultcode')->shift;
       $self->{detail} = $fault_code_node->textContent;
    }
-
+   
    my $fault_string_node = $fault_node->getChildrenByTagName('faultstring')->shift;
    $self->{fault_string} = $fault_string_node->textContent;
    return bless $self, $class;
@@ -2021,7 +2027,7 @@ sub stringify{
    my $self = shift;
    my $fault = "\nSOAP Fault:\n";
    $fault .=   "-----------\n";
-
+   
    if (!Encode::is_utf8($self->{fault_string})) {
       $self->{fault_string} = decode_utf8($self->{fault_string});
    }
@@ -2101,21 +2107,21 @@ END
 
 sub new {
    my ($class, $url) = @_;
-   my $user_agent = LWP::UserAgent->new(agent => "VI Perl", ssl_opts => { SSL_verify_mode => 'SSL_VERIFY_NONE', verify_hostname => 0 });
+   my $user_agent = LWP::UserAgent->new(agent => "VI Perl");
    my $cookie_jar = HTTP::Cookies->new(ignore_discard => 1);
    $user_agent->cookie_jar( $cookie_jar );
    $user_agent->protocols_allowed( ['http', 'https'] );
    $user_agent->conn_cache(LWP::ConnCache->new);
    my $self = { user_agent => $user_agent,
                 url => $url, };
-   return bless $self, $class;
+   return bless $self, $class;   
 }
 
 sub save_session {
    my ($self, $file) = @_;
    my $user_agent = $self->{user_agent};
    umask 0077;
-   $user_agent->cookie_jar->save($file);
+   $user_agent->cookie_jar->save($file); 
    return;
 }
 
@@ -2137,7 +2143,7 @@ sub unload_session {
 sub get_session_loaded {
    my $self = shift;
    my $user_agent = $self->{user_agent};
-   return defined $user_agent->cookie_jar and
+   return defined $user_agent->cookie_jar and 
                   $user_agent->cookie_jar->as_string ne '';
 }
 
@@ -2187,19 +2193,19 @@ sub request {
                                     $url,
                                     $http_header,
                                     $request_envelope);
-
+   
    # send request
    Util::trace(3, "\nREQUEST: " . Dumper($request->content));
    my $response = $user_agent->request($request);
    Util::trace(3, "\nRESPONSE: " . Dumper($response->content) . "\n");
-
-   my $xml_parser = XML::LibXML->new;
-   my $result;
+   
+   my $xml_parser = XML::LibXML->new;   
+   my $result;   
    eval { $result = $xml_parser->parse_string($response->content) };
    if ($@) {
       # response is not well formed xml - possibly be a setup issue
       die "SOAP request error - possibly a protocol issue: " . $response->content . "\n";
-   }
+   }   
    my $body = $result->documentElement()->getChildrenByTagName('soapenv:Body')->shift;
    my $return_val = $body->getChildrenByTagName("${op_name}Response")->shift;
    if (! $return_val) {
@@ -2234,16 +2240,16 @@ package PrimType;
 sub new {
    my ($class, $val, $type_name) = @_;
    my $self = { val => $val , type_name => $type_name};
-   return bless $self, $class;
+   return bless $self, $class;   
 }
 
 sub serialize {
    my ($self, $tag, $emit_type) = @_;
-   my $val = $self->{val};
+   my $val = $self->{val};   
    my $serialized_string = "<$tag>";
    if ($emit_type) {
       my $type_name = $self->{type_name};
-      $serialized_string = "<$tag xsi:type=\"xsd:${type_name}\">";
+      $serialized_string = "<$tag xsi:type=\"xsd:${type_name}\">";      
    }
    return $serialized_string .= "$val</$tag>";
 }
@@ -2265,7 +2271,7 @@ use Encode;
 sub new {
    my ($class, $val) = @_;
    my $self = { val => $val };
-   return bless $self, $class;
+   return bless $self, $class;   
 }
 
 sub serialize {
@@ -2274,7 +2280,7 @@ sub serialize {
    my $serialized_string = "<$tag>";
    if ($emit_type) {
       my $type_name = ref $self;
-      $serialized_string = "<$tag xsi:type=\"$type_name\">";
+      $serialized_string = "<$tag xsi:type=\"$type_name\">";      
    }
    return $serialized_string = "$serialized_string$val</$tag>";
 }
@@ -2316,16 +2322,16 @@ sub deserialize {
    my $self = {};
    my @property_list = $class->get_property_list();
    foreach (@property_list) {
-      my ($property_name, $class_name, $isarray) = @$_;
+      my ($property_name, $class_name, $isarray) = @$_; 
       my @child_nodes = $element_node->getChildrenByTagName($property_name);
       if (! @child_nodes) {
          next;
-      }
-      my $property_val = [];
+      }      
+      my $property_val = [];   
       foreach (@child_nodes) {
          my $val;
          my $child_class_name = $class_name;
-
+         
          if (defined $child_class_name) {
             my $child_type_node =
                $_->getAttributeNodeNS('http://www.w3.org/2001/XMLSchema-instance', 'type');
@@ -2336,7 +2342,7 @@ sub deserialize {
                }
             }
          }
-
+         
          if ($child_class_name) {
             if ($child_class_name eq 'boolean') {
                if ($_->textContent eq 'true' or $_->textContent eq '1') {
@@ -2357,7 +2363,7 @@ sub deserialize {
          } else {
             $property_val = $val;
          }
-      }
+      }      
       my $propValType = ref $property_val;
       if ($propValType =~ /ArrayOf.*/) {
          my @keyvals = %$property_val;
@@ -2367,8 +2373,8 @@ sub deserialize {
       } else {
          $self->{$property_name} = $property_val;
       }
-   }
-   return bless $self, $class;
+   } 
+   return bless $self, $class;   
 }
 
 
@@ -2379,10 +2385,10 @@ sub serialize {
    if ($emit_type) {
       my $type_name = ref $self;
       $serialized_string = "<$tag xsi:type=\"$type_name\">";
-   }
+   } 
    foreach (@property_list) {
       # bug 193402
-      my ($property_name, $class_name, $isarray, $mandatory) = @$_;
+      my ($property_name, $class_name, $isarray, $mandatory) = @$_;      
       if (! exists($self->{$property_name})) {
          if ($mandatory == 1) {
             Carp::confess "Mandatory property \"$property_name\" missing";
@@ -2407,19 +2413,19 @@ sub serialize {
                } else {
                   Carp::confess "Cannot serialize boolean: acceptable values are true/false/1/0, got '$_'";
                }
-               $serialized_string .= "<$property_name>" . XmlUtil::escape_xml_string($val) . "</$property_name>";
+               $serialized_string .= "<$property_name>" . XmlUtil::escape_xml_string($val) . "</$property_name>";                          
                next;
             }
-
+            
             # complex type
             my $show_type;
             my $obj_type_name = ref $_;
-            if ($class_name ne $obj_type_name) {
+            if ($class_name ne $obj_type_name) {               
                $show_type = 1;
                if ($class_name eq 'anyType' &&  ! $obj_type_name) {
                   # primitive going out as any -- treat them as xsd:string
                   if (defined ($_)) {
-                     $serialized_string .=
+                     $serialized_string .=       
                         "<$property_name xsi:type=\"xsd:string\">" .
                         XmlUtil::escape_xml_string($_) . "</$property_name>";
                   }
@@ -2427,7 +2433,7 @@ sub serialize {
                }
             }
             if ($obj_type_name && $class_name eq 'ManagedObjectReference') {
-               $obj_type_name = 'ManagedObjectReference';
+               $obj_type_name = 'ManagedObjectReference';   
             }
             if ($class_name ne 'anyType') {
                if (! $obj_type_name || ! $obj_type_name->isa($class_name)) {
@@ -2441,9 +2447,9 @@ sub serialize {
          } else {
             # primitive
             if (defined($_)) {
-               $serialized_string .=
-                  "<$property_name>" . XmlUtil::escape_xml_string($_) . "</$property_name>";
-            }
+               $serialized_string .=       
+                  "<$property_name>" . XmlUtil::escape_xml_string($_) . "</$property_name>";     
+            }         
          }
       }
    }
@@ -2482,7 +2488,7 @@ sub arg_validation {
          if($arg eq $prop->[0]) {
             $found = 1;
          }
-      }
+      } 
       if($found == 0) {
          Carp::confess("Argument $arg is not valid");
       }
@@ -2497,7 +2503,7 @@ sub get_property_list {
 ##################################################################################
 
 
-##################################################################################
+##################################################################################   
 package ManagedObjectReference;
 use VMware::VIMRuntime;
 
@@ -2506,11 +2512,11 @@ our @ISA = qw(ComplexType);
 
 our @property_list = (['type', undef],
                       ['value', undef]);
-
+                      
 VIMRuntime::make_get_set('ManagedObjectReference', 'type', 'value');
 
 sub get_property_list {
-   return @property_list;
+   return @property_list;   
 }
 
 sub deserialize {
@@ -2561,3 +2567,4 @@ __END__
 =head1 HELP-LINKS
 
 See the vSphere SDK for Perl Programming Guide at http://www.vmware.com/support/developer/viperltoolkit/ for reference documentation for the subroutines.
+

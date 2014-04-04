@@ -26,22 +26,22 @@ sub get_host_view {
    if ($service_content->about->apiType eq 'VirtualCenter') {
       my $vihost = Opts::get_option('vihost');
       if ($require_host) {
-         Opts::assert_usage(defined($vihost),
-                            "The --vihost option must be specified " .
-                            "when connecting to vCenter.");
+         Opts::assert_usage(defined($vihost), 
+                            "The --vihost option must be specified " . 
+                            "when connecting to vCenter."); 
       }
       return undef unless (defined($vihost));
       if ($properties) {
-         $host_view = Vim::find_entity_view(view_type => 'HostSystem',
+         $host_view = Vim::find_entity_view(view_type => 'HostSystem', 
                                             filter => {'name' => "$vihost"},
-                                            properties => $properties);
+                                            properties => $properties);      
       } else {
-         $host_view = Vim::find_entity_view(view_type => 'HostSystem',
+         $host_view = Vim::find_entity_view(view_type => 'HostSystem', 
                                             filter => {'name' => "$vihost"});
       }
    } else {
       #
-      # assume only one entry if connected to an ESX
+      # assume only one entry if connected to an ESX 
       #
       if ($properties) {
          $host_view = Vim::find_entity_view (view_type => 'HostSystem',
@@ -121,9 +121,9 @@ sub build_http_request {
          }
       }
    }
-
+   
    # bug 301386
-   # Certain combinations of perl/lwp will construct
+   # Certain combinations of perl/lwp will construct 
    # corrupted HTTP request when utf-8 tagged URL is
    # involved so downgrading the utf8 url string.
    utf8::downgrade($url_string);
@@ -164,7 +164,7 @@ sub parse_remote_path {
    } else {
       $path = $remote_path;
    }
-
+   
    return ($mode, $dc, $ds, $path);
 }
 
@@ -263,7 +263,7 @@ sub http_put_file {
    my $service_url = URI::URL->new($service->{vim_soap}->{url});
    my $user_agent = $service->{vim_soap}->{user_agent};
 
-   my $req = build_http_request("PUT", $mode, $service_url,
+   my $req = build_http_request("PUT", $mode, $service_url, 
                                 $remote_path, $remote_ds, $remote_dc);
    unless ($req) {
       print STDERR "Unable to construct request : $remote_path.\n";
@@ -293,7 +293,7 @@ sub http_get_file {
    my $service_url = URI::URL->new($service->{vim_soap}->{url});
    my $user_agent = $service->{vim_soap}->{user_agent};
 
-   my $req = build_http_request("GET", $mode, $service_url,
+   my $req = build_http_request("GET", $mode, $service_url, 
                                 $remote_path, $remote_ds, $remote_dc);
    unless ($req) {
       print STDERR "Unable to construct request : $remote_path.\n";
@@ -301,7 +301,7 @@ sub http_get_file {
       my $resp = do_http_get_file($user_agent, $req, $local_dest_path);
       if ($resp) {
          if (!$resp->is_success) {
-            print STDERR "GET " . $req->uri . " unsuccessful : " .
+            print STDERR "GET " . $req->uri . " unsuccessful : " . 
                          $resp->status_line . "\n";
          }
       } else {
@@ -320,8 +320,8 @@ sub get_advoption_by_key {
    my ($ao, $key) = @_;
 
    # convert to dot notation
-   $key =~ s/^\s*\///g;
-   $key =~ s/\//\./g;
+   $key =~ s/^\s*\///g; 
+   $key =~ s/\//\./g; 
 
    my $optList = $ao->supportedOption();
    foreach my $optDef (@$optList) {
@@ -343,7 +343,7 @@ sub get_advoption_by_key {
 #
 sub get_advoption_type {
    my $optType = shift;
-   my $valType = "string";
+   my $valType = "string"; 
 
    if (defined($optType)) {
       if ($optType->isa("IntOption")) {
@@ -373,7 +373,7 @@ sub set_advoption_default {
       $defVal = "" unless defined($defVal);
 
       my $val = new PrimType($defVal, $valType);
-      $opt->{value} = $val;
+      $opt->{value} = $val; 
 
       $ao->UpdateOptions(changedValue => [$opt]);
 
@@ -552,16 +552,16 @@ sub enter_maintenance_mode{
          else {
             $vmaction = $vm_actions->{$returnval->{'name'}};
             if (!defined $vmaction) {
-               Carp::confess("No action specified for VM " . $returnval->{'name'}
+               Carp::confess("No action specified for VM " . $returnval->{'name'} 
                              . " in hashmap argument vm_actions.\n");
             }
             elsif ($vmaction ne 'poweroff' && $vmaction ne 'suspend') {
-               Carp::confess("Invalid action " .$vmaction. " specified for VM "
+               Carp::confess("Invalid action " .$vmaction. " specified for VM " 
                              . $returnval->{'name'} . " in hashmap argument vm_actions.\n");
             }
          }
          if ($vmaction eq 'poweroff') {
-            eval {
+            eval { 
                VmOps::poweroff_vm(vim => $vim,
                                   vm_mor => $_);
             };
@@ -607,7 +607,7 @@ sub exit_maintenance_mode{
       Carp::confess("host_mor argument is required.\n");
    }
    elsif (!defined $args{host_mor}) {
-      Carp::confess("host_mor argument is undefined.\n");
+      Carp::confess("host_mor argument is undefined.\n");   
    }
 
    my $host_mo_ref = $args{host_mor};
@@ -638,7 +638,7 @@ sub exit_maintenance_mode{
 #        where
 #           vim                       - Vim object instance
 #           host_mor                  - Host system managed object reference
-#           force                     - Flag to specify whether or not the host should be
+#           force                     - Flag to specify whether or not the host should be 
 #                                       rebooted regardless of whether it is in maintenance mode
 # Output: Return 1 for successful operation Else return fault.
 # ----------------------------------------------------------------------------------------------
@@ -649,7 +649,7 @@ sub reboot_host {
       Carp::confess("host_mor argument is required.\n");
    }
    elsif (!defined $args{host_mor}) {
-      Carp::confess("host_mor argument is undefined.\n");
+      Carp::confess("host_mor argument is undefined.\n");   
    }
 
    my $host_mo_ref = $args{host_mor};
@@ -684,7 +684,7 @@ sub reboot_host {
 #        where
 #           vim                       - Vim object instance
 #           host_mor                  - Host system managed object reference
-#           force                     - Flag to specify whether or not the host should be
+#           force                     - Flag to specify whether or not the host should be 
 #                                       rebooted regardless of whether it is in maintenance mode
 # Output: Return 1 for successful operation Else return fault.
 # ----------------------------------------------------------------------------------------------
@@ -695,7 +695,7 @@ sub shutdown_host {
       Carp::confess("host_mor argument is required.\n");
    }
    elsif (!defined $args{host_mor}) {
-      Carp::confess("host_mor argument is undefined.\n");
+      Carp::confess("host_mor argument is undefined.\n");   
    }
 
    my $host_mo_ref = $args{host_mor};
@@ -739,14 +739,14 @@ sub get_host_info {
       Carp::confess("host_mor argument is required.\n");
    }
    elsif (!defined $args{host_mor}) {
-      Carp::confess("host_mor argument is undefined.\n");
+      Carp::confess("host_mor argument is undefined.\n");   
    }
 
    if (!exists($args{properties})) {
       Carp::confess("properties argument is required.\n");
    }
    elsif (!defined $args{properties}) {
-      Carp::confess("properties argument is undefined.\n");
+      Carp::confess("properties argument is undefined.\n");   
    }
 
    my $host_mo_ref = $args{host_mor};
@@ -774,7 +774,7 @@ sub check_host_in_maintenance_mode {
       Carp::confess("host_mor argument is required.\n");
    }
    elsif (!defined $args{host_mor}) {
-      Carp::confess("host_mor argument is undefined.\n");
+      Carp::confess("host_mor argument is undefined.\n");   
    }
 
    my $host_mo_ref = $args{host_mor};
@@ -805,7 +805,7 @@ sub get_list_powered_on_vms {
    elsif(! defined $args{host_mor}) {
       Carp::confess("host_mor argument is undefined.\n");
    }
-
+   
    my $host_mo_ref = $args{host_mor};
    my $vim = VIExt::get_vim_instance(%args);
    my $host_view = $vim->get_view(mo_ref => $host_mo_ref);
@@ -843,7 +843,7 @@ sub get_vm_power_status {
       Carp::confess("vm_mor argument is required.\n");
    }
    elsif (!defined $args{vm_mor}) {
-      Carp::confess("vm_mor argument is undefined.\n");
+      Carp::confess("vm_mor argument is undefined.\n");   
    }
 
    my $vm_mo_ref = $args{vm_mor};
@@ -873,7 +873,7 @@ sub poweroff_vm {
       Carp::confess("vm_mor argument is required.\n");
    }
    elsif (! defined $args{vm_mor}) {
-      Carp::confess("vm_mor argument is undefined.\n");
+      Carp::confess("vm_mor argument is undefined.\n");   
    }
 
    my $vm_mo_ref = $args{vm_mor};
@@ -883,7 +883,7 @@ sub poweroff_vm {
    eval {
       $vm_view->PowerOffVM();
    };
-   if ($@) {
+   if ($@) { 
       die $@;
    }
    return 1;
@@ -905,7 +905,7 @@ sub suspend_vm {
       Carp::confess("vm_mor argument is required.\n");
    }
    elsif (! defined $args{vm_mor}) {
-      Carp::confess("vm_mor argument is undefined.\n");
+      Carp::confess("vm_mor argument is undefined.\n");   
    }
 
    my $vm_mo_ref = $args{vm_mor};
@@ -915,7 +915,7 @@ sub suspend_vm {
    eval {
       $vm_view->SuspendVM();
    };
-   if ($@) {
+   if ($@) { 
       die $@;
    }
    return 1;
