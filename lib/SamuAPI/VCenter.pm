@@ -303,7 +303,21 @@ sub get_manager {
         ExEntity::Empty->throw( error => 'Could not retrieve manager', entity => "$type" );
     }
     return $manager;
-#    return $sc;
+}
+
+sub get_hosts {
+    my $self = shift;
+    my $result = ();
+    $result = $self->find_entities( view_type => 'HostSystem');
+    return $result;
+}
+
+sub get_host_configmanager{
+    my ( $self, %args) = @_;
+    my $host = SamuAPI_host->new( view => $args{view});
+    my $mo_ref = $host->get_manager( $args{manager});
+    my $return = $self->get_view( mo_ref => $mo_ref);
+    return $return;
 }
 
 sub get_templates {
@@ -346,6 +360,33 @@ sub find_vms_with_disk {
         }
     }
     return \@vms;
+}
+
+sub get_switches {
+    my $self = shift;
+    my $result = ();
+    $result = $self->find_entities( view_type => 'DistributedVirtualSwitch', properties => ['summary', 'portgroup'] );
+    return $result;
+}
+
+sub get_dvps {
+    my $self = shift;
+    my $result = ();
+    $result = $self->find_entities( view_type => 'DistributedVirtualPortgroup', properties => ['summary', 'key'] );
+    return $result;
+}
+
+sub get_networks {
+    my $self = shift;
+    my $result = ();
+    my $networks = $self->find_entities( view_type => 'Network', properties => ['summary'] );
+    for my $network ( @{ $networks } ) {
+        my $obj = SamuAPI_network->new( view => $network);
+        if ( $obj->get_mo_ref_type eq 'Network' ) {
+            push( @{ $result }, $network );
+        }
+    }
+    return $result;
 }
 
 1

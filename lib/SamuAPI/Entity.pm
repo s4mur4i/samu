@@ -37,6 +37,11 @@ sub get_mo_ref_value {
     return $self->{mo_ref}->{value};
 }
 
+sub get_mo_ref_type {
+    my $self = shift;
+    return $self->{mo_ref}->{type};
+}
+
 sub get_mo_ref {
     my $self = shift;
     my %result = ( value => $self->{mo_ref}->{value}, type => $self->{mo_ref}->{type});
@@ -606,7 +611,7 @@ sub new {
     } elsif ( $args{mo_ref}) { 
         $self->{mo_ref} = $args{mo_ref};
     } else {
-        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_distributedvirtualportgroup");
+        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_network");
     }
     $self->parse_info;
     return $self;
@@ -620,7 +625,7 @@ sub parse_info {
     }
     my $view = $self->{view};
     $self->{info}->{connected_vms} = $self->connected_vms;
-    $self->{info}->{name} = $view->{name};
+    $self->{info}->{name} = $view->{summary}->{name};
     if ( !defined($self->{mo_ref}) ) {
         $self->{mo_ref} = $self->{view}->{mo_ref};
     }
@@ -637,6 +642,47 @@ sub connected_vms {
         push( @vm, $obj->get_mo_ref);
     }
     return \@vm;
+}
+
+######################################################################################
+package SamuAPI_host;
+
+use base 'Entity';
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    if ( $args{view}) {
+        $self->{view} = $args{view};
+    } elsif ( $args{mo_ref}) { 
+        $self->{mo_ref} = $args{mo_ref};
+    } else {
+        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_host");
+    }
+    $self->parse_info;
+    return $self;
+}
+
+sub parse_info {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    my $view = $self->{view};
+    $self->{info}->{name} = $view->{name};
+    if ( !defined($self->{mo_ref}) ) {
+        $self->{mo_ref} = $self->{view}->{mo_ref};
+    }
+    $self->{info}->{mo_ref_value} = $self->get_mo_ref_value;
+    $self->{info}->{mo_ref} = $self->get_mo_ref;
+    return $self;
+}
+
+sub get_manager {
+    my ($self, $manager) = @_;
+    my $mo_ref = $self->{view}->{configManager}->{$manager};
+    return $mo_ref;    
 }
 
 1
