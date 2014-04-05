@@ -640,10 +640,29 @@ sub switch_POST{
 
 }
 
-sub switch : Chained('switch_base'): PathPart(''): Args(1) : ActionClass('REST') {}
+sub switch : Chained('switch_base'): PathPart(''): Args(1) : ActionClass('REST') {
+    my ( $self, $c, $mo_ref_value ) = @_;
+    eval {
+        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'DistributedVirtualSwitch', value => $mo_ref_value) ;
+        my %params = ( mo_ref => $c->stash->{mo_ref});
+        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }    
+}
 
 sub switch_GET {
-
+    my ( $self, $c, $moref_value) = @_;
+    my %result = ();
+    eval {
+        my $switch = SamuAPI_distributedvirtualswitch->new( view => $c->stash->{view});
+        %result = %{ $switch->get_info};
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub switch_DELETE {
@@ -679,10 +698,29 @@ sub dvps_POST {
 
 }
 
-sub dvp : Chained('dvp_base'): PathPart(''): Args(1) : ActionClass('REST') {}
+sub dvp : Chained('dvp_base'): PathPart(''): Args(1) : ActionClass('REST') {
+    my ( $self, $c, $mo_ref_value ) = @_;
+    eval {
+        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'DistributedVirtualPortgroup', value => $mo_ref_value) ;
+        my %params = ( mo_ref => $c->stash->{mo_ref});
+        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }    
+}
 
 sub dvp_GET {
-
+    my ( $self, $c, $moref_value) = @_;
+    my %result = ();
+    eval {
+        my $dvp = SamuAPI_distributedvirtualportgroup->new( view => $c->stash->{view});
+        %result = %{ $dvp->get_info};
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub dvp_DELETE {
@@ -720,10 +758,29 @@ sub hostnetworks_POST {
 
 }
 
-sub hostnetwork : Chained('hostnetwork_base'): PathPart(''): Args(1) : ActionClass('REST') {}
+sub hostnetwork : Chained('hostnetwork_base'): PathPart(''): Args(1) : ActionClass('REST') {
+    my ( $self, $c, $mo_ref_value ) = @_;
+    eval {
+        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'Network', value => $mo_ref_value) ;
+        my %params = ( mo_ref => $c->stash->{mo_ref});
+        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }    
+}
 
 sub hostnetwork_GET {
-
+    my ( $self, $c, $moref_value) = @_;
+    my %result = ();
+    eval {
+        my $network = SamuAPI_network->new( view => $c->stash->{view});
+        %result = %{ $network->get_info};
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub hostnetwork_DELETE {
