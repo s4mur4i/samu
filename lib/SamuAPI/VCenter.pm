@@ -389,4 +389,39 @@ sub get_networks {
     return $result;
 }
 
+sub create_switch {
+    my ($self, %args) = @_;
+    my $task = ();
+    my $ticket = delete($args{ticket});
+    my $host_mo_ref_value = delete($args{host});
+    my $host = $self->get_view( mo_ref => $self->create_moref( value => $host_mo_ref_value, type => 'HostSystem' ) );
+    my $network_folder = $self->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'network' });
+    my $hostspec = DistributedVirtualSwitchHostMemberConfigSpec->new( operation           => 'add', maxProxySwitchPorts => 99, host                => $host);
+    my $dvsconfigspec = DVSConfigSpec->new( name        => $ticket, maxPorts    => 300, description => "DVS for ticket $ticket", host        => [$hostspec]);
+    my $spec = DVSCreateSpec->new( configSpec => $dvsconfigspec );
+    $task = $network_folder->CreateDVS_Task( spec => $spec );
+    return $task;
+}
+
+sub create_dvp {
+    my ($self, %args) = @_;
+    my $task = ();
+    my $ticket = delete($args{ticket});
+    my $switch_value = delete($args{switch});
+    my $func = delete($args{func});
+    my $name_base = $ticket . "-" . $func . "-";
+    my $name = $name_base . &Misc::rand_3digit;
+    my $view = $self->find_entity( view_type => 'DistributedVirtualPortgroup', properties => ['name'], filter => { name => $name } );
+    while ( defined($view) ) {
+        $name = $name_base . &Misc::rand_3digit;
+        $view = $self->find_entity( view_type => 'DistributedVirtualPortgroup', properties => ['name'], filter => { name => $name } );
+    }
+    my $switch_mo_ref = $self->create_moref( value => $switch_value, type=> 'DistributedVirtualSwitch' );
+    my $switch_view = $self->get_view( mo_ref => $switch_mo_ref);
+    my $network_folder = $self->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'network' });
+    my $spec = DVPortgroupConfigSpec->new( name        => $name, type        => 'earlyBinding', numPorts    => 20, description => "Port group");
+    $task = $switch_view->AddDVPortgroup_Task( spec => $spec );
+    return $task;
+}
+
 1

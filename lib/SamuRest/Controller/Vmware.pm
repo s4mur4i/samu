@@ -636,8 +636,22 @@ sub switches_GET {
     return $self->__ok( $c, \%result );
 }
 
-sub switch_POST{
-
+sub switches_POST{
+    my ($self, $c) = @_;
+    my $params = $c->req->params;
+    my $ticket = $params->{ticket};
+    my $host = $params->{host};
+# TODO impelement method to list hosts
+    my %result =();
+    eval {
+        my $task_mo_ref = $c->stash->{vim}->create_switch( ticket => $ticket, host => $host );
+        my $task = SamuAPI_task->new( mo_ref => $task_mo_ref);
+        $result{task} = $task->get_mo_ref;
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub switch : Chained('switch_base'): PathPart(''): Args(1) : ActionClass('REST') {
@@ -695,7 +709,21 @@ sub dvps_GET {
 }
 
 sub dvps_POST {
-
+    my ($self, $c) = @_;
+    my $params = $c->req->params;
+    my $ticket = $params->{ticket};
+    my $switch = $params->{switch};
+    my $func = $params->{func};
+    my %result =();
+    eval {
+        my $task_mo_ref = $c->stash->{vim}->create_dvp( ticket => $ticket, switch => $switch, func => $func);
+        my $task = SamuAPI_task->new( mo_ref => $task_mo_ref);
+        $result{task} = $task->get_mo_ref;
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub dvp : Chained('dvp_base'): PathPart(''): Args(1) : ActionClass('REST') {
@@ -732,8 +760,7 @@ sub dvp_PUT {
 }
 
 sub hostnetwork_base : Chained(networkBase) : PathPart('hostnetwork'): CaptureArgs(0) { }
-# Terminology is not correct here and need to fix.
-# We return all networks that are Network objects
+
 sub hostnetworks : Chained('hostnetwork_base'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 sub hostnetworks_GET{
@@ -752,10 +779,6 @@ sub hostnetworks_GET{
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
-}
-
-sub hostnetworks_POST {
-
 }
 
 sub hostnetwork : Chained('hostnetwork_base'): PathPart(''): Args(1) : ActionClass('REST') {

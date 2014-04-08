@@ -23,6 +23,7 @@ BEGIN {
 use SamuAPI::Exception;
 use SamuAPI::VCenter;
 use SamuAPI::Entity;
+use SamuAPI::Misc;
 
 &Log::debug("Loaded module common");
 
