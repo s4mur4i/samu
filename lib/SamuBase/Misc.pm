@@ -89,7 +89,6 @@ sub call_pod2usage {
 =cut
 
 sub option_parser {
-    &Log::debug("Starting " . (caller(0))[3] . " sub");
     my $opts        = shift;
     my $module_name = shift;
     if ( exists( $opts->{helper} ) ) {
@@ -98,51 +97,41 @@ sub option_parser {
     }
     if ( exists $opts->{module} ) {
         my $module = 'Base::' . $opts->{module};
-        &Log::debug("loading module $module");
         eval { load $module; };
         $module->import();
     }
     if ( exists $opts->{prereq_module} ) {
         for my $module ( @{ $opts->{prereq_module} } ) {
-            &Log::debug("loading prereq module $module");
             eval { load $module; };
             $module->import();
         }
     }
     if ( exists $opts->{function} ) {
         if ( exists $opts->{opts} ) {
-            &Log::debug("Parsing options to VMware SDK");
             &VCenter::SDK_options( $opts->{opts} );
             if ( $opts->{vcenter_connect} ) {
                 eval {
-                    &Log::debug("Connecting to VCenter");
                     &VCenter::connect_vcenter();
                 };
                 if ($@) { &Error::catch_ex($@) }
             }
             else {
-                &Log::debug("No connection is required to VCenter");
             }
         }
-        &Log::debug("Invoking handler function of $module_name");
         &{ $opts->{function} };
         if ( $opts->{vcenter_connect} ) {
-            &Log::debug("Disconnecting from VCenter");
             &VCenter::disconnect_vcenter();
         }
     }
     else {
         my $arg = shift @ARGV;
         if ( defined $arg and exists $opts->{functions}->{$arg} ) {
-            &Log::debug("Forwarding parsing to subfunction parser $arg");
             &misc::option_parser( $opts->{functions}->{$arg}, $arg );
         }
         else {
-            &Log::debug("Calling helper");
             call_pod2usage( $opts->{helper} );
         }
     }
-    &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return 1;
 }
 

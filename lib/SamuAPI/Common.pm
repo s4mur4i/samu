@@ -25,8 +25,6 @@ use SamuAPI::VCenter;
 use SamuAPI::Entity;
 use SamuAPI::Misc;
 
-&Log::debug("Loaded module common");
-
 our $VERSION = '1.0.0';
 
 1

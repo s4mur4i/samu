@@ -30,7 +30,6 @@ our %find_params = ();
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    &Log::debug("Starting " . (caller(0))[3] . " sub");
     $self->{vcenter_url} = delete($args{vcenter_url});
     
     # The two information should be provided together, or sessionfile should be given
@@ -74,7 +73,6 @@ Connecting to a VCenter
 
 sub connect_vcenter {
     my $self = shift;
-    &Log::debug("Starting " . (caller(0))[3] . " sub");
     my $vim;
     eval {
         $vim = Vim->new(service_url => $self->{vcenter_url});
@@ -84,14 +82,11 @@ sub connect_vcenter {
         ExConnection::VCenter->throw( error => 'Could not connect to VCenter', vcenter_url => $self->{vcenter_url} );
     }
     $self->{vim} = $vim;
-    &Log::dumpobj("Vim connect object", $vim);
-    &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return $vim;
 }
 
 sub savesession_vcenter {
     my $self = shift;
-    &Log::debug("Starting " . (caller(0))[3] . " sub");
     my $sessionfile = File::Temp->new( DIR => '/tmp', UNLINK => 0, SUFFIX => '.session', TEMPLATE => 'vcenter.XXXXXX' );
     eval {
         $self->{vim}->save_session( session_file => $sessionfile );
@@ -100,14 +95,11 @@ sub savesession_vcenter {
     if ($@) {
         ExConnection::VCenter->throw( error => 'Could not save session to VCenter', vcenter_url => $self->{vcenter_url} );
     }
-    &Log::dumpobj("Sessionfile", $sessionfile->filename);
-    &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return $sessionfile->filename;
 }
 
 sub loadsession_vcenter {
     my $self = shift;
-    &Log::debug("Starting " . (caller(0))[3] . " sub");
     my $vim;
     eval {
         $vim = Vim->new(service_url => $self->{vcenter_url});
@@ -118,22 +110,17 @@ sub loadsession_vcenter {
         ExConnection::VCenter->throw( error => 'Could not load session to VCenter', vcenter_url => $self->{vcenter_url} );
     }
     $self->{vim} = $vim;
-    &Log::dumpobj("Vim connect object", $vim);
-    &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return $self;
 }
 
 sub disconnect_vcenter {
     my $self = shift;
-    &Log::debug("Starting " . (caller(0))[3] . " sub");
     eval {
         $self->{vim}->logout();
     };
     if ( $@ ) {
         ExConnection::VCenter->throw( error => 'Could not disconnect from VCenter', vcenter_url => $self->{vcenter_url} );
     }
-    &Log::dumpobj("Returning self", $self);
-    &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return $self;
 }
 

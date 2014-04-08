@@ -50,9 +50,7 @@ Tested if exception is thrown after second create
 =cut
 
 sub create_table {
-    &Log::debug("Starting  " . (caller(0))[3] . " sub");
     if ( !defined($tbh) ) {
-        &Log::debug("Creating table object");
         $tbh = Text::Table->new();
     }
     else {
@@ -62,7 +60,6 @@ sub create_table {
             dest  => 'tbh'
         );
     }
-    &Log::debug("Finishing " .(caller(0))[3] . " sub");
     return 1;
 }
 
@@ -105,9 +102,7 @@ Tested if exception is thrown after second create
 
 sub create_csv {
     my ($header) = @_;
-    &Log::debug("Starting " . (caller(0))[3] . " sub");
     if ( !defined($csv) ) {
-        &Log::debug("Creating csv object");
         $csv = Class::CSV->new( fields => $header );
     }
     else {
@@ -117,7 +112,6 @@ sub create_csv {
             dest  => 'csv'
         );
     }
-    &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return 1;
 }
 
@@ -160,14 +154,10 @@ Tested if exception is thrown if no objects are defined
 
 sub add_row {
     my ($row) = @_;
-    &Log::debug("Starting " . (caller(0))[3] . " sub");
-    &Log::dumpobj( "row", $row );
     if ( defined($tbh) ) {
-        &Log::debug("Adding row to table");
         $tbh->add(@$row);
     }
     elsif ( defined $csv ) {
-        &Log::debug("Adding row to csv");
         $csv->add_line($row);
     }
     else {
@@ -177,7 +167,6 @@ sub add_row {
             dest  => 'tbh/csv'
         );
     }
-    &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return 1;
 }
 
@@ -215,15 +204,12 @@ Tested if exception is thrown if no objects are defined
 =cut
 
 sub print {
-    &Log::debug("Starting " . (caller(0))[3] . " sub");
     if ( defined($tbh) ) {
-        &Log::debug("Printing from table");
         $tbh->load;
         print $tbh;
         undef $tbh;
     }
     elsif ( defined $csv ) {
-        &Log::debug("Printing from csv");
         $csv->print;
         undef $csv;
     }
@@ -234,7 +220,6 @@ sub print {
             dest  => 'tbh/csv'
         );
     }
-    &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return 1;
 }
 
@@ -276,8 +261,6 @@ We need to add test to see if we can create a mock option hash for vmware to use
 
 sub option_parser {
     my ($titles) = @_;
-    &Log::debug("Starting " . (caller(0))[3] . " sub");
-    &Log::dumpobj( "titles", $titles );
     my $output = &Opts::get_option('output');
     if ( $output eq 'table' ) {
         &Output::create_table;
@@ -295,9 +278,7 @@ sub option_parser {
         &Output::add_row($titles);
     }
     else {
-        &Log::info("Skipping header adding");
     }
-    &Log::debug("Finishing " . (caller(0))[3] . " sub");
     return 1;
 }
 

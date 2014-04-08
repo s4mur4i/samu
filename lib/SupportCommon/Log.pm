@@ -1,118 +1,58 @@
-package Log;
+package Log2;
 
 use strict;
 use warnings;
-
-use Getopt::Long qw(:config bundling pass_through);
 use Sys::Syslog qw(:standard :macros);
 use File::Basename;
 use Data::Dumper;
-
-=pod
-
-=head1 log.pm
-
-Subroutines from SupportCommon/log.pm
-
-=cut
-
-my $verbose;
-my $quiet;
-my $verbosity;
-
-=pod
-
-=head2 verbostiy
-
-=head3 PURPOSE
-
-Returns verbosity level
-
-=head3 PARAMETERS
-
-=over
-
-=back
-
-=head3 RETURNS
-
-Returns verbosity level
-
-=head3 DESCRIPTION
-
-Getter sub for verbosity
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested for each verbosity level to see if it returns a value from 0-10
-
-=cut
-
-sub verbosity {
-    return $verbosity;
+BEGIN {
+    use Exporter;
+    our @ISA    = qw( Exporter );
+    our @EXPORT = qw( );
 }
 
-=pod
+our $verbosity = 6;
+our $facility = 'LOG_USER';
+our $label = 'samu';
+our $logger = undef;
 
-=head2 log2line
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    $self->{verbosity} = delete( $args{verbosity} ) || $verbosity;
+    $self->{facility} = delete( $args{facility} ) || $facility;
+    $self->{label} = delete( $args{label} ) || $label;
+    return $self;
+}
 
-=head3 PURPOSE
+sub get_verbosity {
+    my $self = shift;
+    return $self->{verbosity};
+}
 
-Formats a log message
+sub set_verbosity {
+    my ($self, $verb) = shift;
+    $self->{verbosity} = $verb;
+    return $self;
+}
 
-=head3 PARAMETERS
+sub get_label {
+    my $self = shift;
+    return $self->{label};
+}
 
-=over
-
-=item level
-
-Level of information
-
-=item msg
-
-The requested log information
-
-=back
-
-=head3 RETURNS
-
-The formatted log message
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Output is tested if it is as expected
-
-=cut
+sub get_facility {
+    my $self = shift;
+    return $self->{facility};
+}
 
 sub log2line {
     $0 =~ s/.*\///g;    # strip off the leading . from the program name
-    my $level = shift;
-    my $msg   = shift;
-    my %args  = @_;
+    my ($self, $level, $msg, %args) = @_;
     my $sep   = '';
-    my (
-        $package, $filename,  $line,     $subroutine,
-        $hasargs, $wantarray, $evaltext, $is_require
-    ) = caller(1);
-    my $prefix =
-        $0 . "["
-      . $$ . "]: ("
-      . basename($filename) . ") "
-      . getpwuid($<)
-      . " [$level]";
+    my ( $package, $filename,  $line,     $subroutine, $hasargs, $wantarray, $evaltext, $is_require ) = caller(1);
+    my $prefix = $0 . "[" . $$ . "]: (" . basename($filename) . ") " . getpwuid($<) . " [$level]";
     my $prefix_stderr = basename($filename) . " [$level]";
-    closelog();
-    openlog( $prefix, "", LOG_USER );
     $msg .= ';';
 
     for my $k ( sort keys %args ) {
@@ -128,480 +68,70 @@ sub log2line {
         $msg .= "$sep $k='$v'";
         $sep = ',';
     }
-    print STDERR "$prefix_stderr: $msg\n";
+    if ( *stderr ) {
+        print STDERR "$prefix_stderr: $msg\n";
+    }
     return "$msg\n";
 }
 
-=pod
-
-=head2 debug2
-
-=head3 PURPOSE
-
-debug 2 for printing information at log level 10
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to print
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested if output from 0 to 10 is as expected
-
-=cut
-
 sub debug2 {
-    ( verbosity() >= 10 ) and syslog( LOG_DEBUG, log2line( 'DEBUG2', @_ ) );
+    my ($self, @msg) = @_;
+    ( $self->get_verbosity >= 10 ) and syslog( LOG_DEBUG, $self->log2line( 'DEBUG2', @msg ) );
 }
-
-=pod
-
-=head2 debug1
-
-=head3 PURPOSE
-
-debug 1 for printing information at log level 9
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to print
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested if output from 0 to 10 is as expected
-
-=cut
 
 sub debug1 {
-    ( verbosity() >= 9 ) and syslog( LOG_DEBUG, log2line( 'DEBUG1', @_ ) );
+    my ($self, @msg) = @_;
+    ( $self->get_verbosity >= 9 ) and syslog( LOG_DEBUG, $self->log2line( 'DEBUG1', @msg ) );
 }
-
-=pod
-
-=head2 debug
-
-=head3 PURPOSE
-
-debug for printing information at log level 8
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to print
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested if output from 0 to 10 is as expected
-
-=cut
 
 sub debug {
-    ( verbosity() >= 8 ) and syslog( LOG_DEBUG, log2line( 'DEBUG', @_ ) );
+    my ($self, @msg) = @_;
+    ( $self->get_verbosity >= 8 ) and syslog( LOG_DEBUG, $self->log2line( 'DEBUG', @msg ) );
 }
-
-=pod
-
-=head2 info
-
-=head3 PURPOSE
-
-info for printing information at log level 7
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to print
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested if output from 0 to 10 is as expected
-
-=cut
 
 sub info {
-    ( verbosity() >= 7 ) and syslog( LOG_INFO, log2line( 'INFO', @_ ) );
+    my ($self, @msg) = @_;
+    ( $self->get_verbosity >= 7 ) and syslog( LOG_INFO, $self->log2line( 'INFO', @msg ) );
 }
-
-=pod
-
-=head2 notice
-
-=head3 PURPOSE
-
-notice for printing information at log level 6
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to print
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested if output from 0 to 10 is as expected
-
-=cut
 
 sub notice {
-    ( verbosity() >= 6 ) and syslog( LOG_NOTICE, log2line( 'NOTICE', @_ ) );
+    my ($self, @msg) = @_;
+    ( $self->get_verbosity >= 6 ) and syslog( LOG_NOTICE, $self->log2line( 'NOTICE', @msg ) );
 }
-
-=pod
-
-=head2 warning
-
-=head3 PURPOSE
-
-warning for printing information at log level 5
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to print
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested if output from 0 to 10 is as expected
-
-=cut
-
-sub warning {
-    ( verbosity() >= 5 ) and syslog( LOG_WARNING, log2line( 'WARNING', @_ ) );
-}
-
-=pod
-
-=head2 error
-
-=head3 PURPOSE
-
-error for printing information at log level 4
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to print
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested if output from 0 to 10 is as expected
-
-=cut
-
+    
+sub warning { 
+    my ($self, @msg) = @_;
+    ( $self->get_verbosity >= 5 ) and syslog( LOG_WARNING, $self->log2line( 'WARNING', @msg ) );
+}   
+        
 sub error {
-    ( verbosity() >= 4 ) and syslog( LOG_ERR, log2line( 'ERROR', @_ ) );
+    my ($self, @msg) = @_;
+    ( $self->get_verbosity >= 4 ) and syslog( LOG_ERR, $self->log2line( 'ERROR', @msg ) );
+}   
+    
+sub critical { 
+    my ($self, @msg) = @_;
+    ( $self->get_verbosity >= 3 ) and syslog( LOG_CRIT, $self->log2line( 'CRITICAL', @msg ) );
+}       
+    
+sub alert { 
+    my ($self, @msg) = @_;
+    ( $self->get_verbosity >= 2 ) and syslog( LOG_ALERT, $self->log2line( 'ALERT', @msg ) );
 }
-
-=pod
-
-=head2 ciritical
-
-=head3 PURPOSE
-
-Critical for printing information at log level 3
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to print
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested if output from 0 to 10 is as expected
-
-=cut
-
-sub critical {
-    ( verbosity() >= 3 ) and syslog( LOG_CRIT, log2line( 'CRITICAL', @_ ) );
-}
-
-=pod
-
-=head2 alert
-
-=head3 PURPOSE
-
-alert for printing information at log level 2
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to print
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested if output from 0 to 10 is as expected
-
-=cut
-
-sub alert {
-    ( verbosity() >= 2 ) and syslog( LOG_ALERT, log2line( 'ALERT', @_ ) );
-}
-
-=pod
-
-=head2 emergency
-
-=head3 PURPOSE
-
-emergency for printing information at log level 1
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to print
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Tested if output from 0 to 10 is as expected
-
-=cut
 
 sub emergency {
-    ( verbosity() >= 1 ) and syslog( LOG_EMERG, log2line( 'EMERGENCY', @_ ) );
+    my ($self, @msg) = @_;
+    ( $self->get_verbosity >= 1 ) and syslog( LOG_EMERG, $self->log2line( 'EMERGENCY', @msg ) );
 }
-
-=pod
-
-=head2 dumpobj
-
-=head3 PURPOSE
-
-Dumps an object for debugging
-
-=head3 PARAMETERS
-
-=over
-
-=item name
-
-Name of object for better identification
-
-=item obj
-
-Object to dump
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-Output is tested at normal log level and log level 10
-
-=cut
 
 sub dumpobj {
-    my ( $name, $obj ) = @_;
-    ( verbosity() >= 10 ) and debug2( "Dumping object $name:" . Dumper($obj) );
+    my ( $self, $name, $obj ) = @_;
+    ( $self->get_verbosity >= 10 ) and $self->debug2( "Dumping object $name:" . Dumper($obj) );
 }
-
-=pod
-
-=head2 loghash
-
-=head3 PURPOSE
-
-Logs a hash to readable format
-
-=head3 PARAMETERS
-
-=over
-
-=item msg
-
-Message to log to hash
-
-=item hash
-
-Hashref to log
-
-=back
-
-=head3 RETURNS
-
-=head3 DESCRIPTION
-
-=head3 THROWS
-
-=head3 COMMENTS
-
-=head3 TEST COVERAGE
-
-No output at log level 7 but standard output at log level 8 is tested
-
-=cut
 
 sub loghash {
-    my ( $msg, $hash ) = @_;
-    ( verbosity() >= 8 ) and debug(
-        $msg
-          . (
-            join ',', ( map { "$_=>'" . $hash->{$_} . "'" } sort keys %{$hash} )
-          )
-    );
-}
-
-BEGIN {
-    use Exporter();
-    our ( @ISA, @EXPORT );
-
-    @ISA    = qw(Exporter);
-    @EXPORT = qw( );
-
-    GetOptions(
-        "v+" => \$verbose,    # occurence counter
-        "q+" => \$quiet,      # occurence counter
-    );
-    $quiet   ||= 0;
-    $verbose ||= 0;
-    $verbosity = ( 6 + $verbose ) - $quiet;
-    if ( $verbosity < 0 ) {
-        $verbosity = 0;
-    }
-    elsif ( $verbosity > 10 ) {
-        $verbosity = 10;
-    }
-
-    debug("==== Log started");
-    debug("Verbosity level verbosity=>'$verbosity'");
+    my ($self, $msg, $hash ) = @_;
+    ( $self->get_verbosity >= 8 ) and $self->debug( $msg . ( join ',', ( map { "$_=>'" . $hash->{$_} . "'" } sort keys %{$hash} )));
 }
 
 1;
