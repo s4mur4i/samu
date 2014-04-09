@@ -6,6 +6,13 @@ use Data::Dumper;
 BEGIN { extends 'SamuRest::ControllerX::REST'; }
 
 use SamuAPI::Common;
+use SupportCommon::Common;
+
+sub begin: Private {
+    my ( $self, $c ) = @_;
+    my $verbosity = $c->req->params->{verbosity} || 6;
+    $c->stash->{logger} = Log2->new( verbosity => $verbosity );
+}
 
 =head1 NAME
 
@@ -25,6 +32,7 @@ Catalyst Controller.
 
 sub vmwareBase : Chained('/') : PathPart('vmware') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
+    print Dumper $c->stash;
     my $user_id = $self->__is_logined($c);
     return $self->__error( $c, "You're not login yet." ) unless $user_id;
 }

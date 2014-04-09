@@ -12,7 +12,6 @@ Collector sub for SupportCommon modules
 
 =cut
 
-use SupportCommon::Log;
 use SupportCommon::Log2;
 use SupportCommon::Table_csv;
 
