@@ -33,6 +33,9 @@ use Exception::Class (
     'ExEntity::Empty' => { isa => 'ExEntity' },
     'ExEntity::NotEmpty' => { isa => 'ExEntity', fields => ['count'] },
     'ExEntity::NoSnapshot' => { isa => 'ExEntity' },
+    'ExEntity::FindEntityError' => { isa => 'ExEntity', fields => ['view_type']},
+    'ExEntity::ServiceContent' => { isa => 'ExEntity'},
+    'ExTask::Error' => { isa => 'ExTask', fields => ['creator'] },
 );
 
 BEGIN {
