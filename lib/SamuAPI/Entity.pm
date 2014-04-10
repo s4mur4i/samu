@@ -10,162 +10,146 @@ BEGIN {
     our @EXPORT = qw( );
 }
 
-# Maybe make some Inheritance TODO
 our $view = undef;
 our $info = ();
 our $mo_ref = undef;
+our $logger = undef;
 
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
+    $self->base_parse(%args);
+    return $self;
+}
+
+sub base_parse {
+    my ( $self, %args) = @_;
     if ( $args{view} ) {
-        $self->{view} = delete$args{view};
+        $self->{view} = delete($args{view});
     }
     if ( $args{mo_ref} ) {
-        $self->{mo_ref} = delete$args{mo_ref};
+        $self->{mo_ref} = delete($args{mo_ref});
+    } elsif ( $args{view} and $args{view}{mo_ref}) {
+        $self->{mo_ref} = $args{view}->{mo_ref};
     }
+    $self->{logger} = delete($args{logger});
     return $self;
 }
 
 sub get_info {
     my $self = shift;
-    return $self->{info};
+    $self->{logger}->start;
+    my $return = $self->{info} || undef;
+    $self->{logger}->dumpobj('return', $return);
+    $self->{logger}->finish;
+    return $return;
 }
 
 sub get_mo_ref_value {
     my $self = shift;
-    return $self->{mo_ref}->{value};
+    $self->{logger}->start;
+    my $return = $self->{mo_ref}->{value} || undef;
+    $self->{logger}->dumpobj('return', $return);
+    $self->{logger}->finish;
+    return $return;
 }
 
 sub get_mo_ref_type {
     my $self = shift;
-    return $self->{mo_ref}->{type};
+    $self->{logger}->start;
+    my $return = $self->{mo_ref}->{type} || undef;
+    $self->{logger}->dumpobj('return', $return);
+    $self->{logger}->finish;
+    return $return;
 }
 
 sub get_mo_ref {
     my $self = shift;
-    my %result = ( value => $self->{mo_ref}->{value}, type => $self->{mo_ref}->{type});
-    return \%result;
+    $self->{logger}->start;
+    my %return = ( value => $self->{mo_ref}->{value}, type => $self->{mo_ref}->{type});
+    $self->{logger}->dumpobj('return', %return);
+    $self->{logger}->finish;
+    return \%return;
 }
 
 sub get_name {
     my $self = shift;
-    return $self->{info}->{name};
+    $self->{logger}->start;
+    my $return = $self->{info}->{name} || undef;
+    $self->{logger}->dumpobj('return', $return);
+    $self->{logger}->finish;
+    return $return;
 }
+
 #####################################################################################
+
 package SamuAPI_resourcepool;
 
 use base 'Entity';
-our $refresh = 0;
 
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    if ( $args{view} ) {
-        $self->{view} = delete$args{view};
-    }
-    if ( $args{mo_ref} ) {
-        $self->{mo_ref} = delete$args{mo_ref};
-    }
-    if ( $args{refresh}) {
-        $self->{refresh} = delete($args{refresh});
-    }
-    $self->parse_info;
+    $self->base_parse;
+    $self->info_parse;
     return $self;
 }
 
-sub parse_info {
+sub info_parse {
     my $self = shift;
-    # If info has been parsed once then flush previous info
+    $self->{logger}->start;
     if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{logger}->debug1("Need to flush info hash");
         $self->{info} = ();
     }
     if ( defined($self->{view}) ) {
+        $self->{logger}->debug1("View has been given parsing it");
         my $view = $self->{view};
+        $self->{logger}->dumpobj("view", $view);
         $self->{info}->{name} = $view->{name};
         $self->{info}->{parent_name} = $view->{parent} if defined($view->{parent});
         if ( defined($view->{parent} )) {
-            my $parent = Entity->new( mo_ref => $view->{parent});
+            my $parent = Entity->new( mo_ref => $view->{parent}, logger => $self->{logger});
             $self->{info}->{parent_mo_ref} = $parent->get_mo_ref;
         }
         $self->{info}->{virtualmachinecount} = $self->child_vms;
         $self->{info}->{resourcepoolcount} = $self->child_rps;
-        if ($self->{refresh}) {
-            $view->RefreshRuntime;
-        }
         my $runtime = $view->{runtime};
         # Only returning some information can be expanded further later
         $self->{info}->{runtime} = { Status => $runtime->{overallStatus}->{val}, memory => { overallUsage => $runtime->{memory}->{overallUsage} }, cpu => { overallUsage => $runtime->{cpu}->{overallUsage} }};
     }
-    if ( !defined($self->{mo_ref}) ) {
-        $self->{mo_ref} = $self->{view}->{mo_ref};
-    }
     $self->{info}->{mo_ref} = $self->get_mo_ref_value;
+    $self->{logger}->dumpobj("info parsed", $self->{info});
+    $self->{logger}->finish;
     return $self;
 }
 
 sub child_vms {
     my $self = shift;
+    $self->{logger}->start;
     my $value = 0;
     if ( defined($self->{view}->{vm}) ) {
         $value = scalar @{ $self->{view}->{vm}};
+    } else {
+        $self->{logger}->info("No child vms");
     }
+    $self->{logger}->debug2("value=>'$value'");
+    $self->{logger}->finish;
     return $value;
 }
 
 sub child_rps {
     my $self = shift;
+    $self->{logger}->start;
     my $value = 0;
     if ( defined($self->{view}->{resourcePool}) ) {
         $value = scalar @{ $self->{view}->{resourcePool}};
-    }
-    return $value;
-}
-
-sub destroy {
-    my $self = shift;
-    my $task = undef;
-    if ( $self->child_vms ne 0 ) {
-        ExEntity::NotEmpty->throw( error => "ResourcePool has child virtual machines", entity => $self->{view}->{name}, count => $self->child_vms );
-    } elsif ( $self->child_rps ne 0 ) {
-        ExEntity::NotEmpty->throw( error => "ResourcePool has child resourcepools", entity => $self->{view}->{name}, count => $self->child_rps );
-    }
-    $task = $self->{view}->Destroy_Task;
-    return $task;
-}
-
-sub update {
-    my ( $self, %args) = @_;
-    my %param = ();
-    if ( defined($args{name}) ) {
-        $param{name} = delete($args{name});
-    }
-    my $rp_view = $self->{view};
-    if ( keys %args ) {
-        $param{spec} = $self->_resourcepool_resource_config_spec(%args);
-    }
-    $self->{view}->UpdateConfig( %param );
-    return $self;
-}
-
-sub create {
-    my ( $self, %args) = @_;
-    my $rp_name = delete($args{name});
-    my $rp_spec = $self->_resourcepool_resource_config_spec(%args);
-    my $rp_view = $self->{view}->CreateResourcePool( name => $rp_name, spec => $rp_spec );
-    return $rp_view;
-}
-
-sub move {
-    my ( $self, %args ) = @_;
-    my @list = ();
-    if ( defined($args{list}) ) {
-        @list = @{$args{list}}
     } else {
-        ExAPI_Argument->throw( error => "Missing list argument", argument => "list", subroutine => "move");
+        $self->{logger}->info("No child rps");
     }
-    $self->{view}->MoveIntoResourcePool( list => @list );
-    return $self;
+    $self->{logger}->debug2("value=>'$value'");
+    $self->{logger}->finish;
+    return $value;
 }
 
 sub _resourcepool_resource_config_spec {
@@ -202,11 +186,12 @@ use base 'Entity';
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
+    $self->{logger} = delete($args{logger});
     if ( $args{view} ) {
-        $self->{view} = delete$args{view};
+        $self->{view} = delete($args{view});
     }
     if ( $args{mo_ref} ) {
-        $self->{mo_ref} = delete$args{mo_ref};
+        $self->{mo_ref} = delete($args{mo_ref});
     }
     $self->parse_info;
     return $self;

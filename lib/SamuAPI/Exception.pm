@@ -35,6 +35,7 @@ use Exception::Class (
     'ExEntity::NoSnapshot' => { isa => 'ExEntity' },
     'ExEntity::FindEntityError' => { isa => 'ExEntity', fields => ['view_type']},
     'ExEntity::ServiceContent' => { isa => 'ExEntity'},
+    'ExEntity::Move' => { isa => 'ExEntity', fields => ['parent'] },
     'ExTask::Error' => { isa => 'ExTask', fields => ['creator'] },
 );
 

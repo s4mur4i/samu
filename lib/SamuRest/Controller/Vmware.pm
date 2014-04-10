@@ -6,12 +6,13 @@ use Data::Dumper;
 BEGIN { extends 'SamuRest::ControllerX::REST'; }
 
 use SamuAPI::Common;
-use SupportCommon::Common;
 
 sub begin: Private {
     my ( $self, $c ) = @_;
     my $verbosity = $c->req->params->{verbosity} || 6;
-    $c->stash->{logger} = Log2->new( verbosity => $verbosity );
+    my $facility = $c->req->params->{facility} || 'LOG_USER';
+    my $label = $c->req->params->{label} || 'samu_vmware';
+    $c->log( Log2->new( verbosity => $verbosity, facility => $facility, label => $label ) );
 }
 
 =head1 NAME
@@ -26,75 +27,58 @@ Catalyst Controller.
 
 =cut
 
-=head2 index
-
-=cut
-
 sub vmwareBase : Chained('/') : PathPart('vmware') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
-    print Dumper $c->stash;
     my $user_id = $self->__is_logined($c);
     return $self->__error( $c, "You're not login yet." ) unless $user_id;
+    $c->log->debug1("Logged in user_id=>" . $user_id);
 }
 
 sub loginBase : Chained('vmwareBase') : PathPart('') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
+    $c->log->debug('Check if user has logged in previously in session and has an active session');
     if ( !$c->session->{__vim_login} ) {
         $self->__error( $c, "Login to VCenter first" );
     }
-    if (
-        !defined(
-            $c->session->{__vim_login}->{sessions}
-              ->[ $c->session->{__vim_login}->{active} ]
-        )
-      )
-    {
+    if ( !defined( $c->session->{__vim_login}->{sessions} ->[ $c->session->{__vim_login}->{active} ])) {
         $self->__error( $c, "No active login session to vcenter" );
     }
-    my $vim;
     my $active_session;
     if ( $c->req->params->{vim_id} ) {
-        $active_session =
-          $c->session->{__vim_login}->{sessions}->[ $c->req->params->{vim_id} ];
-    }
-    else {
+        $active_session = $c->session->{__vim_login}->{sessions}->[ $c->req->params->{vim_id} ];
+    } else {
         $active_session = $c->session->{__vim_login}->{sessions}->[ $c->session->{__vim_login}->{active} ];
     }
+    $c->log->dumpobj( "active_session", $active_session );
     eval {
-        my $VCenter = VCenter->new(
-            vcenter_url => $active_session->{vcenter_url},
-            sessionfile => $active_session->{vcenter_sessionfile}
-        );
+        my $VCenter = VCenter->new( vcenter_url => $active_session->{vcenter_url}, sessionfile => $active_session->{vcenter_sessionfile}, logger => $c->log);
         $VCenter->loadsession_vcenter;
         $c->stash->{vim} = $VCenter;
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }
-    $active_session->{last_used} = $c->datetime->epoch;
-# Parse begin_entity if needed
-    eval {
+        $active_session->{last_used} = $c->datetime->epoch;
         my %param = ();
-# TODO maybe rethink, since this params might be used somewhere else aswell
         if ( $c->req->params->{computeresource} ) {
+            $c->log->debug1('ComputeResource begin_entity requested');
             %param = ( view_type => 'ComputeResource', properties => ['name'], filter => {name => $c->req->params->{computeresource} } );
         } elsif ($c->req->params->{datacenter}) {
+            $c->log->debug1('Datacenter begin_entity requested');
             %param = ( view_type => 'Datacenter', properties => ['name'], filter => {name => $c->req->params->{datacenter} } );
         } elsif ( $c->req->params->{hostsystem} ) {
+            $c->log->debug1('Hostsystem begin_entity requested');
             %param = ( view_type => 'HostSystem', properties => ['name'], filter => {name => $c->req->params->{hostsystem} } );
         }
         if ( keys %param ) {
+            $c->log->debug('Begin_entity was requested adding to find_params');
             my $begin_entity = $c->stash->{vim}->find_entity( %param );
             $c->stash->{vim}->set_find_params( begin_entity => $begin_entity);
         }
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
 }
 
-sub connection : Chained('vmwareBase') : PathPart('') : Args(0) :
-  ActionClass('REST') {
+sub connection : Chained('vmwareBase') : PathPart('') : Args(0) : ActionClass('REST') {
     my ( $self, $c ) = @_;
     if ( !$c->session->{__vim_login} ) {
         $c->session->{__vim_login} = { active => '0', sessions => [] };
@@ -106,8 +90,7 @@ sub connection_GET {
     my %return = ();
     if ( !@{ $c->session->{__vim_login}->{sessions} } ) {
         $return{connections} = "";
-    }
-    else {
+    } else {
         for my $num ( 0 .. $#{ $c->session->{__vim_login}->{sessions} } ) {
             $return{connections}->{$num} = ();
             for my $key ( keys $c->session->{__vim_login}->{sessions}->[$num]) {
@@ -116,84 +99,55 @@ sub connection_GET {
         }
         $return{active} = $c->session->{__vim_login}->{active};
     }
+    $c->log->dumpobj('return', \%return);
     return $self->__ok( $c, \%return );
 }
 
 sub connection_POST {
     my ( $self, $c ) = @_;
-
-    # Set options
     my $params           = $c->req->params;
     my $user_id          = $c->session->{__user};
     my $model            = $c->model("Database::UserConfig");
-    my $vcenter_username = $params->{vcenter_username}
-      || $model->get_user_value( $user_id, "vcenter_username" );
-    return $self->__error( $c, "Vcenter_username cannot be parsed or found" )
-      unless $vcenter_username;
-    my $vcenter_password = $params->{vcenter_password}
-      || $model->get_user_value( $user_id, "vcenter_password" );
-    return $self->__error( $c, "Vcenter_password cannot be parsed or found" )
-      unless $vcenter_password;
-    my $vcenter_url = $params->{vcenter_url}
-      || $model->get_user_value( $user_id, "vcenter_url" );
-    return $self->__error( $c, "Vcenter_url cannot be parsed or found" )
-      unless $vcenter_url;
+    my $vcenter_username = $params->{vcenter_username} || $model->get_user_value( $user_id, "vcenter_username" );
+    return $self->__error( $c, "Vcenter_username cannot be parsed or found" ) unless $vcenter_username;
+    my $vcenter_password = $params->{vcenter_password} || $model->get_user_value( $user_id, "vcenter_password" );
+    return $self->__error( $c, "Vcenter_password cannot be parsed or found" ) unless $vcenter_password;
+    my $vcenter_url = $params->{vcenter_url} || $model->get_user_value( $user_id, "vcenter_url" );
+    return $self->__error( $c, "Vcenter_url cannot be parsed or found" ) unless $vcenter_url;
 
 # TODO: Maybe later implement proto, servicepath, server, but for me currently not needed
     my $VCenter;
     eval {
-        $VCenter = VCenter->new(
-            vcenter_url      => $vcenter_url,
-            vcenter_username => $vcenter_username,
-            vcenter_password => $vcenter_password
-        );
+        $VCenter = VCenter->new( vcenter_url      => $vcenter_url, vcenter_username => $vcenter_username, vcenter_password => $vcenter_password, logger => $c->log);
         $VCenter->connect_vcenter;
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
-    }
-    else {
+    } else {
         my $sessionfile = $VCenter->savesession_vcenter;
-        push(
-            @{ $c->session->{__vim_login}->{sessions} },
-            {
-                vcenter_url         => $vcenter_url,
-                vcenter_sessionfile => $sessionfile,
-                vcenter_username => $vcenter_username,
-                last_used =>    $c->datetime->epoch,
-            }
-        );
+        push( @{ $c->session->{__vim_login}->{sessions} }, { vcenter_url         => $vcenter_url, vcenter_sessionfile => $sessionfile, vcenter_username => $vcenter_username, last_used =>    $c->datetime->epoch, });
     }
-
-    #$c->stash->{vim} = $VCenter;
-    $c->session->{__vim_login}->{active} =
-      $#{ $c->session->{__vim_login}->{sessions} };
-    return $self->__ok(
-        $c,
-        {
-            vim_login => "success",
-            id        => $#{ $c->session->{__vim_login}->{sessions} }
-        }
-    );
+    $c->session->{__vim_login}->{active} = $#{ $c->session->{__vim_login}->{sessions} };
+    $c->log->dumpobj('vcenter', $VCenter);
+    return $self->__ok( $c, { vim_login => "success", id        => $#{ $c->session->{__vim_login}->{sessions} } });
 }
 
 sub connection_DELETE {
     my ( $self, $c ) = @_;
-    my $params = $c->req->params;
-    my $id     = $params->{id};
+    my $id     = $c->req->params->{id};
+    $c->log->debug1("id=>'$id'");
     if ( $id < 0 || $id > $#{ $c->session->{__vim_login}->{sessions} } ) {
         return $self->__error( $c, "Session ID out of range" );
     }
     my $session = $c->session->{__vim_login}->{sessions}->[$id];
     eval {
-        my $VCenter = VCenter->new(
-            vcenter_url => $session->{vcenter_url},
-            sessionfile => $session->{vcenter_sessionfile}
-        );
+        my $VCenter = VCenter->new( vcenter_url => $session->{vcenter_url}, sessionfile => $session->{vcenter_sessionfile}, logger => $c->log);
         $VCenter->loadsession_vcenter;
         $VCenter->disconnect_vcenter;
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
     $c->session->{__vim_login}->{sessions}->[$id] = undef;
@@ -202,8 +156,7 @@ sub connection_DELETE {
 
 sub connection_PUT {
     my ( $self, $c ) = @_;
-    my $params = $c->req->params;
-    my $id     = $params->{id};
+    my $id     = $c->req->params->{id};
     if ( $id < 0 || $id > $#{ $c->session->{__vim_login}->{sessions} } ) {
         return $self->__error( $c, "Session ID out of range" );
     }
@@ -218,20 +171,15 @@ sub folders : Chained('folderBase') : PathPart('') : Args(0) :
 
 sub folders_GET {
     my ( $self, $c ) = @_;
-    my $params = $c->req->params;
-    my %result= ();
+    my $result= {};
     eval {
-# TODO, try to implement properties for faster query
-        my $folders = $c->stash->{vim}->find_entities( view_type => 'Folder' );
-        for my $folder_view ( @{ $folders } ) {
-            my $folder = SamuAPI_folder->new( view => $folder_view);
-            $result{ $folder->get_mo_ref_value } = $folder->get_name;
-        }
+        $result = $c->stash->{vim}->get_folder_list;
     };
     if ($@) {
+        print Dumper $@;
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+    return $self->__ok( $c, $result );
 }
 
 sub folders_PUT {
@@ -336,14 +284,11 @@ sub resourcepools_GET {
     my $refresh = $params->{refresh} || 0;
     my %result= ();
     eval {
-# TODO, try to implement properties for faster query
-        my $resourcepools = $c->stash->{vim}->find_entities( view_type => 'ResourcePool' );
-        for my $resourcepool_view ( @{ $resourcepools } ) {
-            my $resourcepool = SamuAPI_resourcepool->new( view => $resourcepool_view, refresh => $refresh);
-            $result{ $resourcepool->get_mo_ref_value } = $resourcepool->get_name;
-        }
+        bless $c->stash->{vim}, 'VCenter_resourcepool';
+        %result = %{ $c->stash->{vim}->get_all};
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
     return $self->__ok( $c, \%result );
@@ -359,53 +304,27 @@ sub resourcepools_POST {
 sub resourcepools_PUT {
     my ( $self, $c ) = @_;
     my %result = ();
-    my $param = $c->req->params;
-    my $child_value = $param->{child_value};
-    my $child_type = $param->{child_type};
-    my $child_mo_ref = $c->stash->{vim}->create_moref( type => $child_type, value => $child_value) ;
-    my $parent_value = $param->{parent_value} || undef;
+    my $params = $c->req->params;
     eval {
-        my $parent_view = undef;
-        if (defined($parent_value) ) {
-            my $mo_ref = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $parent_value) ;
-            my %params = ( mo_ref => $mo_ref);
-            $parent_view = $c->stash->{vim}->get_view( %params);
-        } else {
-            $parent_view = $c->stash->{vim}->find_entity( view_type => 'ResourcePool', properties => ['name'], filter => { name => 'Resources'} );
-        }
-        my $resourcepool = SamuAPI_resourcepool->new( view => $parent_view );
-        $resourcepool->move( mo_ref => $child_mo_ref);
+        bless $c->stash->{vim}, 'VCenter_resourcepool';
+        %result = %{ $c->stash->{vim}->move( %{ $params } ) };
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
     return $self->__ok( $c, \%result);
 }
 
-sub resourcepool : Chained('resourcepoolBase') : PathPart('') : Args(1) : ActionClass('REST') { 
-    my ( $self, $c, $mo_ref_value ) = @_;      
-    eval {
-        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'ResourcePool', value => $mo_ref_value) ;
-        my %params = ( mo_ref => $c->stash->{mo_ref});
-        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }
-}
+sub resourcepool : Chained('resourcepoolBase') : PathPart('') : Args(1) : ActionClass('REST') { }
 
 sub resourcepool_GET {
     my ( $self, $c, $mo_ref_value ) = @_;
     my %result = ();
     my $refresh = $c->req->params->{refresh} || 0;
     eval {
-        my $resourcepool = SamuAPI_resourcepool->new( view => $c->stash->{view}, refresh => $refresh );
-        %result = %{ $resourcepool->get_info} ;
-        if ( $result{parent_name} ) {
-            my $parent_view = $c->stash->{vim}->get_view( mo_ref => $result{parent_name}, properties => ['name'] );
-            my $parent = SamuAPI_resourcepool->new( view => $parent_view, refresh => 0 );
-            $result{parent_name} = $parent->get_name;
-        }
+        bless $c->stash->{vim}, 'VCenter_resourcepool';
+        %result = %{ $c->stash->{vim}->get_single( refresh => $refresh, moref_value => $mo_ref_value) };
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -431,12 +350,13 @@ sub resourcepool_DELETE {
 sub resourcepool_PUT {
     my ( $self, $c, $mo_ref_value ) = @_;
     my %result = ();
-    my %update_param = %{ $c->req->params };
+    my %param = %{ $c->req->params };
     eval {
-        my $rp = SamuAPI_resourcepool->new( view => $c->stash->{view} );
-        $rp->update(%update_param);
+        bless $c->stash->{vim}, 'VCenter_resourcepool';
+        %result = %{ $c->stash->{vim}->update( %param ) };
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
     return $self->__ok( $c, \%result );
