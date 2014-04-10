@@ -3,6 +3,8 @@ package SamuRest::ControllerX::REST;
 use Moose;
 use namespace::autoclean;
 
+use SupportCommon::Common;
+
 BEGIN { extends 'Catalyst::Controller::REST' }
 
 __PACKAGE__->config(
