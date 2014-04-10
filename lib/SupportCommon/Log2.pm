@@ -52,6 +52,8 @@ sub log2line {
     my $sep   = '';
     my ( $package, $filename,  $line,     $subroutine, $hasargs, $wantarray, $evaltext, $is_require ) = caller(1);
     my $prefix = $0 . "[" . $$ . "]: (" . basename($filename) . ") " . getpwuid($<) . " [$level]";
+#    print Dumper $prefix;
+    openlog( $prefix, "", LOG_USER );
     my $prefix_stderr = basename($filename) . " [$level]";
     $msg .= ';';
 
@@ -132,6 +134,18 @@ sub dumpobj {
 sub loghash {
     my ($self, $msg, $hash ) = @_;
     ( $self->get_verbosity >= 8 ) and $self->debug( $msg . ( join ',', ( map { "$_=>'" . $hash->{$_} . "'" } sort keys %{$hash} )));
+}
+
+sub start {
+    my $self = shift;
+    $self->debug( "Starting " . (caller(1))[3] . " sub" );
+    return $self;
+}
+
+sub finish {
+    my $self = shift;
+    $self->debug( "Finishing " . (caller(1))[3] . " sub" );
+    return $self;
 }
 
 1;
