@@ -9,9 +9,9 @@ use SamuAPI::Common;
 
 sub begin: Private {
     my ( $self, $c ) = @_;
-    my $verbosity = $c->req->params->{verbosity} || 6;
-    my $facility = $c->req->params->{facility} || 'LOG_USER';
-    my $label = $c->req->params->{label} || 'samu_vmware';
+    my $verbosity = delete($c->req->params->{verbosity}) || 6;
+    my $facility = delete($c->req->params->{facility}) || 'LOG_USER';
+    my $label = delete($c->req->params->{label}) || 'samu_vmware';
     $c->log( Log2->new( verbosity => $verbosity, facility => $facility, label => $label ) );
 }
 
@@ -350,6 +350,7 @@ sub resourcepool_PUT {
     my ( $self, $c, $mo_ref_value ) = @_;
     my %result = ();
     my %param = %{ $c->req->params };
+    $param{moref_value} = $mo_ref_value;
     eval {
         bless $c->stash->{vim}, 'VCenter_resourcepool';
         %result = %{ $c->stash->{vim}->update( %param ) };

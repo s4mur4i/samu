@@ -422,7 +422,7 @@ sub destroy {
     }
     $self->{logger}->dumpobj( 'task', $task);
     my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    %return = { taskid => { value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type } };
+    %return = ( taskid => { value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type } );
     $self->{logger}->finish;
     return \%return;
 }
@@ -430,14 +430,16 @@ sub destroy {
 sub update {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
+    $self->{logger}->dumpobj('args', \%args);
     my %param = ();
-    my $view = $self->values_to_view( type => 'ResourcePool', value => $args{moref_value} );
+    my $view = $self->values_to_view( type => 'ResourcePool', value => delete($args{moref_value}) );
     my $resourcepool = SamuAPI_resourcepool->new( view => $view, logger => $self->{logger} );
     $param{name} = delete($args{name}) if defined($args{name});
-    $param{spec} = $resourcepool->_resourcepool_resource_config_spec(%args) if ( keys %args);
-    $self->{view}->UpdateConfig( %param );
+    $param{config} = $resourcepool->_resourcepool_resource_config_spec(%args) if ( keys %args);
+    $self->{logger}->dumpobj('param', \%param);
+    $resourcepool->{view}->UpdateConfig( %param );
     $self->{logger}->finish;
-    return $self;
+    return { update => 'success'};
 }
 
 sub move {

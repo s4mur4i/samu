@@ -156,27 +156,41 @@ sub child_rps {
 
 sub _resourcepool_resource_config_spec {
     my ( $self, %args) = @_;
-    my $share_level = delete($args{shares_level}) || "normal";
+    $self->{logger}->start;
+    $self->{logger}->dumpobj('args', \%args);
+
     my $cpu_share = delete($args{cpu_share}) || 4000;
-    my $memory_share = delete($args{memory_share}) || 32928;
     my $cpu_expandable_reservation = delete($args{cpu_expandable_reservation}) || "true";
     my $cpu_limit = delete($args{cpu_limit}) || -1;
     my $cpu_reservation = delete($args{cpu_reservation}) || 0;
+
+    my $memory_share = delete($args{memory_share}) || 32928;
     my $memory_expandable_reservation = delete($args{memory_expandable_reservation}) || "true";
     my $memory_limit = delete($args{memory_limit}) || -1;
     my $memory_reservation = delete($args{memory_reservation}) || 0;
+
+    my $share_level = delete($args{shares_level}) || "normal";
     my $shareslevel = SharesLevel->new($share_level);
+
     my $cpushares   = SharesInfo->new( shares => $cpu_share, level => $shareslevel );
-    my $memshares   = SharesInfo->new( shares => $memory_share, level => $shareslevel );
     my $cpuallocation = ResourceAllocationInfo->new( expandableReservation => $cpu_expandable_reservation, limit                 => $cpu_limit, reservation           => $cpu_reservation, shares                => $cpushares);
+
+    my $memshares   = SharesInfo->new( shares => $memory_share, level => $shareslevel );
     my $memoryallocation = ResourceAllocationInfo->new( expandableReservation => $memory_expandable_reservation, limit                 => $memory_limit, reservation           => $memory_reservation, shares                => $memshares);
+
     my $configspec = ResourceConfigSpec->new( cpuAllocation    => $cpuallocation, memoryAllocation => $memoryallocation);
+    $self->{logger}->dumpobj('configspec', $configspec);
+    $self->{logger}->finish;
     return $configspec;
 }
 
 sub get_property {
     my ($self, $property) = @_;
+    $self->{logger}->start;
+    $self->{logger}->debug1("Requested property=>'$property'");
     my $object = $self->{view}->get_property($property);
+    $self->{logger}->dumpobj( 'object', $object);
+    $self->{logger}->finish;
     return $object;
 }
 
@@ -272,18 +286,12 @@ use base 'Entity';
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    if ( $args{view}) {
-        $self->{view} = $args{view};
-    } elsif ( $args{mo_ref}) { 
-        $self->{mo_ref} = $args{mo_ref};
-    } else {
-        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_task");
-    }
-    $self->parse_info;
+    $self->base_parse(%args);
+    $self->info_parse;
     return $self;
 }
 
-sub parse_info {
+sub info_parse {
     my $self = shift;
     # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
