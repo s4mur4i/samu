@@ -405,8 +405,9 @@ sub destroy {
     my ($self,%args) = @_;
     $self->{logger}->start;
     my $task = undef;
+    my %return= ();
     my $view = $self->values_to_view( %args );
-    my $resourcepool = SamuAPI_resourcepool->new( view => $view );
+    my $resourcepool = SamuAPI_resourcepool->new( view => $view, logger => $self->{logger} );
     if ( $resourcepool->child_vms ne 0 ) {
         ExEntity::NotEmpty->throw( error => "ResourcePool has child virtual machines", entity => $self->{view}->{name}, count => $self->child_vms );
     } elsif ( $resourcepool->child_rps ne 0 ) {
@@ -420,8 +421,10 @@ sub destroy {
         ExTask::Error->throw( error => 'Error during task', number=> 'unknown', creator => (caller(0))[3] );
     }
     $self->{logger}->dumpobj( 'task', $task);
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    %return = { taskid => { value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type } };
     $self->{logger}->finish;
-    return $task;
+    return \%return;
 }
 
 sub update {
@@ -429,7 +432,7 @@ sub update {
     $self->{logger}->start;
     my %param = ();
     my $view = $self->values_to_view( type => 'ResourcePool', value => $args{moref_value} );
-    my $resourcepool = SamuAPI_resourcepool->new( view => $view );
+    my $resourcepool = SamuAPI_resourcepool->new( view => $view, logger => $self->{logger} );
     $param{name} = delete($args{name}) if defined($args{name});
     $param{spec} = $resourcepool->_resourcepool_resource_config_spec(%args) if ( keys %args);
     $self->{view}->UpdateConfig( %param );
@@ -466,20 +469,26 @@ sub create {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
     my $name = delete($args{name});
-    my $parent_view = $self->values_to_view( type=>$args{type} , value => 'ResourcePool' );
-    my $parent = SamuAPI_resourcepool->new( view => $parent_view );
+    my $parent_view;
+    if ( defined($args{value}) ) {
+        $parent_view = $self->values_to_view( value=>$args{value} , type => 'ResourcePool' );
+    } else {
+        $parent_view = $self->find_entity( view_type => 'ResourcePool', properties => ['name'], filter => { name => 'Resources'} );
+    }
+    my $parent = SamuAPI_resourcepool->new( view => $parent_view, logger=> $self->{logger} );
     my $spec = $parent->_resourcepool_resource_config_spec(%args);
-    my $rp_view;
+    my $rp_moref;
     eval {
-        $rp_view = $parent->{view}->CreateResourcePool( name => $name, spec => $spec );
-        $self->{logger}->dumpobj('rp_view', $rp_view);
+        $rp_moref = $parent->{view}->CreateResourcePool( name => $name, spec => $spec );
+        $self->{logger}->dumpobj('rp_moref', $rp_moref);
     };
     if ( $@ ) {
         $self->{logger}->dumpobj('error', $@);
         ExTask::Error->throw( error => 'Error during Resource pool creation', number=> 'unknown', creator => (caller(0))[3] );
     }
-    my $rp = SamuAPI_resourcepool->new( view => $rp_view);
-    my %return = ( $name => ( type => $rp->get_mo_ref_type, value => $rp->get_mo_ref_value) );
+    my $rp = SamuAPI_resourcepool->new( mo_ref => $rp_moref, logger => $self->{logger});
+# TODO validate output and make it same as get
+    my %return = ( $name => { type => $rp->get_mo_ref_type, value => $rp->get_mo_ref_value} );
     $self->{logger}->dumpobj('return', %return);
     $self->{logger}->finish;
     return \%return;
@@ -491,7 +500,8 @@ sub get_all {
     my %result = ();
     my $rps = $self->find_entities( view_type => 'ResourcePool', properties => ['name']);
     for my $rp ( @{ $rps }) {
-        my $obj = SamuAPI_resourcepool->new( view => $rp);
+        my $obj = SamuAPI_resourcepool->new( view => $rp, logger => $self->{logger});
+        $self->{logger}->dumpobj('obj', $obj);
         $result{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
     }
     $self->{logger}->dumpobj( 'result', %result);
@@ -507,11 +517,11 @@ sub get_single {
     if ( $args{refresh}) {
         $view->RefreshRuntime;
     }
-    my $resourcepool = SamuAPI_resourcepool->new( view => $view );
+    my $resourcepool = SamuAPI_resourcepool->new( view => $view, logger => $self->{logger} );
     %result = %{ $resourcepool->get_info} ;
     if ( $result{parent_name} ) { 
         my $parent_view = $self->get_view( mo_ref => $result{parent_name}, properties => ['name'] );
-        my $parent = SamuAPI_resourcepool->new( view => $parent_view, refresh => 0 );
+        my $parent = SamuAPI_resourcepool->new( view => $parent_view, refresh => 0, logger=> $self->{logger} );
         $result{parent_name} = $parent->get_name; 
     }
     $self->{logger}->dumpobj( 'result', \%result );

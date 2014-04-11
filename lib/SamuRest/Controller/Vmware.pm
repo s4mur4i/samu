@@ -297,8 +297,8 @@ sub resourcepools_GET {
 sub resourcepools_POST {
     my ( $self, $c ) = @_;
     my $view = $c->stash->{vim}->find_entity( view_type => 'ResourcePool', properties => ['name'], filter => { name => 'Resources'} );
-    $self->resourcepool($c, $view->{mo_ref}->{value});
-    $self->resourcepool_POST($c, $view->{mo_ref}->{value});
+    my $parent = SamuAPI_resourcepool->new( view => $view, logger => $c->log);
+    $self->resourcepool_POST($c, $parent->get_mo_ref_value);
 }
 
 sub resourcepools_PUT {
@@ -334,17 +334,16 @@ sub resourcepool_GET {
 
 sub resourcepool_DELETE {
     my ( $self, $c, $mo_ref_value ) = @_;
-    my $task = undef;
+    my %return = ();
     eval {
-        my $resourcepool = SamuAPI_resourcepool->new( view => $c->stash->{view} );
-        my $task_mo_ref = $resourcepool->destroy;
-        my $taskobj = SamuAPI_task->new( mo_ref => $task_mo_ref);
-        $task = $taskobj->mo_ref_value;   
+        bless $c->stash->{vim}, 'VCenter_resourcepool';
+        %return = %{ $c->stash->{vim}->destroy( value => $mo_ref_value, type => 'ResourcePool') };
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, { taskid => $task } );
+    return $self->__ok( $c, \%return );
 }
 
 sub resourcepool_PUT {
@@ -366,16 +365,11 @@ sub resourcepool_POST {
     my ( $self, $c, $mo_ref_value ) = @_;
     my %result = ();
     my %create_param = %{ $c->req->params };
+    $create_param{value} = $mo_ref_value;
 # TODO if multiple computeresources with same mo_ref how can they be distingueshed
     eval {
-        my $parent_rp = SamuAPI_resourcepool->new( view => $c->stash->{view} );
-        my $moref = $parent_rp->create( %create_param );
-        my $view = $c->stash->{vim}->get_view( mo_ref => $moref);
-        my $resourcepool = SamuAPI_resourcepool->new( view => $view );
-        %result = %{ $resourcepool->get_info} ;
-        if ( $result{parent} ) {
-            $result{parent} = $c->stash->{vim}->get_view( mo_ref => $result{parent}, properties => ['name'] )->name;
-        }
+        bless $c->stash->{vim}, 'VCenter_resourcepool';
+        %result = %{ $c->stash->{vim}->create( %create_param ) };
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );

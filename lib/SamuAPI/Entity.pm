@@ -24,15 +24,17 @@ sub new {
 
 sub base_parse {
     my ( $self, %args) = @_;
+    $self->{logger} = delete($args{logger});
     if ( $args{view} ) {
         $self->{view} = delete($args{view});
     }
     if ( $args{mo_ref} ) {
+        $self->{logger}->debug1('Argument mo_ref given');
         $self->{mo_ref} = delete($args{mo_ref});
-    } elsif ( $args{view} and $args{view}{mo_ref}) {
-        $self->{mo_ref} = $args{view}->{mo_ref};
+    } elsif ( $self->{view} and $self->{view}->{mo_ref}) {
+        $self->{logger}->debug1('Returning mo_ref from view');
+        $self->{mo_ref} = $self->{view}->{mo_ref};
     }
-    $self->{logger} = delete($args{logger});
     return $self;
 }
 
@@ -90,7 +92,7 @@ use base 'Entity';
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    $self->base_parse;
+    $self->base_parse(%args);
     $self->info_parse;
     return $self;
 }
