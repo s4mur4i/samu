@@ -185,18 +185,10 @@ sub folders_GET {
 sub folders_PUT {
     my ( $self, $c) = @_;
     my $params = $c->req->params;
-    my $parent_folder_mo_ref_value = $params->{parent_folder};
-    my $child_type = $params->{child_type};
-    my $child_value = $params->{child_value};
     my %result= ();
     eval {
-# TODO test if works
-        my $parent_mo_ref = $c->stash->{vim}->create_moref( type => 'Folder', value => $parent_folder_mo_ref_value) ;
-        my $parent_view = $c->stash->{vim}->get_view( mo_ref => $parent_mo_ref );
-        my $child_mo_ref = $c->stash->{vim}->create_moref( type => $child_type, value => $child_value) ;
-        my $child_view = $c->stash->{vim}->get_view( mo_ref => $child_mo_ref );
-        my $task = $parent_view->MoveIntoFolder_Task( list => [$child_view] );
-        $result{task} = $task->{value};
+        bless $c->stash->{vim}, 'VCenter_folder';
+        %result = %{ $c->stash->{vim}->move( %{ $params } ) };
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -239,17 +231,15 @@ sub folder_GET {
 
 sub folder_DELETE {
     my ( $self, $c, $mo_ref_value ) = @_;
-    my $task = undef;
+    my %return = ();
     eval {
-        my $folder = SamuAPI_folder->new( view => $c->stash->{view} );
-        my $task_mo_ref = $folder->destroy;
-        my $taskobj = SamuAPI_task->new( mo_ref => $task_mo_ref);
-        $task = $taskobj->mo_ref_value;
+        bless $c->stash->{vim}, 'VCenter_folder';
+        %return = %{ $c->stash->{vim}->destroy( value => $mo_ref_value, type => 'Folder') };
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, { taskid => $task } );
+    return $self->__ok( $c, \%return );
 
 }
 

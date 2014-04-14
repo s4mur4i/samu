@@ -409,9 +409,9 @@ sub destroy {
     my $view = $self->values_to_view( %args );
     my $resourcepool = SamuAPI_resourcepool->new( view => $view, logger => $self->{logger} );
     if ( $resourcepool->child_vms ne 0 ) {
-        ExEntity::NotEmpty->throw( error => "ResourcePool has child virtual machines", entity => $self->{view}->{name}, count => $self->child_vms );
+        ExEntity::NotEmpty->throw( error => "ResourcePool has child virtual machines", entity => $self->{view}->{name}, count => $resourcepool->child_vms );
     } elsif ( $resourcepool->child_rps ne 0 ) {
-        ExEntity::NotEmpty->throw( error => "ResourcePool has child resourcepools", entity => $self->{view}->{name}, count => $self->child_rps );
+        ExEntity::NotEmpty->throw( error => "ResourcePool has child resourcepools", entity => $self->{view}->{name}, count => $resourcepool->child_rps );
     }
     eval {
         $task = $resourcepool->{view}->Destroy_Task;
@@ -601,6 +601,57 @@ sub create {
     $self->{logger}->dumpobj('return', %return);
     $self->{logger}->finish;
     return \%return;
+}
+
+sub destroy {
+    my ($self,%args) = @_;
+    $self->{logger}->start;
+    my $task = undef;
+    my %return= ();
+    my $view = $self->values_to_view( %args );
+    my $folder = SamuAPI_folder->new( view => $view, logger => $self->{logger} );
+    if ( $folder->child_vms ne 0 ) {
+        ExEntity::NotEmpty->throw( error => "Folder has child virtual machines", entity => $folder->get_name, count => $folder->child_vms );
+    } elsif ( $folder->child_folders ne 0 ) {
+        ExEntity::NotEmpty->throw( error => "Folder has child folders", entity => $folder->get_name, count => $folder->child_folders );
+    }
+    eval {
+        $task = $folder->{view}->Destroy_Task;
+    };
+    if ( $@ ) {
+        $self->{logger}->dumpobj('error', $@);
+        ExTask::Error->throw( error => 'Error during task', number=> 'unknown', creator => (caller(0))[3] );
+    }
+    $self->{logger}->dumpobj( 'task', $task);
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    %return = ( taskid => { value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type } );
+    $self->{logger}->finish;
+    return \%return;
+}
+
+sub move {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my $child_value = $args{child_value};
+    my $child_type = $args{child_type};
+    my $mo_ref = $self->create_moref( type => $child_type, value => $child_value) ;
+    my $parent_value = $args{parent_value} || undef;
+    eval {
+        my $parent_view = undef;
+        if (defined($parent_value) ) {
+            $parent_view = $self->values_to_view( type=> 'Folder', value => $parent_value );
+        } else {
+            $parent_view = $self->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'vm'} );
+        }
+        $parent_view->MoveIntoFolder( list => [$mo_ref] );
+    }; 
+    if ($@) {
+        $self->{logger}->dumpobj("error", $@);
+        ExEntity::Move->throw( error => 'Problem during moving entity', entity => $child_value, parent => $parent_value );
+    }
+    $self->{logger}->finish;
+# TODO nothing to return..maybe return success?
+    return { status => "moved" };
 }
 
 ####################################################################
