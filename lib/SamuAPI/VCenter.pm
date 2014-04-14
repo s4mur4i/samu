@@ -549,11 +549,56 @@ sub get_all {
     my %return = ();
     my $folders = $self->find_entities( view_type => 'Folder', properties => ['name'] );
     for my $folder_view ( @{ $folders } ) {
-        $self->{logger}->dumpobj("folder", $folder_view);
-        my $folder = SamuAPI_folder->new( view => $folder_view, logger => $self->{logger} );
-        $return{ $folder->get_mo_ref_value } = $folder->get_name;
+        my $obj = SamuAPI_folder->new( view => $folder_view, logger => $self->{logger} );
+        $self->{logger}->dumpobj("folder", $obj);
+        $return{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
     }
     $self->{logger}->dumpobj("return", \%return);
+    $self->{logger}->finish;
+    return \%return;
+}
+
+sub get_single {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'Folder', value => $args{moref_value});
+    my $folder = SamuAPI_folder->new( view => $view, logger => $self->{logger} );
+    %result = %{ $folder->get_info} ;
+    if ( $result{parent_name} ) { 
+        my $parent_view = $self->get_view( mo_ref => $result{parent_name}, properties => ['name'] );
+        my $parent = SamuAPI_folder->new( view => $parent_view, logger=> $self->{logger} );
+        $result{parent_name} = $parent->get_name; 
+    }
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub create {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my $name = delete($args{name});
+    my $parent_view;
+    if ( defined($args{value}) ) {
+        $parent_view = $self->values_to_view( value=>$args{value} , type => 'Folder' );
+    } else {
+        $parent_view = $self->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'vm'} );
+    }
+    my $parent = SamuAPI_folder->new( view => $parent_view, logger=> $self->{logger} );
+    my $folder_moref;
+    eval {
+        $folder_moref = $parent->{view}->CreateFolder( name => $name);
+        $self->{logger}->dumpobj('folder_moref', $folder_moref);
+    };
+    if ( $@ ) {
+        $self->{logger}->dumpobj('error', $@);
+        ExTask::Error->throw( error => 'Error during Folder creation', number=> 'unknown', creator => (caller(0))[3] );
+    }
+    my $folder = SamuAPI_folder->new( mo_ref => $folder_moref, logger => $self->{logger});
+# TODO validate output and make it same as get
+    my %return = ( $name => { type => $folder->get_mo_ref_type, value => $folder->get_mo_ref_value} );
+    $self->{logger}->dumpobj('return', %return);
     $self->{logger}->finish;
     return \%return;
 }

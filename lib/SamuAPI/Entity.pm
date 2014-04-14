@@ -202,28 +202,23 @@ use base 'Entity';
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    $self->{logger} = delete($args{logger});
-    if ( $args{view} ) {
-        $self->{view} = delete($args{view});
-    }
-    if ( $args{mo_ref} ) {
-        $self->{mo_ref} = delete($args{mo_ref});
-    }
-    $self->parse_info;
+    $self->base_parse(%args);
+    $self->info_parse;
     return $self;
 }
 
-sub parse_info {
+sub info_parse {
     my $self = shift;
-    # If info has been parsed once then flush previous info
+    $self->{logger}->start;
     if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{logger}->debug1("Need to flush info hash");
         $self->{info} = ();
     }
     my $view = $self->{view};
     $self->{info}->{name} = $view->{name};
     $self->{info}->{parent_name} = $view->{parent} if defined($view->{parent});
     if ( defined($view->{parent} )) {
-        my $parent = Entity->new( mo_ref => $view->{parent});
+        my $parent = Entity->new( mo_ref => $view->{parent}, logger=> $self->{logger});
         $self->{info}->{parent_mo_ref} = $parent->get_mo_ref;
     }
     $self->{info}->{status} = $view->{overallStatus}->{val};
@@ -233,6 +228,8 @@ sub parse_info {
         $self->{mo_ref} = $self->{view}->{mo_ref};
     }
     $self->{info}->{mo_ref} = $self->get_mo_ref_value;
+    $self->{logger}->dumpobj('self', $self);
+    $self->{logger}->finish;
     return $self;
 }
 

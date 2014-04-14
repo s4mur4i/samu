@@ -171,15 +171,15 @@ sub folders : Chained('folderBase') : PathPart('') : Args(0) :
 
 sub folders_GET {
     my ( $self, $c ) = @_;
-    my $result= {};
+    my %result= ();
     eval {
-        $result = $c->stash->{vim}->get_folder_list;
+        bless $c->stash->{vim}, 'VCenter_folder';
+        %result = %{ $c->stash->{vim}->get_all };
     };
     if ($@) {
-        print Dumper $@;
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, $result );
+    return $self->__ok( $c, \%result );
 }
 
 sub folders_PUT {
@@ -206,23 +206,9 @@ sub folders_PUT {
 
 sub folders_POST {
     my ( $self, $c ) = @_;
-    my %result = ();
-    my $params = $c->req->params;
-    my $folder_name = $params->{name};
-    if (defined( $params->{parent_value} )) {
-        my $parent_mo_ref = $c->stash->{vim}->create_moref( type => 'Folder', value => $params->{parent_value} );
-        $c->stash->{view} = $c->stash->{vim}->get_view( mo_ref => $parent_mo_ref );
-    } else {
-        $c->stash->{view} = $c->stash->{vim}->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'vm'} );
-    }
-    eval {
-        my $folder = SamuAPI_folder->new( view => $c->stash->{view} );
-        $folder->create( name => $folder_name );
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }
-    return $self->__ok( $c, \%result );
+    my $view = $c->stash->{vim}->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'vm'} );
+    my $parent = SamuAPI_folder->new( view => $view, logger => $c->log);
+    $self->folder_POST($c, $parent->get_mo_ref_value);
 }
 
 sub folder : Chained('folderBase') : PathPart('') : Args(1) : ActionClass('REST') { 
@@ -238,16 +224,11 @@ sub folder : Chained('folderBase') : PathPart('') : Args(1) : ActionClass('REST'
 }
 
 sub folder_GET {
-    my ( $self, $c, $name ) = @_;
+    my ( $self, $c, $mo_ref_value ) = @_;
     my %result = ();
     eval {
-        my $folder = SamuAPI_folder->new( view => $c->stash->{view} );
-        %result = %{ $folder->get_info} ;
-        if ( $result{parent_name} ) {
-            my $parent_view = $c->stash->{vim}->get_view( mo_ref => $result{parent_name}, properties => ['name'] );
-            my $parent = SamuAPI_resourcepool->new( view => $parent_view, refresh => 0 );
-            $result{parent_name} = $parent->get_name;
-        }
+        bless $c->stash->{vim}, 'VCenter_folder';
+        %result = %{ $c->stash->{vim}->get_single( moref_value => $mo_ref_value) };
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -270,6 +251,22 @@ sub folder_DELETE {
     }
     return $self->__ok( $c, { taskid => $task } );
 
+}
+
+sub folder_POST {
+    my ( $self, $c, $mo_ref_value ) = @_;
+    my %result = ();
+    my %create_param = ( name => $c->req->params->{name} );
+    $create_param{value} = $mo_ref_value;
+# TODO if multiple computeresources with same mo_ref how can they be distingueshed
+    eval {
+        bless $c->stash->{vim}, 'VCenter_folder';
+        %result = %{ $c->stash->{vim}->create( %create_param ) };
+    };
+    if ($@) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub resourcepoolBase : Chained('loginBase') : PathPart('resourcepool') :
