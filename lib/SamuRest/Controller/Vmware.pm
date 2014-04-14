@@ -203,17 +203,7 @@ sub folders_POST {
     $self->folder_POST($c, $parent->get_mo_ref_value);
 }
 
-sub folder : Chained('folderBase') : PathPart('') : Args(1) : ActionClass('REST') { 
-    my ( $self, $c, $mo_ref_value ) = @_;
-    eval {
-        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'Folder', value => $mo_ref_value) ;
-        my %params = ( mo_ref => $c->stash->{mo_ref});
-        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }
-}
+sub folder : Chained('folderBase') : PathPart('') : Args(1) : ActionClass('REST') { }
 
 sub folder_GET {
     my ( $self, $c, $mo_ref_value ) = @_;

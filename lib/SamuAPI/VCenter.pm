@@ -409,9 +409,9 @@ sub destroy {
     my $view = $self->values_to_view( %args );
     my $resourcepool = SamuAPI_resourcepool->new( view => $view, logger => $self->{logger} );
     if ( $resourcepool->child_vms ne 0 ) {
-        ExEntity::NotEmpty->throw( error => "ResourcePool has child virtual machines", entity => $self->{view}->{name}, count => $resourcepool->child_vms );
+        ExEntity::NotEmpty->throw( error => "ResourcePool has child virtual machines", entity => $resourcepool->get_name, count => $resourcepool->child_vms );
     } elsif ( $resourcepool->child_rps ne 0 ) {
-        ExEntity::NotEmpty->throw( error => "ResourcePool has child resourcepools", entity => $self->{view}->{name}, count => $resourcepool->child_rps );
+        ExEntity::NotEmpty->throw( error => "ResourcePool has child resourcepools", entity => $resourcepool->get_name, count => $resourcepool->child_rps );
     }
     eval {
         $task = $resourcepool->{view}->Destroy_Task;
