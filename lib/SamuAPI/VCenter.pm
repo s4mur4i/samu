@@ -417,9 +417,14 @@ sub get_task {
 sub cancel_task {
     my ($self, %args )= @_;
     $self->{logger}->start;
-    my %result = ();
+    my $result = ();
+    my $task_view = $self->values_to_view( value => $args{value}, type => 'Task');
+    my $task = SamuAPI_task->new( view => $task_view, logger => $self->{logger} );
+#TODO Add test to see if cancelable.
+    $task->{view}->cancel;
+    $result->{status} = "cancelled";
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 ####################################################################

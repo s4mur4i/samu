@@ -379,22 +379,19 @@ sub task_GET {
     my %result =();
     eval {
         %result = %{ $c->stash->{vim}->get_task( value => $mo_ref_value) };
- #       my $task = SamuAPI_task->new( view => $c->stash->{view} );
- #       $result{$mo_ref_value} = $task->get_info;
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
     return $self->__ok( $c, \%result );
 }
 
 sub task_DELETE {
-    my ( $self, $c ,$num) = @_;
+    my ( $self, $c ,$mo_ref_value) = @_;
     my %result = ();
     eval {
-#Verify functionality
-  #      my $task = SamuAPI_task->new( view => $c->stash->{view} );
-  #      $task->cancel;
+        %result = %{ $c->stash->{vim}->cancel_task( value => $mo_ref_value) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
