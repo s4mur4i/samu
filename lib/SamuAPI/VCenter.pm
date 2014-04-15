@@ -831,11 +831,10 @@ sub new {
     return $self;
 }
 
-sub linked_clones {
+sub _linked_clones {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $vm = SamuAPI_virtualmachine->new( view => $args{view}, logger => $self->{logger} );
-    my $snapshot = $self->get_view( mo_ref => $vm->last_snapshot_moref );
+    my $snapshot = $self->get_view( mo_ref => $args{vm}->last_snapshot_moref );
     my $disk;
     for my $device ( @{ $snapshot->{'config'}->{'hardware'}->{'device'} } ) {
         $self->{logger}->dumpobj('device', $device);
@@ -845,18 +844,18 @@ sub linked_clones {
             last;
         }
     }
-    my @vms = @{ $self->find_vms_with_disk( disk => $disk, template => $vm->get_name)};
+    my @vms = @{ $self->_find_vms_with_disk( disk => $disk, template => $args{vm}->get_name)};
     $self->{logger}->dumpobj( 'vms', \@vms);
     $self->{logger}->finish;
     return \@vms;
 }
  
-sub find_vms_with_disk {
+sub _find_vms_with_disk {
     my ( $self, %args) = @_;
     $self->{logger}->start;
 # TODO push this to the model
     my @vms           = ();
-    my $machine_views = $self->find_entities( view_type  => 'VirtualMachine', properties => [ 'layout.disk', 'name' ]);
+    my $machine_views = $self->find_entities( view_type  => 'VirtualMachine', properties => [ 'layout.disk', 'name','summary' ]);
     for my $machine_view (@$machine_views) {
         my $machine = SamuAPI_virtualmachine->new( view => $machine_view, logger => $self->{logger});
         if ( $machine->get_name eq $args{template}) {
@@ -880,10 +879,27 @@ sub find_vms_with_disk {
 sub get_templates {
     my $self = shift;
     $self->{logger}->start;
-    my $result = $self->find_entities( view_type => 'VirtualMachine', properties => ['summary'], filter => { 'config.template' => 'true'  }  );
+    my $result = {};
+    my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['summary'], filter => { 'config.template' => 'true'  }  );
+    for my $vm (@$vms) {
+        my $obj = SamuAPI_template->new( view => $vm, logger=> $self->{logger});
+        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+    }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
 }
 
+sub get_template {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $result = {};
+    my $view = $self->values_to_view( value => $args{value}, type => 'VirtualMachine');
+    my $obj = SamuAPI_template->new( view => $view, logger=> $self->{logger});
+    $result = $obj->get_info;
+    $result->{active_linked_clones} = $self->_linked_clones( vm => $obj);
+    $self->{logger}->dumpobj('result', $result);
+    $self->{logger}->finish;
+    return $result;
+}
 1

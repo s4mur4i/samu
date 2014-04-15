@@ -24,11 +24,7 @@ sub new {
 
 sub base_parse {
     my ( $self, %args) = @_;
-    $args{logger}->dumpobj('args22', \%args);
-#    $self->{logger} = delete($args{logger});
-    $self->{logger} = $args{logger};
-    $args{logger}->dumpobj('args23', \%args);
-    $self->{logger}->dumpobj('self', $self);
+    $self->{logger} = delete($args{logger});
     if ( $args{view} ) {
         $self->{view} = delete($args{view});
     }
@@ -36,7 +32,7 @@ sub base_parse {
         $self->{logger}->debug1('Argument mo_ref given');
         $self->{mo_ref} = delete($args{mo_ref});
     } elsif ( $self->{view} and $self->{view}->{mo_ref}) {
-#        $self->{logger}->debug1('Returning mo_ref from view');
+        $self->{logger}->debug1('Returning mo_ref from view');
         $self->{mo_ref} = $self->{view}->{mo_ref};
     }
     return $self;
@@ -199,6 +195,7 @@ sub get_property {
 }
 
 ######################################################################################
+
 package SamuAPI_folder;
 
 use base 'Entity';
@@ -287,7 +284,6 @@ use base 'Entity';
 
 sub new {
     my ($class, %args) = @_;
-    $args{logger}->dumpobj('args', \%args);
     my $self = bless {}, $class;
     $self->base_parse(%args);
     $self->info_parse;
@@ -370,27 +366,22 @@ sub wait_for_finish {
 }
 
 ######################################################################################
-package SamuAPI_template;
+
+package SamuAPI_virtualmachine;
 
 use base 'Entity';
 
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    if ( $args{view}) {
-        $self->{view} = $args{view};
-    } elsif ( $args{mo_ref}) { 
-        $self->{mo_ref} = $args{mo_ref};
-    } else {
-        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_template");
-    }
-    $self->parse_info;
+    $self->base_parse(%args);
+    $self->info_parse;
     return $self;
 }
 
-sub parse_info {
+sub info_parse {
     my $self = shift;
-    # If info has been parsed once then flush previous info
+    $self->{logger}->start;
     if ( defined( $self->{info} ) && keys $self->{info} ) {
         $self->{info} = ();
     }
@@ -407,36 +398,7 @@ sub parse_info {
         $self->{mo_ref} = $self->{view}->{mo_ref};
     }
     $self->{info}->{mo_ref} = $self->get_mo_ref_value;
-    return $self;
-}
-
-sub get_property {
-    my ($self, $property) = @_;
-    my $object = $self->{view}->get_property($property);
-    return $object;
-}
-
-######################################################################################
-package SamuAPI_virtualmachine;
-
-use base 'Entity';
-
-sub new {
-    my ($class, %args) = @_;
-    my $self = bless {}, $class;
-    if ( $args{view}) {
-        $self->{view} = $args{view};
-    } elsif ( $args{mo_ref}) { 
-        $self->{mo_ref} = $args{mo_ref};
-    } else {
-        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_virtualmachine");
-    }
-    $self->parse_info;
-    return $self;
-}
-
-sub parse_info {
-    my $self = shift;
+    $self->{logger}->finish;
     return $self;
 }
 
@@ -499,6 +461,48 @@ sub poweron {
         $self->{view}->PowerOnVM;
     }
     return $self;
+}
+
+######################################################################################
+
+package SamuAPI_template;
+
+use base 'SamuAPI_virtualmachine';
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    $self->base_parse(%args);
+    $self->info_parse;
+    return $self;
+}
+
+sub info_parse {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    if ( defined($self->{view}) ) {
+        my $view = $self->{view}->{summary};
+        $self->{info}->{name} = $view->{config}->{name};
+        $self->{info}->{vmpath} = $view->{config}->{vmPathName};
+        $self->{info}->{memorySizeMB} = $view->{config}->{memorySizeMB};
+        $self->{info}->{numCpu} = $view->{config}->{numCpu};
+        $self->{info}->{overallStatus} = $view->{overallStatus}->{val};
+        $self->{info}->{toolsVersionStatus} = $view->{guest}->{toolsVersionStatus};
+    }
+    if ( !defined($self->{mo_ref}) ) {
+        $self->{mo_ref} = $self->{view}->{mo_ref};
+    }
+    $self->{info}->{mo_ref} = $self->get_mo_ref_value;
+    return $self;
+}
+
+sub get_property {
+    my ($self, $property) = @_;
+    my $object = $self->{view}->get_property($property);
+    return $object;
 }
 
 ######################################################################################
@@ -651,24 +655,17 @@ use base 'Entity';
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    if ( $args{view}) {
-        $self->{view} = $args{view};
-    } elsif ( $args{mo_ref}) { 
-        $self->{mo_ref} = $args{mo_ref};
-    } else {
-        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_host");
-    }
-    $self->parse_info;
+    $self->base_parse(%args);
+    $self->info_parse;
     return $self;
 }
 
-sub parse_info {
+sub info_parse {
     my $self = shift;
     # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
         $self->{info} = ();
     }
-    my $view = $self->{view};
     $self->{info}->{name} = $view->{name};
     if ( !defined($self->{mo_ref}) ) {
         $self->{mo_ref} = $self->{view}->{mo_ref};

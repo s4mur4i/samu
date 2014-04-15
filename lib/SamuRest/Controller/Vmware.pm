@@ -408,40 +408,27 @@ sub templates_GET {
     my ( $self, $c ) = @_;
     my %result = ();
     eval {
-        my $templates = $c->stash->{vim}->get_templates;
-        for my $vm (@$templates) {
-            my $template = SamuAPI_template->new( view => $vm);
-            $result{$template->get_mo_ref_value } = $template->get_name;
-        }
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}->get_templates };
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
     return $self->__ok( $c, \%result );
 }
 
-sub template : Chained(templateBase) : PathPart(''): Args(1) : ActionClass('REST') {
-    my ( $self, $c, $mo_ref_value ) = @_;
-    eval {
-        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'VirtualMachine', value => $mo_ref_value) ;
-        my %params = ( mo_ref => $c->stash->{mo_ref});
-        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }    
-}
+sub template : Chained(templateBase) : PathPart(''): Args(1) : ActionClass('REST') { }
 
 sub template_GET {
     my ( $self, $c ,$mo_ref_value) = @_;
     my %result = ();
     eval {
-        my $template = SamuAPI_template->new( view => $c->stash->{view});
-        %result = %{ $template->get_info};
-        my $linked = $c->stash->{vim}->linked_clones( view => $c->stash->{view});
-        $result{active_linked_clones} = $linked;
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}->get_template( value=> $mo_ref_value) };
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c,\%result );
@@ -451,6 +438,7 @@ sub template_DELETE {
     my ( $self, $c ,$mo_ref) = @_;
     my %result =();
     eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
         my $vms = $c->stash->{vim}->linked_clones( view => $c->stash->{view});
         for my $vm ( @{ $vms }) {
             my $mo_ref = $c->stash->{vim}->create_moref( type => 'VirtualMachine', value => $vm->{mo_ref} ) ;
