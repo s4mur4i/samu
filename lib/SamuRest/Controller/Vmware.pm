@@ -372,22 +372,13 @@ sub tasks_GET {
     return $self->__ok( $c, \%result );
 }
 
-sub task : Chained(taskBase) : PathPart(''): Args(1) : ActionClass('REST') {
-    my ( $self, $c, $mo_ref_value ) = @_;
-    eval {
-#        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'Task', value => $mo_ref_value) ;
-#        my %params = ( mo_ref => $c->stash->{mo_ref});
-#        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }   
-}
+sub task : Chained(taskBase) : PathPart(''): Args(1) : ActionClass('REST') { }
 
 sub task_GET {
     my ( $self, $c ,$mo_ref_value ) = @_;
     my %result =();
     eval {
+        %result = %{ $c->stash->{vim}->get_task( value => $mo_ref_value) };
  #       my $task = SamuAPI_task->new( view => $c->stash->{view} );
  #       $result{$mo_ref_value} = $task->get_info;
     };
@@ -406,6 +397,7 @@ sub task_DELETE {
   #      $task->cancel;
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
     return $self->__ok( $c, \%result );

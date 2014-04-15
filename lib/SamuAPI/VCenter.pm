@@ -407,9 +407,11 @@ sub get_tasks {
 sub get_task {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
+    my $task_view = $self->values_to_view( value => $args{value}, type => 'Task');
+    my $task = SamuAPI_task->new( view => $task_view, logger => $self->{logger} );
+    my $result =  $task->get_info ;
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub cancel_task {
