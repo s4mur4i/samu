@@ -363,15 +363,10 @@ sub tasks_GET {
     my ( $self, $c ) = @_;
     my %result =();
     eval {
-        my $taskmanager = $c->stash->{vim}->get_manager("taskManager");
-        for ( @{ $taskmanager->{recentTask}}) {
-            my $task_view = $c->stash->{vim}->get_view( mo_ref => $_);
-            print Dumper $task_view;
-            my $task = SamuAPI_task->new( view => $task_view );
-            $result{ $task->get_mo_ref_value} = $task->get_info;
-        }
+        %result = %{ $c->stash->{vim}->get_tasks };
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
     return $self->__ok( $c, \%result );
@@ -380,9 +375,9 @@ sub tasks_GET {
 sub task : Chained(taskBase) : PathPart(''): Args(1) : ActionClass('REST') {
     my ( $self, $c, $mo_ref_value ) = @_;
     eval {
-        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'Task', value => $mo_ref_value) ;
-        my %params = ( mo_ref => $c->stash->{mo_ref});
-        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
+#        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'Task', value => $mo_ref_value) ;
+#        my %params = ( mo_ref => $c->stash->{mo_ref});
+#        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -393,8 +388,8 @@ sub task_GET {
     my ( $self, $c ,$mo_ref_value ) = @_;
     my %result =();
     eval {
-        my $task = SamuAPI_task->new( view => $c->stash->{view} );
-        $result{$mo_ref_value} = $task->get_info;
+ #       my $task = SamuAPI_task->new( view => $c->stash->{view} );
+ #       $result{$mo_ref_value} = $task->get_info;
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -407,8 +402,8 @@ sub task_DELETE {
     my %result = ();
     eval {
 #Verify functionality
-        my $task = SamuAPI_task->new( view => $c->stash->{view} );
-        $task->cancel;
+  #      my $task = SamuAPI_task->new( view => $c->stash->{view} );
+  #      $task->cancel;
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );

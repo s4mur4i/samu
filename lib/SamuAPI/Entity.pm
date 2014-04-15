@@ -24,7 +24,11 @@ sub new {
 
 sub base_parse {
     my ( $self, %args) = @_;
-    $self->{logger} = delete($args{logger});
+    $args{logger}->dumpobj('args22', \%args);
+#    $self->{logger} = delete($args{logger});
+    $self->{logger} = $args{logger};
+    $args{logger}->dumpobj('args23', \%args);
+    $self->{logger}->dumpobj('self', $self);
     if ( $args{view} ) {
         $self->{view} = delete($args{view});
     }
@@ -32,7 +36,7 @@ sub base_parse {
         $self->{logger}->debug1('Argument mo_ref given');
         $self->{mo_ref} = delete($args{mo_ref});
     } elsif ( $self->{view} and $self->{view}->{mo_ref}) {
-        $self->{logger}->debug1('Returning mo_ref from view');
+#        $self->{logger}->debug1('Returning mo_ref from view');
         $self->{mo_ref} = $self->{view}->{mo_ref};
     }
     return $self;
@@ -276,12 +280,14 @@ sub child_vms {
 }
 
 ######################################################################################
+
 package SamuAPI_task;
 
 use base 'Entity';
 
 sub new {
     my ($class, %args) = @_;
+    $args{logger}->dumpobj('args', \%args);
     my $self = bless {}, $class;
     $self->base_parse(%args);
     $self->info_parse;
@@ -292,6 +298,7 @@ sub info_parse {
     my $self = shift;
     # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{logger}->debug1("Need to flush info hash");
         $self->{info} = ();
     }
     if ( defined($self->{view}) ) {
@@ -301,7 +308,7 @@ sub info_parse {
         $self->{info}->{startTime} = $view->{info}->{startTime};
         $self->{info}->{completeTime} = $view->{info}->{completeTime} if defined($view->{info}->{completeTime});
         $self->{info}->{entityName} = $view->{info}->{entityName};
-        my $entity = Entity->new( mo_ref => $view->{info}->{entity});
+        my $entity = Entity->new( mo_ref => $view->{info}->{entity}, logger => $self->{logger});
         $self->{info}->{entity_moref} = $entity->get_mo_ref;
         $self->{info}->{queueTime} = $view->{info}->{queueTime};
         $self->{info}->{key} = $view->{info}->{key};

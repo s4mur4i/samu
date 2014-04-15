@@ -389,6 +389,37 @@ sub values_to_view {
     return $view;
 }
 
+sub get_tasks {
+    my $self = shift;
+    $self->{logger}->start;
+    my %result = ();
+    my $taskmanager = $self->get_manager("taskManager");
+    for ( @{ $taskmanager->{recentTask}}) {
+        my $task_view = $self->get_view( mo_ref => $_);
+        my $task = SamuAPI_task->new( view => $task_view, logger => $self->{logger} );
+        $result{ $task->get_mo_ref_value} = $task->get_info;
+    }
+    $self->{logger}->dumpobj('result', \%result);
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub get_task {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub cancel_task {
+    my ($self, %args )= @_;
+    $self->{logger}->start;
+    my %result = ();
+    $self->{logger}->finish;
+    return \%result;
+}
+
 ####################################################################
 
 package VCenter_resourcepool;
