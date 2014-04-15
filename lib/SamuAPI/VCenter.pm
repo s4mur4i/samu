@@ -902,4 +902,22 @@ sub get_template {
     $self->{logger}->finish;
     return $result;
 }
+
+sub promote_template {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type => 'VirtualMachine', value => $args{value});
+    my $obj = SamuAPI_template->new( view => $view, logger=> $self->{logger});
+    my $vms = $self->_linked_clones( vm => $obj);
+    for my $vm ( @{ $vms }) {
+        my $vm_view = $self->values_to_view(type => 'VirtualMachine', value => $vm->{mo_ref} );
+        my $vm = SamuAPI_virtualmachine->new( view => $vm_view, logger => $self->{logger});
+        my $task = $vm->promote;
+        $result{$vm->get_name} = $task->{value};
+    }
+    $self->{logger}->finish;
+    return \%result;
+}
+
 1

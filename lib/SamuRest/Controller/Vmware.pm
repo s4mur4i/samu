@@ -435,20 +435,14 @@ sub template_GET {
 }
 
 sub template_DELETE {
-    my ( $self, $c ,$mo_ref) = @_;
+    my ( $self, $c ,$mo_ref_value) = @_;
     my %result =();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        my $vms = $c->stash->{vim}->linked_clones( view => $c->stash->{view});
-        for my $vm ( @{ $vms }) {
-            my $mo_ref = $c->stash->{vim}->create_moref( type => 'VirtualMachine', value => $vm->{mo_ref} ) ;
-            my $vm_view = $c->stash->{vim}->get_view( mo_ref => $mo_ref );
-            my $vm = SamuAPI_virtualmachine->new( view => $vm_view);
-            my $task = $vm->promote;
-            $result{$vm->get_name} = $task->{value};
-        }
+        %result = %{ $c->stash->{vim}->promote_template(value => $mo_ref_value) };
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
