@@ -497,27 +497,17 @@ sub switches_POST{
 # TODO impelement method to list hosts
     my %result =();
     eval {
-        my $task_mo_ref = $c->stash->{vim}->create_switch( ticket => $ticket, host => $host );
-        my $task = SamuAPI_task->new( mo_ref => $task_mo_ref);
-        $result{task} = $task->get_mo_ref;
+        bless $c->stash->{vim}, 'VCenter_dvs';
+        %result = %{ $c->stash->{vim}->create( ticket => $ticket, host => $host )};
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
 }
 
-sub switch : Chained('switch_base'): PathPart(''): Args(1) : ActionClass('REST') {
-    my ( $self, $c, $mo_ref_value ) = @_;
-    eval {
-        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'DistributedVirtualSwitch', value => $mo_ref_value) ;
-        my %params = ( mo_ref => $c->stash->{mo_ref});
-        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }    
-}
+sub switch : Chained('switch_base'): PathPart(''): Args(1) : ActionClass('REST') { }
 
 sub switch_GET {
     my ( $self, $c, $mo_ref_value) = @_;
@@ -534,7 +524,16 @@ sub switch_GET {
 }
 
 sub switch_DELETE {
-
+    my ( $self, $c, $mo_ref_value) =@_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_switch';
+        %result = %{ $c->stash->{vim}->destroy( value => $mo_ref_value) };
+    };
+    if ( $@ ) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub switch_PUT {
@@ -567,9 +566,8 @@ sub dvps_POST {
     my $func = $params->{func};
     my %result =();
     eval {
-        my $task_mo_ref = $c->stash->{vim}->create_dvp( ticket => $ticket, switch => $switch, func => $func);
-        my $task = SamuAPI_task->new( mo_ref => $task_mo_ref);
-        $result{task} = $task->get_mo_ref;
+        bless $c->stash->{vim}, 'VCenter_dvp';
+        %result = %{ $c->stash->{vim}->create( ticket => $ticket, switch => $switch, func => $func )};
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -577,17 +575,7 @@ sub dvps_POST {
     return $self->__ok( $c, \%result );
 }
 
-sub dvp : Chained('dvp_base'): PathPart(''): Args(1) : ActionClass('REST') {
-    my ( $self, $c, $mo_ref_value ) = @_;
-    eval {
-        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'DistributedVirtualPortgroup', value => $mo_ref_value) ;
-        my %params = ( mo_ref => $c->stash->{mo_ref});
-        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }    
-}
+sub dvp : Chained('dvp_base'): PathPart(''): Args(1) : ActionClass('REST') { }
 
 sub dvp_GET {
     my ( $self, $c, $mo_ref_value) = @_;
@@ -603,7 +591,16 @@ sub dvp_GET {
 }
 
 sub dvp_DELETE {
-
+    my ( $self, $c, $mo_ref_value) =@_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_dvp';
+        %result = %{ $c->stash->{vim}->destroy( value => $mo_ref_value) };
+    };
+    if ( $@ ) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub dvp_PUT {
@@ -627,17 +624,7 @@ sub hostnetworks_GET{
     return $self->__ok( $c, \%result );
 }
 
-sub hostnetwork : Chained('hostnetwork_base'): PathPart(''): Args(1) : ActionClass('REST') {
-    my ( $self, $c, $mo_ref_value ) = @_;
-    eval {
-        $c->stash->{mo_ref} = $c->stash->{vim}->create_moref( type => 'Network', value => $mo_ref_value) ;
-        my %params = ( mo_ref => $c->stash->{mo_ref});
-        $c->stash->{view} = $c->stash->{vim}->get_view( %params);
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }    
-}
+sub hostnetwork : Chained('hostnetwork_base'): PathPart(''): Args(1) : ActionClass('REST') { }
 
 sub hostnetwork_GET {
     my ( $self, $c, $mo_ref_value) = @_;

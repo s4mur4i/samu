@@ -427,6 +427,17 @@ sub cancel_task {
     return $result;
 }
 
+sub destroy_entity {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my $task = $args{obj}->{view}->Destroy_Task;
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    my %result = ( taskid => { value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type } );
+    $self->{logger}->dumpobj('result', \%result);
+    $self->{logger}->finish;
+    return \%result;
+}
+
 ####################################################################
 
 package VCenter_resourcepool;
@@ -747,7 +758,7 @@ sub create {
     my ($self, %args) = @_;
     $self->{logger}->start;
     $self->{logger}->dumpobj('args', \%args);
-    my $task = ();
+    my $task_moref;
     my $ticket = delete($args{ticket});
     my $switch_value = delete($args{switch});
     my $func = delete($args{func});
@@ -763,15 +774,17 @@ sub create {
     my $network_folder = $self->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'network' });
     my $spec = DVPortgroupConfigSpec->new( name        => $name, type        => 'earlyBinding', numPorts    => 20, description => "Port group");
     eval {
-        $task = $switch_view->AddDVPortgroup_Task( spec => $spec );
+        $task_moref = $switch_view->AddDVPortgroup_Task( spec => $spec );
     };
     if ( $@ ) {
         $self->{logger}->dumpobj('error', $@);
         ExTask::Error->throw( error => 'Error during task', number=> 'unknown', creator => (caller(0))[3] );
     }
-    $self->{logger}->dumpobj('task', $task);
+    my $task = SamuAPI_task->new( mo_ref => $task_moref, logger => $self->{logger});
+    my %return = $task->get_moref;
+    $self->{logger}->dumpobj('return', \%return);
     $self->{logger}->finish;
-    return $task;
+    return \%return;
 }
 
 sub get_all {
@@ -799,6 +812,19 @@ sub get_single {
     return $result;
 }
 
+sub destory {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type => 'DistributedVirtualPortgroup', value => $args{value});
+    my $obj = SamuAPI_distributedvirtualportgroup->new( logger => $self->{logger}, view => $view );
+    if ( scalar( @{ $obj->connected_vms} ) ) {
+        ExAPI::NotEmpty->throw( error => 'DVP has connected vms', count => scalar( @{ $obj->connected_vms} ), entity => $obj->mo_ref_value  );
+    }
+    my %result = %{ $self->destroy_entity( obj => $obj ) };
+    $self->{logger}->finish;
+    return \%result;
+}
+
 ####################################################################
 
 package VCenter_dvs;
@@ -815,7 +841,7 @@ sub create {
     my ($self, %args) = @_;
     $self->{logger}->start;
     $self->{logger}->dumpobj('args', \%args);
-    my $task = ();
+    my $task_moref;
     my $ticket = delete($args{ticket});
     my $host_mo_ref_value = delete($args{host});
     my $host = $self->get_view( mo_ref => $self->create_moref( value => $host_mo_ref_value, type => 'HostSystem' ) );
@@ -824,15 +850,17 @@ sub create {
     my $dvsconfigspec = DVSConfigSpec->new( name        => $ticket, maxPorts    => 300, description => "DVS for ticket $ticket", host        => [$hostspec]);
     my $spec = DVSCreateSpec->new( configSpec => $dvsconfigspec );
     eval {
-        $task = $network_folder->CreateDVS_Task( spec => $spec );
+        $task_moref = $network_folder->CreateDVS_Task( spec => $spec );
     };
     if ( $@ ) {
         $self->{logger}->dumpobj('error', $@);
         ExTask::Error->throw( error => 'Error during task', number=> 'unknown', creator => (caller(0))[3] );
     }
-    $self->{logger}->dumpobj('task', $task);
+    my $task = SamuAPI_task->new( mo_ref => $task_moref, logger => $self->{logger});
+    my %return = $task->get_moref;
+    $self->{logger}->dumpobj('return', \%return);
     $self->{logger}->finish;
-    return $task;
+    return \%return;
 }
 
 sub get_all {
@@ -858,6 +886,19 @@ sub get_single {
     my $result = $obj->get_info;
     $self->{logger}->finish;
     return $result;
+}
+
+sub destory {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type => 'DistributedVirtualSwitch', value => $args{value});
+    my $obj = SamuAPI_distributedvirtualswitch->new( logger => $self->{logger}, view => $view );
+    if ( scalar( @{ $obj->connected_vms} ) ) {
+        ExAPI::NotEmpty->throw( error => 'DVS has connected vms', count => scalar( @{ $obj->connected_vms} ), entity => $obj->mo_ref_value  );
+    }
+    my %result = %{ $self->destroy_entity( obj => $obj ) };
+    $self->{logger}->finish;
+    return \%result;
 }
 
 ####################################################################
