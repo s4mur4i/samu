@@ -721,6 +721,16 @@ sub get_all {
     return $result;
 }
 
+sub get_single {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type => 'Network', value => $args{value});
+    my $obj = SamuAPI_network->new( view => $view, logger => $self->{logger} );
+    my $result = $obj->get_info;
+    $self->{logger}->finish;
+    return $result;
+}
+
 ####################################################################
 
 package VCenter_dvp;
@@ -779,6 +789,16 @@ sub get_all {
     return $result;
 }
 
+sub get_single {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type => 'DistributedVirtualPortgroup', value => $args{value});
+    my $obj = SamuAPI_distributedvirtualportgroup->new( view => $view, logger => $self->{logger} );
+    my $result = $obj->get_info;
+    $self->{logger}->finish;
+    return $result;
+}
+
 ####################################################################
 
 package VCenter_dvs;
@@ -826,6 +846,16 @@ sub get_all {
         $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
     }
     $self->{logger}->dumpobj('result', $result);
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub get_single {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type => 'DistributedVirtualSwitch', value => $args{value});
+    my $obj = SamuAPI_distributedvirtualswitch->new( view => $view, logger => $self->{logger} );
+    my $result = $obj->get_info;
     $self->{logger}->finish;
     return $result;
 }

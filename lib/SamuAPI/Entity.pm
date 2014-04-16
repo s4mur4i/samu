@@ -542,7 +542,7 @@ sub connected_vms {
     my $self = shift;
     my @vm= ();
     for my $vm ( @{$self->{view}->{vm}}) {
-        my $obj = Entity->new( mo_ref => $vm );
+        my $obj = Entity->new( mo_ref => $vm, logger => $self->{logger} );
         push( @vm, $obj->get_mo_ref);
     }
     return \@vm;
@@ -585,7 +585,7 @@ sub connected_vms {
     my $self = shift;
     my @vm= ();
     for my $vm ( @{ $self->{view}->{vm} }) {
-        my $obj = Entity->new( mo_ref => $vm );
+        my $obj = Entity->new( mo_ref => $vm, logger => $self->{logger} );
         push( @vm, $obj->get_mo_ref);
     }
     return \@vm;
@@ -626,7 +626,7 @@ sub connected_vms {
     my $self = shift;
     my @vm= ();
     for my $vm ( @{ $self->{view}->{vm} }) {
-        my $obj = Entity->new( mo_ref => $vm );
+        my $obj = Entity->new( mo_ref => $vm, logger => $self->{logger} );
         push( @vm, $obj->get_mo_ref);
     }
     return \@vm;

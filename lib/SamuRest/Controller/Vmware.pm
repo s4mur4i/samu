@@ -480,7 +480,7 @@ sub switches_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_dvs';
-        $result{switch} = $c->stash->{vim}->get_all;
+        %result = %{ $c->stash->{vim}->get_all};
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -520,13 +520,14 @@ sub switch : Chained('switch_base'): PathPart(''): Args(1) : ActionClass('REST')
 }
 
 sub switch_GET {
-    my ( $self, $c, $moref_value) = @_;
+    my ( $self, $c, $mo_ref_value) = @_;
     my %result = ();
     eval {
-        my $switch = SamuAPI_distributedvirtualswitch->new( view => $c->stash->{view});
-        %result = %{ $switch->get_info};
+        bless $c->stash->{vim}, 'VCenter_dvs';
+        %result = %{ $c->stash->{vim}->get_single( value => $mo_ref_value) };
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
@@ -549,7 +550,7 @@ sub dvps_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_dvp';
-        $result{dvp} = $c->stash->{vim}->get_all;
+        %result = %{ $c->stash->{vim}->get_all };
     };
     if ($@) {
         $c->logger->dumpobj('error', $@);
@@ -589,11 +590,11 @@ sub dvp : Chained('dvp_base'): PathPart(''): Args(1) : ActionClass('REST') {
 }
 
 sub dvp_GET {
-    my ( $self, $c, $moref_value) = @_;
+    my ( $self, $c, $mo_ref_value) = @_;
     my %result = ();
     eval {
-        my $dvp = SamuAPI_distributedvirtualportgroup->new( view => $c->stash->{view});
-        %result = %{ $dvp->get_info};
+        bless $c->stash->{vim}, 'VCenter_dvp';
+        %result = %{ $c->stash->{vim}->get_single( value => $mo_ref_value) };
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -618,7 +619,7 @@ sub hostnetworks_GET{
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_hostnetwork';
-        $result{hostnetwork} = $c->stash->{vim}->get_all;
+        %result = %{ $c->stash->{vim}->get_all};
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
@@ -639,11 +640,11 @@ sub hostnetwork : Chained('hostnetwork_base'): PathPart(''): Args(1) : ActionCla
 }
 
 sub hostnetwork_GET {
-    my ( $self, $c, $moref_value) = @_;
+    my ( $self, $c, $mo_ref_value) = @_;
     my %result = ();
     eval {
-        my $network = SamuAPI_network->new( view => $c->stash->{view});
-        %result = %{ $network->get_info};
+        bless $c->stash->{vim}, 'VCenter_hostnetwork';
+        %result = %{ $c->stash->{vim}->get_single( value => $mo_ref_value)};
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );
