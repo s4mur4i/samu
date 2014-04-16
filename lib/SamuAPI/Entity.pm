@@ -506,6 +506,7 @@ sub get_property {
 }
 
 ######################################################################################
+
 package SamuAPI_distributedvirtualswitch;
 
 use base 'Entity';
@@ -513,18 +514,12 @@ use base 'Entity';
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    if ( $args{view}) {
-        $self->{view} = $args{view};
-    } elsif ( $args{mo_ref}) { 
-        $self->{mo_ref} = $args{mo_ref};
-    } else {
-        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_distributedvirtualswitch");
-    }
-    $self->parse_info;
+    $self->base_parse(%args);
+    $self->info_parse;
     return $self;
 }
 
-sub parse_info {
+sub info_parse {
     my $self = shift;
     # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
@@ -554,6 +549,7 @@ sub connected_vms {
 }
 
 ######################################################################################
+
 package SamuAPI_distributedvirtualportgroup;
 
 use base 'Entity';
@@ -561,18 +557,12 @@ use base 'Entity';
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    if ( $args{view}) {
-        $self->{view} = $args{view};
-    } elsif ( $args{mo_ref}) { 
-        $self->{mo_ref} = $args{mo_ref};
-    } else {
-        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_distributedvirtualportgroup");
-    }
-    $self->parse_info;
+    $self->base_parse(%args);
+    $self->info_parse;
     return $self;
 }
 
-sub parse_info {
+sub info_parse {
     my $self = shift;
     # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
@@ -602,6 +592,7 @@ sub connected_vms {
 }
 
 ######################################################################################
+
 package SamuAPI_network;
 
 use base 'Entity';
@@ -609,18 +600,12 @@ use base 'Entity';
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
-    if ( $args{view}) {
-        $self->{view} = $args{view};
-    } elsif ( $args{mo_ref}) { 
-        $self->{mo_ref} = $args{mo_ref};
-    } else {
-        ExAPI::Argument->throw( error => "missing view or mo_ref argument ", argument => , subroutine => "SamuAPI_network");
-    }
-    $self->parse_info;
+    $self->base_parse(%args);
+    $self->info_parse;
     return $self;
 }
 
-sub parse_info {
+sub info_parse {
     my $self = shift;
     # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
@@ -648,6 +633,7 @@ sub connected_vms {
 }
 
 ######################################################################################
+
 package SamuAPI_host;
 
 use base 'Entity';

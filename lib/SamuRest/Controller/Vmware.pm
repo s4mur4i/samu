@@ -454,30 +454,20 @@ sub networks : Chained('networkBase'): PathPart(''): Args(0) : ActionClass('REST
 
 sub networks_GET {
     my ( $self, $c ) = @_;
-    my %result = ( dvp => {}, switch => {}, network => {} );
+    my %result = ( dvp => (), switch => (), hostnetwork => () );
     eval {
-        my $switches = $c->stash->{vim}->get_switches;
-        for my $switch ( @{ $switches } ) {
-            my $obj = SamuAPI_distributedvirtualswitch->new( view => $switch );
-            $result{switch}{$obj->get_mo_ref_value} = $obj->get_mo_ref;
-            $result{switch}{$obj->get_mo_ref_value}{name} = $obj->get_name;
-        }
-        my $dvps = $c->stash->{vim}->get_dvps;
-        for my $dvp ( @{ $dvps } ) {
-            my $obj = SamuAPI_distributedvirtualportgroup->new( view => $dvp );
-            $result{dvp}{$obj->get_mo_ref_value} = $obj->get_mo_ref;
-            $result{dvp}{$obj->get_mo_ref_value}{name} = $obj->get_name;
-        }
-        my $hostnetworks = $c->stash->{vim}->get_host_networks;
-        for my $network ( @{ $hostnetworks } ) {
-            my $obj = SamuAPI_network->new( view => $network );
-            $result{hostnetwork}{$obj->get_mo_ref_value} = $obj->get_mo_ref;
-            $result{hostnetwork}{$obj->get_mo_ref_value}{name} = $obj->get_name;
-        }
+        bless $c->stash->{vim}, 'VCenter_dvs';
+        $result{switch} = $c->stash->{vim}->get_all;
+        bless $c->stash->{vim}, 'VCenter_dvp';
+        $result{dvp} = $c->stash->{vim}->get_all;
+        bless $c->stash->{vim}, 'VCenter_hostnetwork';
+        $result{hostnetwork} = $c->stash->{vim}->get_all;
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
+    $c->log->dumpobj('result', \%result);
     return $self->__ok( $c, \%result );
 }
 
@@ -489,14 +479,11 @@ sub switches_GET {
     my ( $self, $c) = @_;
     my %result = ();
     eval {
-        my $switches = $c->stash->{vim}->get_switches;
-        for my $switch ( @{ $switches } ) {
-            my $obj = SamuAPI_distributedvirtualswitch->new( view => $switch );
-            $result{$obj->get_mo_ref_value} = $obj->get_mo_ref;
-            $result{$obj->get_mo_ref_value}{name} = $obj->get_name;
-        }
+        bless $c->stash->{vim}, 'VCenter_dvs';
+        $result{switch} = $c->stash->{vim}->get_all;
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
@@ -561,14 +548,11 @@ sub dvps_GET {
     my ( $self, $c) = @_;
     my %result = ();
     eval {
-        my $dvps = $c->stash->{vim}->get_dvps;
-        for my $dvp ( @{ $dvps } ) {
-            my $obj = SamuAPI_distributedvirtualportgroup->new( view => $dvp );
-            $result{$obj->get_mo_ref_value} = $obj->get_mo_ref;
-            $result{$obj->get_mo_ref_value}{name} = $obj->get_name;
-        }
+        bless $c->stash->{vim}, 'VCenter_dvp';
+        $result{dvp} = $c->stash->{vim}->get_all;
     };
     if ($@) {
+        $c->logger->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
@@ -633,13 +617,8 @@ sub hostnetworks_GET{
     my ( $self, $c) = @_;
     my %result = ();
     eval {
-        my $networks = $c->stash->{vim}->get_networks;
-        for my $network ( @{ $networks } ) {
-            my $obj = SamuAPI_network->new( view => $network );
-            print Dumper $obj;
-            $result{$obj->get_mo_ref_value} = $obj->get_mo_ref;
-            $result{$obj->get_mo_ref_value}{name} = $obj->get_name;
-        }
+        bless $c->stash->{vim}, 'VCenter_hostnetwork';
+        $result{hostnetwork} = $c->stash->{vim}->get_all;
     };
     if ($@) {
         $self->__exception_to_json( $c, $@ );

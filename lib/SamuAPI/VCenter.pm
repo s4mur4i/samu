@@ -712,7 +712,8 @@ sub get_all {
     for my $network ( @{ $networks } ) {
         my $obj = SamuAPI_network->new( view => $network, logger => $self->{logger});
         if ( $obj->get_mo_ref_type eq 'Network' ) {
-            push( @{ $result }, $network );
+            $self->{logger}->dumpobj("hostnetwork", $obj);
+            $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
         }
     }
     $self->{logger}->dumpobj('result', $result);
@@ -767,7 +768,12 @@ sub get_all {
     my $self = shift;
     $self->{logger}->start;
     my $result = ();
-    $result = $self->find_entities( view_type => 'DistributedVirtualPortgroup', properties => ['summary', 'key'] );
+    my $dvps = $self->find_entities( view_type => 'DistributedVirtualPortgroup', properties => ['summary', 'key'] );
+    for my $dvp ( @{ $dvps } ) {
+        my $obj = SamuAPI_distributedvirtualportgroup->new( view => $dvp, logger => $self->{logger});
+        $self->{logger}->dumpobj("dvp", $obj);
+        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+    }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
@@ -813,7 +819,12 @@ sub get_all {
     my $self = shift;
     $self->{logger}->start;
     my $result = ();
-    $result = $self->find_entities( view_type => 'DistributedVirtualSwitch', properties => ['summary', 'portgroup'] );
+    my $dvs = $self->find_entities( view_type => 'DistributedVirtualSwitch', properties => ['summary', 'portgroup'] );
+    for my $switch ( @{ $dvs } ) {
+        my $obj = SamuAPI_distributedvirtualswitch->new( view => $switch, logger => $self->{logger});
+        $self->{logger}->dumpobj("dvs", $obj);
+        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+    }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
