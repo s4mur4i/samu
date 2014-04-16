@@ -537,7 +537,17 @@ sub switch_DELETE {
 }
 
 sub switch_PUT {
-
+    my ( $self, $c, $mo_ref_value) =@_;
+    my %result = ();
+    my $params           = $c->req->params;
+    eval {
+        bless $c->stash->{vim}, 'VCenter_switch';
+        %result = %{ $c->stash->{vim}->update( %{ $params} ) };
+    };
+    if ( $@ ) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 }
 
 sub dvp_base : Chained(networkBase) : PathPart('dvp'): CaptureArgs(0) { }
@@ -604,6 +614,17 @@ sub dvp_DELETE {
 }
 
 sub dvp_PUT {
+    my ( $self, $c, $mo_ref_value) =@_;
+    my %result = ();
+    my $params           = $c->req->params;
+    eval {
+        bless $c->stash->{vim}, 'VCenter_dvp';
+        %result = %{ $c->stash->{vim}->update( %{ $params} ) };
+    };
+    if ( $@ ) {
+        $self->__exception_to_json( $c, $@ );
+    }
+    return $self->__ok( $c, \%result );
 
 }
 
@@ -637,14 +658,6 @@ sub hostnetwork_GET {
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
-}
-
-sub hostnetwork_DELETE {
-
-}
-
-sub hostnetwork_PUT {
-
 }
 
 __PACKAGE__->meta->make_immutable;

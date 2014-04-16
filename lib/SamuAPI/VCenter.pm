@@ -825,6 +825,23 @@ sub destory {
     return \%result;
 }
 
+sub update {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    $self->{logger}->dumpobj('args', \%args);
+    my %param = ();
+    my $view = $self->values_to_view( type => 'DistributedVirtualPortgroup', value => delete($args{moref_value}) );
+    my $dvp = SamuAPI_distributedvirtualportgroup->new( view => $view, logger => $self->{logger} );
+    $param{spec} = $dvp->_dvportgroupconfigspec(%args) if ( keys %args);
+    $self->{logger}->dumpobj('param', \%param);
+    my $task_moref = $dvp->{view}->ReconfigureDVPortgroup_Task( %param );
+    my $task = SamuAPI_task->new( mo_ref => $task_moref, logger => $self->{logger});
+    my %return = $task->get_moref;
+    $self->{logger}->dumpobj('return', \%return);
+    $self->{logger}->finish;
+    return \%return;
+}
+
 ####################################################################
 
 package VCenter_dvs;
@@ -899,6 +916,23 @@ sub destory {
     my %result = %{ $self->destroy_entity( obj => $obj ) };
     $self->{logger}->finish;
     return \%result;
+}
+
+sub update {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    $self->{logger}->dumpobj('args', \%args);
+    my %param = ();
+    my $view = $self->values_to_view( type => 'DistributedVirtualSwitch', value => delete($args{moref_value}) );
+    my $dvs = SamuAPI_distributedvirtualswitch->new( view => $view, logger => $self->{logger} );
+    $param{spec} = $dvs->_dvsconfigspec(%args) if ( keys %args);
+    $self->{logger}->dumpobj('param', \%param);
+    my $task_moref = $dvs->{view}->ReconfigureDvs_Task( %param );
+    my $task = SamuAPI_task->new( mo_ref => $task_moref, logger => $self->{logger});
+    my %return = $task->get_moref;
+    $self->{logger}->dumpobj('return', \%return);
+    $self->{logger}->finish;
+    return \%return;
 }
 
 ####################################################################

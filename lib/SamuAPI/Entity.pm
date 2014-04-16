@@ -548,6 +548,19 @@ sub connected_vms {
     return \@vm;
 }
 
+sub _dvsconfigspec {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    $self->{logger}->dumpobj('args', \%args);
+    my $spec = DVSConfigSpec->new();
+    if ( $args{name} ) {
+        $spec->{name} = delete($args{name});
+    }
+    $self->{logger}->dumpobj('configspec', $spec);
+    $self->{logger}->finish;
+    return $spec;
+}
+
 ######################################################################################
 
 package SamuAPI_distributedvirtualportgroup;
@@ -589,6 +602,23 @@ sub connected_vms {
         push( @vm, $obj->get_mo_ref);
     }
     return \@vm;
+}
+
+sub _dvportgroupconfigspec {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    $self->{logger}->dumpobj('args', \%args);
+    my $type = delete($args{type}) || 'earlyBinding';
+    my $numport = delete($args{numport}) || '16';
+    my $desc = delete($args{desc}) || 'DVP desc';
+    my $autoexpand = delete($args{autoexpand}) || "true";
+    my $configspec = DVPortgroupConfigSpec->new( type => $type, numPorts => $numport, autoExpand => $autoexpand );
+    if ( $args{name} ) {
+        $configspec->{name} = delete($args{name});
+    }
+    $self->{logger}->dumpobj('configspec', $configspec);
+    $self->{logger}->finish;
+    return $configspec;
 }
 
 ######################################################################################
