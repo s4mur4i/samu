@@ -694,6 +694,237 @@ sub host_GET {
     return $self->__ok( $c, \%result );
 }
 
+
+sub vmsBase: Chained('loginBase'): PathPart('vm') : CaptureArgs(0) { }
+
+sub vms : Chained('vmsBase'): PathPart(''): Args(0) : ActionClass('REST') {}
+
+sub vms_GET {
+
+}
+
+sub vms_POST {
+
+}
+
+sub vmBase: Chained('vmsBase'): PathPart('') : CaptureArgs(1) {
+    my ($self, $c, $mo_ref_value) = @_;
+    $c->stash->{ mo_ref } = $mo_ref_value
+}
+
+sub vm : Chained('vmBase'): PathPart(''): Args(0) : ActionClass('REST') {}
+
+sub vm_GET{
+
+}
+
+sub vm_DELETE {
+
+}
+
+sub vm_POST {
+
+}
+
+sub vm_PUT {
+
+}
+
+sub cpu : Chained('vmBase'): PathPart('cpu'): Args(0) : ActionClass('REST') {}
+
+sub cpu_GET {
+
+}
+
+sub cpu_PUT {
+
+}
+
+sub process : Chained('vmBase'): PathPart('process'): Args(0) : ActionClass('REST') {}
+
+sub process_GET {
+
+}
+
+sub process_POST {
+
+}
+
+sub transfer : Chained('vmBase'): PathPart('transfer'): Args(0) : ActionClass('REST') {}
+
+sub transfer_POST {
+
+}
+
+sub memory : Chained('vmBase'): PathPart('memory'): Args(0) : ActionClass('REST') {}
+
+sub memory_GET {
+
+}
+
+sub memory_PUT {
+
+}
+
+sub network : Chained('vmBase'): PathPart('network'): Args(0) : ActionClass('REST') {}
+
+sub network_GET {
+
+}
+
+sub network_PUT {
+
+}
+
+sub network_DELETE {
+
+}
+
+sub disks : Chained('vmBase'): PathPart('disk'): Args(0) : ActionClass('REST') {}
+
+sub disks_GET {
+
+}
+
+sub disks_POST {
+
+}
+
+sub disk : Chained('vmBase'): PathPart('disk'): Args(1) : ActionClass('REST') {}
+
+sub disk_GET {
+
+}
+
+sub disk_DELETE {
+
+}
+
+sub disk_PUT {
+
+}
+
+sub annotations : Chained('vmBase'): PathPart('annotation'): Args(0) : ActionClass('REST') {}
+
+sub annotations_GET {
+
+}
+
+sub annotation : Chained('vmBase'): PathPart('annotation'): Args(1) : ActionClass('REST') {}
+
+sub annotation_GET {
+
+}
+
+sub annotation_DELETE {
+
+}
+
+sub annotation_PUT {
+
+}
+
+sub events : Chained('vmBase'): PathPart('event'): Args(0) : ActionClass('REST') {}
+
+sub events_GET {
+
+}
+
+sub event : Chained('vmBase'): PathPart('event'): Args(1) : ActionClass('REST') {}
+
+sub event_GET {
+
+}
+
+sub cdroms : Chained('vmBase'): PathPart('cdrom'): Args(0) : ActionClass('REST') {}
+
+sub cdroms_GET {
+
+}
+
+sub cdroms_POST {
+
+}
+
+sub cdrom : Chained('vmBase'): PathPart('cdrom'): Args(1) : ActionClass('REST') {}
+
+sub cdrom_GET {
+
+}
+
+sub cdrom_PUT {
+
+}
+
+sub cdrom_DELETE {
+
+}
+
+sub interfaces : Chained('vmBase'): PathPart('interface'): Args(0) : ActionClass('REST') {}
+
+sub interfaces_GET {
+
+}
+
+sub interfaces_POST {
+
+}
+
+sub interface : Chained('vmBase'): PathPart('interface'): Args(1) : ActionClass('REST') {}
+
+sub interface_GET {
+
+}
+
+sub interface_PUT {
+
+}
+
+sub interface_DELETE {
+
+}
+
+
+sub powerstatus : Chained('vmBase'): PathPart('powerstatus'): Args(0) : ActionClass('REST') {}
+
+sub powerstatus_GET {
+
+}
+
+sub powerstate : Chained('vmBase'): PathPart('powerstatus'): Args(1) : ActionClass('REST') {}
+
+sub powerstate_PUT {
+
+}
+
+sub snapshots : Chained('vmBase'): PathPart('snapshot'): Args(0) : ActionClass('REST') {}
+
+sub snapshots_GET {
+
+}
+
+sub snapshots_POST {
+
+}
+
+sub snapshots_DELETE {
+
+}
+
+sub snapshot : Chained('vmBase'): PathPart('snapshot'): Args(1) : ActionClass('REST') {}
+
+sub snapshot_GET {
+
+}
+
+sub snapshot_PUT {
+
+}
+
+sub snapshot_DELETE {
+
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;
