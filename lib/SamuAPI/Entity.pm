@@ -682,19 +682,24 @@ sub info_parse {
     if ( defined( $self->{info} ) && keys $self->{info} ) {
         $self->{info} = ();
     }
+    my $view = $self->{view};
     $self->{info}->{name} = $view->{name};
-    if ( !defined($self->{mo_ref}) ) {
-        $self->{mo_ref} = $self->{view}->{mo_ref};
-    }
-    $self->{info}->{mo_ref_value} = $self->get_mo_ref_value;
-    $self->{info}->{mo_ref} = $self->get_mo_ref;
+    $self->{info}->{rebootrequired} = $view->{summary}->{rebootRequired};
+    my $hw = $view->{summary}->{hardware};
+    $self->{info}->{hw} = { cpuMhz => $hw->{cpuMhz}, cpuModel => $hw->{cpuModel}, memorySize => $hw->{memorySize}, model => $hw->{model}, numCpuThreads => $hw->{numCpuThreads}, vendor => $hw->{vendor}, numNics => $hw->{numNics}, numHBA => $hw->{numHBAs}, numCpuCores => $hw->{numCpuCores} };
+    $self->{info}->{status} = $view->{summary}->{overallStatus}->{val};
+    $self->{info}->{vms} = $self->connected_vms;
     return $self;
 }
 
-sub get_manager {
-    my ($self, $manager) = @_;
-    my $mo_ref = $self->{view}->{configManager}->{$manager};
-    return $mo_ref;    
+sub connected_vms {
+    my $self = shift;
+    my @vm= ();
+    for my $vm ( @{$self->{view}->{vm}}) {
+        my $obj = Entity->new( mo_ref => $vm, logger => $self->{logger} );
+        push( @vm, $obj->get_mo_ref);
+    }
+    return \@vm;
 }
 
 1

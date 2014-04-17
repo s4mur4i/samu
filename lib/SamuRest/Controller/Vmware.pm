@@ -660,6 +660,40 @@ sub hostnetwork_GET {
     return $self->__ok( $c, \%result );
 }
 
+sub hostBase: Chained('loginBase'): PathPart('host') : CaptureArgs(0) { }
+
+sub hosts : Chained('hostBase'): PathPart(''): Args(0) : ActionClass('REST') {}
+
+sub hosts_GET {
+    my ( $self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_host';
+        %result = %{ $c->stash->{vim}->get_all };
+    };
+    if ($@) {
+        $c->logger->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
+}
+
+sub host : Chained('hostBase'): PathPart(''): Args(1) : ActionClass('REST') {}
+
+sub host_GET {
+    my ( $self, $c, $mo_ref_value) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_host';
+        %result = %{ $c->stash->{vim}->get_single(value => $mo_ref_value) };
+    };
+    if ($@) {
+        $c->logger->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
+}
+
 __PACKAGE__->meta->make_immutable;
 
 1;

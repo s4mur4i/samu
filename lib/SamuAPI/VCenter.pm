@@ -1036,4 +1036,41 @@ sub promote_template {
     return \%result;
 }
 
+####################################################################
+
+package VCenter_host;
+use base 'VCenter';
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    $self->base_parse(%args);
+    return $self;
+}
+
+sub get_all {
+    my $self = shift;
+    $self->{logger}->start;
+    my $result = ();
+    my $hosts = $self->find_entities( view_type => 'HostSystem', properties => ['summary', 'name']);
+    for my $host ( @{ $hosts } ) {
+        my $obj = SamuAPI_host->new( view => $host, logger => $self->{logger});
+        $self->{logger}->dumpobj("host", $obj);
+        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+    }
+    $self->{logger}->dumpobj('result', $result);
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub get_single {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type => 'HostSystem', value => $args{value});
+    my $obj = SamuAPI_host->new( view => $view, logger => $self->{logger} );
+    my $result = $obj->get_info;
+    $self->{logger}->finish;
+    return $result;
+}
+
 1
