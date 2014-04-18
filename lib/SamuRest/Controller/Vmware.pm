@@ -672,7 +672,7 @@ sub hosts_GET {
         %result = %{ $c->stash->{vim}->get_all };
     };
     if ($@) {
-        $c->logger->dumpobj('error', $@);
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
@@ -688,7 +688,7 @@ sub host_GET {
         %result = %{ $c->stash->{vim}->get_single(value => $mo_ref_value) };
     };
     if ($@) {
-        $c->logger->dumpobj('error', $@);
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
@@ -700,7 +700,17 @@ sub vmsBase: Chained('loginBase'): PathPart('vm') : CaptureArgs(0) { }
 sub vms : Chained('vmsBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 sub vms_GET {
-
+    my ( $self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}->get_all };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub vms_POST {
@@ -709,12 +719,23 @@ sub vms_POST {
 
 sub vmBase: Chained('vmsBase'): PathPart('') : CaptureArgs(1) {
     my ($self, $c, $mo_ref_value) = @_;
-    $c->stash->{ mo_ref } = $mo_ref_value
+    $c->stash->{ mo_ref_value } = $mo_ref_value
 }
 
 sub vm : Chained('vmBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 sub vm_GET{
+    my ( $self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value}) };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 
 }
 

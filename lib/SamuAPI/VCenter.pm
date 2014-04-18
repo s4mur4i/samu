@@ -1019,6 +1019,38 @@ sub get_template {
     return $result;
 }
 
+sub get_all {
+    my $self = shift;
+    $self->{logger}->start;
+    my %return = ();
+    my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['name'] );
+    for my $vm_view ( @{ $vms } ) {
+        my $obj = SamuAPI_virtualmachine->new( view => $vm_view, logger => $self->{logger} );
+        $self->{logger}->dumpobj("vm", $obj);
+        $return{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+    }
+    $self->{logger}->dumpobj("return", \%return);
+    $self->{logger}->finish;
+    return \%return;
+}
+
+sub get_single {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    %result = %{ $vm->get_info} ;
+    if ( $result{parent_name} ) { 
+        my $parent_view = $self->get_view( mo_ref => $result{parent_name}, properties => ['name'] );
+        my $parent = SamuAPI_resourcepool->new( view => $parent_view, logger=> $self->{logger} );
+        $result{parent_name} = $parent->get_name; 
+    }
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
 sub promote_template {
     my ( $self, %args) = @_;
     $self->{logger}->start;
