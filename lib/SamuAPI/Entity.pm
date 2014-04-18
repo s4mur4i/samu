@@ -463,6 +463,20 @@ sub poweron {
     return $self;
 }
 
+sub _virtualmachineconfigspec {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my %params = ();
+    if ( $args{numcpus}) {
+        $params{numCPUs} = delete($args{numcpus});
+        $self->{logger}->debug1("Requested change of CPU num=>'$params{numCPUs}'");
+    }
+    my $spec = VirtualMachineConfigSpec->new( %params );
+    $self->{logger}->dumpobj('spec', $spec);
+    $self->{logger}->finish;
+    return $spec;
+}
+
 ######################################################################################
 
 package SamuAPI_template;

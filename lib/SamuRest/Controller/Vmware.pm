@@ -562,7 +562,7 @@ sub dvps_GET {
         %result = %{ $c->stash->{vim}->get_all };
     };
     if ($@) {
-        $c->logger->dumpobj('error', $@);
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
@@ -714,7 +714,17 @@ sub vms_GET {
 }
 
 sub vms_POST {
-
+    my ( $self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value}) };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub vmBase: Chained('vmsBase'): PathPart('') : CaptureArgs(1) {
@@ -736,214 +746,633 @@ sub vm_GET{
         $self->__exception_to_json( $c, $@ );
     }    
     return $self->__ok( $c, \%result );
-
 }
 
 sub vm_DELETE {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub vm_POST {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub vm_PUT {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub cpu : Chained('vmBase'): PathPart('cpu'): Args(0) : ActionClass('REST') {}
 
 sub cpu_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub cpu_PUT {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub process : Chained('vmBase'): PathPart('process'): Args(0) : ActionClass('REST') {}
 
 sub process_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub process_POST {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub transfer : Chained('vmBase'): PathPart('transfer'): Args(0) : ActionClass('REST') {}
 
 sub transfer_POST {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub memory : Chained('vmBase'): PathPart('memory'): Args(0) : ActionClass('REST') {}
 
 sub memory_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub memory_PUT {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub network : Chained('vmBase'): PathPart('network'): Args(0) : ActionClass('REST') {}
 
 sub network_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub network_PUT {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub network_DELETE {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub disks : Chained('vmBase'): PathPart('disk'): Args(0) : ActionClass('REST') {}
 
 sub disks_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub disks_POST {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub disk : Chained('vmBase'): PathPart('disk'): Args(1) : ActionClass('REST') {}
 
 sub disk_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub disk_DELETE {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub disk_PUT {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub annotations : Chained('vmBase'): PathPart('annotation'): Args(0) : ActionClass('REST') {}
 
 sub annotations_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub annotation : Chained('vmBase'): PathPart('annotation'): Args(1) : ActionClass('REST') {}
 
 sub annotation_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub annotation_DELETE {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub annotation_PUT {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub events : Chained('vmBase'): PathPart('event'): Args(0) : ActionClass('REST') {}
 
 sub events_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub event : Chained('vmBase'): PathPart('event'): Args(1) : ActionClass('REST') {}
 
 sub event_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub cdroms : Chained('vmBase'): PathPart('cdrom'): Args(0) : ActionClass('REST') {}
 
 sub cdroms_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub cdroms_POST {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub cdrom : Chained('vmBase'): PathPart('cdrom'): Args(1) : ActionClass('REST') {}
 
 sub cdrom_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub cdrom_PUT {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub cdrom_DELETE {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub interfaces : Chained('vmBase'): PathPart('interface'): Args(0) : ActionClass('REST') {}
 
 sub interfaces_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub interfaces_POST {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub interface : Chained('vmBase'): PathPart('interface'): Args(1) : ActionClass('REST') {}
 
 sub interface_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub interface_PUT {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub interface_DELETE {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 
 sub powerstatus : Chained('vmBase'): PathPart('powerstatus'): Args(0) : ActionClass('REST') {}
 
 sub powerstatus_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub powerstate : Chained('vmBase'): PathPart('powerstatus'): Args(1) : ActionClass('REST') {}
 
 sub powerstate_PUT {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub snapshots : Chained('vmBase'): PathPart('snapshot'): Args(0) : ActionClass('REST') {}
 
 sub snapshots_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub snapshots_POST {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub snapshots_DELETE {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub snapshot : Chained('vmBase'): PathPart('snapshot'): Args(1) : ActionClass('REST') {}
 
 sub snapshot_GET {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub snapshot_PUT {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 sub snapshot_DELETE {
-
+    my ($self, $c) = @_;
+    my %result = ();
+    eval {
+        bless $c->stash->{vim}, 'VCenter_vm';
+        %result = %{ $c->stash->{vim}-> };
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
 }
 
 __PACKAGE__->meta->make_immutable;
