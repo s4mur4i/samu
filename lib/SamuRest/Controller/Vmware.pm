@@ -753,7 +753,7 @@ sub vm_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -767,7 +767,7 @@ sub vm_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+        #%result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -781,7 +781,7 @@ sub vm_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+        #%result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -797,7 +797,7 @@ sub cpu_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+        #%result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -809,9 +809,10 @@ sub cpu_GET {
 sub cpu_PUT {
     my ($self, $c) = @_;
     my %result = ();
+    my $numcpus = $c->req->params->{numcpus};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->update( numcpus => $numcpus ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -827,7 +828,7 @@ sub process_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+        #%result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -841,7 +842,7 @@ sub process_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -857,7 +858,7 @@ sub transfer_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+       # %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -873,7 +874,7 @@ sub memory_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -885,9 +886,10 @@ sub memory_GET {
 sub memory_PUT {
     my ($self, $c) = @_;
     my %result = ();
+    my $memorymb = $c->req->params->{memorymb};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->update(memory => $memorymb) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -903,7 +905,7 @@ sub network_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -917,7 +919,7 @@ sub network_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -931,7 +933,7 @@ sub network_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -947,7 +949,7 @@ sub disks_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -961,7 +963,7 @@ sub disks_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -977,7 +979,7 @@ sub disk_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -991,7 +993,7 @@ sub disk_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1005,7 +1007,7 @@ sub disk_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1021,7 +1023,7 @@ sub annotations_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1037,7 +1039,7 @@ sub annotation_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1051,7 +1053,7 @@ sub annotation_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1065,7 +1067,7 @@ sub annotation_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1081,7 +1083,7 @@ sub events_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1097,7 +1099,7 @@ sub event_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1113,7 +1115,7 @@ sub cdroms_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1127,7 +1129,7 @@ sub cdroms_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1143,7 +1145,7 @@ sub cdrom_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1157,7 +1159,7 @@ sub cdrom_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1171,7 +1173,7 @@ sub cdrom_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1187,7 +1189,7 @@ sub interfaces_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1201,7 +1203,7 @@ sub interfaces_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1217,7 +1219,7 @@ sub interface_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1231,7 +1233,7 @@ sub interface_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1245,7 +1247,7 @@ sub interface_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1262,7 +1264,7 @@ sub powerstatus_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1278,7 +1280,7 @@ sub powerstate_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1294,7 +1296,7 @@ sub snapshots_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1308,7 +1310,7 @@ sub snapshots_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1322,7 +1324,7 @@ sub snapshots_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1338,7 +1340,7 @@ sub snapshot_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1352,7 +1354,7 @@ sub snapshot_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1366,7 +1368,7 @@ sub snapshot_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}-> };
+#        %result = %{ $c->stash->{vim}-> };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);

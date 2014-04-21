@@ -471,6 +471,10 @@ sub _virtualmachineconfigspec {
         $params{numCPUs} = delete($args{numcpus});
         $self->{logger}->debug1("Requested change of CPU num=>'$params{numCPUs}'");
     }
+    if ( $args{memorymb}) {
+        $params{memoryMB} = delete($args{memorymb});
+        $self->{logger}->debug1("Requested change of Memory MB=>'$params{memoryMB}'");
+    }
     my $spec = VirtualMachineConfigSpec->new( %params );
     $self->{logger}->dumpobj('spec', $spec);
     $self->{logger}->finish;
