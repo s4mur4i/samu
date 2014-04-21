@@ -797,7 +797,8 @@ sub cpu_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        #%result = %{ $c->stash->{vim}-> };
+        my $ret = $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value});
+        %result = (numcpus => $ret->{numCpu});
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -812,7 +813,7 @@ sub cpu_PUT {
     my $numcpus = $c->req->params->{numcpus};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->update( numcpus => $numcpus ) };
+        %result = %{ $c->stash->{vim}->update( numcpus => $numcpus, moref_value => $c->stash->{mo_ref_value} ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -889,7 +890,7 @@ sub memory_PUT {
     my $memorymb = $c->req->params->{memorymb};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->update(memory => $memorymb) };
+        %result = %{ $c->stash->{vim}->update(memory => $memorymb, moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
