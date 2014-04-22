@@ -398,6 +398,7 @@ sub info_parse {
         $self->{mo_ref} = $self->{view}->{mo_ref};
     }
     $self->{info}->{mo_ref} = $self->get_mo_ref_value;
+    $self->{snapshot} = ();
     $self->{logger}->finish;
     return $self;
 }
@@ -483,6 +484,7 @@ sub _virtualmachineconfigspec {
 
 sub find_snapshot_by_id {
     my ( $self, $snapshot_view, $id ) = @_;
+    $self->{logger}->start;
     my $return;
     if ( $snapshot_view->id == $id ) {
         $return = $snapshot_view;
@@ -493,6 +495,30 @@ sub find_snapshot_by_id {
             }
         }       
     }           
+    $self->{logger}->finish;
+    return $return;
+}
+
+sub parse_snapshot {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my $view = $args{snapshot};
+    $self->{snapshot}->{ $view->{id} } = { name => $view->{name}, createTime => $view->{createTime}, description => $view->{description}, moref_value => $view->{snapshot}->{value}, id => $view->{id}, state => $view->{state}->{val} };
+    if ( defined( $view->{childSnapshotList} ) ) {
+        foreach ( @{ $view->{childSnapshotList} } ) {
+            $self->parse_snapshot( snapshot => $_ );
+        }
+    }
+    $self->{logger}->finish;
+    return $self->get_snapshot;
+}
+
+sub get_snapshot {
+    my $self = shift;
+    $self->{logger}->start;
+    my $return = $self->{snapshot} || undef;
+    $self->{logger}->dumpobj('return', $return);
+    $self->{logger}->finish;
     return $return;
 }
 

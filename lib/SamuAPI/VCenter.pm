@@ -1139,6 +1139,10 @@ sub get_snapshots {
     my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    if ( defined( $view->{childSnapshotList} ) ) {
+        %result = %{ $vm->parse_snapshot( snapshot => $vm->{view}->{snapshot}->{rootSnapshotList}[0] ); };
+        $result{CUR} = $vm->{view}->{snapshot}->{currentSnapshot}->{value};
+    }
     $self->{logger}->dumpobj( 'result', \%result );
     $self->{logger}->finish;
     return \%result;
@@ -1150,6 +1154,10 @@ sub get_snapshot {
     my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    if ( defined( $view->{childSnapshotList} ) ) {
+        my %return = %{ $vm->parse_snapshot( snapshot => $vm->{view}->{snapshot}->{rootSnapshotList}[0] ); };
+        %result = $return{$args{id}};
+    }
     $self->{logger}->dumpobj( 'result', \%result );
     $self->{logger}->finish;
     return \%result;
