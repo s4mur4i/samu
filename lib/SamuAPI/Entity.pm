@@ -604,6 +604,32 @@ sub get_hw {
     return \@hw
 }
 
+sub get_interfaces {
+    my $self = shift;
+    $self->{logger}->start;
+    my %result = ();
+    my @ethernet_hw = @{ $self->get_hw( 'VirtualEthernetCard' ) };
+    for ( my $i = 0 ; $i < scalar(@ethernet_hw) ; $i++ ) {
+        my $type = "Unknown";
+        if ( $ethernet_hw[$i]->isa('VirtualE1000') ) {
+            $type = "E1000";
+        } elsif ( $ethernet_hw[$i]->isa('VirtualE1000e') ) {
+            $type = "E1000e";
+        } elsif ( $ethernet_hw[$i]->isa('VirtualPCNet32') ) {
+            $type = "PCNet32";
+        } elsif ( $ethernet_hw[$i]->isa('VirtualVmxnet2') ) {
+            $type = "Vmxnet2";
+        } elsif ( $ethernet_hw[$i]->isa('VirtualVmxnet3') ) {
+            $type = "Vmxnet3";
+        }
+        $result{$i} = { id => $i, key => $ethernet_hw[$i]->{key}, mac=> $ethernet_hw[$i]->{macAddress}, label => $ethernet_hw[$i]->{deviceInfo}->{label}, summary => $ethernet_hw[$i]->{deviceInfo}->{summary}, type => $type };
+    }
+    $self->{logger}->dumpobj('result', \%result);
+    $self->{logger}->finish;
+    return \%result;
+
+}
+
 ######################################################################################
 
 package SamuAPI_template;
