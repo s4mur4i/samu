@@ -977,11 +977,11 @@ sub disks_POST {
 sub disk : Chained('vmBase'): PathPart('disk'): Args(1) : ActionClass('REST') {}
 
 sub disk_GET {
-    my ($self, $c) = @_;
+    my ($self, $c, $id ) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_disk(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->get_disk(moref_value => $c->stash->{mo_ref_value}, id => $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -991,11 +991,11 @@ sub disk_GET {
 }
 
 sub disk_DELETE {
-    my ($self, $c) = @_;
+    my ($self, $c, $id) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->delete_disk(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->delete_disk(moref_value => $c->stash->{mo_ref_value}, id => $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1005,11 +1005,11 @@ sub disk_DELETE {
 }
 
 sub disk_PUT {
-    my ($self, $c) = @_;
+    my ($self, $c, $id) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->change_disk(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->change_disk(moref_value => $c->stash->{mo_ref_value}, id => $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1143,11 +1143,11 @@ sub cdroms_POST {
 sub cdrom : Chained('vmBase'): PathPart('cdrom'): Args(1) : ActionClass('REST') {}
 
 sub cdrom_GET {
-    my ($self, $c) = @_;
+    my ($self, $c, $id) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_cdrom(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->get_cdrom(moref_value => $c->stash->{mo_ref_value}, id => $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1157,11 +1157,11 @@ sub cdrom_GET {
 }
 
 sub cdrom_PUT {
-    my ($self, $c) = @_;
+    my ($self, $c, $id) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->change_cdrom(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->change_cdrom(moref_value => $c->stash->{mo_ref_value}, id => $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1171,11 +1171,11 @@ sub cdrom_PUT {
 }
 
 sub cdrom_DELETE {
-    my ($self, $c) = @_;
+    my ($self, $c, $id) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->delete_cdrom(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->delete_cdrom(moref_value => $c->stash->{mo_ref_value}, id => $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1217,11 +1217,11 @@ sub interfaces_POST {
 sub interface : Chained('vmBase'): PathPart('interface'): Args(1) : ActionClass('REST') {}
 
 sub interface_GET {
-    my ($self, $c) = @_;
+    my ($self, $c, $id) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_interface(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->get_interface(moref_value => $c->stash->{mo_ref_value}, id => $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1231,11 +1231,11 @@ sub interface_GET {
 }
 
 sub interface_PUT {
-    my ($self, $c) = @_;
+    my ($self, $c, $id) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->change_interface(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->change_interface(moref_value => $c->stash->{mo_ref_value}, id => $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1245,11 +1245,11 @@ sub interface_PUT {
 }
 
 sub interface_DELETE {
-    my ($self, $c) = @_;
+    my ($self, $c, $id) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->delete_interface(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->delete_interface(moref_value => $c->stash->{mo_ref_value}, $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1257,7 +1257,6 @@ sub interface_DELETE {
     }    
     return $self->__ok( $c, \%result );
 }
-
 
 sub powerstatus : Chained('vmBase'): PathPart('powerstatus'): Args(0) : ActionClass('REST') {}
 

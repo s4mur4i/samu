@@ -630,6 +630,19 @@ sub get_interfaces {
 
 }
 
+sub get_disks {
+    my $self = shift;
+    $self->{logger}->start;
+    my %result = ();
+    my @disk_hw = @{ $self->get_hw( 'VirtualDisk' ) };
+    for ( my $i = 0 ; $i < scalar(@disk_hw) ; $i++ ) {
+        $result{$i} = { id => $i, key => $disk_hw[$i]->{key}, capacity => $disk_hw[$i]->{capacityInKB}, filename => $disk_hw[$i]->{backing}->{fileName} };
+    }
+    $self->{logger}->dumpobj('result', \%result);
+    $self->{logger}->finish;
+    return \%result;
+
+}
 ######################################################################################
 
 package SamuAPI_template;
