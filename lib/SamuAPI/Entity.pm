@@ -643,6 +643,20 @@ sub get_disks {
     return \%result;
 
 }
+
+sub get_annotation_key {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my $key = 0;
+    foreach ( @{ $self->{view}->{availableField} } ) {
+        if ( $_->name eq $args{name} ) {
+            $key = $_->{key};
+        }
+    }
+    $self->{logger}->finish;
+    return $key;
+}
+
 ######################################################################################
 
 package SamuAPI_template;

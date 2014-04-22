@@ -1037,11 +1037,11 @@ sub annotations_GET {
 sub annotation : Chained('vmBase'): PathPart('annotation'): Args(1) : ActionClass('REST') {}
 
 sub annotation_GET {
-    my ($self, $c) = @_;
+    my ($self, $c, $name) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_annotation(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->get_annotation(moref_value => $c->stash->{mo_ref_value}, name => $name) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1051,11 +1051,11 @@ sub annotation_GET {
 }
 
 sub annotation_DELETE {
-    my ($self, $c) = @_;
+    my ($self, $c, $name ) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->delete_annotation(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->delete_annotation(moref_value => $c->stash->{mo_ref_value}, name => $name) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1065,11 +1065,11 @@ sub annotation_DELETE {
 }
 
 sub annotation_PUT {
-    my ($self, $c) = @_;
+    my ($self, $c, $name) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->change_annotation(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->change_annotation(moref_value => $c->stash->{mo_ref_value}, name => $name) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
