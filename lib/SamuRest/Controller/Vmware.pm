@@ -798,7 +798,7 @@ sub cpu_GET {
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
         my $ret = $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value});
-        %result = (numcpus => $ret->{numCpu});
+        %result = (numcpus => $ret->{info}->{numCpu});
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -829,7 +829,7 @@ sub process_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        #%result = %{ $c->stash->{vim}-> };
+        my $ret = $c->stash->{vim}->get_process( moref_value => $c->stash->{mo_ref_value});
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -843,7 +843,7 @@ sub process_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
+        my $ret = $c->stash->{vim}->run( moref_value => $c->stash->{mo_ref_value});
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -859,7 +859,7 @@ sub transfer_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-       # %result = %{ $c->stash->{vim}-> };
+        my $ret = $c->stash->{vim}->transfer( moref_value => $c->stash->{mo_ref_value});
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -875,7 +875,8 @@ sub memory_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
+        my $ret = $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value});
+        %result = (memorySizeMB => $ret->{info}->{memorySizeMB});
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -950,7 +951,7 @@ sub disks_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->get_disks(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -964,7 +965,7 @@ sub disks_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->create_disk(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -980,7 +981,7 @@ sub disk_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_disk(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -994,7 +995,7 @@ sub disk_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->delete_disk(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1008,7 +1009,7 @@ sub disk_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->change_disk(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1024,7 +1025,7 @@ sub annotations_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_annotations(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1040,7 +1041,7 @@ sub annotation_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_annotation(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1054,7 +1055,7 @@ sub annotation_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->delete_annotation(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1068,7 +1069,7 @@ sub annotation_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->change_annotation(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1084,7 +1085,7 @@ sub events_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_events(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1100,7 +1101,7 @@ sub event_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_event(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1116,7 +1117,7 @@ sub cdroms_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_cdrom(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1130,7 +1131,7 @@ sub cdroms_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->create_cdrom(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1146,7 +1147,7 @@ sub cdrom_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_cdrom(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1160,7 +1161,7 @@ sub cdrom_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->change_cdrom(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1174,7 +1175,7 @@ sub cdrom_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->delete_cdrom(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1190,7 +1191,7 @@ sub interfaces_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_interfaces(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1204,7 +1205,7 @@ sub interfaces_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->create_interface(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1220,7 +1221,7 @@ sub interface_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_interface(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1234,7 +1235,7 @@ sub interface_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->change_interface(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1248,7 +1249,7 @@ sub interface_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->delete_interface(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1265,7 +1266,7 @@ sub powerstatus_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_powerstate(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1281,7 +1282,7 @@ sub powerstate_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->change_powerstate(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1297,7 +1298,7 @@ sub snapshots_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-
+        %result = %{ $c->stash->{vim}->get_snapshots(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1309,9 +1310,10 @@ sub snapshots_GET {
 sub snapshots_POST {
     my ($self, $c) = @_;
     my %result = ();
+    my $params = $c->req->params;
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->create_snapshot( moref_value => $c->stash->{mo_ref_value}, name => $params->{name}, desc => $params->{desc} ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1325,7 +1327,7 @@ sub snapshots_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->delete_snapshots( moref_value => $c->stash->{mo_ref_value} ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1341,7 +1343,7 @@ sub snapshot_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->get_snapshot(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1355,7 +1357,7 @@ sub snapshot_PUT {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->revert_snapshot(moref_value => $c->stash->{mo_ref_value} ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1369,7 +1371,7 @@ sub snapshot_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->delete_snapshot( moref_value => $c->stash->{mo_ref_value} ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
