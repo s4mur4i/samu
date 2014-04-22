@@ -1339,11 +1339,11 @@ sub snapshots_DELETE {
 sub snapshot : Chained('vmBase'): PathPart('snapshot'): Args(1) : ActionClass('REST') {}
 
 sub snapshot_GET {
-    my ($self, $c) = @_;
+    my ($self, $c, $id) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_snapshot(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->get_snapshot(moref_value => $c->stash->{mo_ref_value}, id => $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1353,11 +1353,11 @@ sub snapshot_GET {
 }
 
 sub snapshot_PUT {
-    my ($self, $c) = @_;
+    my ($self, $c, $id ) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->revert_snapshot(moref_value => $c->stash->{mo_ref_value} ) };
+        %result = %{ $c->stash->{vim}->revert_snapshot(moref_value => $c->stash->{mo_ref_value}, id => $id ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1367,11 +1367,11 @@ sub snapshot_PUT {
 }
 
 sub snapshot_DELETE {
-    my ($self, $c) = @_;
+    my ($self, $c, $id) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->delete_snapshot( moref_value => $c->stash->{mo_ref_value} ) };
+        %result = %{ $c->stash->{vim}->delete_snapshot( moref_value => $c->stash->{mo_ref_value}, id => $id ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);

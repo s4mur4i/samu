@@ -1082,6 +1082,103 @@ sub update {
     return \%result;
 }
 
+sub create_snapshot {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $task = $vm->{view}->CreateSnapshot_Task( name        => $args{name}, description => $args{desc}, memory      => 1, quiesce     => 1);
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    my %result = ( value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type );
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub delete_snapshots {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $task = $vm->{view}->RemoveAllSnapshots_Task( consolidate => 1 );
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    my %result = ( value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type );
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub delete_snapshot {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    if ( !defined( $vm->{view}->{snapshot} ) ) {
+        ExEntity::NoSnapshot->throw( error    => "Entity has no snapshots defined", entity   => $vm->get_mo_ref_value);
+    } else {
+        foreach ( @{ $vm->{view}->{snapshot}->{rootSnapshotList} } ) {
+            my $snapshot = $vm->find_snapshot_by_id( $_, $args{id} );
+            if ( defined($snapshot) ) {
+                my $view = $self->get_view( moref => $snapshot->{snapshot} );
+                my $task = $view->RemoveSnapshot_Task( removeChildren => 0 );
+                my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+                %result = ( value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type );
+                last;
+            }   
+        }   
+    }
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub get_snapshots {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub get_snapshot {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub revert_snapshot {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    if ( !defined( $vm->{view}->{snapshot} ) ) {
+        ExEntity::NoSnapshot->throw( error    => "No snapshot found", entity   => $vm->get_name);
+    }
+    foreach ( @{ $vm->{view}->{snapshot}->{rootSnapshotList} } ) {
+        my $snapshot = $vm->find_snapshot_by_id( $_, $args{id} );
+        if ( defined($snapshot) ) {
+            my $view = $self->get_view( moref => $snapshot->snapshot );
+            my $task = $view->RevertToSnapshot_Task( suppressPowerOn => 1 );
+            my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+            %result = ( value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type );
+            last;
+        }
+    }
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
 ####################################################################
 
 package VCenter_host;

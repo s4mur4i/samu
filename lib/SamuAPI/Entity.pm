@@ -481,6 +481,21 @@ sub _virtualmachineconfigspec {
     return $spec;
 }
 
+sub find_snapshot_by_id {
+    my ( $self, $snapshot_view, $id ) = @_;
+    my $return;
+    if ( $snapshot_view->id == $id ) {
+        $return = $snapshot_view;
+    } elsif ( defined( $snapshot_view->childSnapshotList ) ) {
+        foreach ( @{ $snapshot_view->childSnapshotList } ) {
+            if ( !defined($return) ) { 
+                $return = $self->find_snapshot_by_id( $_, $id );
+            }
+        }       
+    }           
+    return $return;
+}
+
 ######################################################################################
 
 package SamuAPI_template;
