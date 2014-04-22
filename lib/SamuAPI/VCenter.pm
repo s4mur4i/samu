@@ -1376,8 +1376,28 @@ sub get_annotation {
             if ( $_->{key} eq $key ) {
                 %result = ( value => $_->{value}, key => $key, name => $args{name});
             }
-        }
+        }                                                                                                                                                                                                                       
     }
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub delete_annotation {
+    my ( $self, %args) = @_;
+    $args{value} = "";
+    $self->change_annotation(%args);
+}
+
+sub change_annotation {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $custom = $self->get_manager("customFieldsManager");
+    my $key = $vm->get_annotation_key( name => $args{name});
+    $custom->SetField( entity => $vm->{view}, key => $key, value => $args{value} );
     $self->{logger}->dumpobj( 'result', \%result );
     $self->{logger}->finish;
     return \%result;
