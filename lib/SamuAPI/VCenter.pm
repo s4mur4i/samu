@@ -1187,6 +1187,81 @@ sub revert_snapshot {
     return \%result;
 }
 
+sub get_powerstate {
+    my ($self, %args) = shift;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my %result = ( powerstate => $vm->get_powerstate );
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+} 
+
+sub change_powerstate {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    if ( $args{state} =~ /^suspend$/ ) {
+        %result = %{ $vm->suspend_task };
+    } elsif ( $args{state} =~ /^standby$/ ) {
+        $vm->standby;
+        %result = ( standby => 'success' );
+    } elsif ( $args{state} =~ /^shutdown$/ ) {
+        $vm->shutdown;
+        %result = ( shutdown => 'success' );
+    } elsif ( $args{state} =~ /^reboot$/) {
+        $vm->reboot;
+        %result = ( reboot => 'success' );
+    } elsif ( $args{state} =~ /^poweron$/) {
+        %result = %{ $vm->poweron_task };
+    } elsif ( $args{state} =~ /^poweroff$/) {
+        %result = %{ $vm->poweroff_task };
+    }
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub get_cdrom {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $ret = $vm->get_cdroms;
+    %result = $ret->{$args{id}};
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub get_cdroms {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    %result = %{ $vm->get_cdroms };
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub create_cdrom {
+
+}
+
+sub delete_cdrom {
+
+}
+
+sub change_cdrom {
+
+}
+
 ####################################################################
 
 package VCenter_host;

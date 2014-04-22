@@ -1117,7 +1117,7 @@ sub cdroms_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_cdrom(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->get_cdroms(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1278,11 +1278,11 @@ sub powerstatus_GET {
 sub powerstate : Chained('vmBase'): PathPart('powerstatus'): Args(1) : ActionClass('REST') {}
 
 sub powerstate_PUT {
-    my ($self, $c) = @_;
+    my ($self, $c, $state) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->change_powerstate(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->change_powerstate(moref_value => $c->stash->{mo_ref_value}, state => $state) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);

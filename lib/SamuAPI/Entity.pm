@@ -435,11 +435,6 @@ sub _find_last_snapshot {
     }
 }
 
-sub get_powerstate {
-    my $self = shift;
-    return $self->{view}->{runtime}->{powerState}->{val};
-}
-
 sub promote {
     my $self = shift;
     $self->poweroff;
@@ -520,6 +515,93 @@ sub get_snapshot {
     $self->{logger}->dumpobj('return', $return);
     $self->{logger}->finish;
     return $return;
+}
+
+sub get_powerstate {
+    my $self = shift;
+    $self->{logger}->start;
+    my $return = $self->{view}->{runtime}->{powerState}->{val} || undef;
+    $self->{logger}->dumpobj('return', $return);
+    $self->{logger}->finish;
+    return $return;
+}
+
+sub poweroff_task {
+    my $self = shift;
+    my $task = $self->{view}->PowerOffVM_Task;
+    my $obj = SamuAPI_task->new( view => $task, logger => $self->{logger} );
+    my %result = $obj->get_mo_ref;
+    return \%result;
+}
+
+sub poweron_task {
+    my $self = shift;
+    my $task = $self->{view}->PowerOnVM_Task;
+    my $obj = SamuAPI_task->new( view => $task, logger => $self->{logger} );
+    my %result = $obj->get_mo_ref;
+    return \%result;
+}
+
+sub suspend_task {
+    my $self = shift;
+    my $task = $self->{view}->SuspendVM_Task;
+    my $obj = SamuAPI_task->new( view => $task, logger => $self->{logger} );
+    my %result = $obj->get_mo_ref;
+    return \%result;
+}
+
+sub standby {
+    my $self = shift;
+    $self->{view}->StandbyGuest;
+    return $self;
+}
+
+sub reboot {
+    my $self = shift;
+    $self->{view}->RebootGuest;
+    return $self;
+}
+
+sub shutdown {
+    my $self = shift;
+    $self->{view}->ShutdownGuest;
+    return $self;
+}
+
+sub get_cdroms {
+    my $self = shift;
+    $self->{logger}->start;
+    my %result = ();
+    my @cdrom_hw = @{ $self->get_hw( 'VirtualCdrom' ) };
+    for ( my $i = 0 ; $i < scalar(@cdrom_hw) ; $i++ ) {
+        my $backing = "Unknown";
+        if ( $cdrom_hw[$i]->{backing}->isa('VirtualCdromIsoBackingInfo') ) {
+            $backing = $cdrom_hw[$i]->{backing}->fileName;
+        } elsif ( $cdrom_hw[$i]->{backing} ->isa('VirtualCdromRemotePassthroughBackingInfo') or $cdrom_hw[$i]->{backing}->isa('VirtualCdromRemoteAtapiBackingInfo')) {
+            $backing = "Client_Device";
+        } elsif ( $cdrom_hw[$i]->{backing}->isa('VirtualCdromAtapiBackingInfo') ) {
+            $backing = $cdrom_hw[$i]->{backing}->{deviceName};
+        }
+        my $label = $cdrom_hw[$i]->{deviceInfo}->{label} || "None";
+        $result{$i} = { id => $i, key => $cdrom_hw[$i]->{key}, backing => "$backing", label => "$label"};
+    }
+    $self->{logger}->dumpobj('result', \%result);
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub get_hw {
+    my ( $self, $hw ) = @_;
+    $self->{logger}->start;
+    my @hw   = ();
+    foreach ( @{$self->{view}->{config}->{hardware}->{device}} ) {
+        if ( $_->isa($hw) ) {
+            push( @hw, $_ );
+        }
+    }
+    $self->{logger}->dumpobj('hw', \@hw);
+    $self->{logger}->finish;
+    return \@hw
 }
 
 ######################################################################################
