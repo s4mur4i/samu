@@ -1075,9 +1075,8 @@ sub update {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $spec = $vm->_virtualmachineconfigspec( %args ) if (keys(%args));
-    my $task = $vm->{view}->ReconfigVM_Task( spec => $spec);
-    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    my %result = ( value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type );
+    my %result = %{ $vm->reconfigvm( spec => $spec ) };
+    $self->{logger}->dumpobj( 'result', \%result );
     $self->{logger}->finish;
     return \%result;
 }

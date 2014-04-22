@@ -657,6 +657,16 @@ sub get_annotation_key {
     return $key;
 }
 
+sub reconfigvm {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my $task = $vm->{view}->ReconfigVM_Task( spec => $args{spec} );
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    my %result = $obj->get_mo_ref;
+    $self->{logger}->finish;
+    return \%result;
+}
+
 ######################################################################################
 
 package SamuAPI_template;
