@@ -882,4 +882,38 @@ sub connected_vms {
     return \@vm;
 }
 
+######################################################################################
+
+package SamuAPI_event;
+
+use base 'Entity';
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    $self->base_parse(%args);
+    $self->info_parse;
+    return $self;
+}
+
+sub info_parse {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    my $view = $self->{view};
+    $self->{info}->{username} = $view->{userName} || "system";
+    $self->{info}->{createdTime} = $view->{createdTime};
+    $self->{info}->{datacenter} = $view->{datacenter}->{name};
+    $self->{info}->{key} = $view->{key};
+    $self->{info}->{fullFormattedMessage} = $view->{fullFormattedMessage};
+    return $self;
+}
+
+sub get_key {
+    my $self = shift;
+    return $self->{info}->{key};
+}
+
 1

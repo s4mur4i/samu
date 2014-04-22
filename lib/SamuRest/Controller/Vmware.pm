@@ -1097,11 +1097,11 @@ sub events_GET {
 sub event : Chained('vmBase'): PathPart('event'): Args(1) : ActionClass('REST') {}
 
 sub event_GET {
-    my ($self, $c) = @_;
+    my ($self, $c, $filter) = @_;
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_event(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->get_event(moref_value => $c->stash->{mo_ref_value},filter=> $filter ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);

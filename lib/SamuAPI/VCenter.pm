@@ -1312,6 +1312,45 @@ sub get_disk {
     return \%result;
 }
 
+sub get_events {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $manager = $self->get_manager("eventManager");
+    my $eventfilter = EventFilterSpecByEntity->new( entity    => $vm->{view}, recursion => EventFilterSpecRecursionOption->new('self'));
+    my $filterspec = EventFilterSpec->new( entity => $eventfilter );
+    my $events = $manager->QueryEvents( filter => $filterspec );
+    for my $event ( @{ $events } ) {
+        my $obj = SamuAPI_event->new(view => $event, logger => $self->{logger});
+        $result{$obj->get_key} = %{ $obj->get_info };
+    }
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub get_event {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $manager = $self->get_manager("eventManager");
+    my $eventfilter = EventFilterSpecByEntity->new( entity    => $vm->{view}, recursion => EventFilterSpecRecursionOption->new('self'));
+    my $filterspec = EventFilterSpec->new( entity => $eventfilter, eventTypeId => $args{filter} );
+    my $events = $manager->QueryEvents( filter => $filterspec );
+    for my $event ( @{ $events } ) {
+        my $obj = SamuAPI_event->new(view => $event, logger => $self->{logger});
+        $result{$obj->get_key} = %{ $obj->get_info };
+    }
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+
 ####################################################################
 
 package VCenter_host;
