@@ -667,6 +667,60 @@ sub reconfigvm {
     return \%result;
 }
 
+sub get_scsi_controller {
+    my $self = shift;
+    $self->{logger}->start;
+    my @types = ( 'VirtualBusLogicController',    'VirtualLsiLogicController', 'VirtualLsiLogicSASController', 'ParaVirtualSCSIController');
+    my @controller = ();
+    for my $type (@types) {
+        my @cont = @{ $self->get_hw( $type ) };
+        if ( scalar(@cont) eq 1 ) {
+            push( @controller, @cont );
+        }
+    }
+    if ( scalar(@controller) != 1 ) {
+        ExEntity::HWError->throw( error  => 'Scsi controller count not good', entity => $self->get_mo_ref_value, hw     => 'SCSI Controller');
+    }
+    $self->{logger}->finish;
+    return $controller[0];
+}
+
+sub get_free_ide_controller {
+    my $self = shift;
+    $self->{logger}->start;
+    my @controller = @{ $self->get_hw( 'VirtualIDEController' ) };
+    for ( my $i = 0 ; $i < scalar(@controller) ; $i++ ) {
+        my $ret;
+        if ( defined( $controller[$i]->device ) ) {
+            if ( @{ $controller[$i]->device } lt 2 ) {
+                $ret = $controller[$i];
+            }   
+            else {
+                next;
+            }   
+        } else {
+            $ret = $controller[$i];
+        }   
+        if ($ret) {
+            return $ret;
+        }   
+    }   
+    $self->{logger}->finish;
+    ExEntity::HWError->throw( error  => 'Could not find free ide controller', entity => $self->get_mo_ref, hw     => 'ide_controller');
+}
+
+#sub _virtualdiskspec {
+#    my ( $self, %args ) = @_;
+#    $self->{logger}->start;
+#    my $disk = VirtualDisk->new( controllerKey => $scsi_con->key, unitNumber    => $unitnumber, key           => -1, backing       => $disk_backing_info, capacityInKB  => $args{size});
+#    my $devspec = VirtualDeviceConfigSpec->new( operation     => VirtualDeviceConfigSpecOperation->new('add'), device        => $disk, fileOperation => VirtualDeviceConfigSpecFileOperation->new('create'));
+#    my $spec = VirtualMachineConfigSpec->new( deviceChange => [$devspec] );
+#
+#    $self->{logger}->dumpobj('spec', $spec);
+#    $self->{logger}->finish;
+#    return $spec;
+#}
+
 ######################################################################################
 
 package SamuAPI_template;

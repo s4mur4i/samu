@@ -963,9 +963,11 @@ sub disks_GET {
 sub disks_POST {
     my ($self, $c) = @_;
     my %result = ();
+    my %params = %{ $c->req->params };
+    $params{moref_value} = $c->stash->{mo_ref_value};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->create_disk(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->create_disk( %params ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);

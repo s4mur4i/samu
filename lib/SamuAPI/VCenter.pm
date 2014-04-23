@@ -1311,6 +1311,31 @@ sub get_disk {
     return \%result;
 }
 
+sub create_disk {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my @disk_hw    = @{ $self->get_hw( 'VirtualDisk' ) };
+    my $scsi_con   = $self->get_scsi_controller;
+    my $unitnumber = $disk_hw[-1]->{unitNumber} + 1;
+    if ( $unitnumber == 7 ) {
+        $unitnumber++;
+    } elsif ( $unitnumber == 15 ) {
+        ExEntity::HWError->throw( error  => 'SCSI controller has already 15 disks', entity => $self->get_mo_ref_value , hw     => 'SCSI Controller');
+    }
+    my $inc_path = &increment_disk_name( $disk_hw[-1]->{backing}->{fileName} );
+    my $disk_backing_info = VirtualDiskFlatVer2BackingInfo->new( fileName        => $inc_path, diskMode        => "persistent", thinProvisioned => 1);
+    my $disk = VirtualDisk->new( controllerKey => $scsi_con->key, unitNumber    => $unitnumber, key           => -1, backing       => $disk_backing_info, capacityInKB  => $args{size});
+    my $devspec = VirtualDeviceConfigSpec->new( operation     => VirtualDeviceConfigSpecOperation->new('add'), device        => $disk, fileOperation => VirtualDeviceConfigSpecFileOperation->new('create'));
+    my $spec = VirtualMachineConfigSpec->new( deviceChange => [$devspec] );
+    $vm->reconfigvm( spec => $spec );
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
 sub get_events {
     my ( $self, %args) = @_;
     $self->{logger}->start;
@@ -1397,6 +1422,25 @@ sub change_annotation {
     my $custom = $self->get_manager("customFieldsManager");
     my $key = $vm->get_annotation_key( name => $args{name});
     $custom->SetField( entity => $vm->{view}, key => $key, value => $args{value} );
+    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->finish;
+    return \%result;
+}
+
+sub remove_hw {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my @net_hw = @{ $self->get_hw( $args{hw} ) };
+    my $deviceconfig;
+    if ( $net_hw[$args{num}]->isa('VirtualDisk') ) {
+        $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('remove'), device    => $net_hw[$args{num}], fileOperation => VirtualDeviceConfigSpecFileOperation->new('destroy'));
+    } else {
+        $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('remove'), device    => $net_hw[$args{num}]);
+    }
+    my $vmspec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
+    my %result = %{ $vm->reconfigvm( spec => $vmspec ) };
     $self->{logger}->dumpobj( 'result', \%result );
     $self->{logger}->finish;
     return \%result;

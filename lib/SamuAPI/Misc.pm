@@ -21,4 +21,23 @@ sub rand_3digit {
     return int( rand(999) );
 }
 
+sub increment_disk_name {
+    my ($name) = @_;
+    my ( $pre, $num, $post );
+    if ( $name =~ /(.*)_(\d+)(\.vmdk)/ ) {
+        ( $pre, $num, $post ) = ( $1, $2, $3 );
+        $num++;
+        if ( $num == 7 ) {
+            $num++;
+        } elsif ( $num > 15 ) {
+            ExEntity::Range->throw( error  => 'Cannot increment further. Last disk used', entity => $name, count  => '15');
+        }   
+    }   
+    else {
+        ( $pre, $post ) = $name =~ /(.*)(\.vmdk)/;
+        $num = 1;
+    }   
+    return "${pre}_$num$post";
+} 
+
 1

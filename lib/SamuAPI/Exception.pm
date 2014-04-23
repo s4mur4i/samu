@@ -36,6 +36,8 @@ use Exception::Class (
     'ExEntity::FindEntityError' => { isa => 'ExEntity', fields => ['view_type']},
     'ExEntity::ServiceContent' => { isa => 'ExEntity'},
     'ExEntity::Move' => { isa => 'ExEntity', fields => ['parent'] },
+    'ExEntity::HWError' => {isa => 'ExEntity', fields => ['hw'] },
+    'ExEntity::Range' => { isa=> 'ExEntity', fields => ['range'] },
     'ExTask::Error' => { isa => 'ExTask', fields => ['creator'] },
 );
 
