@@ -1119,7 +1119,7 @@ sub cdrom_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->delete_cdrom(moref_value => $c->stash->{mo_ref_value}, id => $id) };
+        %result = %{ $c->stash->{vim}->remove_hw(moref_value => $c->stash->{mo_ref_value}, num => $id, hw => 'VirtualCdrom' ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1193,7 +1193,7 @@ sub interface_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->delete_interface(moref_value => $c->stash->{mo_ref_value}, $id) };
+        %result = %{ $c->stash->{vim}->remove_hw(moref_value => $c->stash->{mo_ref_value}, num => $id, hw => 'VirtualEthernetCard') };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
