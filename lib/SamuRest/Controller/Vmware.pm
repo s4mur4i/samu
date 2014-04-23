@@ -997,7 +997,7 @@ sub disk_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->delete_disk(moref_value => $c->stash->{mo_ref_value}, id => $id) };
+        %result = %{ $c->stash->{vim}->remove_hw(moref_value => $c->stash->{mo_ref_value}, num => $id, hw => 'VirtualDisk') };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
