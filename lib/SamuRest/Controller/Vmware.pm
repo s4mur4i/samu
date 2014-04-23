@@ -900,50 +900,6 @@ sub memory_PUT {
     return $self->__ok( $c, \%result );
 }
 
-sub network : Chained('vmBase'): PathPart('network'): Args(0) : ActionClass('REST') {}
-
-sub network_GET {
-    my ($self, $c) = @_;
-    my %result = ();
-    eval {
-        bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
-    };
-    if ($@) {
-        $c->log->dumpobj('error', $@);
-        $self->__exception_to_json( $c, $@ );
-    }    
-    return $self->__ok( $c, \%result );
-}
-
-sub network_PUT {
-    my ($self, $c) = @_;
-    my %result = ();
-    eval {
-        bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
-    };
-    if ($@) {
-        $c->log->dumpobj('error', $@);
-        $self->__exception_to_json( $c, $@ );
-    }    
-    return $self->__ok( $c, \%result );
-}
-
-sub network_DELETE {
-    my ($self, $c) = @_;
-    my %result = ();
-    eval {
-        bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
-    };
-    if ($@) {
-        $c->log->dumpobj('error', $@);
-        $self->__exception_to_json( $c, $@ );
-    }    
-    return $self->__ok( $c, \%result );
-}
-
 sub disks : Chained('vmBase'): PathPart('disk'): Args(0) : ActionClass('REST') {}
 
 sub disks_GET {
@@ -998,20 +954,6 @@ sub disk_DELETE {
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
         %result = %{ $c->stash->{vim}->remove_hw(moref_value => $c->stash->{mo_ref_value}, num => $id, hw => 'VirtualDisk') };
-    };
-    if ($@) {
-        $c->log->dumpobj('error', $@);
-        $self->__exception_to_json( $c, $@ );
-    }    
-    return $self->__ok( $c, \%result );
-}
-
-sub disk_PUT {
-    my ($self, $c, $id) = @_;
-    my %result = ();
-    eval {
-        bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->change_disk(moref_value => $c->stash->{mo_ref_value}, id => $id) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
