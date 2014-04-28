@@ -716,9 +716,11 @@ sub vms_GET {
 sub vms_POST {
     my ( $self, $c) = @_;
     my %result = ();
+    my $params = $c->req->params;
     eval {
-        bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value}) };
+        %result = (Status => "Not implemented");
+#        bless $c->stash->{vim}, 'VCenter_vm';
+#        %result = %{ $c->stash->{vim}->create_vm( %{$params}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -739,7 +741,7 @@ sub vm_GET{
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value} ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -753,7 +755,7 @@ sub vm_DELETE {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-#        %result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->destroy( moref_value => $c->stash->{mo_ref_value} ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -767,21 +769,7 @@ sub vm_POST {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        #%result = %{ $c->stash->{vim}-> };
-    };
-    if ($@) {
-        $c->log->dumpobj('error', $@);
-        $self->__exception_to_json( $c, $@ );
-    }    
-    return $self->__ok( $c, \%result );
-}
-
-sub vm_PUT {
-    my ($self, $c) = @_;
-    my %result = ();
-    eval {
-        bless $c->stash->{vim}, 'VCenter_vm';
-        #%result = %{ $c->stash->{vim}-> };
+        %result = %{ $c->stash->{vim}->clone_vm(moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);

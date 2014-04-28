@@ -471,6 +471,30 @@ sub _virtualmachineconfigspec {
         $params{memoryMB} = delete($args{memorymb});
         $self->{logger}->debug1("Requested change of Memory MB=>'$params{memoryMB}'");
     }
+    if ( $args{alternateGuestName}) {
+        $params{alternateGuestName} = delete($args{alternateGuestName});
+        $self->{logger}->debug1("Requested change of alternateGuestName=>'$params{alternateGuestName}'");
+    }
+    if ( $args{cpuHotAddEnabled}) {
+        $params{cpuHotAddEnabled} = delete($args{cpuHotAddEnabled});
+        $self->{logger}->debug1("Requested change of cpuHotAddEnabled=>'$params{cpuHotAddEnabled}'");
+    }
+    if ( $args{cpuHotRemoveEnabled}) {
+        $params{cpuHotRemoveEnabled} = delete($args{cpuHotRemoveEnabled});
+        $self->{logger}->debug1("Requested change of cpuHotRemoveEnabled=>'$params{cpuHotRemoveEnabled}'");
+    }
+    if ( $args{memoryHotAddEnabled}) {
+        $params{memoryHotAddEnabled} = delete($args{memoryHotAddEnabled});
+        $self->{logger}->debug1("Requested change of memoryHotAddEnabled=>'$params{memoryHotAddEnabled}'");
+    }
+    if ( $args{enterBIOSSetup}) {
+        $params{bootOptions} = VirtualMachineBootOptions->new( enterBIOSSetup => delete($args{enterBIOSSetup}));
+        $self->{logger}->debug1("Requested change of Memory MB=>'$params{enterBIOSSetup}'");
+    }
+    if ( $args{name}) {
+        $params{name} = delete($args{name});
+        $self->{logger}->debug1("Requested change of name=>'$params{name}'");
+    }
     my $spec = VirtualMachineConfigSpec->new( %params );
     $self->{logger}->dumpobj('spec', $spec);
     $self->{logger}->finish;

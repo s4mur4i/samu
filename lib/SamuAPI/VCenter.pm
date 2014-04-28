@@ -438,6 +438,34 @@ sub destroy_entity {
     return \%result;
 }
 
+sub get_rp_parent {
+    my ( $self, $mo_ref_value ) = @_;
+    $self->{logger}->start;
+    my $parent;
+    if ( defined($mo_ref_value)) {
+        $parent = $self->values_to_view( value => $mo_ref_value , type => 'ResourcePool' );
+    } else {
+        $parent = $self->find_entity( view_type => 'ResourcePool', properties => ['name'], filter => { name => 'Resources'} );
+    }
+    my $obj = SamuAPI_resourcepool->new(logger=> $self->{logger}, view => $parent);
+    $self->{logger}->finish;
+    return $obj;
+}
+
+sub get_folder_parent {
+    my ( $self, $mo_ref_value ) = @_;
+    $self->{logger}->start;
+    my $parent;
+    if ( defined($mo_ref_value)) {
+        $parent = $self->values_to_view( value => $mo_ref_value , type => 'Folder' );
+    } else {
+        $parent = $self->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'vm'} );
+    }
+    my $obj = SamuAPI_folder->new(logger=> $self->{logger}, view => $parent);
+    $self->{logger}->finish;
+    return $obj;
+}
+
 ####################################################################
 
 package VCenter_resourcepool;
@@ -1444,6 +1472,46 @@ sub remove_hw {
     $self->{logger}->dumpobj( 'result', \%result );
     $self->{logger}->finish;
     return \%result;
+}
+
+sub create_vm {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my $parent_rp = $self->get_rp_parent( $args{parent_resourcepool});
+    my $folder = $self->get_folder_parent( $args{parent_folder});
+    my $vm = SamuAPI_virtualmachine->new( logger => $self->{logger} );
+    my $spec = $vm->_virtualmachineconfigspec( %args );
+    my $task = $folder->{view}->CreateVM_Task( pool => $parent_rp->{view}->{mo_ref}, config => $spec );
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    my $result = $obj->get_mo_ref;
+    $self->{logger}->dumpobj('result', $result);
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub clone_vm {
+
+}
+
+sub destroy {
+    my ($self,%args) = @_;
+    $self->{logger}->start;
+    my $task = undef;
+    my %return= ();
+    my $view = $self->values_to_view( %args );
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    eval {
+        $task = $vm->{view}->Destroy_Task;
+    };
+    if ( $@ ) {
+        $self->{logger}->dumpobj('error', $@);
+        ExTask::Error->throw( error => 'Error during task', number=> 'unknown', creator => (caller(0))[3] );
+    }
+    $self->{logger}->dumpobj( 'task', $task);
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    %return = ( taskid => { value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type } );
+    $self->{logger}->finish;
+    return \%return;
 }
 
 ####################################################################
