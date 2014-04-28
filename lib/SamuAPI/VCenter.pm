@@ -466,6 +466,25 @@ sub get_folder_parent {
     return $obj;
 }
 
+sub create_rp {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $parent = $self->get_rp_parent( delete($args{parent_resourcepool}));
+    my $spec = $parent->_resourcepool_resource_config_spec(%args);
+    my $rp_moref;
+    eval {
+        $rp_moref = $parent->{view}->CreateResourcePool( name => $args{name}, spec => $spec );
+        $self->{logger}->dumpobj('rp_moref', $rp_moref);
+    };
+    if ( $@ ) {
+        $self->{logger}->dumpobj('error', $@);
+        ExTask::Error->throw( error => 'Error during Resource pool creation', number=> 'unknown', creator => (caller(0))[3] );
+    }
+    $self->{logger}->dumpobj('mo_ref', $rp_moref);
+    $self->{logger}->finish;
+    return $rp_moref;
+}
+
 ####################################################################
 
 package VCenter_resourcepool;
@@ -547,30 +566,12 @@ sub move {
 sub create {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
-    my $name = delete($args{name});
-    my $parent_view;
-    if ( defined($args{value}) ) {
-        $parent_view = $self->values_to_view( value=>$args{value} , type => 'ResourcePool' );
-    } else {
-        $parent_view = $self->find_entity( view_type => 'ResourcePool', properties => ['name'], filter => { name => 'Resources'} );
-    }
-    my $parent = SamuAPI_resourcepool->new( view => $parent_view, logger=> $self->{logger} );
-    my $spec = $parent->_resourcepool_resource_config_spec(%args);
-    my $rp_moref;
-    eval {
-        $rp_moref = $parent->{view}->CreateResourcePool( name => $name, spec => $spec );
-        $self->{logger}->dumpobj('rp_moref', $rp_moref);
-    };
-    if ( $@ ) {
-        $self->{logger}->dumpobj('error', $@);
-        ExTask::Error->throw( error => 'Error during Resource pool creation', number=> 'unknown', creator => (caller(0))[3] );
-    }
+    my $rp_moref = $self->create_rp(%args);
     my $rp = SamuAPI_resourcepool->new( mo_ref => $rp_moref, logger => $self->{logger});
-# TODO validate output and make it same as get
-    my %return = ( $name => { type => $rp->get_mo_ref_type, value => $rp->get_mo_ref_value} );
-    $self->{logger}->dumpobj('return', %return);
+    my $return = $rp->get_mo_ref;
+    $self->{logger}->dumpobj('return', $return);
     $self->{logger}->finish;
-    return \%return;
+    return $return;
 }
 
 sub get_all {
@@ -1490,7 +1491,16 @@ sub create_vm {
 }
 
 sub clone_vm {
+    my ( $self, %args) = @_;
+    my $result = {};
+    my $parent_rp = $self->get_rp_parent( delete($args{parent_resourcepool}) );
+    my $parent_folder = $self->get_folder_parent( delete($args{parent_folder}) );
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $template = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $ticket = delete($args{ticket});
+    my $domain = delete($args{domain});
 
+    return $result;
 }
 
 sub destroy {
