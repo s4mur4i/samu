@@ -485,6 +485,37 @@ sub create_rp {
     return $rp_moref;
 }
 
+sub create_folder {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $parent = $self->get_folder_parent( delete($args{parent_folder}));
+    my $folder_moref;
+    eval {
+        $folder_moref = $parent->{view}->CreateFolder( name => $args{name});
+        $self->{logger}->dumpobj('folder_moref', $folder_moref);
+    };
+    if ( $@ ) {
+        $self->{logger}->dumpobj('error', $@);
+        ExTask::Error->throw( error => 'Error during Folder creation', number=> 'unknown', creator => (caller(0))[3] );
+    }
+    $self->{logger}->dumpobj('mo_ref', $folder_moref);
+    $self->{logger}->finish;
+    return $folder_moref;
+}
+
+sub create_linked_folder {
+    my ($self, $template) = @_;
+    $self->{logger}->start;
+    my $folder = $self->get_view( $template->{parent} );   
+    my $view = $self->find_entity( filter => {name => $template->get_name}, view_type => 'Folder', begin_entity=> $folder );
+    if ( !$view ) {
+        
+    }
+    $self->{logger}->dumpobj('view', $view);
+    $self->{logger}->finish;
+    return $view;
+}
+
 ####################################################################
 
 package VCenter_resourcepool;
@@ -656,29 +687,12 @@ sub get_single {
 sub create {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
-    my $name = delete($args{name});
-    my $parent_view;
-    if ( defined($args{value}) ) {
-        $parent_view = $self->values_to_view( value=>$args{value} , type => 'Folder' );
-    } else {
-        $parent_view = $self->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'vm'} );
-    }
-    my $parent = SamuAPI_folder->new( view => $parent_view, logger=> $self->{logger} );
-    my $folder_moref;
-    eval {
-        $folder_moref = $parent->{view}->CreateFolder( name => $name);
-        $self->{logger}->dumpobj('folder_moref', $folder_moref);
-    };
-    if ( $@ ) {
-        $self->{logger}->dumpobj('error', $@);
-        ExTask::Error->throw( error => 'Error during Folder creation', number=> 'unknown', creator => (caller(0))[3] );
-    }
+    my $folder_moref = $self->create_folder( %args);
     my $folder = SamuAPI_folder->new( mo_ref => $folder_moref, logger => $self->{logger});
-# TODO validate output and make it same as get
-    my %return = ( $name => { type => $folder->get_mo_ref_type, value => $folder->get_mo_ref_value} );
-    $self->{logger}->dumpobj('return', %return);
+    my $return = $folder->get_mo_ref;
+    $self->{logger}->dumpobj('return', $return);
     $self->{logger}->finish;
-    return \%return;
+    return $return;
 }
 
 sub destroy {
@@ -1492,14 +1506,20 @@ sub create_vm {
 
 sub clone_vm {
     my ( $self, %args) = @_;
+    $self->{logger}->start;
     my $result = {};
-    my $parent_rp = $self->get_rp_parent( delete($args{parent_resourcepool}) );
     my $parent_folder = $self->get_folder_parent( delete($args{parent_folder}) );
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $template = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ticket = delete($args{ticket});
     my $domain = delete($args{domain});
-
+    if ( !$self->entity_exists( $self->create_moref( type => 'ResourcePool', value => $ticket ) ) ) {
+       $self->create_rp( name => $ticket ); 
+    }
+    $self->create_linked_folder( $template );
+    my $pool = $self->values_to_view( type => 'ResourcePool', value => $ticket );
+    $self->{logger}->dumpobj('result', $result);
+    $self->{logger}->finish;
     return $result;
 }
 
