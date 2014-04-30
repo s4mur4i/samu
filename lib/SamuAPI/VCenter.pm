@@ -166,6 +166,12 @@ sub entity_exists {
             push(@{$self->{entities} }, $view);
             $return = 1;
         }
+    } elsif ( $args{name}) {
+        my $view = $self->find_entity( view_type => $args{type}, properties => ['name'], filter => { name => $args{name}} );
+        if ( $view ) {
+            push(@{$self->{entities} }, $view);
+            $return = 1;
+        }
     } else {
         ExAPI::Argument->throw( error => 'No required argument give', argument => join(', ', sort keys %args), subroutine => (caller(0))[3] );
     }
@@ -506,10 +512,12 @@ sub create_folder {
 sub create_linked_folder {
     my ($self, $template) = @_;
     $self->{logger}->start;
+    $self->{logger}->dumpobj('template', $template);
     my $folder = $self->get_view( $template->{parent} );   
     my $view = $self->find_entity( filter => {name => $template->get_name}, view_type => 'Folder', begin_entity=> $folder );
     if ( !$view ) {
-        
+        my $mo_ref = $self->create_folder( parent_folder => $folder->get_mo_ref_value, name => $template->get_name );
+        $view = $self->get_view( mo_ref => $mo_ref );
     }
     $self->{logger}->dumpobj('view', $view);
     $self->{logger}->finish;
@@ -1066,7 +1074,7 @@ sub get_all {
     my $self = shift;
     $self->{logger}->start;
     my %return = ();
-    my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['name'] );
+    my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['name', 'summary'] );
     for my $vm_view ( @{ $vms } ) {
         my $obj = SamuAPI_virtualmachine->new( view => $vm_view, logger => $self->{logger} );
         $self->{logger}->dumpobj("vm", $obj);
@@ -1118,10 +1126,10 @@ sub update {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $spec = $vm->_virtualmachineconfigspec( %args ) if (keys(%args));
-    my %result = %{ $vm->reconfigvm( spec => $spec ) };
-    $self->{logger}->dumpobj( 'result', \%result );
+    my $result = $vm->reconfigvm( spec => $spec );
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub create_snapshot {
@@ -1230,8 +1238,9 @@ sub revert_snapshot {
 }
 
 sub get_powerstate {
-    my ($self, %args) = shift;
+    my ($self, %args) = @_;
     $self->{logger}->start;
+    $self->{logger}->dumpobj('args', \%args);
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my %result = ( powerstate => $vm->get_powerstate );
@@ -1243,53 +1252,51 @@ sub get_powerstate {
 sub change_powerstate {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
+    my $result = {};
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     if ( $args{state} =~ /^suspend$/ ) {
-        %result = %{ $vm->suspend_task };
+        $result = $vm->suspend_task;
     } elsif ( $args{state} =~ /^standby$/ ) {
         $vm->standby;
-        %result = ( standby => 'success' );
+        $result = { standby => 'success' };
     } elsif ( $args{state} =~ /^shutdown$/ ) {
         $vm->shutdown;
-        %result = ( shutdown => 'success' );
+        $result = { shutdown => 'success' };
     } elsif ( $args{state} =~ /^reboot$/) {
         $vm->reboot;
-        %result = ( reboot => 'success' );
+        $result = { reboot => 'success' };
     } elsif ( $args{state} =~ /^poweron$/) {
-        %result = %{ $vm->poweron_task };
+        $result =  $vm->poweron_task;
     } elsif ( $args{state} =~ /^poweroff$/) {
-        %result = %{ $vm->poweroff_task };
+        $result = $vm->poweroff_task;
     }
-    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub get_cdrom {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ret = $vm->get_cdroms;
-    %result = $ret->{$args{id}};
-    $self->{logger}->dumpobj( 'result', \%result );
+    my $result = $ret->{$args{id}};
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub get_cdroms {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    %result = %{ $vm->get_cdroms };
-    $self->{logger}->dumpobj( 'result', \%result );
+    my $result = $vm->get_cdroms;
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub create_cdrom {
@@ -1319,14 +1326,13 @@ sub get_interfaces {
 sub get_interface {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ret = $vm->get_interfaces;
-    %result = $ret->{$args{id}};
-    $self->{logger}->dumpobj( 'result', \%result );
+    my $result = $ret->{$args{id}};
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub get_disks {
@@ -1344,14 +1350,13 @@ sub get_disks {
 sub get_disk {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ret = $vm->get_disks;
-    %result = $ret->{$args{id}};
-    $self->{logger}->dumpobj( 'result', \%result );
+    my $result = $ret->{$args{id}};
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub create_disk {
@@ -1360,15 +1365,15 @@ sub create_disk {
     my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my @disk_hw    = @{ $self->get_hw( 'VirtualDisk' ) };
-    my $scsi_con   = $self->get_scsi_controller;
+    my @disk_hw    = @{ $vm->get_hw( 'VirtualDisk' ) };
+    my $scsi_con   = $vm->get_scsi_controller;
     my $unitnumber = $disk_hw[-1]->{unitNumber} + 1;
     if ( $unitnumber == 7 ) {
         $unitnumber++;
     } elsif ( $unitnumber == 15 ) {
         ExEntity::HWError->throw( error  => 'SCSI controller has already 15 disks', entity => $self->get_mo_ref_value , hw     => 'SCSI Controller');
     }
-    my $inc_path = &increment_disk_name( $disk_hw[-1]->{backing}->{fileName} );
+    my $inc_path = &Misc::increment_disk_name( $disk_hw[-1]->{backing}->{fileName} );
     my $disk_backing_info = VirtualDiskFlatVer2BackingInfo->new( fileName        => $inc_path, diskMode        => "persistent", thinProvisioned => 1);
     my $disk = VirtualDisk->new( controllerKey => $scsi_con->key, unitNumber    => $unitnumber, key           => -1, backing       => $disk_backing_info, capacityInKB  => $args{size});
     my $devspec = VirtualDeviceConfigSpec->new( operation     => VirtualDeviceConfigSpecOperation->new('add'), device        => $disk, fileOperation => VirtualDeviceConfigSpecFileOperation->new('create'));
@@ -1475,7 +1480,7 @@ sub remove_hw {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my @net_hw = @{ $self->get_hw( $args{hw} ) };
+    my @net_hw = @{ $vm->get_hw( $args{hw} ) };
     my $deviceconfig;
     if ( $net_hw[$args{num}]->isa('VirtualDisk') ) {
         $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('remove'), device    => $net_hw[$args{num}], fileOperation => VirtualDeviceConfigSpecFileOperation->new('destroy'));
@@ -1507,17 +1512,26 @@ sub create_vm {
 sub clone_vm {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
+    $self->{logger}->dumpobj('args', \%args);
     my $parent_folder = $self->get_folder_parent( delete($args{parent_folder}) );
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $template = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ticket = delete($args{ticket});
     my $domain = delete($args{domain});
-    if ( !$self->entity_exists( $self->create_moref( type => 'ResourcePool', value => $ticket ) ) ) {
+    if ( !$self->entity_exists(  name => $ticket, type => 'ResourcePool' ) ) {
        $self->create_rp( name => $ticket ); 
     }
     $self->create_linked_folder( $template );
-    my $pool = $self->values_to_view( type => 'ResourcePool', value => $ticket );
+
+    my $pool = $self->find_entity( view_type => 'ResourcePool', filter => { name => $ticket}, properties => ['name'] );
+    my $relocate_spec = $template->_relocatespec( pool => $pool );
+    my $config_spec = $template->_virtualmachineconfigspec( %args );
+    my $customization_sepc = $template->_customizationspec( %args );
+    my $vm_view = $self->find_entities( view_type => 'VirtualMachine', properties => [ 'config.hardware.device', 'summary.config.name' ]);
+    my $network = $template->generate_network_setup( mac_base => delete($args{mac_base}), vms=> $vm_view );
+    my $vmname = $template->generateuniqname;
+    my $spec;
+    my $result = $template->clone( name => $vmname, folder=> $parent_folder->{view}, spec => $spec);
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;

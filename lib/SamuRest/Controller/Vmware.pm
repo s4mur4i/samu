@@ -694,7 +694,6 @@ sub host_GET {
     return $self->__ok( $c, \%result );
 }
 
-
 sub vmsBase: Chained('loginBase'): PathPart('vm') : CaptureArgs(0) { }
 
 sub vms : Chained('vmsBase'): PathPart(''): Args(0) : ActionClass('REST') {}
@@ -767,9 +766,16 @@ sub vm_DELETE {
 sub vm_POST {
     my ($self, $c) = @_;
     my %result = ();
+    my $params = $c->req->params;
+    my $user_id          = $c->session->{__user};
+    my $model            = $c->model("Database::UserConfig");
+    if ( !defined($params->{mac_base}) ) {
+        $params->{mac_base} = $model->get_user_value( $user_id, "mac_base" ) || "02:01:00:";
+    }
+    $params->{moref_value} = $c->stash->{mo_ref_value};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->clone_vm(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->clone_vm( %$params) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -786,7 +792,7 @@ sub cpu_GET {
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
         my $ret = $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value});
-        %result = (numcpus => $ret->{info}->{numCpu});
+        %result = (numcpus => $ret->{numCpu});
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -864,7 +870,7 @@ sub memory_GET {
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
         my $ret = $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value});
-        %result = (memorySizeMB => $ret->{info}->{memorySizeMB});
+        %result = (memorySizeMB => $ret->{memorySizeMB});
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -879,7 +885,7 @@ sub memory_PUT {
     my $memorymb = $c->req->params->{memorymb};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->update(memory => $memorymb, moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->update(memorymb => $memorymb, moref_value => $c->stash->{mo_ref_value}) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -1197,7 +1203,7 @@ sub powerstatus_GET {
     my %result = ();
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_powerstate(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->get_powerstate(moref_value => $c->stash->{mo_ref_value}, test => 1) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);

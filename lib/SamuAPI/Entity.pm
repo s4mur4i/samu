@@ -371,6 +371,7 @@ package SamuAPI_virtualmachine;
 
 use base 'Entity';
 
+our $vms = undef;
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
@@ -495,6 +496,10 @@ sub _virtualmachineconfigspec {
         $params{name} = delete($args{name});
         $self->{logger}->debug1("Requested change of name=>'$params{name}'");
     }
+    if ( $args{deviceChange}) {
+        $params{deviceChange} = delete($args{deviceChange});
+        $self->{logger}->dumpobj('devicechange', $params{deviceChange});
+    }
     my $spec = VirtualMachineConfigSpec->new( %params );
     $self->{logger}->dumpobj('spec', $spec);
     $self->{logger}->finish;
@@ -553,25 +558,25 @@ sub get_powerstate {
 sub poweroff_task {
     my $self = shift;
     my $task = $self->{view}->PowerOffVM_Task;
-    my $obj = SamuAPI_task->new( view => $task, logger => $self->{logger} );
-    my %result = $obj->get_mo_ref;
-    return \%result;
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    my $result = $obj->get_mo_ref;
+    return $result;
 }
 
 sub poweron_task {
     my $self = shift;
     my $task = $self->{view}->PowerOnVM_Task;
-    my $obj = SamuAPI_task->new( view => $task, logger => $self->{logger} );
-    my %result = $obj->get_mo_ref;
-    return \%result;
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    my $result = $obj->get_mo_ref;
+    return $result;
 }
 
 sub suspend_task {
     my $self = shift;
     my $task = $self->{view}->SuspendVM_Task;
     my $obj = SamuAPI_task->new( view => $task, logger => $self->{logger} );
-    my %result = $obj->get_mo_ref;
-    return \%result;
+    my $result = $obj->get_mo_ref;
+    return $result;
 }
 
 sub standby {
@@ -686,9 +691,9 @@ sub reconfigvm {
     $self->{logger}->start;
     my $task = $self->{view}->ReconfigVM_Task( spec => $args{spec} );
     my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    my %result = $obj->get_mo_ref;
+    my $result = $obj->get_mo_ref;
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub get_scsi_controller {
@@ -733,17 +738,250 @@ sub get_free_ide_controller {
     ExEntity::HWError->throw( error  => 'Could not find free ide controller', entity => $self->get_mo_ref, hw     => 'ide_controller');
 }
 
-#sub _virtualdiskspec {
-#    my ( $self, %args ) = @_;
-#    $self->{logger}->start;
-#    my $disk = VirtualDisk->new( controllerKey => $scsi_con->key, unitNumber    => $unitnumber, key           => -1, backing       => $disk_backing_info, capacityInKB  => $args{size});
-#    my $devspec = VirtualDeviceConfigSpec->new( operation     => VirtualDeviceConfigSpecOperation->new('add'), device        => $disk, fileOperation => VirtualDeviceConfigSpecFileOperation->new('create'));
-#    my $spec = VirtualMachineConfigSpec->new( deviceChange => [$devspec] );
-#
-#    $self->{logger}->dumpobj('spec', $spec);
-#    $self->{logger}->finish;
-#    return $spec;
-#}
+sub _relocatespec {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my $relocate_spec = VirtualMachineRelocateSpec->new( diskMoveType => "createNewChildDiskBacking", pool         => $args{pool});
+    $self->{logger}->finish;
+    return $relocate_spec;
+}
+
+sub get_memory {
+    my $self = shift;
+    return $self->{info}->{memorySizeMB};
+}
+
+sub get_numcpu {
+    my $self = shift;
+    return $self->{info}->{numCPU};
+}
+
+sub generate_network_setup {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $ethernet_hw = $self->get_hw( 'VirtualEthernetCard' );
+    $self->{vms} = delete($args{vms});
+    my $mac        = $self->generate_macs( mac_base => $args{mac_base}, count => scalar( @{$ethernet_hw}) );
+    my @return = ();
+    for my $interface ( @{ $ethernet_hw } ) {
+        my $ethernetcard;
+        if ( $interface->isa('VirtualE1000') ) {
+            $ethernetcard = VirtualE1000->new( addressType      => 'Manual', macAddress       => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
+        } elsif ( $interface->isa('VirtualE1000e') ) {
+            $ethernetcard = VirtualE1000e->new( addressType      => 'Manual', macAddress       => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
+        } elsif ( $interface->isa('VirtualPCNet32') ) {
+            $ethernetcard = VirtualPCNet32->new( addressType      => 'Manual', macAddress       => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
+        } elsif ( $interface->isa('VirtualVmxnet2')) {
+            $ethernetcard = VirtualVmxnet2->new( addressType      => 'Manual', macAddress       => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
+        } elsif ( $interface->isa('VirtualVmxnet3') ) {
+            $ethernetcard = VirtualVmxnet3->new( addressType      => 'Manual', macAddress       => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
+        } else {
+            ExEntity::HWError->throw( error => 'Unknown network type', hw => $interface->{key}, entity => $self->get_mo_ref_value );
+        }
+        my $operation        = VirtualDeviceConfigSpecOperation->new('edit');
+        my $deviceconfigspec = VirtualDeviceConfigSpec->new( device    => $ethernetcard, operation => $operation);
+        push( @return, $deviceconfigspec );
+    }
+    $self->{logger}->finish;
+    return \@return;
+}
+
+sub generate_macs {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my @mac = ();
+    while ( @mac != $args{count} ) {
+        if ( @mac == 0 ) {
+            push( @mac, $self->generate_uniq_mac( $args{mac_base} ) );
+        } else {
+            my $last = $mac[-1];
+            my $new_mac;
+            eval { $new_mac = $self->increment_mac($last); };
+            if ($@) {
+                @mac = ();
+            } else {
+                if ( !$self->mac_compare($new_mac) ) {
+                    push( @mac, $new_mac );
+                }   
+            }   
+        }   
+    }   
+    $self->{logger}->finish;
+    return \@mac;
+}
+
+sub generate_mac {
+    my ($self, $mac_base) = @_;
+    $self->{logger}->start;
+    my $mac = join ':', map { sprintf( "%02X", int rand(256) ) } ( 1 .. 3 );
+    $self->{logger}->finish;
+    return "$mac_base$mac";
+}
+
+sub mac_compare {
+    my ($self, $mac) = @_;
+    $self->{logger}->start;
+    for my $vm (@{ $self->{vms}}) {
+        my $vm_name = $vm->get_property('summary.config.name');
+        my $devices = $vm->get_property('config.hardware.device');
+        for my $device (@$devices) {
+            if ( $device->isa("VirtualEthernetCard") ) {
+                if ( $mac eq $device->macAddress ) { 
+                    return 1;
+                }   
+            } else {
+                next;
+            }
+        }   
+    }   
+    $self->{logger}->finish;
+    return 0;
+}  
+
+sub increment_mac {
+    my ($self, $mac) = @_;
+    $self->{logger}->start;
+    ( my $mac_hex = $mac ) =~ s/://g;
+    my ( $mac_hi, $mac_lo ) = unpack( "nN", pack( 'H*', $mac_hex ) );
+    if ( $mac_lo == 0x00FFFFFF ) {
+        Entity::Mac->throw( error => "Mac addressed reached end of pool", mac   => $mac, entity => $self->get_mo_ref_value);
+    }   
+    else {      
+        ++$mac_lo;  
+    }   
+    $mac_hex = sprintf( "%04X%08X", $mac_hi, $mac_lo );
+    my $new_mac = join( ':', $mac_hex =~ /../sg );
+    if ( $self->mac_compare($new_mac) ) {
+        $new_mac = $self->increment_mac($new_mac);
+    }   
+    $self->{logger}->finish;
+    return $new_mac;
+} 
+
+sub generate_uniq_mac {
+    my ( $self, $mac_base ) = @_;
+    $self->{logger}->start;
+    my $mac = $self->generate_mac( $mac_base );
+    while ( $self->mac_compare($mac) ) {
+        $mac = $self->generate_mac( $mac_base );
+    }   
+    $self->{logger}->finish;
+    return $mac;
+} 
+
+sub _virtualmachineclonespec {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my $clonespec = VirtualMachineCloneSpec->new( location => $args{location}, powerOn => 1,template => 0, config => $args{config}, customization => $args{customization});
+    if ( $args{fullclone} ) {
+        $clonespec->{snapshot} = $self->last_snapshot_moref;
+    }
+    $self->{logger}->dumpobj('clonespec', $clonespec);
+    $self->{logger}->finish;
+    return $clonespec;
+}
+
+sub _customizationspec {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my $customizationspec = ();
+    $self->{logger}->dumpobj('customizationspec', $customizationspec);
+    $self->{logger}->finish;
+    return $customizationspec;
+}
+
+sub _customizationpassword {
+    my ( $self, %args ) = @_;
+    my $password = $args{password} || 'titkos';
+    my $ret = CustomizationPassword->new( plainText => 1, value => $password );
+    return $ret;
+}
+
+sub _customizationidentification_domain {
+    my ( $self, %args ) = @_;
+    my $domainadmin = $args{domainadmin} || 'Administrator@support.balabit';
+    my $joindomain = $args{joindomain} || 'support.balabit';
+    my $ret = CustomizationIdentification->new( domainAdmin         => $domainadmin, domainAdminPassword => $self->_customizationpassword , joinDomain          => $joindomain);
+    return $ret;
+}  
+
+sub _customizationidentification_workgroup {
+    my ( $self, %args ) = @_;
+    my $domainadmin = $args{domainadmin} || 'Administrator@support.balabit';
+    my $workgroup = $args{workgroup} || 'SUPPORT';
+    my $ret = CustomizationIdentification->new( domainAdmin         => $domainadmin, domainAdminPassword => $self->_customizationpassword, joinWorkgroup       => $workgroup);
+    return $ret;
+} 
+
+sub _clonespec_win {
+    my ( $self, %args ) = @_;
+    my $nicsetting =  $self->_customizationadaptermapping; 
+    my $globalipsettings = CustomizationGlobalIPSettings->new( dnsServerList => ['10.10.0.1'], dnsSuffixList => ['support.balabit']);
+    my $customoptions = CustomizationWinOptions->new( changeSID => 1, deleteAccounts => 0 );
+    my $guiunattend = CustomizationGuiUnattended->new( autoLogon      => 1, autoLogonCount => 1, password       => $self->_customizationpassword, timeZone       => '095');
+    my $customname = CustomizationPrefixName->new( base => 'winguest' ); 
+    my $userdata = CustomizationUserData->new( productId    => '123', orgName      => 'support', fullName     => 'admin', computerName => $customname);
+    my $runonce = CustomizationGuiRunOnce->new( commandList => [ "w32tm /resync", "cscript c:/windows/system32/slmgr.vbs /skms prod-dev-winsrv.balabit", "cscript c:/windows/system32/slmgr.vbs /ato" ]);
+    # Set get_annotationkey
+    my $identification;
+    # TODO rethink on how the domain or workgroup join should be
+    if (defined($args{joindomain})) {
+        $identification = $self->_customizationidentification_domain(%args);
+    } else {
+        $identification = $self->_customizationidentification_workgroup(%args);
+    }   
+    my $identity = CustomizationSysprep->new( guiRunOnce     => $runonce, guiUnattended  => $guiunattend, identification => $identification, userData       => $userdata);
+    if ( $self->get_name =~ /^T_win_200[03]/ ) {
+        my $licenseprintdata = CustomizationLicenseFilePrintData->new( autoMode => CustomizationLicenseDataMode->new('perSeat') );
+        $identity->{licenseFilePrintDatalicenseFilePrintData} = $licenseprintdata;
+    }   
+    my $customization_spec = CustomizationSpec->new( globalIPSettings => $globalipsettings, identity         => $identity, options          => $customoptions, nicSettingMap    => [@$nicsetting]);
+    my $clone_spec = $self->_virtualmachineclonespec( location => $args{relocate_spec}, fullclone => $args{fullclone}, config => $args{config_spec}, customization => $customization_spec);
+    return $clone_spec;
+}
+
+sub _customizationadaptermapping {
+    my $self = shift;
+    my @return;
+    my $ethernet_hw = $self->get_hw( 'VirtualEthernetCard' );
+    for my $int ( @$ethernet_hw ) {
+        my $ip      = CustomizationDhcpIpGenerator->new();
+        my $adapter = CustomizationIPSettings->new( dnsDomain =>'support.balabit', dnsServerList => ['10.10.0.1'], gateway => ['10.21.255.254'], subnetMask => '255.255.0.0', ip => $ip, netBIOS => CustomizationNetBIOSMode->new('enableNetBIOS'));
+        my $nicsetting = CustomizationAdapterMapping->new( adapter => $adapter );
+        push( @return, $nicsetting );
+    }   
+    return \@return;
+}
+
+sub generateuniqname {
+    my ($self) = @_;
+    my $name = $self->{view}->{name} =~ s/^T_//;
+    my $return = "${name}_" . &rand_3digit;
+    while ( $self->name_compare( $return ) ) {
+        $return = "${name}_" . &rand_3digit;
+    }
+    return $return;
+}
+
+sub name_compare {
+    my ( $self, $name ) = @_;
+    for my $vm ( @{$self->{vms}} ) {
+        if ( $vm->{name} eq $name ) {
+            return 1;
+        }
+    }
+    return 0
+}
+
+sub clone {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my $task = $self->{view}->CloneVM_Task(folder => $args{folder}, name => $args{name}, spec=> $args{spec});
+    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
+    my $return = $obj->get_moref;
+    $self->{logger}->finish;
+    return $return;
+}
 
 ######################################################################################
 

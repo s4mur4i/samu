@@ -38,6 +38,7 @@ use Exception::Class (
     'ExEntity::Move' => { isa => 'ExEntity', fields => ['parent'] },
     'ExEntity::HWError' => {isa => 'ExEntity', fields => ['hw'] },
     'ExEntity::Range' => { isa=> 'ExEntity', fields => ['range'] },
+    'ExEntity::Mac' => { isa => 'ExEntity', fields => ['mac'] },
     'ExTask::Error' => { isa => 'ExTask', fields => ['creator'] },
 );
 
