@@ -1005,9 +1005,10 @@ sub annotation_DELETE {
 sub annotation_PUT {
     my ($self, $c, $name) = @_;
     my %result = ();
+    my $value = $c->req->params->{value};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->change_annotation(moref_value => $c->stash->{mo_ref_value}, name => $name) };
+        %result = %{ $c->stash->{vim}->change_annotation(moref_value => $c->stash->{mo_ref_value}, name => $name, value => $value) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
