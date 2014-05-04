@@ -108,11 +108,11 @@ sub connection_POST {
     my $params           = $c->req->params;
     my $user_id          = $c->session->{__user};
     my $model            = $c->model("Database::UserConfig");
-    my $vcenter_username = $params->{vcenter_username} || $model->get_user_value( $user_id, "vcenter_username" );
+    my $vcenter_username = $params->{vcenter_username} || $model->get_user_config( $user_id, "vcenter_username" );
     return $self->__error( $c, "Vcenter_username cannot be parsed or found" ) unless $vcenter_username;
-    my $vcenter_password = $params->{vcenter_password} || $model->get_user_value( $user_id, "vcenter_password" );
+    my $vcenter_password = $params->{vcenter_password} || $model->get_user_config( $user_id, "vcenter_password" );
     return $self->__error( $c, "Vcenter_password cannot be parsed or found" ) unless $vcenter_password;
-    my $vcenter_url = $params->{vcenter_url} || $model->get_user_value( $user_id, "vcenter_url" );
+    my $vcenter_url = $params->{vcenter_url} || $model->get_user_config( $user_id, "vcenter_url" );
     return $self->__error( $c, "Vcenter_url cannot be parsed or found" ) unless $vcenter_url;
 
 # TODO: Maybe later implement proto, servicepath, server, but for me currently not needed
@@ -1176,9 +1176,14 @@ sub interfaces_GET {
 sub interfaces_POST {
     my ($self, $c) = @_;
     my %result = ();
+    my $user_id          = $c->session->{__user};
+    $c->log->debug1("userid=>'$user_id'");
+    my $model            = $c->model("Database::UserConfig");
+    my $mac_base = $model->get_user_config( $user_id, "mac_base" ) || "02:01:00:";
+    my $type = $c->req->params->{type} || 'E1000';
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->create_interface(moref_value => $c->stash->{mo_ref_value}) };
+        %result = %{ $c->stash->{vim}->create_interface(moref_value => $c->stash->{mo_ref_value}, mac_base => $mac_base, type=> $type ) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);

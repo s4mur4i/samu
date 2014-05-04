@@ -1559,6 +1559,42 @@ sub destroy {
     return \%return;
 }
 
+sub create_interface {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+# TODO the label is not set correctly to the network, maybe investigate why
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $net_hw = $vm->get_interfaces;
+    my $mac     = $vm->generate_uniq_mac( $args{mac_base});
+    my $network;
+    if ( defined($args{network}) ) {
+        $network = $self->values_to_view( type => 'Network', value => $args{network} );
+    } else {
+        $network = $self->find_entity( view_type => 'Network', properties => ['name'] );
+    }
+    my $backing = VirtualEthernetCardNetworkBackingInfo->new( deviceName => 'dummy', useAutoDetect => 1,  network    => $network );
+    my $connectable = VirtualDeviceConnectInfo->new( startConnected    => '1', allowGuestControl => '1', connected         => '1');
+    my $device;
+    my %params = (connectable => $connectable, wakeOnLanEnabled => 1, macAddress       => $mac, addressType      => "Manual", key              => -1, backing          => $backing);
+    if ( $args{type} eq "E1000") {
+        $device = VirtualE1000->new( %params );
+    } elsif ( $args{type} eq "E1000e" ) {
+        $device = VirtualE1000e->new( %params );
+    } elsif ( $args{type} eq "VirtualVmxnet2" ) {
+        $device = VirtualVmxnet2->new( %params );
+    } elsif ( $args{type} eq "VirtualVmxnet3" ) {
+        $device = VirtualVmxnet3->new( %params );
+    }
+    my $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('add'), device    => $device);
+    my $spec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
+    my $result = $vm->reconfigvm( spec => $spec );
+    $self->{logger}->dumpobj( 'result', $result );
+    $self->{logger}->finish;
+    return $result;
+}
+
 ####################################################################
 
 package VCenter_host;
