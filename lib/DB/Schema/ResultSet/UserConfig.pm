@@ -42,7 +42,7 @@ sub get_user_config {
 
     my $r = $self->find({ user_id => $user_id, config_id => $vr->id });
     return unless $r;
-    if ($r->encrypt) {
+    if ($vr->encrypt) {
         return __get_crypt()->decrypt($r->data);
     } else {
         return $r->data;
