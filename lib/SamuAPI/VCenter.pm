@@ -1596,4 +1596,41 @@ sub get_single {
     return $result;
 }
 
+####################################################################
+
+package VCenter_datastore;
+use base 'VCenter';
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    $self->base_parse(%args);
+    return $self;
+}
+
+sub get_all {
+    my $self = shift;
+    $self->{logger}->start;
+    my $result = ();
+    my $datastores = $self->find_entities( view_type => 'Datastore', properties => ['summary', 'name']);
+    for my $datastore ( @{ $datastores } ) {
+        my $obj = SamuAPI_datastore->new( view => $datastore, logger => $self->{logger});
+        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+    }
+    $self->{logger}->dumpobj('result', $result);
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub get_single {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type => 'Datastore', value => $args{value});
+    my $obj = SamuAPI_datastore->new( view => $view, logger => $self->{logger} );
+    my $result = $obj->get_info;
+    $self->{logger}->dumpobj('result', $result);
+    $self->{logger}->finish;
+    return $result;
+}
+
 1

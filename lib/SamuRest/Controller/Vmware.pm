@@ -448,6 +448,40 @@ sub template_DELETE {
     return $self->__ok( $c, \%result );
 }
 
+sub datastoreBase: Chained('loginBase'): PathPart('datastore') : CaptureArgs(0) { }
+
+sub datastores : Chained('datastoreBase'): PathPart(''): Args(0) : ActionClass('REST') {}
+
+sub datastores_GET {
+    my ( $self, $c) = @_;
+    my %result =();
+	eval {
+        bless $c->stash->{vim}, 'VCenter_datastore';
+        %result = %{ $c->stash->{vim}->get_all( ) };
+	};
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
+}
+
+sub datastore : Chained('datastoreBase'): PathPart(''): Args(1) : ActionClass('REST') {}
+
+sub datastore_GET {
+    my ( $self, $c ,$mo_ref_value) = @_;
+    my %result =();
+	eval {
+        bless $c->stash->{vim}, 'VCenter_datastore';
+        %result = %{ $c->stash->{vim}->get_single( value=> $mo_ref_value ) };
+	};
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+    return $self->__ok( $c, \%result );
+}
+
 sub networkBase: Chained('loginBase'): PathPart('network') : CaptureArgs(0) { }
 
 sub networks : Chained('networkBase'): PathPart(''): Args(0) : ActionClass('REST') {}

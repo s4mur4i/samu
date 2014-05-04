@@ -1256,4 +1256,55 @@ sub get_key {
     return $self->{info}->{key};
 }
 
+######################################################################################
+
+package SamuAPI_datastore;
+
+use base 'Entity';
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    $self->base_parse(%args);
+    $self->info_parse;
+    return $self;
+}
+
+sub info_parse {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    my $view = $self->{view};
+	$self->{info}->{accessible} = $view->{summary}->{accessible};
+	$self->{info}->{capacity} = $view->{summary}->{capacity};
+	$self->{info}->{freeSpace} = $view->{summary}->{freeSpace};
+	$self->{info}->{maintenanceMode} = $view->{summary}->{maintenanceMode};
+	$self->{info}->{multipleHostAccess} = $view->{summary}->{multipleHostAccess};
+	$self->{info}->{name} = $view->{summary}->{name};
+	$self->{info}->{type} = $view->{summary}->{type};
+	$self->{info}->{uncommitted} = $view->{summary}->{uncommitted};
+	$self->{info}->{url} = $view->{summary}->{url};
+	$self->{info}->{maxFileSize} = $view->{info}->{maxFileSize};
+	$self->{info}->{timestamp} = $view->{summary}->{timestamp};
+	$self->{info}->{SIOC} = $view->{iormConfiguration}->{enabled};
+	$self->{info}->{connected_vms} = $self->connected_vms;
+	if ( !defined($self->{mo_ref}) ) {
+        $self->{mo_ref} = $self->{view}->{mo_ref};
+    }
+    $self->{info}->{mo_ref} = $self->get_mo_ref_value;
+    return $self;
+}
+
+sub connected_vms {
+    my $self = shift;
+    my @vm= ();
+    for my $vm ( @{ $self->{view}->{vm} }) {
+        my $obj = Entity->new( mo_ref => $vm, logger => $self->{logger} );
+        push( @vm, $obj->get_mo_ref);
+    }
+    return \@vm;
+}
+
 1
