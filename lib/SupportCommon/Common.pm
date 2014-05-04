@@ -13,7 +13,7 @@ Collector sub for SupportCommon modules
 =cut
 
 use SupportCommon::Log2;
-use SupportCommon::Table_csv;
+#use SupportCommon::Table_csv;
 
 our $VERSION = '1.0.0';
 
