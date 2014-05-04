@@ -1300,14 +1300,6 @@ sub get_cdroms {
     return $result;
 }
 
-sub create_cdrom {
-
-}
-
-sub delete_cdrom {
-
-}
-
 sub change_cdrom {
 
 }
@@ -1589,6 +1581,23 @@ sub create_interface {
     }
     my $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('add'), device    => $device);
     my $spec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
+    my $result = $vm->reconfigvm( spec => $spec );
+    $self->{logger}->dumpobj( 'result', $result );
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub create_cdrom {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $ide_key      = $vm->get_free_ide_controller->{key};
+    my $cdrombacking = VirtualCdromRemotePassthroughBackingInfo->new( exclusive  => 0, deviceName => '', useAutoDetect => 1);
+    my $cdrom = VirtualCdrom->new( key           => -1, backing       => $cdrombacking, controllerKey => $ide_key);
+    my $devspec = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('add'), device    => $cdrom,);
+    my $spec = VirtualMachineConfigSpec->new( deviceChange => [$devspec] );
     my $result = $vm->reconfigvm( spec => $spec );
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
