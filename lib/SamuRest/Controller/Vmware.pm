@@ -804,7 +804,7 @@ sub vm_POST {
     my $user_id          = $c->session->{__user};
     my $model            = $c->model("Database::UserConfig");
     if ( !defined($params->{mac_base}) ) {
-        $params->{mac_base} = $model->get_user_value( $user_id, "mac_base" ) || "02:01:00:";
+        $params->{mac_base} = $model->get_user_config( $user_id, "mac_base" ) || "02:01:00:";
     }
     $params->{moref_value} = $c->stash->{mo_ref_value};
     eval {
@@ -1211,9 +1211,10 @@ sub interface_GET {
 sub interface_PUT {
     my ($self, $c, $id) = @_;
     my %result = ();
+    my $network = $c->req->params->{network};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->change_interface(moref_value => $c->stash->{mo_ref_value}, id => $id) };
+        %result = %{ $c->stash->{vim}->change_interface(moref_value => $c->stash->{mo_ref_value}, id => $id, network => $network) };
     };
     if ($@) {
         $c->log->dumpobj('error', $@);

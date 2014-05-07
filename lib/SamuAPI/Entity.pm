@@ -372,6 +372,7 @@ package SamuAPI_virtualmachine;
 use base 'Entity';
 
 our $vms = undef;
+
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
@@ -741,7 +742,13 @@ sub get_free_ide_controller {
 sub _relocatespec {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $relocate_spec = VirtualMachineRelocateSpec->new( diskMoveType => "createNewChildDiskBacking", pool         => $args{pool});
+    my $diskmovetype;
+    if ( defined($args{fullclone})) {
+        $diskmovetype = 'moveAllDiskBackingsAndDisallowSharing';
+    } else {
+        $diskmovetype = 'createNewChildDiskBacking';
+    }
+    my $relocate_spec = VirtualMachineRelocateSpec->new( diskMoveType => $diskmovetype, pool         => $args{pool});
     $self->{logger}->finish;
     return $relocate_spec;
 }
@@ -822,7 +829,7 @@ sub mac_compare {
     my ($self, $mac) = @_;
     $self->{logger}->start;
     for my $vm (@{ $self->{vms}}) {
-        my $vm_name = $vm->get_property('summary.config.name');
+        my $vm_name = $vm->get_property('name');
         my $devices = $vm->get_property('config.hardware.device');
         for my $device (@$devices) {
             if ( $device->isa("VirtualEthernetCard") ) {
@@ -873,21 +880,12 @@ sub _virtualmachineclonespec {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
     my $clonespec = VirtualMachineCloneSpec->new( location => $args{location}, powerOn => 1,template => 0, config => $args{config}, customization => $args{customization});
-    if ( $args{fullclone} ) {
+    if ( !defined($args{fullclone}) ) {
         $clonespec->{snapshot} = $self->last_snapshot_moref;
     }
     $self->{logger}->dumpobj('clonespec', $clonespec);
     $self->{logger}->finish;
     return $clonespec;
-}
-
-sub _customizationspec {
-    my ( $self, %args ) = @_;
-    $self->{logger}->start;
-    my $customizationspec = ();
-    $self->{logger}->dumpobj('customizationspec', $customizationspec);
-    $self->{logger}->finish;
-    return $customizationspec;
 }
 
 sub _customizationpassword {
@@ -913,16 +911,16 @@ sub _customizationidentification_workgroup {
     return $ret;
 } 
 
-sub _clonespec_win {
+sub _win_clonespec {
     my ( $self, %args ) = @_;
     my $nicsetting =  $self->_customizationadaptermapping; 
     my $globalipsettings = CustomizationGlobalIPSettings->new( dnsServerList => ['10.10.0.1'], dnsSuffixList => ['support.balabit']);
     my $customoptions = CustomizationWinOptions->new( changeSID => 1, deleteAccounts => 0 );
     my $guiunattend = CustomizationGuiUnattended->new( autoLogon      => 1, autoLogonCount => 1, password       => $self->_customizationpassword, timeZone       => '095');
     my $customname = CustomizationPrefixName->new( base => 'winguest' ); 
-    my $userdata = CustomizationUserData->new( productId    => '123', orgName      => 'support', fullName     => 'admin', computerName => $customname);
+    my $productkey = $self->get_annotation( name => 'samu_productkey')->{value};
+    my $userdata = CustomizationUserData->new( productId    => $productkey, orgName      => 'support', fullName     => 'admin', computerName => $customname);
     my $runonce = CustomizationGuiRunOnce->new( commandList => [ "w32tm /resync", "cscript c:/windows/system32/slmgr.vbs /skms prod-dev-winsrv.balabit", "cscript c:/windows/system32/slmgr.vbs /ato" ]);
-    # Set get_annotationkey
     my $identification;
     # TODO rethink on how the domain or workgroup join should be
     if (defined($args{joindomain})) {
@@ -937,6 +935,23 @@ sub _clonespec_win {
     }   
     my $customization_spec = CustomizationSpec->new( globalIPSettings => $globalipsettings, identity         => $identity, options          => $customoptions, nicSettingMap    => [@$nicsetting]);
     my $clone_spec = $self->_virtualmachineclonespec( location => $args{relocate_spec}, fullclone => $args{fullclone}, config => $args{config_spec}, customization => $customization_spec);
+    return $clone_spec;
+}
+
+sub _lin_clonespec {
+    my ( $self, %args ) = @_;
+    my $nicsetting =  $self->_customizationadaptermapping; 
+    my $hostname = CustomizationPrefixName->new( base => 'linuxguest' );
+    my $globalipsettings = CustomizationGlobalIPSettings->new( dnsServerList => ['10.10.0.1'], dnsSuffixList => ['support.balabit']);
+    my $linuxprep = CustomizationLinuxPrep->new( domain     => 'support.balabit', hostName   => $hostname, timeZone   => 'Europe/Budapest', hwClockUTC => 1);
+    my $customization_spec = CustomizationSpec->new( identity         => $linuxprep, globalIPSettings => $globalipsettings, nicSettingMap    => [@{ $nicsetting }]);
+    my $clone_spec = $self->_virtualmachineclonespec( location => $args{relocate_spec}, fullclone => $args{fullclone}, config => $args{config_spec}, customization => $customization_spec);
+    return $clone_spec;
+}
+
+sub _oth_clonespec {
+    my ( $self, %args ) = @_;
+    my $clone_spec = $self->_virtualmachineclonespec( location => $args{relocate_spec}, fullclone => $args{fullclone}, config => $args{config_spec});
     return $clone_spec;
 }
 
@@ -955,32 +970,69 @@ sub _customizationadaptermapping {
 
 sub generateuniqname {
     my ($self) = @_;
-    my $name = $self->{view}->{name} =~ s/^T_//;
-    my $return = "${name}_" . &rand_3digit;
+    $self->{logger}->start;
+    (my $name = $self->{view}->{name}) =~ s/^T_//;
+    my $return = "${name}_" . &Misc::rand_3digit;
+    $self->{logger}->debug1("name=>'$return'");
     while ( $self->name_compare( $return ) ) {
         $return = "${name}_" . &rand_3digit;
     }
+    $self->{logger}->debug2("return=>'$return'");
+    $self->{logger}->finish;
     return $return;
 }
 
 sub name_compare {
     my ( $self, $name ) = @_;
+    $self->{logger}->start;
     for my $vm ( @{$self->{vms}} ) {
         if ( $vm->{name} eq $name ) {
+            $self->{logger}->finish;
             return 1;
         }
     }
+    $self->{logger}->finish;
     return 0
 }
 
 sub clone {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
-    my $task = $self->{view}->CloneVM_Task(folder => $args{folder}, name => $args{name}, spec=> $args{spec});
+    my $task;
+    eval {
+        $task = $self->{view}->CloneVM_Task(folder => $args{folder}, name => $args{name}, spec=> $args{spec});
+        $self->{logger}->dumpobj('task', $task);
+    };
+    if ($@) {
+        $self->{logger}->dumpobj('error', $@);
+        $@->rethrow;
+    }
     my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    my $return = $obj->get_moref;
+    my $return = $obj->get_mo_ref;
     $self->{logger}->finish;
     return $return;
+}
+
+sub get_annotation {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my $result = {};
+    my $id;
+    if ( defined( $args{name} and !defined($args{id}))) {
+        $id = $self->get_annotation_key( name => $args{name});
+    } else {
+        $id = $args{id};
+    }
+    foreach ( @{ $self->{view}->{value} } ) {
+        $self->{logger}->dumpobj('annotation_entry', $_);
+        if ( $_->{key} eq $id ) {
+            $result = { value => $_->{value}, key => $id};
+            last;
+        }
+    }
+    $self->{logger}->dumpobj("result", $result);
+    $self->{logger}->finish;
+    return $result;
 }
 
 ######################################################################################

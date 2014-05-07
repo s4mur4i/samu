@@ -513,10 +513,17 @@ sub create_linked_folder {
     my ($self, $template) = @_;
     $self->{logger}->start;
     $self->{logger}->dumpobj('template', $template);
-    my $folder = $self->get_view( $template->{parent} );   
-    my $view = $self->find_entity( filter => {name => $template->get_name}, view_type => 'Folder', begin_entity=> $folder );
-    if ( !$view ) {
-        my $mo_ref = $self->create_folder( parent_folder => $folder->get_mo_ref_value, name => $template->get_name );
+    my $folder_view = $self->get_view( mo_ref => $template->{view}->{parent} );   
+    my $folder = SamuAPI_folder->new( logger=> $self->{logger}, view => $folder_view);
+    (my $folder_name = $template->get_name) =~ s/^T_//;
+    my $view;
+    eval {
+        $view = $self->find_entity( filter => {name => $folder_name }, view_type => 'Folder', begin_entity=> $folder->{view} );
+        $self->{logger}->dumpobj('view', $view);
+    };
+    if ( $@ ) {
+        $self->{logger}->dumpobj('error_create_linked_folder',$@);
+        my $mo_ref = $self->create_folder( parent_folder => $folder->get_mo_ref_value, name => $folder_name );
         $view = $self->get_view( mo_ref => $mo_ref );
     }
     $self->{logger}->dumpobj('view', $view);
@@ -1300,10 +1307,6 @@ sub get_cdroms {
     return $result;
 }
 
-sub change_cdrom {
-
-}
-
 sub get_interfaces {
     my ($self, %args) = @_;
     $self->{logger}->start;
@@ -1432,20 +1435,12 @@ sub get_annotations {
 sub get_annotation {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $key = $vm->get_annotation_key( name => $args{name});
-    if ( defined( $vm->{view}->{value} ) ) {
-        foreach ( @{ $vm->{view}->{value} } ) {
-            if ( $_->{key} eq $key ) {
-                %result = ( value => $_->{value}, key => $key, name => $args{name});
-            }
-        }                                                                                                                                                                                                                       
-    }
-    $self->{logger}->dumpobj( 'result', \%result );
+    my $result = $vm->get_annotation( name => $args{name} );
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub delete_annotation {
@@ -1506,7 +1501,6 @@ sub clone_vm {
     my ( $self, %args) = @_;
     $self->{logger}->start;
     $self->{logger}->dumpobj('args', \%args);
-    my $parent_folder = $self->get_folder_parent( delete($args{parent_folder}) );
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $template = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ticket = delete($args{ticket});
@@ -1514,17 +1508,28 @@ sub clone_vm {
     if ( !$self->entity_exists(  name => $ticket, type => 'ResourcePool' ) ) {
        $self->create_rp( name => $ticket ); 
     }
-    $self->create_linked_folder( $template );
-
+    my $parent_folder;
+    if (defined($args{parent_folder})) {
+        $parent_folder = $self->values_to_view( type => 'folder', value => $args{parent_folder} );
+    } else {
+        $parent_folder = $self->create_linked_folder( $template );
+    }
     my $pool = $self->find_entity( view_type => 'ResourcePool', filter => { name => $ticket}, properties => ['name'] );
-    my $relocate_spec = $template->_relocatespec( pool => $pool );
-    my $config_spec = $template->_virtualmachineconfigspec( %args );
-    my $customization_sepc = $template->_customizationspec( %args );
-    my $vm_view = $self->find_entities( view_type => 'VirtualMachine', properties => [ 'config.hardware.device', 'summary.config.name' ]);
+    $args{relocate_spec} = $template->_relocatespec( pool => $pool, fullclone => $args{fullclone} );
+    $args{config_spec} = $template->_virtualmachineconfigspec( %args );
+    my $vm_view = $self->find_entities( view_type => 'VirtualMachine', properties => [ 'config.hardware.device', 'name' ]);
     my $network = $template->generate_network_setup( mac_base => delete($args{mac_base}), vms=> $vm_view );
     my $vmname = $template->generateuniqname;
     my $spec;
-    my $result = $template->clone( name => $vmname, folder=> $parent_folder->{view}, spec => $spec);
+    my $clonespectype = $template->get_annotation( name => 'samu_clonespec' );
+    if ( $clonespectype->{value} eq 'win' ) {
+        $spec = $template->_win_clonespec(%args);
+    } elsif ( $clonespectype->{value} eq 'lin' ) {
+        $spec = $template->_lin_clonespec(%args);
+    } else {
+        $spec = $template->_oth_clonespec(%args);
+    }
+    my $result = $template->clone( name => $vmname, folder=> $parent_folder, spec => $spec);
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
@@ -1578,6 +1583,8 @@ sub create_interface {
         $device = VirtualVmxnet2->new( %params );
     } elsif ( $args{type} eq "VirtualVmxnet3" ) {
         $device = VirtualVmxnet3->new( %params );
+    } elsif ( $args{type} eq "VirtualPCNet32" ) {
+        $device = VirtualPCNet32->new( %params );
     }
     my $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('add'), device    => $device);
     my $spec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
@@ -1598,6 +1605,66 @@ sub create_cdrom {
     my $cdrom = VirtualCdrom->new( key           => -1, backing       => $cdrombacking, controllerKey => $ide_key);
     my $devspec = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('add'), device    => $cdrom,);
     my $spec = VirtualMachineConfigSpec->new( deviceChange => [$devspec] );
+    my $result = $vm->reconfigvm( spec => $spec );
+    $self->{logger}->dumpobj( 'result', $result );
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub change_interface {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $net_hw = $vm->get_interfaces;
+    my $network = $self->values_to_view( type=> 'Network', value => $args{netwok} );
+    my $backing;
+    if ( $network->{mo_ref}->{type} eq 'Network' ) {
+        $backing = VirtualEthernetCardNetworkBackingInfo->new( deviceName => $network->{name}, network    => $network);
+    } elsif ( $network->{mo_ref}->{type} eq 'DistributedVirtualPortgroup' ) {
+        my $switch = &self->get_view( mo_ref => $network->{config}->{distributedVirtualSwitch} );
+        my $port = DistributedVirtualSwitchPortConnection->new( portgroupKey => $network->{key}, switchUuid   => $switch->{uuid});
+        $backing = VirtualEthernetCardDistributedVirtualPortBackingInfo->new( port => $port );
+    }
+    my $net = ${ $net_hw}[$args{num}];
+    my $device;
+    my %params = (  key => $net->{key}, backing => $backing, );
+    if ( $net->isa('VirtualE1000') ) {
+        $device = VirtualE1000->new( %params );
+    } elsif ( $net->isa('VirtualE1000e') ) {
+        $device = VirtualE1000e->new( %params );
+    } elsif ( $net->isa('VirtualVmxnet2') ) {
+        $device = VirtualVmxnet2->new( %params );
+    } elsif ( $net->isa('VirtualVmxnet3') ) {
+        $device = VirtualVmxnet3->new( %params );
+    } elsif ( $net->isa('VirtualPCNet32') ) {
+        $device = VirtualPCNet32->new( %params );
+    }
+    my $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('edit'), device    => $device);
+    my $spec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
+    my $result = $vm->reconfigvm( spec => $spec );
+    $self->{logger}->dumpobj( 'result', $result );
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub change_cdrom {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my %result = ();
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $cdroms = $vm->get_cdroms;
+    my $backing;
+    if ( $args{iso}) {
+        $backing = VirtualCdromIsoBackingInfo->new( fileName => $args{iso} );
+    } else {
+        $backing = VirtualCdromRemotePassthroughBackingInfo->new( exclusive  => 0, deviceName => '');
+    }
+    my $device = VirtualCdrom->new( backing       => $backing, key           => ${ $cdroms}[$args{num}]->{key});
+    my $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('edit'), device    => $device);
+    my $spec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
     my $result = $vm->reconfigvm( spec => $spec );
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
