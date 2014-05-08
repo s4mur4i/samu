@@ -360,6 +360,7 @@ sub wait_for_finish {
         }   
         else {
             sleep 1;
+            $self->update;
         } 
     }
     return $self;
@@ -1007,10 +1008,9 @@ sub clone {
         $self->{logger}->dumpobj('error', $@);
         $@->rethrow;
     }
-    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    my $return = $obj->get_mo_ref;
+    $self->{logger}->dumpobj( 'task', $task);
     $self->{logger}->finish;
-    return $return;
+    return $task;
 }
 
 sub get_annotation {
@@ -1366,4 +1366,39 @@ sub connected_vms {
     return \@vm;
 }
 
+######################################################################################
+
+package SamuAPI_process;
+
+use base 'Entity';
+
+sub new {
+    my ($class, %args) = @_;
+    my $self = bless {}, $class;
+    $self->base_parse(%args);
+    $self->info_parse;
+    return $self;
+}
+
+sub info_parse {
+    my $self = shift;
+    # If info has been parsed once then flush previous info
+    if ( defined( $self->{info} ) && keys $self->{info} ) {
+        $self->{info} = ();
+    }
+    my $view = $self->{view};
+    $self->{info}->{pid} = $view->{pid};
+    $self->{info}->{owner} = $view->{owner} // '---';
+    $self->{info}->{name} = $view->{name} // '---';
+    $self->{info}->{cmdLine} = $view->{cmdLine} // '---';
+    $self->{info}->{startTime} = $view->{startTime} // '---';
+    $self->{info}->{exitCode} = $view->{exitCode} // '---';
+    $self->{info}->{endTime} = $view->{endTime} // '---';
+    return $self;
+}
+
+sub get_pid {
+    my $self = shift;
+    return $self->{info}->{pid};
+}
 1

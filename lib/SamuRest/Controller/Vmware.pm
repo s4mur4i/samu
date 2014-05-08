@@ -803,10 +803,13 @@ sub vm_POST {
     my $params = $c->req->params;
     my $user_id          = $c->session->{__user};
     my $model            = $c->model("Database::UserConfig");
+    my $users_rs = $c->model('Database::User');
+    my $user = $users_rs->find($user_id);
     if ( !defined($params->{mac_base}) ) {
         $params->{mac_base} = $model->get_user_config( $user_id, "mac_base" ) || "02:01:00:";
     }
     $params->{moref_value} = $c->stash->{mo_ref_value};
+    $params->{owner} = $user->username;
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
         %result = %{ $c->stash->{vim}->clone_vm( %$params) };
@@ -855,9 +858,11 @@ sub process : Chained('vmBase'): PathPart('process'): Args(0) : ActionClass('RES
 sub process_GET {
     my ($self, $c) = @_;
     my %result = ();
+    my $params = $c->req->params;
+    $params->{moref_value} = $c->stash->{mo_ref_value};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        my $ret = $c->stash->{vim}->get_process( moref_value => $c->stash->{mo_ref_value});
+        my $ret = $c->stash->{vim}->get_process( %{$params} );
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -869,9 +874,11 @@ sub process_GET {
 sub process_POST {
     my ($self, $c) = @_;
     my %result = ();
+    my $params = $c->req->params;
+    $params->{moref_value} = $c->stash->{mo_ref_value};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        my $ret = $c->stash->{vim}->run( moref_value => $c->stash->{mo_ref_value});
+        my $ret = $c->stash->{vim}->run( %{$params} );
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -885,9 +892,11 @@ sub transfer : Chained('vmBase'): PathPart('transfer'): Args(0) : ActionClass('R
 sub transfer_POST {
     my ($self, $c) = @_;
     my %result = ();
+    my $params = $c->req->params;
+    $params->{moref_value} = $c->stash->{mo_ref_value};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        my $ret = $c->stash->{vim}->transfer( moref_value => $c->stash->{mo_ref_value});
+        my $ret = $c->stash->{vim}->transfer( %{$params} );
     };
     if ($@) {
         $c->log->dumpobj('error', $@);

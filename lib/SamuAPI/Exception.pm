@@ -39,6 +39,7 @@ use Exception::Class (
     'ExEntity::HWError' => {isa => 'ExEntity', fields => ['hw'] },
     'ExEntity::Range' => { isa=> 'ExEntity', fields => ['range'] },
     'ExEntity::Mac' => { isa => 'ExEntity', fields => ['mac'] },
+    'ExEntity::Auth' => { isa => 'ExEntity', fields => ['username', 'password'] },
     'ExTask::Error' => { isa => 'ExTask', fields => ['creator'] },
 );
 

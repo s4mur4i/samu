@@ -1523,7 +1523,8 @@ sub clone_vm {
         $parent_folder = $self->create_linked_folder( $template );
     }
     my $pool = $self->find_entity( view_type => 'ResourcePool', filter => { name => $ticket}, properties => ['name'] );
-    $args{relocate_spec} = $template->_relocatespec( pool => $pool, fullclone => $args{fullclone} );
+    #$args{relocate_spec} = $template->_relocatespec( pool => $pool, fullclone => $args{fullclone} );
+    $args{relocate_spec} = $template->_relocatespec( pool => $pool );
     $args{config_spec} = $template->_virtualmachineconfigspec( %args );
     my $vm_view = $self->find_entities( view_type => 'VirtualMachine', properties => [ 'config.hardware.device', 'name' ]);
     my $network = $template->generate_network_setup( mac_base => delete($args{mac_base}), vms=> $vm_view );
@@ -1537,14 +1538,23 @@ sub clone_vm {
     } else {
         $spec = $template->_oth_clonespec(%args);
     }
-    my $result = $template->clone( name => $vmname, folder=> $parent_folder, spec => $spec);
+    my $task_mo_ref = $template->clone( name => $vmname, folder=> $parent_folder, spec => $spec);
+    my $task_view = $self->get_view( mo_ref => $task_mo_ref);
+    my $task = SamuAPI_task->new( logger => $self->{logger}, view => $task_view );
+    $task->wait_for_finish;
     my $cloned_vm = $self->find_entity( view_type => 'VirtualMachine', begin_entity => $parent_folder, filter => { name => $vmname } );
-    my $cloned = SamuAPI_virtualmachine->new( logger => $self->{logger}, view => $cloned_vm );
+    my $vm = SamuAPI_virtualmachine->new( logger => $self->{logger}, view => $cloned_vm);
     my $annotations = $template->get_annotations;
-    for my $id ( keys %{$annotations} ) {
-        $self->_change_annotation( id => $id, value => $annotations->{$id});
+    for my $key ( keys %{$annotations} ) {
+        $self->{logger}->debug1("key=>'$key', value=>'$annotations->{$key}'");
+        $self->_change_annotation( key => $key, value => $annotations->{$key}, view => $cloned_vm);
     }
-# TODO add owner and ticket
+    $self->_change_annotation( key => $vm->get_annotation_key( name => 'samu_ticket'), value => $ticket, view => $cloned_vm);
+    $self->_change_annotation( key => $vm->get_annotation_key( name => 'samu_owner'), value => $args{owner}, view => $cloned_vm);
+    if ( defined($args{altername})) {
+        $self->_change_annotation( key => $vm->get_annotation_key( name => 'samu_altername'), value => $args{altername}, view => $cloned_vm);
+    }
+    my $result = { clone => 'success', annotation=> 'success'};
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
@@ -1684,6 +1694,69 @@ sub change_cdrom {
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
+}
+
+sub run {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type => 'HostSystem', value => $args{value});
+    my $obj = SamuAPI_host->new( view => $view, logger => $self->{logger} );
+    my $result;
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub transfer {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type => 'HostSystem', value => $args{value});
+    my $obj = SamuAPI_host->new( view => $view, logger => $self->{logger} );
+    my $result;
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub get_process {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type => 'HostSystem', value => $args{value});
+    my $obj = SamuAPI_host->new( view => $view, logger => $self->{logger} );
+    my $username = $args{username} || $obj->get_annotation(name => 'samu_username');
+    my $password = $args{password} || $obj->get_annotation(name => 'samu_password');
+    my $guestCreds = $self->guest_credentials( view => $view, username => $username, password => $password);
+    my $guestOP        = $self->get_manager("guestOperationsManager");
+    my $processmanager = $self->get_view( mo_ref => $guestOP->{processManager} );
+    my %params = (vm   => $view, auth => $guestCreds);
+    if ( defined($args{pid}) ) {
+        $params{pids} = [ $args{pid}];
+    }
+    my $data = $processmanager->ListProcessesInGuest( %params);
+    my $result = ();
+    for my $program ( @{$data} ) {
+        my $prog = SamuAPI_process->new( logger => $self->{logger}, view => $program);
+        $result->{$prog->get_pid} = $prog->get_info;
+    }
+    $self->{logger}->dumpobj('result', $result);
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub guest_credentials {
+    my ( $self, %args ) = @_;
+    $self->{logger}->start;
+    my $guestOP = $self->get_manager("guestOperationsManager");
+    my $authMgr   = $self->get_view( mo_ref => $guestOP->{authManager} );
+    my $guestAuth = NamePasswordAuthentication->new( username           => $args{username}, password           => $args{password}, interactiveSession => 'false');
+    eval {
+        $authMgr->ValidateCredentialsInGuest( vm => $args{view}, auth => $guestAuth );
+    };
+    if ( $@ ) {
+        $self->{logger}->dumpobj('error', $@);
+        ExEntity::Auth->throw( error => 'Could not complete authentication', entity => $args{view}->{name}, username => $args{username}, password => $args{password} );
+    }
+    $self->{logger}->dumpobj('guestAuth', $guestAuth);
+    $self->{logger}->finish;
+    return $guestAuth;
 }
 
 ####################################################################
