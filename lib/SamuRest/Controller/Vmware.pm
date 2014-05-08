@@ -891,18 +891,18 @@ sub transfer : Chained('vmBase'): PathPart('transfer'): Args(0) : ActionClass('R
 
 sub transfer_POST {
     my ($self, $c) = @_;
-    my %result = ();
+    my $result = {};
     my $params = $c->req->params;
     $params->{moref_value} = $c->stash->{mo_ref_value};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        my $ret = $c->stash->{vim}->transfer( %{$params} );
+        $result = $c->stash->{vim}->transfer( %{$params} );
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+    return $self->__ok( $c, $result );
 }
 
 sub memory : Chained('vmBase'): PathPart('memory'): Args(0) : ActionClass('REST') {}

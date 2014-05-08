@@ -1699,8 +1699,8 @@ sub change_cdrom {
 sub run {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     $self->{logger}->dumpobj('args',\%args);
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $username = $args{username} || $vm->get_annotation(name => 'samu_username')->{value};
     my $password = $args{password} || $vm->get_annotation(name => 'samu_password')->{value};
@@ -1719,9 +1719,63 @@ sub run {
 sub transfer {
     my ($self, %args) = @_;
     $self->{logger}->start;
+    my $result = {};
+    if ( $args{dest} eq 'to' ) {
+        $result = $self->transfer_to(%args);
+    } elsif ( $args{dest} eq 'from') {
+        $result = $self->transfer_from(%args);
+    } else {
+        ExAPI::Argument->throw(error => 'No destinationed recognized', argument => 'dest', subroutine => (caller(0))[3] );
+    }
+    $self->{logger}->dumpobj( 'result', $result );
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub transfer_to {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $result;
+    my $username = $args{username} || $vm->get_annotation(name => 'samu_username')->{value};
+    my $password = $args{password} || $vm->get_annotation(name => 'samu_password')->{value};
+    my $guestCreds = $self->guest_credentials( view => $view, username => $username, password => $password);
+    my $guestOP        = $self->get_manager("guestOperationsManager");
+    my $filemanager = $self->get_view( mo_ref => $guestOP->{fileManager} );
+    my $overwrite = $args{overwrite} // 1;
+    my $transferinfo;
+    eval {
+        $transferinfo = $filemanager->InitiateFileTransferToGuest( vm => $view, auth => $guestCreds, guestFilePath  => $args{dest}, fileAttributes => GuestFileAttributes->new(), fileSize       => $args{size}, overwrite => $overwrite );
+    };
+    if ($@) {
+        $self->{logger}->dumpobj('error', $@);
+        Entity::TransferError->throw( error    => 'Could not retrieve Transfer information', entity   => $vm->get_mo_ref_value, filename => $args{dest});
+    }
+    my $result = { url => $transferinfo};
+    $self->{logger}->dumpobj( 'result', $result );
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub transfer_from {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $username = $args{username} || $vm->get_annotation(name => 'samu_username')->{value};
+    my $password = $args{password} || $vm->get_annotation(name => 'samu_password')->{value};
+    my $guestCreds = $self->guest_credentials( view => $view, username => $username, password => $password);
+    my $guestOP        = $self->get_manager("guestOperationsManager");
+    my $filemanager = $self->get_view( mo_ref => $guestOP->{fileManager} );
+    my $transferinfo;
+    eval {
+        $transferinfo = $filemanager->InitiateFileTransferFromGuest( vm            => $view, auth          => $guestCreds, guestFilePath => $args{source});
+    };
+    if ($@) {
+        $self->{logger}->dumpobj('error', $@);
+        Entity::TransferError->throw( error    => 'Could not retrieve Transfer information', entity   => $vm->get_mo_ref_value, filename => $args{source});
+    }
+    my $result = { url => $transferinfo->{url}, size => $transferinfo->{size}, accesstime => $transferinfo->{attributes}->{accessTime}, modificationtime => $transferinfo->{attributes}->{modificationTime}};
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
