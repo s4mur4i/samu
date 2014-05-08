@@ -1699,9 +1699,19 @@ sub change_cdrom {
 sub run {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my $view = $self->values_to_view( type => 'HostSystem', value => $args{value});
-    my $obj = SamuAPI_host->new( view => $view, logger => $self->{logger} );
-    my $result;
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    $self->{logger}->dumpobj('args',\%args);
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $username = $args{username} || $vm->get_annotation(name => 'samu_username')->{value};
+    my $password = $args{password} || $vm->get_annotation(name => 'samu_password')->{value};
+    my $guestCreds = $self->guest_credentials( view => $view, username => $username, password => $password);
+    my $guestOP        = $self->get_manager("guestOperationsManager");
+    my $processmanager = $self->get_view( mo_ref => $guestOP->{processManager} );
+    my $guestProgSpec = GuestProgramSpec->new( workingDirectory => $args{workdir}, programPath      => $args{prog}, arguments        => $args{prog_arg}, envVariables     => [ $args{env} ]);
+    $self->{logger}->dumpobj('guestprogspec', $guestProgSpec);
+    my $pid = $processmanager->StartProgramInGuest( vm   => $view, auth => $guestCreds, spec => $guestProgSpec);
+    my $result = { pid => $pid };
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
 }
@@ -1709,9 +1719,10 @@ sub run {
 sub transfer {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my $view = $self->values_to_view( type => 'HostSystem', value => $args{value});
-    my $obj = SamuAPI_host->new( view => $view, logger => $self->{logger} );
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $result;
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
 }

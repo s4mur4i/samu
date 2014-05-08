@@ -67,7 +67,7 @@ sub parse_ex {
     my $info = {};
     if ( $ex->isa('SoapFault')) {
         # We have a vmware exception
-        $info = &object2hash($ex);
+        $info = &_object2hash($ex);
     } elsif ( $ex->isa('ExBase') ) {
         # We have  SamuAPI exception
         for my $key ( keys %$ex ) {

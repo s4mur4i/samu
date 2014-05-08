@@ -873,18 +873,18 @@ sub process_GET {
 
 sub process_POST {
     my ($self, $c) = @_;
-    my %result = ();
+    my $result = {};
     my $params = $c->req->params;
     $params->{moref_value} = $c->stash->{mo_ref_value};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        my $ret = $c->stash->{vim}->run( %{$params} );
+        $result = $c->stash->{vim}->run( %{$params} );
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+    return $self->__ok( $c, $result );
 }
 
 sub transfer : Chained('vmBase'): PathPart('transfer'): Args(0) : ActionClass('REST') {}
