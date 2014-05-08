@@ -31,11 +31,12 @@ sub vmwareBase : Chained('/') : PathPart('vmware') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
     my $user_id = $self->__is_logined($c);
     return $self->__error( $c, "You're not login yet." ) unless $user_id;
-    $c->log->debug1("Logged in user_id=>" . $user_id);
+    $c->log->debug1("Logged in user_id=>'$user_id'");
 }
 
 sub loginBase : Chained('vmwareBase') : PathPart('') : CaptureArgs(0) {
     my ( $self, $c ) = @_;
+    $c->log->start;
     $c->log->debug('Check if user has logged in previously in session and has an active session');
     if ( !$c->session->{__vim_login} ) {
         $self->__error( $c, "Login to VCenter first" );
@@ -43,18 +44,20 @@ sub loginBase : Chained('vmwareBase') : PathPart('') : CaptureArgs(0) {
     if ( !defined( $c->session->{__vim_login}->{sessions} ->[ $c->session->{__vim_login}->{active} ])) {
         $self->__error( $c, "No active login session to vcenter" );
     }
-    my $active_session;
-    if ( $c->req->params->{vim_id} ) {
-        $active_session = $c->session->{__vim_login}->{sessions}->[ $c->req->params->{vim_id} ];
-    } else {
-        $active_session = $c->session->{__vim_login}->{sessions}->[ $c->session->{__vim_login}->{active} ];
-    }
+    my $vim_id = $c->req->params->{vim_id} || $c->session->{__vim_login}->{active}; 
+    my $active_session = $c->session->{__vim_login}->{sessions}->[ $vim_id ];
     $c->log->dumpobj( "active_session", $active_session );
     eval {
+        my $epoch = $c->datetime->epoch;
+        my $last_used = $active_session->{last_used};
+        if ( defined($last_used) and (( $epoch - $last_used) >1599) ) {
+            $c->log->debug('Session has expired');
+            ExConnection::SessionExpire->throw( error => "Session expired", time => $last_used );
+        }
         my $VCenter = VCenter->new( vcenter_url => $active_session->{vcenter_url}, sessionfile => $active_session->{vcenter_sessionfile}, logger => $c->log);
         $VCenter->loadsession_vcenter;
         $c->stash->{vim} = $VCenter;
-        $active_session->{last_used} = $c->datetime->epoch;
+        $c->session->{__vim_login}->{sessions}->[ $vim_id ]->{last_used} = $epoch;
         my %param = ();
         if ( $c->req->params->{computeresource} ) {
             $c->log->debug1('ComputeResource begin_entity requested');
@@ -76,35 +79,41 @@ sub loginBase : Chained('vmwareBase') : PathPart('') : CaptureArgs(0) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
+    $c->log->finish;
 }
 
 sub connection : Chained('vmwareBase') : PathPart('') : Args(0) : ActionClass('REST') {
     my ( $self, $c ) = @_;
+    $c->log->start;
     if ( !$c->session->{__vim_login} ) {
         $c->session->{__vim_login} = { active => '0', sessions => [] };
     }
+    $c->log->finish;
 }
 
 sub connection_GET {
     my ( $self, $c ) = @_;
-    my %return = ();
+    $c->log->start;
+    my $return = {};
     if ( !@{ $c->session->{__vim_login}->{sessions} } ) {
-        $return{connections} = "";
+        $return->{connections} = "";
     } else {
         for my $num ( 0 .. $#{ $c->session->{__vim_login}->{sessions} } ) {
-            $return{connections}->{$num} = ();
+            $return->{connections}->{$num} = ();
             for my $key ( keys $c->session->{__vim_login}->{sessions}->[$num]) {
-                $return{connections}->{$num}->{$key} = $c->session->{__vim_login}->{sessions}->[$num]->{$key};
+                $return->{connections}->{$num}->{$key} = $c->session->{__vim_login}->{sessions}->[$num]->{$key};
             }
         }
-        $return{active} = $c->session->{__vim_login}->{active};
+        $return->{active} = $c->session->{__vim_login}->{active};
     }
-    $c->log->dumpobj('return', \%return);
-    return $self->__ok( $c, \%return );
+    $c->log->dumpobj('return', $return);
+    $c->log->finish;
+    return $self->__ok( $c, $return );
 }
 
 sub connection_POST {
     my ( $self, $c ) = @_;
+    $c->log->start;
     my $params           = $c->req->params;
     my $user_id          = $c->session->{__user};
     my $model            = $c->model("Database::UserConfig");
@@ -115,8 +124,9 @@ sub connection_POST {
     my $vcenter_url = $params->{vcenter_url} || $model->get_user_config( $user_id, "vcenter_url" );
     return $self->__error( $c, "Vcenter_url cannot be parsed or found" ) unless $vcenter_url;
 
-# TODO: Maybe later implement proto, servicepath, server, but for me currently not needed
+    # TODO: Maybe later implement proto, servicepath, server, but for me currently not needed
     my $VCenter;
+    my $epoch = $c->datetime->epoch;
     eval {
         $VCenter = VCenter->new( vcenter_url      => $vcenter_url, vcenter_username => $vcenter_username, vcenter_password => $vcenter_password, logger => $c->log);
         $VCenter->connect_vcenter;
@@ -126,15 +136,19 @@ sub connection_POST {
         $self->__exception_to_json( $c, $@ );
     } else {
         my $sessionfile = $VCenter->savesession_vcenter;
-        push( @{ $c->session->{__vim_login}->{sessions} }, { vcenter_url         => $vcenter_url, vcenter_sessionfile => $sessionfile, vcenter_username => $vcenter_username, last_used =>    $c->datetime->epoch, });
+        push( @{ $c->session->{__vim_login}->{sessions} }, { vcenter_url         => $vcenter_url, vcenter_sessionfile => $sessionfile, vcenter_username => $vcenter_username, last_used =>    $epoch, });
     }
+# TODO maybe validate if we delete one and recreate a wrong index can be added here
     $c->session->{__vim_login}->{active} = $#{ $c->session->{__vim_login}->{sessions} };
     $c->log->dumpobj('vcenter', $VCenter);
-    return $self->__ok( $c, { vim_login => "success", id        => $#{ $c->session->{__vim_login}->{sessions} } });
+    $c->log->finish;
+    my $return = { vim_login => "success", id        => $#{ $c->session->{__vim_login}->{sessions} }, time_stamp => $epoch };
+    return $self->__ok( $c, $return);
 }
 
 sub connection_DELETE {
     my ( $self, $c ) = @_;
+    $c->log->start;
     my $id     = $c->req->params->{id};
     $c->log->debug1("id=>'$id'");
     if ( $id < 0 || $id > $#{ $c->session->{__vim_login}->{sessions} } ) {
@@ -151,55 +165,70 @@ sub connection_DELETE {
         $self->__exception_to_json( $c, $@ );
     }
     $c->session->{__vim_login}->{sessions}->[$id] = undef;
+    $c->log->finish;
     return $self->__ok( $c, { $id => "deleted" } );
 }
 
 sub connection_PUT {
     my ( $self, $c ) = @_;
+    $c->log->start;
     my $id     = $c->req->params->{id};
     if ( $id < 0 || $id > $#{ $c->session->{__vim_login}->{sessions} } ) {
         return $self->__error( $c, "Session ID out of range" );
     }
     $c->session->{__vim_login}->{active} = $id;
+    $c->log->finish;
     return $self->__ok( $c, { active => $id } );
 }
 
 sub folderBase : Chained('loginBase') : PathPart('folder') : CaptureArgs(0) { }
 
-sub folders : Chained('folderBase') : PathPart('') : Args(0) :
-  ActionClass('REST') { }
+sub folders : Chained('folderBase') : PathPart('') : Args(0) : ActionClass('REST') {
+    my ( $self, $c ) = @_;
+    bless $c->stash->{vim}, 'VCenter_folder';
+}
 
 sub folders_GET {
     my ( $self, $c ) = @_;
-    my %result= ();
+    $c->log->start;
+    my $result= {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_folder';
-        %result = %{ $c->stash->{vim}->get_all };
+        $result = $c->stash->{vim}->get_all;
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+    $c->log->dumpobj('result', $result);
+    $c->log->start;
+    return $self->__ok( $c, $result );
 }
 
 sub folders_PUT {
     my ( $self, $c) = @_;
+    $c->log->start;
     my $params = $c->req->params;
-    my %result= ();
+    my $result= {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_folder';
-        %result = %{ $c->stash->{vim}->move( %{ $params } ) };
+        $result = $c->stash->{vim}->move( %{ $params } );
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+    $c->log->dumpobj('result', $result);
+    $c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub folders_POST {
     my ( $self, $c ) = @_;
+    $c->log->start;
+    # This part can be a violation of the MVC model build, since the 2nd Controller should generate this part.
+    # If I would copy code here, that would be code duplication, which I want to evade
     my $view = $c->stash->{vim}->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'vm'} );
     my $parent = SamuAPI_folder->new( view => $view, logger => $c->log);
+    $c->log->finish;
     $self->folder_POST($c, $parent->get_mo_ref_value);
 }
 
@@ -207,29 +236,34 @@ sub folder : Chained('folderBase') : PathPart('') : Args(1) : ActionClass('REST'
 
 sub folder_GET {
     my ( $self, $c, $mo_ref_value ) = @_;
-    my %result = ();
+    $c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_folder';
-        %result = %{ $c->stash->{vim}->get_single( moref_value => $mo_ref_value) };
+        $result = $c->stash->{vim}->get_single( moref_value => $mo_ref_value);
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result);
-
+    $c->log->dumpobj('result', $result);
+    $c->log->finish;
+    return $self->__ok( $c, $result);
 }
 
 sub folder_DELETE {
     my ( $self, $c, $mo_ref_value ) = @_;
-    my %return = ();
+    $c->log->start;
+    my $return = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_folder';
-        %return = %{ $c->stash->{vim}->destroy( value => $mo_ref_value, type => 'Folder') };
+        $return = $c->stash->{vim}->destroy( value => $mo_ref_value, type => 'Folder');
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%return );
+    $c->log->dumpobj('result', $return);
+    $c->log->finish;
+    return $self->__ok( $c, $return );
 
 }
 
@@ -240,7 +274,6 @@ sub folder_POST {
     $create_param{value} = $mo_ref_value;
 # TODO if multiple computeresources with same mo_ref how can they be distingueshed
     eval {
-        bless $c->stash->{vim}, 'VCenter_folder';
         %result = %{ $c->stash->{vim}->create( %create_param ) };
     };
     if ($@) {

@@ -27,6 +27,7 @@ use Exception::Class (
     'ExConnection' => { isa => 'ExBase', },
     'ExAPI' => { isa => 'ExBase' },
 
+    'ExConnection::SessionExpire' => { isa => 'ExConnection', fields => ['time' ] },
     'ExConnection::VCenter' => { isa => 'ExConnection', fields => ['vcenter_url'] },
     'ExAPI::Argument' => { isa => 'ExAPI', fields => ['argument','subroutine']},
     'ExAPI::ObjectType' => { isa => 'ExAPI', fields => ['type'] },
