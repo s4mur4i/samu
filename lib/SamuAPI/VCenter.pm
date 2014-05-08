@@ -1719,10 +1719,10 @@ sub transfer {
 sub get_process {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my $view = $self->values_to_view( type => 'HostSystem', value => $args{value});
-    my $obj = SamuAPI_host->new( view => $view, logger => $self->{logger} );
-    my $username = $args{username} || $obj->get_annotation(name => 'samu_username');
-    my $password = $args{password} || $obj->get_annotation(name => 'samu_password');
+    my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
+    my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
+    my $username = $args{username} || $vm->get_annotation(name => 'samu_username')->{value};
+    my $password = $args{password} || $vm->get_annotation(name => 'samu_password')->{value};
     my $guestCreds = $self->guest_credentials( view => $view, username => $username, password => $password);
     my $guestOP        = $self->get_manager("guestOperationsManager");
     my $processmanager = $self->get_view( mo_ref => $guestOP->{processManager} );

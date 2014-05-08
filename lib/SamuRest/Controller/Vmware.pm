@@ -857,18 +857,18 @@ sub process : Chained('vmBase'): PathPart('process'): Args(0) : ActionClass('RES
 
 sub process_GET {
     my ($self, $c) = @_;
-    my %result = ();
+    my $result = {};
     my $params = $c->req->params;
     $params->{moref_value} = $c->stash->{mo_ref_value};
     eval {
         bless $c->stash->{vim}, 'VCenter_vm';
-        my $ret = $c->stash->{vim}->get_process( %{$params} );
+        $result = $c->stash->{vim}->get_process( %{$params} );
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+    return $self->__ok( $c, $result );
 }
 
 sub process_POST {
