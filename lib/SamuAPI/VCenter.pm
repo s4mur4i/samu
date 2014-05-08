@@ -531,6 +531,15 @@ sub create_linked_folder {
     return $view;
 }
 
+sub _change_annotation {
+    my ( $self, %args )  = @_;
+    $self->{logger}->start;
+    my $custom = $self->get_manager("customFieldsManager");
+    $custom->SetField( entity => $args{view}, key => $args{key}, value => $args{value} );
+    $self->{logger}->finish;
+    return $self;
+}
+
 ####################################################################
 
 package VCenter_resourcepool;
@@ -1421,15 +1430,15 @@ sub get_event {
 sub get_annotations {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
+    my $result = {};
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     foreach ( @{ $vm->{view}->{availableField} } ) {
-        $result{$_->{key}} = $_->{name};
+        $result->{$_->{key}} = $_->{name};
     }
-    $self->{logger}->dumpobj( 'result', \%result );
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub get_annotation {
@@ -1452,15 +1461,14 @@ sub delete_annotation {
 sub change_annotation {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $custom = $self->get_manager("customFieldsManager");
     my $key = $vm->get_annotation_key( name => $args{name});
-    $custom->SetField( entity => $vm->{view}, key => $key, value => $args{value} );
-    $self->{logger}->dumpobj( 'result', \%result );
+    $self->_chane_annotation( view => $vm->{view}, key => $key , value => $args{value});
+    my $result = { $key => $args{value}};
+    $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub remove_hw {
@@ -1530,6 +1538,13 @@ sub clone_vm {
         $spec = $template->_oth_clonespec(%args);
     }
     my $result = $template->clone( name => $vmname, folder=> $parent_folder, spec => $spec);
+    my $cloned_vm = $self->find_entity( view_type => 'VirtualMachine', begin_entity => $parent_folder, filter => { name => $vmname } );
+    my $cloned = SamuAPI_virtualmachine->new( logger => $self->{logger}, view => $cloned_vm );
+    my $annotations = $template->get_annotations;
+    for my $id ( keys %{$annotations} ) {
+        $self->_change_annotation( id => $id, value => $annotations->{$id});
+    }
+# TODO add owner and ticket
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;

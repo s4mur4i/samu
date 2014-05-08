@@ -1016,19 +1016,26 @@ sub clone {
 sub get_annotation {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
-    my $result = {};
     my $id;
     if ( defined( $args{name} and !defined($args{id}))) {
         $id = $self->get_annotation_key( name => $args{name});
     } else {
         $id = $args{id};
     }
+    my $all = $self->get_annotations;
+    my $result = { key => $id, value => $all->{$id}};
+    $self->{logger}->dumpobj("result", $result);
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub get_annotations {
+    my $self = shift;
+    $self->{logger}->start;
+    my $result = {};
     foreach ( @{ $self->{view}->{value} } ) {
         $self->{logger}->dumpobj('annotation_entry', $_);
-        if ( $_->{key} eq $id ) {
-            $result = { value => $_->{value}, key => $id};
-            last;
-        }
+        $result->{$_->{key}} = $_->{value}
     }
     $self->{logger}->dumpobj("result", $result);
     $self->{logger}->finish;
