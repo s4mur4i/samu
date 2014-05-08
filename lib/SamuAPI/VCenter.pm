@@ -1720,12 +1720,12 @@ sub transfer {
     my ($self, %args) = @_;
     $self->{logger}->start;
     my $result = {};
-    if ( $args{dest} eq 'to' ) {
+    if ( defined($args{dest}) ) {
         $result = $self->transfer_to(%args);
-    } elsif ( $args{dest} eq 'from') {
+    } elsif ( defined($args{source})) {
         $result = $self->transfer_from(%args);
     } else {
-        ExAPI::Argument->throw(error => 'No destinationed recognized', argument => 'dest', subroutine => (caller(0))[3] );
+        ExAPI::Argument->throw(error => 'No destination recognized', argument => 'dest', subroutine => (caller(0))[3] );
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
@@ -1749,7 +1749,7 @@ sub transfer_to {
     };
     if ($@) {
         $self->{logger}->dumpobj('error', $@);
-        Entity::TransferError->throw( error    => 'Could not retrieve Transfer information', entity   => $vm->get_mo_ref_value, filename => $args{dest});
+        ExEntity::Transfer->throw( error    => 'Could not retrieve Transfer information', entity   => $vm->get_mo_ref_value, filename => $args{dest});
     }
     my $result = { url => $transferinfo};
     $self->{logger}->dumpobj( 'result', $result );
@@ -1773,7 +1773,7 @@ sub transfer_from {
     };
     if ($@) {
         $self->{logger}->dumpobj('error', $@);
-        Entity::TransferError->throw( error    => 'Could not retrieve Transfer information', entity   => $vm->get_mo_ref_value, filename => $args{source});
+        ExEntity::Transfer->throw( error    => 'Could not retrieve Transfer information', entity   => $vm->get_mo_ref_value, filename => $args{source});
     }
     my $result = { url => $transferinfo->{url}, size => $transferinfo->{size}, accesstime => $transferinfo->{attributes}->{accessTime}, modificationtime => $transferinfo->{attributes}->{modificationTime}};
     $self->{logger}->dumpobj( 'result', $result );
