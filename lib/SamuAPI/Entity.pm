@@ -40,10 +40,7 @@ sub base_parse {
 
 sub get_info {
     my $self = shift;
-    $self->{logger}->start;
     my $return = $self->{info} || undef;
-    $self->{logger}->dumpobj('return', $return);
-    $self->{logger}->finish;
     return $return;
 }
 
@@ -58,28 +55,19 @@ sub get_mo_ref_value {
 
 sub get_mo_ref_type {
     my $self = shift;
-    $self->{logger}->start;
     my $return = $self->{mo_ref}->{type} || undef;
-    $self->{logger}->dumpobj('return', $return);
-    $self->{logger}->finish;
     return $return;
 }
 
 sub get_mo_ref {
     my $self = shift;
-    $self->{logger}->start;
-    my %return = ( value => $self->{mo_ref}->{value}, type => $self->{mo_ref}->{type});
-    $self->{logger}->dumpobj('return', %return);
-    $self->{logger}->finish;
-    return \%return;
+    my $return = { value => $self->{mo_ref}->{value}, type => $self->{mo_ref}->{type}};
+    return $return;
 }
 
 sub get_name {
     my $self = shift;
-    $self->{logger}->start;
     my $return = $self->{info}->{name} || undef;
-    $self->{logger}->dumpobj('return', $return);
-    $self->{logger}->finish;
     return $return;
 }
 
@@ -185,11 +173,7 @@ sub _resourcepool_resource_config_spec {
 
 sub get_property {
     my ($self, $property) = @_;
-    $self->{logger}->start;
-    $self->{logger}->debug1("Requested property=>'$property'");
     my $object = $self->{view}->get_property($property);
-    $self->{logger}->dumpobj( 'object', $object);
-    $self->{logger}->finish;
     return $object;
 }
 
@@ -290,9 +274,7 @@ sub new {
 
 sub info_parse {
     my $self = shift;
-    # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
-        $self->{logger}->debug1("Need to flush info hash");
         $self->{info} = ();
     }
     if ( defined($self->{view}) ) {
@@ -413,7 +395,7 @@ sub generate_network_setup {
     my $ethernet_hw = $self->get_hw( 'VirtualEthernetCard' );
     $self->{vms} = delete($args{vms});
     my $mac = $self->generate_macs( mac_base => $args{mac_base}, count => scalar( @{$ethernet_hw}) );
-    my @return = ();
+    my $return = [];
     for my $interface ( @{ $ethernet_hw } ) {
         my $ethernetcard;
         if ( $interface->isa('VirtualE1000') ) {
@@ -431,10 +413,10 @@ sub generate_network_setup {
         }
         my $operation = VirtualDeviceConfigSpecOperation->new('edit');
         my $deviceconfigspec = VirtualDeviceConfigSpec->new( device => $ethernetcard, operation => $operation);
-        push( @return, $deviceconfigspec );
+        push( @$return, $deviceconfigspec );
     }
     $self->{logger}->finish;
-    return \@return;
+    return $return;
 }
 
 sub get_property {
@@ -480,14 +462,13 @@ sub poweroff {
     my $self = shift;
     if ( $self->get_powerstate ne "poweredOff" ) {
         $self->{view}->PowerOffVM;
-# TODO maybe impelemnt shutdown or force
     }
     return $self;
 }
 
 sub poweron {
     my $self = shift;
-    if ( $self->get_powerstate ne "poweredOff" ) {
+    if ( $self->get_powerstate ne "poweredOn" ) {
         $self->{view}->PowerOnVM;
     }
     return $self;
@@ -572,19 +553,13 @@ sub parse_snapshot {
 
 sub get_snapshot {
     my $self = shift;
-    $self->{logger}->start;
     my $return = $self->{snapshot} || undef;
-    $self->{logger}->dumpobj('return', $return);
-    $self->{logger}->finish;
     return $return;
 }
 
 sub get_powerstate {
     my $self = shift;
-    $self->{logger}->start;
     my $return = $self->{view}->{runtime}->{powerState}->{val} || undef;
-    $self->{logger}->dumpobj('return', $return);
-    $self->{logger}->finish;
     return $return;
 }
 
@@ -633,76 +608,76 @@ sub shutdown {
 sub get_cdroms {
     my $self = shift;
     $self->{logger}->start;
-    my %result = ();
-    my @cdrom_hw = @{ $self->get_hw( 'VirtualCdrom' ) };
-    for ( my $i = 0 ; $i < scalar(@cdrom_hw) ; $i++ ) {
+    my $result = {};
+    my $cdrom_hw = $self->get_hw( 'VirtualCdrom' );
+    for ( my $i = 0 ; $i < scalar(@$cdrom_hw) ; $i++ ) {
         my $backing = "Unknown";
-        if ( $cdrom_hw[$i]->{backing}->isa('VirtualCdromIsoBackingInfo') ) {
-            $backing = $cdrom_hw[$i]->{backing}->fileName;
-        } elsif ( $cdrom_hw[$i]->{backing} ->isa('VirtualCdromRemotePassthroughBackingInfo') or $cdrom_hw[$i]->{backing}->isa('VirtualCdromRemoteAtapiBackingInfo')) {
+        if ( $$cdrom_hw[$i]->{backing}->isa('VirtualCdromIsoBackingInfo') ) {
+            $backing = $$cdrom_hw[$i]->{backing}->fileName;
+        } elsif ( $$cdrom_hw[$i]->{backing} ->isa('VirtualCdromRemotePassthroughBackingInfo') or $$cdrom_hw[$i]->{backing}->isa('VirtualCdromRemoteAtapiBackingInfo')) {
             $backing = "Client_Device";
-        } elsif ( $cdrom_hw[$i]->{backing}->isa('VirtualCdromAtapiBackingInfo') ) {
-            $backing = $cdrom_hw[$i]->{backing}->{deviceName};
+        } elsif ( $$cdrom_hw[$i]->{backing}->isa('VirtualCdromAtapiBackingInfo') ) {
+            $backing = $$cdrom_hw[$i]->{backing}->{deviceName};
         }
-        my $label = $cdrom_hw[$i]->{deviceInfo}->{label} || "None";
-        $result{$i} = { id => $i, key => $cdrom_hw[$i]->{key}, backing => "$backing", label => "$label"};
+        my $label = $$cdrom_hw[$i]->{deviceInfo}->{label} || "None";
+        $result->{$i} = { id => $i, key => $$cdrom_hw[$i]->{key}, backing => "$backing", label => "$label"};
     }
-    $self->{logger}->dumpobj('result', \%result);
+    $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 }
 
 sub get_hw {
     my ( $self, $hw ) = @_;
     $self->{logger}->start;
-    my @hw   = ();
+    my $ret   = [];
     foreach ( @{$self->{view}->{config}->{hardware}->{device}} ) {
         if ( $_->isa($hw) ) {
-            push( @hw, $_ );
+            push( @$ret, $_ );
         }
     }
-    $self->{logger}->dumpobj('hw', \@hw);
+    $self->{logger}->dumpobj('ret', $ret);
     $self->{logger}->finish;
-    return \@hw
+    return $ret;
 }
 
 sub get_interfaces {
     my $self = shift;
     $self->{logger}->start;
-    my %result = ();
-    my @ethernet_hw = @{ $self->get_hw( 'VirtualEthernetCard' ) };
-    for ( my $i = 0 ; $i < scalar(@ethernet_hw) ; $i++ ) {
+    my $result = {};
+    my $ethernet_hw = $self->get_hw( 'VirtualEthernetCard' );
+    for ( my $i = 0 ; $i < scalar(@$ethernet_hw) ; $i++ ) {
         my $type = "Unknown";
-        if ( $ethernet_hw[$i]->isa('VirtualE1000') ) {
+        if ( $$ethernet_hw[$i]->isa('VirtualE1000') ) {
             $type = "E1000";
-        } elsif ( $ethernet_hw[$i]->isa('VirtualE1000e') ) {
+        } elsif ( $$ethernet_hw[$i]->isa('VirtualE1000e') ) {
             $type = "E1000e";
-        } elsif ( $ethernet_hw[$i]->isa('VirtualPCNet32') ) {
+        } elsif ( $$ethernet_hw[$i]->isa('VirtualPCNet32') ) {
             $type = "PCNet32";
-        } elsif ( $ethernet_hw[$i]->isa('VirtualVmxnet2') ) {
+        } elsif ( $$ethernet_hw[$i]->isa('VirtualVmxnet2') ) {
             $type = "Vmxnet2";
-        } elsif ( $ethernet_hw[$i]->isa('VirtualVmxnet3') ) {
+        } elsif ( $$ethernet_hw[$i]->isa('VirtualVmxnet3') ) {
             $type = "Vmxnet3";
         }
-        $result{$i} = { id => $i, key => $ethernet_hw[$i]->{key}, mac=> $ethernet_hw[$i]->{macAddress}, label => $ethernet_hw[$i]->{deviceInfo}->{label}, summary => $ethernet_hw[$i]->{deviceInfo}->{summary}, type => $type };
+        $result->{$i} = { id => $i, key => $$ethernet_hw[$i]->{key}, mac=> $$ethernet_hw[$i]->{macAddress}, label => $$ethernet_hw[$i]->{deviceInfo}->{label}, summary => $$ethernet_hw[$i]->{deviceInfo}->{summary}, type => $type };
     }
-    $self->{logger}->dumpobj('result', \%result);
+    $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 
 }
 
 sub get_disks {
     my $self = shift;
     $self->{logger}->start;
-    my %result = ();
-    my @disk_hw = @{ $self->get_hw( 'VirtualDisk' ) };
-    for ( my $i = 0 ; $i < scalar(@disk_hw) ; $i++ ) {
-        $result{$i} = { id => $i, key => $disk_hw[$i]->{key}, capacity => $disk_hw[$i]->{capacityInKB}, filename => $disk_hw[$i]->{backing}->{fileName} };
+    my $result = {};
+    my $disk_hw = $self->get_hw( 'VirtualDisk' );
+    for ( my $i = 0 ; $i < scalar(@$disk_hw) ; $i++ ) {
+        $result->{$i} = { id => $i, key => $$disk_hw[$i]->{key}, capacity => $$disk_hw[$i]->{capacityInKB}, filename => $$disk_hw[$i]->{backing}->{fileName} };
     }
-    $self->{logger}->dumpobj('result', \%result);
+    $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
-    return \%result;
+    return $result;
 
 }
 
@@ -881,7 +856,8 @@ sub generate_uniq_mac {
 sub _virtualmachineclonespec {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
-    my $clonespec = VirtualMachineCloneSpec->new( location => $args{location}, powerOn => 1,template => 0, config => $args{config}, customization => $args{customization});
+    my $poweron = $args{powerOn} // 1;
+    my $clonespec = VirtualMachineCloneSpec->new( location => $args{location}, powerOn => $poweron,template => 0, config => $args{config}, customization => $args{customization});
     if ( !defined($args{fullclone}) ) {
         $clonespec->{snapshot} = $self->last_snapshot_moref;
     }
@@ -892,43 +868,44 @@ sub _virtualmachineclonespec {
 
 sub _customizationpassword {
     my ( $self, %args ) = @_;
-    my $password = $args{password} || 'titkos';
+    my $password = $args{password} // 'titkos';
     my $ret = CustomizationPassword->new( plainText => 1, value => $password );
     return $ret;
 }
 
 sub _customizationidentification_domain {
     my ( $self, %args ) = @_;
-    my $domainadmin = $args{domainadmin} || 'Administrator@support.balabit';
-    my $joindomain = $args{joindomain} || 'support.balabit';
-    my $ret = CustomizationIdentification->new( domainAdmin         => $domainadmin, domainAdminPassword => $self->_customizationpassword , joinDomain          => $joindomain);
+    my $domainadmin = $args{domainAdmin} || 'Administrator@support.balabit';
+    my $joindomain = $args{joinDomain} || 'support.balabit';
+    my $domainadminpassword = $self->_customizationpassword( password => $args{domainAdminPassword} );
+    my $ret = CustomizationIdentification->new( domainAdmin         => $domainadmin, domainAdminPassword => $domainadminpassword, joinDomain          => $joindomain);
     return $ret;
 }  
 
 sub _customizationidentification_workgroup {
     my ( $self, %args ) = @_;
-    my $domainadmin = $args{domainadmin} || 'Administrator@support.balabit';
     my $workgroup = $args{workgroup} || 'SUPPORT';
-    my $ret = CustomizationIdentification->new( domainAdmin         => $domainadmin, domainAdminPassword => $self->_customizationpassword, joinWorkgroup       => $workgroup);
+    my $ret = CustomizationIdentification->new( joinWorkgroup       => $workgroup);
     return $ret;
 } 
 
 sub _win_clonespec {
     my ( $self, %args ) = @_;
     my $nicsetting =  $self->_customizationadaptermapping; 
-    my $globalipsettings = CustomizationGlobalIPSettings->new( dnsServerList => ['10.10.0.1'], dnsSuffixList => ['support.balabit']);
+    my $globalipsettings = $self->_customizationglobalipsetting(%args);
+    my $base = $args{base} // "winguest";
     my $customoptions = CustomizationWinOptions->new( changeSID => 1, deleteAccounts => 0 );
     my $guiunattend = CustomizationGuiUnattended->new( autoLogon      => 1, autoLogonCount => 1, password       => $self->_customizationpassword, timeZone       => '095');
-    my $customname = CustomizationPrefixName->new( base => 'winguest' ); 
+    my $customname = CustomizationPrefixName->new( base => $base ); 
     my $productkey = $self->get_annotation( name => 'samu_productkey')->{value};
     my $userdata = CustomizationUserData->new( productId    => $productkey, orgName      => 'support', fullName     => 'admin', computerName => $customname);
     my $runonce = CustomizationGuiRunOnce->new( commandList => [ "w32tm /resync", "cscript c:/windows/system32/slmgr.vbs /skms prod-dev-winsrv.balabit", "cscript c:/windows/system32/slmgr.vbs /ato" ]);
     my $identification;
     # TODO rethink on how the domain or workgroup join should be
-    if (defined($args{joindomain})) {
-        $identification = $self->_customizationidentification_domain(%args);
-    } else {
+    if (defined($args{domain})) {
         $identification = $self->_customizationidentification_workgroup(%args);
+    } else {
+        $identification = $self->_customizationidentification_domain(%args);
     }   
     my $identity = CustomizationSysprep->new( guiRunOnce     => $runonce, guiUnattended  => $guiunattend, identification => $identification, userData       => $userdata);
     if ( $self->get_name =~ /^T_win_200[03]/ ) {
@@ -940,12 +917,24 @@ sub _win_clonespec {
     return $clone_spec;
 }
 
+sub _customizationglobalipsetting {
+    my ( $self, %args) = @_;
+    my $dnssuffixlist = $args{dnsSuffixList} // "support.balabit";
+    my $dnsserverlist = $args{dnsServerList} // "10.10.0.1";
+    my $globalipsettings = CustomizationGlobalIPSettings->new( dnsServerList => [ $dnsserverlist ], dnsSuffixList => [$dnssuffixlist]);
+    return $globalipsettings;
+}
+
 sub _lin_clonespec {
     my ( $self, %args ) = @_;
     my $nicsetting =  $self->_customizationadaptermapping; 
-    my $hostname = CustomizationPrefixName->new( base => 'linuxguest' );
-    my $globalipsettings = CustomizationGlobalIPSettings->new( dnsServerList => ['10.10.0.1'], dnsSuffixList => ['support.balabit']);
-    my $linuxprep = CustomizationLinuxPrep->new( domain     => 'support.balabit', hostName   => $hostname, timeZone   => 'Europe/Budapest', hwClockUTC => 1);
+    my $base = $args{base} // "linuxguest";
+    my $domain = $args{domain} // "support.balabit";
+    my $timezone = $args{timeZone} // "Europe/Budapest";
+    my $hwclockutc = $args{hwClockUTC} // 1;
+    my $globalipsettings = $self->_customizationglobalipsetting(%args);
+    my $hostname = CustomizationPrefixName->new( base => $base );
+    my $linuxprep = CustomizationLinuxPrep->new( domain     => $domain, hostName   => $hostname, timeZone   => $timezone, hwClockUTC => $hwclockutc);
     my $customization_spec = CustomizationSpec->new( identity         => $linuxprep, globalIPSettings => $globalipsettings, nicSettingMap    => [@{ $nicsetting }]);
     my $clone_spec = $self->_virtualmachineclonespec( location => $args{relocate_spec}, fullclone => $args{fullclone}, config => $args{config_spec}, customization => $customization_spec);
     return $clone_spec;
@@ -958,12 +947,16 @@ sub _oth_clonespec {
 }
 
 sub _customizationadaptermapping {
-    my $self = shift;
+    my ($self, %args) = @_;
     my @return;
+    my $dnsdomain = $args{dnsDomain} // "support.balabit";
+    my $gateway = $args{gateway} // "10.21.255.254";
+    my $subnetmask = $args{subnetMask} // "255.255.0.0";
+    my $dnsserverlist = $args{dnsServerList} // "10.10.0.1";
     my $ethernet_hw = $self->get_hw( 'VirtualEthernetCard' );
     for my $int ( @$ethernet_hw ) {
         my $ip      = CustomizationDhcpIpGenerator->new();
-        my $adapter = CustomizationIPSettings->new( dnsDomain =>'support.balabit', dnsServerList => ['10.10.0.1'], gateway => ['10.21.255.254'], subnetMask => '255.255.0.0', ip => $ip, netBIOS => CustomizationNetBIOSMode->new('enableNetBIOS'));
+        my $adapter = CustomizationIPSettings->new( dnsDomain => $dnsdomain, dnsServerList => [$dnsserverlist], gateway => [$gateway], subnetMask => $subnetmask, ip => $ip, netBIOS => CustomizationNetBIOSMode->new('enableNetBIOS'));
         my $nicsetting = CustomizationAdapterMapping->new( adapter => $adapter );
         push( @return, $nicsetting );
     }   
@@ -1092,12 +1085,6 @@ sub info_parse {
     }
     $self->{info}->{mo_ref} = $self->get_mo_ref_value;
     return $self;
-}
-
-sub get_property {
-    my ($self, $property) = @_;
-    my $object = $self->{view}->get_property($property);
-    return $object;
 }
 
 ######################################################################################
@@ -1232,7 +1219,6 @@ sub new {
 
 sub info_parse {
     my $self = shift;
-    # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
         $self->{info} = ();
     }
@@ -1273,7 +1259,6 @@ sub new {
 
 sub info_parse {
     my $self = shift;
-    # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
         $self->{info} = ();
     }
@@ -1347,7 +1332,6 @@ sub new {
 
 sub info_parse {
     my $self = shift;
-    # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
         $self->{info} = ();
     }
@@ -1398,7 +1382,6 @@ sub new {
 
 sub info_parse {
     my $self = shift;
-    # If info has been parsed once then flush previous info
     if ( defined( $self->{info} ) && keys $self->{info} ) {
         $self->{info} = ();
     }
