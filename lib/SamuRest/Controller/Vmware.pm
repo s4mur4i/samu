@@ -461,6 +461,87 @@ sub task_DELETE {
     return $self->__ok( $c, $result );
 }
 
+sub ticketqueryBase : Chained('loginBase'):PathPart('ticket'): CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+}
+
+sub ticketsquery : Chained('ticketqueryBase'): PathPart(''): Args(0) : ActionClass('REST') {}
+
+sub ticketsquery_GET {
+    my ( $self, $c ) = @_;
+	$c->log->start;
+    my $result = {};
+    eval {
+        $result = $c->stash->{vim}->get_tickets;
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
+}
+
+sub ticketquery: Chained('ticketqueryBase') : PathPart(''): Args(1) : ActionClass('REST') { }
+
+sub ticketquery_GET {
+    my ( $self, $c, $ticket ) = @_;
+	$c->log->start;
+    my $result = {};
+    eval {
+        $result = $c->stash->{vim}->get_ticket( ticket => $ticket);
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
+
+}
+
+sub userqueryBase : Chained('loginBase'):PathPart('user'): CaptureArgs(0) {
+    my ( $self, $c ) = @_;
+}
+
+sub usersquery : Chained('userqueryBase'): PathPart(''): Args(0) : ActionClass('REST') {}
+
+sub usersquery_GET {
+    my ( $self, $c ) = @_;
+	$c->log->start;
+    my $result = {};
+    eval {
+        $result = $c->stash->{vim}->get_users;
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
+}
+
+sub userquery: Chained('userqueryBase') : PathPart(''): Args(1) : ActionClass('REST') { }
+
+sub userquery_GET {
+    my ( $self, $c, $username ) = @_;
+	$c->log->start;
+    my $result = {};
+    eval {
+        $result = $c->stash->{vim}->get_user( username => $username);
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
+}
+
 sub templateBase: Chained('loginBase'): PathPart('template') : CaptureArgs(0) { 
     my ( $self, $c ) = @_;
     bless $c->stash->{vim}, 'VCenter_vm';

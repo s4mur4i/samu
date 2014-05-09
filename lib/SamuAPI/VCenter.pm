@@ -537,6 +537,60 @@ sub _change_annotation {
     return $self;
 }
 
+sub get_tickets {
+    my $self = shift;
+    $self->{logger}->start;
+    my $result = {};
+    my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['name', 'value', 'availableField' ]);
+    for my $vm (@$vms) {
+        my $obj = SamuAPI_virtualmachine->new( logger => $self->{logger}, view => $vm);
+        my $annotation = $obj->get_annotation( name => 'samu_ticket' )->{value};
+        if ( defined($result->{$annotation}) ) {
+            push(@{ $result->{$annotation} }, $obj->get_mo_ref );
+        } else {
+            $result->{$annotation} = [ $obj->get_mo_ref];
+        }
+    }
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub get_ticket {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $all = $self->get_tickets;
+    my $result = { $args{ticket} => $all->{$args{ticket}}};
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub get_users {
+    my $self = shift;
+    $self->{logger}->start;
+    my $result = {};
+    my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['name', 'value', 'availableField' ]);
+    for my $vm (@$vms) {
+        my $obj = SamuAPI_virtualmachine->new( logger => $self->{logger}, view => $vm);
+        my $annotation = $obj->get_annotation( name => 'samu_owner' )->{value};
+        if ( defined($result->{$annotation}) ) {
+            push(@{ $result->{$annotation} }, $obj->get_mo_ref );
+        } else {
+            $result->{$annotation} = [ $obj->get_mo_ref];
+        }
+    }
+    $self->{logger}->finish;
+    return $result;
+}
+
+sub get_user {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $all = $self->get_users;
+    my $result = { $args{username} => $all->{$args{username}}};
+    $self->{logger}->finish;
+    return $result;
+}
+
 ####################################################################
 
 package VCenter_resourcepool;
