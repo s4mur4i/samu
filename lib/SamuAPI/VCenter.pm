@@ -800,7 +800,8 @@ sub create {
     my $task_moref;
     my $ticket = delete($args{ticket});
     my $switch_value = delete($args{switch});
-    my $func = delete($args{func});
+    my $func = delete($args{func}) // "unknown";
+    my $numports = $args{numPorts} // 20;
     my $name_base = $ticket . "-" . $func . "-";
     my $name = $name_base . &Misc::rand_3digit;
     my $view = $self->find_entity( view_type => 'DistributedVirtualPortgroup', properties => ['name'], filter => { name => $name } );
@@ -810,7 +811,7 @@ sub create {
     }
     my $switch_view = $self->values_to_view( value => $switch_value, type=> 'DistributedVirtualSwitch');
     my $network_folder = $self->find_entity( view_type => 'Folder', properties => ['name'], filter => { name => 'network' });
-    my $spec = DVPortgroupConfigSpec->new( name        => $name, type        => 'earlyBinding', numPorts    => 20, description => "Port group");
+    my $spec = DVPortgroupConfigSpec->new( name        => $name, type        => 'earlyBinding', numPorts    => $numports, description => "Port group");
     eval {
         $task_moref = $switch_view->AddDVPortgroup_Task( spec => $spec );
     };
@@ -1101,9 +1102,13 @@ sub update {
 sub create_snapshot {
     my ( $self, %args) = @_;
     $self->{logger}->start;
+    my $name = $args{name} // "snapshot";
+    my $desc = $args{description} // "My little pony";
+    my $memory = $args{memory} // 1;
+    my $quiesce = $args{quiesce} // 1;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $task = $vm->{view}->CreateSnapshot_Task( name        => $args{name}, description => $args{desc}, memory      => 1, quiesce     => 1);
+    my $task = $vm->{view}->CreateSnapshot_Task( name        => $name, description => $desc, memory      => $memory, quiesce     => $quiesce);
     my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
     my $result = $obj->get_mo_ref;
     $self->{logger}->dumpobj( 'result', $result );
@@ -1114,9 +1119,10 @@ sub create_snapshot {
 sub delete_snapshots {
     my ( $self, %args) = @_;
     $self->{logger}->start;
+    my $consolidate = $args{consolidate} // 1;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $task = $vm->{view}->RemoveAllSnapshots_Task( consolidate => 1 );
+    my $task = $vm->{view}->RemoveAllSnapshots_Task( consolidate => $consolidate );
     my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
     my $result = $obj->get_mo_ref;
     $self->{logger}->dumpobj( 'result', $result );
@@ -1128,6 +1134,7 @@ sub delete_snapshot {
     my ( $self, %args) = @_;
     $self->{logger}->start;
     my $result = {};
+    my $removechildren = $args{removeChildren} // 0;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     if ( !defined( $vm->{view}->{snapshot} ) ) {
@@ -1137,7 +1144,7 @@ sub delete_snapshot {
             my $snapshot = $vm->find_snapshot_by_id( $_, $args{id} );
             if ( defined($snapshot) ) {
                 my $view = $self->get_view( mo_ref => $snapshot->{snapshot} );
-                my $task = $view->RemoveSnapshot_Task( removeChildren => 0 );
+                my $task = $view->RemoveSnapshot_Task( removeChildren => $removechildren );
                 my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
                 $result = $obj->get_mo_ref;
                 last;
@@ -1183,6 +1190,7 @@ sub revert_snapshot {
     my ( $self, %args) = @_;
     $self->{logger}->start;
     my $result = {};
+    my $supress = $args{suppressPowerOn} // 1;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     if ( !defined( $vm->{view}->{snapshot} ) ) {
@@ -1193,7 +1201,7 @@ sub revert_snapshot {
         if ( defined($snapshot) ) {
             $self->{logger}->dumpobj('snapshot', $snapshot);
             my $view = $self->get_view( mo_ref => $snapshot->{snapshot} );
-            my $task = $view->RevertToSnapshot_Task( suppressPowerOn => 1 );
+            my $task = $view->RevertToSnapshot_Task( suppressPowerOn => $supress );
             my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
             $result = $obj->get_mo_ref;
             last;
@@ -1316,15 +1324,15 @@ sub create_disk {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my @disk_hw    = @{ $vm->get_hw( 'VirtualDisk' ) };
+    my $disk_hw    = $vm->get_hw( 'VirtualDisk' );
     my $scsi_con   = $vm->get_scsi_controller;
-    my $unitnumber = $disk_hw[-1]->{unitNumber} + 1;
+    my $unitnumber = $$disk_hw[-1]->{unitNumber} + 1;
     if ( $unitnumber == 7 ) {
         $unitnumber++;
     } elsif ( $unitnumber == 15 ) {
         ExEntity::HWError->throw( error  => 'SCSI controller has already 15 disks', entity => $self->get_mo_ref_value , hw     => 'SCSI Controller');
     }
-    my $inc_path = &Misc::increment_disk_name( $disk_hw[-1]->{backing}->{fileName} );
+    my $inc_path = &Misc::increment_disk_name( $$disk_hw[-1]->{backing}->{fileName} );
     my $disk_backing_info = VirtualDiskFlatVer2BackingInfo->new( fileName        => $inc_path, diskMode        => "persistent", thinProvisioned => 1);
     my $disk = VirtualDisk->new( controllerKey => $scsi_con->key, unitNumber    => $unitnumber, key           => -1, backing       => $disk_backing_info, capacityInKB  => $args{size});
     my $devspec = VirtualDeviceConfigSpec->new( operation     => VirtualDeviceConfigSpecOperation->new('add'), device        => $disk, fileOperation => VirtualDeviceConfigSpecFileOperation->new('create'));
@@ -1400,10 +1408,8 @@ sub get_annotation {
 
 sub delete_annotation {
     my ( $self, %args) = @_;
-    $self->{logger}->start;
     $args{value} = "";
     my $result = $self->change_annotation(%args);
-    $self->{logger}->finish;
     return $result;
 }
 
@@ -1425,12 +1431,12 @@ sub remove_hw {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my @net_hw = @{ $vm->get_hw( $args{hw} ) };
+    my $net_hw = $vm->get_hw( $args{hw} );
     my $deviceconfig;
-    if ( $net_hw[$args{num}]->isa('VirtualDisk') ) {
-        $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('remove'), device    => $net_hw[$args{num}], fileOperation => VirtualDeviceConfigSpecFileOperation->new('destroy'));
+    if ( $$net_hw[$args{num}]->isa('VirtualDisk') ) {
+        $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('remove'), device    => $$net_hw[$args{num}], fileOperation => VirtualDeviceConfigSpecFileOperation->new('destroy'));
     } else {
-        $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('remove'), device    => $net_hw[$args{num}]);
+        $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('remove'), device    => $$net_hw[$args{num}]);
     }
     my $vmspec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
     my $result = $vm->reconfigvm( spec => $vmspec );
@@ -1509,29 +1515,23 @@ sub clone_vm {
 sub destroy {
     my ($self,%args) = @_;
     $self->{logger}->start;
-    my $task = undef;
-    my %return= ();
+    my $return= {};
     my $view = $self->values_to_view( %args );
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     eval {
-        $task = $vm->{view}->Destroy_Task;
+        $return = $self->destroy_entity( obj => $vm );
     };
     if ( $@ ) {
         $self->{logger}->dumpobj('error', $@);
         ExTask::Error->throw( error => 'Error during task', number=> 'unknown', creator => (caller(0))[3] );
     }
-    $self->{logger}->dumpobj( 'task', $task);
-    my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    %return = ( taskid => { value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type } );
     $self->{logger}->finish;
-    return \%return;
+    return $return;
 }
 
 sub create_interface {
     my ($self, %args) = @_;
     $self->{logger}->start;
-# TODO the label is not set correctly to the network, maybe investigate why
-    my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $net_hw = $vm->get_interfaces;
@@ -1568,11 +1568,12 @@ sub create_interface {
 sub create_cdrom {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ide_key      = $vm->get_free_ide_controller->{key};
-    my $cdrombacking = VirtualCdromRemotePassthroughBackingInfo->new( exclusive  => 0, deviceName => '', useAutoDetect => 1);
+    my $exclusive = $args{exclusive} // 0;
+    my $devicename = $args{deviceName} // "";
+    my $cdrombacking = VirtualCdromRemotePassthroughBackingInfo->new( exclusive  => $exclusive, deviceName => $devicename, useAutoDetect => 1);
     my $cdrom = VirtualCdrom->new( key           => -1, backing       => $cdrombacking, controllerKey => $ide_key);
     my $devspec = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('add'), device    => $cdrom,);
     my $spec = VirtualMachineConfigSpec->new( deviceChange => [$devspec] );
@@ -1623,15 +1624,16 @@ sub change_interface {
 sub change_cdrom {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my %result = ();
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $cdroms = $vm->get_cdroms;
+    my $exclusive = $args{exclusive} // 0;
+    my $devicename = $args{deviceName} // "";
     my $backing;
     if ( $args{iso}) {
         $backing = VirtualCdromIsoBackingInfo->new( fileName => $args{iso} );
     } else {
-        $backing = VirtualCdromRemotePassthroughBackingInfo->new( exclusive  => 0, deviceName => '');
+        $backing = VirtualCdromRemotePassthroughBackingInfo->new( exclusive  => $exclusive, deviceName => $devicename);
     }
     my $device = VirtualCdrom->new( backing       => $backing, key           => ${ $cdroms}[$args{num}]->{key});
     my $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('edit'), device    => $device);
@@ -1645,7 +1647,6 @@ sub change_cdrom {
 sub run {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    $self->{logger}->dumpobj('args',\%args);
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $username = $args{username} || $vm->get_annotation(name => 'samu_username')->{value};
@@ -1671,7 +1672,7 @@ sub transfer {
     } elsif ( defined($args{source})) {
         $result = $self->transfer_from(%args);
     } else {
-        ExAPI::Argument->throw(error => 'No destination recognized', argument => 'dest', subroutine => (caller(0))[3] );
+        ExAPI::Argument->throw(error => 'No destination recognized', argument => 'dest/source', subroutine => (caller(0))[3] );
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
@@ -1755,6 +1756,9 @@ sub get_process {
 sub guest_credentials {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
+    if ( !defined($args{username}) or !defined($args{password}) ) {
+        ExEntity::Auth->throw( error => 'Could not parse username or password', username => $args{username}, password => $args{password});
+    }
     my $guestOP = $self->get_manager("guestOperationsManager");
     my $authMgr   = $self->get_view( mo_ref => $guestOP->{authManager} );
     my $guestAuth = NamePasswordAuthentication->new( username           => $args{username}, password           => $args{password}, interactiveSession => 'false');
@@ -1763,7 +1767,7 @@ sub guest_credentials {
     };
     if ( $@ ) {
         $self->{logger}->dumpobj('error', $@);
-        ExEntity::Auth->throw( error => 'Could not complete authentication', entity => $args{view}->{name}, username => $args{username}, password => $args{password} );
+        ExEntity::Auth->throw( error => $@->{faultMessage}, entity => $args{view}->{name}, username => $args{username}, password => $args{password} );
     }
     $self->{logger}->dumpobj('guestAuth', $guestAuth);
     $self->{logger}->finish;
