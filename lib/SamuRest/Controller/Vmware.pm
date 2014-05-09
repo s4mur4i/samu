@@ -269,107 +269,124 @@ sub folder_DELETE {
 
 sub folder_POST {
     my ( $self, $c, $mo_ref_value ) = @_;
-    my %result = ();
+    $c->log->start;
+    my $result = {};
     my %create_param = ( name => $c->req->params->{name} );
     $create_param{value} = $mo_ref_value;
 # TODO if multiple computeresources with same mo_ref how can they be distingueshed
     eval {
-        %result = %{ $c->stash->{vim}->create( %create_param ) };
+        $result = $c->stash->{vim}->create( %create_param );
     };
     if ($@) {
+		$c->log->dumpobj('error',$@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result',$result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub resourcepoolBase : Chained('loginBase') : PathPart('resourcepool') :
   CaptureArgs(0) { }
 
-sub resourcepools : Chained('resourcepoolBase') : PathPart('') : Args(0) :
-  ActionClass('REST') { }
+sub resourcepools : Chained('resourcepoolBase') : PathPart('') : Args(0) : ActionClass('REST') {
+    my ( $self, $c ) = @_;
+    bless $c->stash->{vim}, 'VCenter_resourcepool';
+}
 
 sub resourcepools_GET {
     my ( $self, $c ) = @_;
-    my $params = $c->req->params;
-    my $refresh = $params->{refresh} || 0;
-    my %result= ();
+	$c->log->start;
+    my $refresh = $c->req->params->{refresh} || 0;
+    my $result= {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_resourcepool';
-        %result = %{ $c->stash->{vim}->get_all};
+        $result = $c->stash->{vim}->get_all( refresh => $refresh);
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result',$result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub resourcepools_POST {
     my ( $self, $c ) = @_;
+	$c->log->start;
     my $view = $c->stash->{vim}->find_entity( view_type => 'ResourcePool', properties => ['name'], filter => { name => 'Resources'} );
     my $parent = SamuAPI_resourcepool->new( view => $view, logger => $c->log);
+	$c->log->finish;
     $self->resourcepool_POST($c, $parent->get_mo_ref_value);
 }
 
 sub resourcepools_PUT {
     my ( $self, $c ) = @_;
-    my %result = ();
-    my $params = $c->req->params;
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_resourcepool';
-        %result = %{ $c->stash->{vim}->move( %{ $params } ) };
+        $result = $c->stash->{vim}->move( %{ $c->req->params } );
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result);
+	$c->log->dumpobj('result',$result);
+	$c->log->finish;
+    return $self->__ok( $c, $result);
 }
 
 sub resourcepool : Chained('resourcepoolBase') : PathPart('') : Args(1) : ActionClass('REST') { }
 
 sub resourcepool_GET {
     my ( $self, $c, $mo_ref_value ) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     my $refresh = $c->req->params->{refresh} || 0;
     eval {
-        bless $c->stash->{vim}, 'VCenter_resourcepool';
-        %result = %{ $c->stash->{vim}->get_single( refresh => $refresh, moref_value => $mo_ref_value) };
+        $result = $c->stash->{vim}->get_single( refresh => $refresh, moref_value => $mo_ref_value);
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result);
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result);
 }
 
 sub resourcepool_DELETE {
     my ( $self, $c, $mo_ref_value ) = @_;
-    my %return = ();
+	$c->log->start;
+    my $return = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_resourcepool';
-        %return = %{ $c->stash->{vim}->destroy( value => $mo_ref_value, type => 'ResourcePool') };
+        $return = $c->stash->{vim}->destroy( value => $mo_ref_value, type => 'ResourcePool');
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%return );
+	$c->log->dumpobj('result', $return);
+	$c->log->finish;
+    return $self->__ok( $c, $return );
 }
 
 sub resourcepool_PUT {
     my ( $self, $c, $mo_ref_value ) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     my %param = %{ $c->req->params };
     $param{moref_value} = $mo_ref_value;
     eval {
-        bless $c->stash->{vim}, 'VCenter_resourcepool';
-        %result = %{ $c->stash->{vim}->update( %param ) };
+        $result = $c->stash->{vim}->update( %param );
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub resourcepool_POST {
