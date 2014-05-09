@@ -391,18 +391,20 @@ sub resourcepool_PUT {
 
 sub resourcepool_POST {
     my ( $self, $c, $mo_ref_value ) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     my %create_param = %{ $c->req->params };
     $create_param{value} = $mo_ref_value;
-# TODO if multiple computeresources with same mo_ref how can they be distingueshed
     eval {
-        bless $c->stash->{vim}, 'VCenter_resourcepool';
-        %result = %{ $c->stash->{vim}->create( %create_param ) };
+        $result = $c->stash->{vim}->create( %create_param );
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub taskBase: Chained('loginBase'): PathPart('task') : CaptureArgs(0) { }
@@ -411,125 +413,150 @@ sub tasks : Chained('taskBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 sub tasks_GET {
     my ( $self, $c ) = @_;
-    my %result =();
+	$c->log->start;
+    my $result = {};
     eval {
-        %result = %{ $c->stash->{vim}->get_tasks };
+        $result = $c->stash->{vim}->get_tasks;
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub task : Chained(taskBase) : PathPart(''): Args(1) : ActionClass('REST') { }
 
 sub task_GET {
     my ( $self, $c ,$mo_ref_value ) = @_;
-    my %result =();
+	$c->log->start;
+    my $result = {};
     eval {
-        %result = %{ $c->stash->{vim}->get_task( value => $mo_ref_value) };
+        $result = $c->stash->{vim}->get_task( value => $mo_ref_value);
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub task_DELETE {
     my ( $self, $c ,$mo_ref_value) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        %result = %{ $c->stash->{vim}->cancel_task( value => $mo_ref_value) };
+        $result = $c->stash->{vim}->cancel_task( value => $mo_ref_value);
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
-sub templateBase: Chained('loginBase'): PathPart('template') : CaptureArgs(0) { }
+sub templateBase: Chained('loginBase'): PathPart('template') : CaptureArgs(0) { 
+    my ( $self, $c ) = @_;
+    bless $c->stash->{vim}, 'VCenter_vm';
+}
 
 sub templates : Chained('templateBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 sub templates_GET {
     my ( $self, $c ) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_templates };
+        $result = $c->stash->{vim}->get_templates;
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub template : Chained(templateBase) : PathPart(''): Args(1) : ActionClass('REST') { }
 
 sub template_GET {
     my ( $self, $c ,$mo_ref_value) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->get_template( value=> $mo_ref_value) };
+        $result = $c->stash->{vim}->get_template( value=> $mo_ref_value);
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c,\%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c,$result );
 }
 
 sub template_DELETE {
     my ( $self, $c ,$mo_ref_value) = @_;
-    my %result =();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_vm';
-        %result = %{ $c->stash->{vim}->promote_template(value => $mo_ref_value) };
+        $result = $c->stash->{vim}->promote_template(value => $mo_ref_value);
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
-sub datastoreBase: Chained('loginBase'): PathPart('datastore') : CaptureArgs(0) { }
+sub datastoreBase: Chained('loginBase'): PathPart('datastore') : CaptureArgs(0) { 
+    my ( $self, $c) = @_;
+    bless $c->stash->{vim}, 'VCenter_datastore';
+}
 
 sub datastores : Chained('datastoreBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 sub datastores_GET {
     my ( $self, $c) = @_;
-    my %result =();
+	$c->log->start;
+    my $result = {};
 	eval {
-        bless $c->stash->{vim}, 'VCenter_datastore';
-        %result = %{ $c->stash->{vim}->get_all( ) };
+        $result = $c->stash->{vim}->get_all;
 	};
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub datastore : Chained('datastoreBase'): PathPart(''): Args(1) : ActionClass('REST') {}
 
 sub datastore_GET {
     my ( $self, $c ,$mo_ref_value) = @_;
-    my %result =();
+	$c->log->start;
+    my $result = {};
 	eval {
-        bless $c->stash->{vim}, 'VCenter_datastore';
-        %result = %{ $c->stash->{vim}->get_single( value=> $mo_ref_value ) };
+        $result = $c->stash->{vim}->get_single( value=> $mo_ref_value );
 	};
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub networkBase: Chained('loginBase'): PathPart('network') : CaptureArgs(0) { }
@@ -538,244 +565,291 @@ sub networks : Chained('networkBase'): PathPart(''): Args(0) : ActionClass('REST
 
 sub networks_GET {
     my ( $self, $c ) = @_;
-    my %result = ( dvp => (), switch => (), hostnetwork => () );
+	$c->log->start;
+    my $result = { dvp => {}, switch => {}, hostnetwork => {} };
     eval {
         bless $c->stash->{vim}, 'VCenter_dvs';
-        $result{switch} = $c->stash->{vim}->get_all;
+        $result->{switch} = $c->stash->{vim}->get_all;
         bless $c->stash->{vim}, 'VCenter_dvp';
-        $result{dvp} = $c->stash->{vim}->get_all;
+        $result->{dvp} = $c->stash->{vim}->get_all;
         bless $c->stash->{vim}, 'VCenter_hostnetwork';
-        $result{hostnetwork} = $c->stash->{vim}->get_all;
+        $result->{hostnetwork} = $c->stash->{vim}->get_all;
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    $c->log->dumpobj('result', \%result);
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
-sub switch_base : Chained(networkBase) : PathPart('switch'): CaptureArgs(0) { }
+sub switch_base : Chained(networkBase) : PathPart('switch'): CaptureArgs(0) { 
+    my ( $self, $c) = @_;
+    bless $c->stash->{vim}, 'VCenter_dvs';
+}
 
 sub switches : Chained('switch_base'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 sub switches_GET {
     my ( $self, $c) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_dvs';
-        %result = %{ $c->stash->{vim}->get_all};
+        $result = $c->stash->{vim}->get_all;
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub switches_POST{
     my ($self, $c) = @_;
+	$c->log->start;
     my $params = $c->req->params;
     my $ticket = $params->{ticket};
     my $host = $params->{host};
-# TODO impelement method to list hosts
-    my %result =();
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_dvs';
-        %result = %{ $c->stash->{vim}->create( ticket => $ticket, host => $host )};
+        $result = $c->stash->{vim}->create( ticket => $ticket, host => $host );
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub switch : Chained('switch_base'): PathPart(''): Args(1) : ActionClass('REST') { }
 
 sub switch_GET {
     my ( $self, $c, $mo_ref_value) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_dvs';
-        %result = %{ $c->stash->{vim}->get_single( value => $mo_ref_value) };
+        $result = $c->stash->{vim}->get_single( value => $mo_ref_value);
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub switch_DELETE {
     my ( $self, $c, $mo_ref_value) =@_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_switch';
-        %result = %{ $c->stash->{vim}->destroy( value => $mo_ref_value) };
+        $result = $c->stash->{vim}->destroy( value => $mo_ref_value);
     };
     if ( $@ ) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub switch_PUT {
     my ( $self, $c, $mo_ref_value) =@_;
-    my %result = ();
-    my $params           = $c->req->params;
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_switch';
-        %result = %{ $c->stash->{vim}->update( %{ $params} ) };
+        $result = $c->stash->{vim}->update( %{ $c->req->params} );
     };
     if ( $@ ) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
-sub dvp_base : Chained(networkBase) : PathPart('dvp'): CaptureArgs(0) { }
+sub dvp_base : Chained(networkBase) : PathPart('dvp'): CaptureArgs(0) { 
+    my ( $self, $c) = @_;
+    bless $c->stash->{vim}, 'VCenter_dvp';
+}
 
 sub dvps : Chained('dvp_base'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 sub dvps_GET {
     my ( $self, $c) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_dvp';
-        %result = %{ $c->stash->{vim}->get_all };
+        $result = $c->stash->{vim}->get_all;
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub dvps_POST {
     my ($self, $c) = @_;
+	$c->log->start;
     my $params = $c->req->params;
     my $ticket = $params->{ticket};
     my $switch = $params->{switch};
     my $func = $params->{func};
-    my %result =();
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_dvp';
-        %result = %{ $c->stash->{vim}->create( ticket => $ticket, switch => $switch, func => $func )};
+        $result = $c->stash->{vim}->create( ticket => $ticket, switch => $switch, func => $func );
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub dvp : Chained('dvp_base'): PathPart(''): Args(1) : ActionClass('REST') { }
 
 sub dvp_GET {
     my ( $self, $c, $mo_ref_value) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_dvp';
-        %result = %{ $c->stash->{vim}->get_single( value => $mo_ref_value) };
+        $result = $c->stash->{vim}->get_single( value => $mo_ref_value);
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub dvp_DELETE {
     my ( $self, $c, $mo_ref_value) =@_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_dvp';
-        %result = %{ $c->stash->{vim}->destroy( value => $mo_ref_value) };
+        $result = $c->stash->{vim}->destroy( value => $mo_ref_value);
     };
     if ( $@ ) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub dvp_PUT {
     my ( $self, $c, $mo_ref_value) =@_;
-    my %result = ();
-    my $params           = $c->req->params;
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_dvp';
-        %result = %{ $c->stash->{vim}->update( %{ $params} ) };
+        $result = $c->stash->{vim}->update( %{ $c->req->params} );
     };
     if ( $@ ) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 
 }
 
-sub hostnetwork_base : Chained(networkBase) : PathPart('hostnetwork'): CaptureArgs(0) { }
+sub hostnetwork_base : Chained(networkBase) : PathPart('hostnetwork'): CaptureArgs(0) { 
+    my ( $self, $c) = @_;
+    bless $c->stash->{vim}, 'VCenter_hostnetwork';
+}
 
 sub hostnetworks : Chained('hostnetwork_base'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 sub hostnetworks_GET{
     my ( $self, $c) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_hostnetwork';
-        %result = %{ $c->stash->{vim}->get_all};
+        $result = $c->stash->{vim}->get_all;
     };
     if ($@) {
+        $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub hostnetwork : Chained('hostnetwork_base'): PathPart(''): Args(1) : ActionClass('REST') { }
 
 sub hostnetwork_GET {
     my ( $self, $c, $mo_ref_value) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_hostnetwork';
-        %result = %{ $c->stash->{vim}->get_single( value => $mo_ref_value)};
-    };
-    if ($@) {
-        $self->__exception_to_json( $c, $@ );
-    }    
-    return $self->__ok( $c, \%result );
-}
-
-sub hostBase: Chained('loginBase'): PathPart('host') : CaptureArgs(0) { }
-
-sub hosts : Chained('hostBase'): PathPart(''): Args(0) : ActionClass('REST') {}
-
-sub hosts_GET {
-    my ( $self, $c) = @_;
-    my %result = ();
-    eval {
-        bless $c->stash->{vim}, 'VCenter_host';
-        %result = %{ $c->stash->{vim}->get_all };
+        $result = $c->stash->{vim}->get_single( value => $mo_ref_value);
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
+}
+
+sub hostBase: Chained('loginBase'): PathPart('host') : CaptureArgs(0) { 
+    my ( $self, $c) = @_;
+    bless $c->stash->{vim}, 'VCenter_host';
+}
+
+sub hosts : Chained('hostBase'): PathPart(''): Args(0) : ActionClass('REST') {}
+
+sub hosts_GET {
+    my ( $self, $c) = @_;
+	$c->log->start;
+    my $result = {};
+    eval {
+        $result =  $c->stash->{vim}->get_all;
+    };
+    if ($@) {
+        $c->log->dumpobj('error', $@);
+        $self->__exception_to_json( $c, $@ );
+    }    
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub host : Chained('hostBase'): PathPart(''): Args(1) : ActionClass('REST') {}
 
 sub host_GET {
     my ( $self, $c, $mo_ref_value) = @_;
-    my %result = ();
+	$c->log->start;
+    my $result = {};
     eval {
-        bless $c->stash->{vim}, 'VCenter_host';
-        %result = %{ $c->stash->{vim}->get_single(value => $mo_ref_value) };
+        $result = $c->stash->{vim}->get_single(value => $mo_ref_value);
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
         $self->__exception_to_json( $c, $@ );
     }    
-    return $self->__ok( $c, \%result );
+	$c->log->dumpobj('result', $result);
+	$c->log->finish;
+    return $self->__ok( $c, $result );
 }
 
 sub vmsBase: Chained('loginBase'): PathPart('vm') : CaptureArgs(0) { }
