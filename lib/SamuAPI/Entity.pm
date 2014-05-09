@@ -109,7 +109,6 @@ sub info_parse {
         my $view = $self->{view};
         $self->{logger}->dumpobj("view", $view);
         $self->{info}->{name} = $view->{name};
-        $self->{info}->{parent_name} = $view->{parent} if defined($view->{parent});
         if ( defined($view->{parent} )) {
             my $parent = Entity->new( mo_ref => $view->{parent}, logger => $self->{logger});
             $self->{info}->{parent_mo_ref} = $parent->get_mo_ref;
@@ -217,7 +216,6 @@ sub info_parse {
     }
     my $view = $self->{view};
     $self->{info}->{name} = $view->{name};
-    $self->{info}->{parent_name} = $view->{parent} if defined($view->{parent});
     if ( defined($view->{parent} )) {
         my $parent = Entity->new( mo_ref => $view->{parent}, logger=> $self->{logger});
         $self->{info}->{parent_mo_ref} = $parent->get_mo_ref;
@@ -324,8 +322,11 @@ sub info_parse {
 
 sub cancel {
     my $self = shift;
-    #verify if cancaleable
-    $self->{view}->CancelTask;
+    if ( $self->{view}->{info}->{cancelable} ) {
+        $self->{view}->CancelTask;
+    } else {
+        ExTask::NotCancallable->throw( error => 'Task cannot be cancelled', number => $self->get_mo_ref_value);
+    }
     return $self;
 }
 
@@ -404,6 +405,36 @@ sub info_parse {
     $self->{snapshot} = ();
     $self->{logger}->finish;
     return $self;
+}
+
+sub generate_network_setup {
+    my ($self, %args) = @_;
+    $self->{logger}->start;
+    my $ethernet_hw = $self->get_hw( 'VirtualEthernetCard' );
+    $self->{vms} = delete($args{vms});
+    my $mac = $self->generate_macs( mac_base => $args{mac_base}, count => scalar( @{$ethernet_hw}) );
+    my @return = ();
+    for my $interface ( @{ $ethernet_hw } ) {
+        my $ethernetcard;
+        if ( $interface->isa('VirtualE1000') ) {
+            $ethernetcard = VirtualE1000->new( addressType => 'Manual', macAddress => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
+        } elsif ( $interface->isa('VirtualE1000e') ) {
+            $ethernetcard = VirtualE1000e->new( addressType => 'Manual', macAddress => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
+        } elsif ( $interface->isa('VirtualPCNet32') ) {
+            $ethernetcard = VirtualPCNet32->new( addressType => 'Manual', macAddress => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
+        } elsif ( $interface->isa('VirtualVmxnet2')) {
+            $ethernetcard = VirtualVmxnet2->new( addressType => 'Manual', macAddress => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
+        } elsif ( $interface->isa('VirtualVmxnet3') ) {
+            $ethernetcard = VirtualVmxnet3->new( addressType => 'Manual', macAddress => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
+        } else {
+            ExEntity::HWError->throw( error => 'Unknown network type', hw => $interface->{key}, entity => $self->get_mo_ref_value );
+        }
+        my $operation = VirtualDeviceConfigSpecOperation->new('edit');
+        my $deviceconfigspec = VirtualDeviceConfigSpec->new( device => $ethernetcard, operation => $operation);
+        push( @return, $deviceconfigspec );
+    }
+    $self->{logger}->finish;
+    return \@return;
 }
 
 sub get_property {
@@ -764,36 +795,6 @@ sub get_numcpu {
     return $self->{info}->{numCPU};
 }
 
-sub generate_network_setup {
-    my ($self, %args) = @_;
-    $self->{logger}->start;
-    my $ethernet_hw = $self->get_hw( 'VirtualEthernetCard' );
-    $self->{vms} = delete($args{vms});
-    my $mac        = $self->generate_macs( mac_base => $args{mac_base}, count => scalar( @{$ethernet_hw}) );
-    my @return = ();
-    for my $interface ( @{ $ethernet_hw } ) {
-        my $ethernetcard;
-        if ( $interface->isa('VirtualE1000') ) {
-            $ethernetcard = VirtualE1000->new( addressType      => 'Manual', macAddress       => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
-        } elsif ( $interface->isa('VirtualE1000e') ) {
-            $ethernetcard = VirtualE1000e->new( addressType      => 'Manual', macAddress       => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
-        } elsif ( $interface->isa('VirtualPCNet32') ) {
-            $ethernetcard = VirtualPCNet32->new( addressType      => 'Manual', macAddress       => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
-        } elsif ( $interface->isa('VirtualVmxnet2')) {
-            $ethernetcard = VirtualVmxnet2->new( addressType      => 'Manual', macAddress       => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
-        } elsif ( $interface->isa('VirtualVmxnet3') ) {
-            $ethernetcard = VirtualVmxnet3->new( addressType      => 'Manual', macAddress       => pop(@$mac), wakeOnLanEnabled => 1, key => $interface->{key});
-        } else {
-            ExEntity::HWError->throw( error => 'Unknown network type', hw => $interface->{key}, entity => $self->get_mo_ref_value );
-        }
-        my $operation        = VirtualDeviceConfigSpecOperation->new('edit');
-        my $deviceconfigspec = VirtualDeviceConfigSpec->new( device    => $ethernetcard, operation => $operation);
-        push( @return, $deviceconfigspec );
-    }
-    $self->{logger}->finish;
-    return \@return;
-}
-
 sub generate_macs {
     my ( $self, %args) = @_;
     $self->{logger}->start;
@@ -1040,6 +1041,21 @@ sub get_annotations {
     $self->{logger}->dumpobj("result", $result);
     $self->{logger}->finish;
     return $result;
+}
+
+sub disk_exists {
+    my ( $self, %args) = @_;
+    $self->{logger}->start;
+    my $disks = $self->get_property('layout.disk');
+    for my $vdisk (@{ $disks } ) {
+        for my $diskfile ( @{ $vdisk->{'diskFile'} } ) {
+            if ( $diskfile eq $args{disk} ) {
+                return 1;
+            }
+        }
+    }
+    $self->{logger}->finish;
+    return 0;
 }
 
 ######################################################################################

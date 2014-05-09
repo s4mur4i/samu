@@ -41,7 +41,7 @@ sub loginBase : Chained('vmwareBase') : PathPart('') : CaptureArgs(0) {
     if ( !$c->session->{__vim_login} ) {
         $self->__error( $c, "Login to VCenter first" );
     }
-    if ( !defined( $c->session->{__vim_login}->{sessions} ->[ $c->session->{__vim_login}->{active} ])) {
+    if ( !defined( $c->session->{__vim_login}->{sessions}->[ $c->session->{__vim_login}->{active} ])) {
         $self->__error( $c, "No active login session to vcenter" );
     }
     my $vim_id = $c->req->params->{vim_id} || $c->session->{__vim_login}->{active}; 

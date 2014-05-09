@@ -43,6 +43,7 @@ use Exception::Class (
     'ExEntity::Mac' => { isa => 'ExEntity', fields => ['mac'] },
     'ExEntity::Auth' => { isa => 'ExEntity', fields => ['username', 'password'] },
     'ExTask::Error' => { isa => 'ExTask', fields => ['creator'] },
+    'ExTask::NotCancallable' => { isa => 'ExTask'},
 );
 
 BEGIN {
