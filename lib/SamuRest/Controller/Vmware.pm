@@ -1360,7 +1360,7 @@ sub ticketsquery : Chained('ticketqueryBase'): PathPart(''): Args(0) : ActionCla
 
 =head2 PURPOSE
 
-
+This function returns a list with all active tickets provisioned
 
 =head2 PARAMETERS
 
@@ -1369,6 +1369,8 @@ sub ticketsquery : Chained('ticketqueryBase'): PathPart(''): Args(0) : ActionCla
 =back
 
 =head2 RETURNS
+
+A JSON with a list of tickets, and their connected virtualmachines moref
 
 =head2 DESCRIPTION
 
@@ -1414,15 +1416,21 @@ sub ticketquery: Chained('ticketqueryBase') : PathPart(''): Args(1) : ActionClas
 
 =head2 PURPOSE
 
-
+This function returns information about virtualmachines morefs attached to a ticket
 
 =head2 PARAMETERS
 
 =over
 
+=item ticket
+
+This option is part of the URL
+
 =back
 
 =head2 RETURNS
+
+A JSON containing the virtualmachines morefs attached to a ticket
 
 =head2 DESCRIPTION
 
@@ -1461,9 +1469,7 @@ Base sub for user queries
 
 =cut
 
-sub userqueryBase : Chained('loginBase'):PathPart('user'): CaptureArgs(0) {
-    my ( $self, $c ) = @_;
-}
+sub userqueryBase : Chained('loginBase'):PathPart('user'): CaptureArgs(0) { }
 
 =pod
 
@@ -1483,7 +1489,7 @@ sub usersquery : Chained('userqueryBase'): PathPart(''): Args(0) : ActionClass('
 
 =head2 PURPOSE
 
-
+This function collects all virtualmachines morefs attached to a username
 
 =head2 PARAMETERS
 
@@ -1492,6 +1498,8 @@ sub usersquery : Chained('userqueryBase'): PathPart(''): Args(0) : ActionClass('
 =back
 
 =head2 RETURNS
+
+A JSON containing a list of usernames and their attached vms
 
 =head2 DESCRIPTION
 
@@ -1537,15 +1545,21 @@ sub userquery: Chained('userqueryBase') : PathPart(''): Args(1) : ActionClass('R
 
 =head2 PURPOSE
 
-
+This function retrieves all virtualmachine morefs attached to a username
 
 =head2 PARAMETERS
 
 =over
 
+=item username
+
+This is part of the URL
+
 =back
 
 =head2 RETURNS
+
+A JSON containing the virtualmachine morefs
 
 =head2 DESCRIPTION
 
@@ -1607,7 +1621,7 @@ sub templates : Chained('templateBase'): PathPart(''): Args(0) : ActionClass('RE
 
 =head2 PURPOSE
 
-
+This function gets all useable templates on the VCenter
 
 =head2 PARAMETERS
 
@@ -1617,11 +1631,15 @@ sub templates : Chained('templateBase'): PathPart(''): Args(0) : ActionClass('RE
 
 =head2 RETURNS
 
+A JSON with morefs to the templates, and their name
+
 =head2 DESCRIPTION
 
 =head2 THROWS
 
 =head2 COMMENTS
+
+The find_entity_views returns all virtualmachine objects with template flag on true
 
 =head2 SEE ALSO
 
@@ -1661,7 +1679,7 @@ sub template : Chained(templateBase) : PathPart(''): Args(1) : ActionClass('REST
 
 =head2 PURPOSE
 
-
+This function returns information about templates
 
 =head2 PARAMETERS
 
@@ -1671,16 +1689,19 @@ sub template : Chained(templateBase) : PathPart(''): Args(1) : ActionClass('REST
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with infromation attached to template: all active linked clones, name, vmpath, memory size in MB, number of cpus, status, vm tools status, moref 
 
 =head2 DESCRIPTION
 
 =head2 THROWS
 
 =head2 COMMENTS
+
+Linked clone is calculated from last snapshots disk, since that is the base for all snapshots. I do not allow multiple clone bases from different clones since it will cause a huge confusion and diversion
 
 =head2 SEE ALSO
 
@@ -1708,7 +1729,7 @@ sub template_GET {
 
 =head2 PURPOSE
 
-
+This function unlinks all children from a template
 
 =head2 PARAMETERS
 
@@ -1718,10 +1739,11 @@ sub template_GET {
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with list of virtualmachines moref_values, and the attached task moref for unlinking task
 
 =head2 DESCRIPTION
 
@@ -1730,6 +1752,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.VirtualMachine.html#promoteDisks
 
 =cut
 
