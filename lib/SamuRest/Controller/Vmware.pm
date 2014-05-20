@@ -1807,7 +1807,7 @@ sub datastores : Chained('datastoreBase'): PathPart(''): Args(0) : ActionClass('
 
 =head2 PURPOSE
 
-
+This function returns a list of datastore morefs
 
 =head2 PARAMETERS
 
@@ -1816,6 +1816,8 @@ sub datastores : Chained('datastoreBase'): PathPart(''): Args(0) : ActionClass('
 =back
 
 =head2 RETURNS
+
+A JSON containg all datastore morefs
 
 =head2 DESCRIPTION
 
@@ -1861,7 +1863,7 @@ sub datastore : Chained('datastoreBase'): PathPart(''): Args(1) : ActionClass('R
 
 =head2 PURPOSE
 
-
+This function returns information about one datastore
 
 =head2 PARAMETERS
 
@@ -1871,10 +1873,12 @@ sub datastore : Chained('datastoreBase'): PathPart(''): Args(1) : ActionClass('R
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON containing the datastores information: accessibility, capacity, free space, maintance mode, multiple host access, name, type, uncommited data, url, 
+max file size, timestamp, SIOC, connected virtualmachine morefs, moref
 
 =head2 DESCRIPTION
 
@@ -1883,6 +1887,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.Datastore.html
 
 =cut
 
@@ -1932,7 +1938,7 @@ sub networks : Chained('networkBase'): PathPart(''): Args(0) : ActionClass('REST
 
 =head2 PURPOSE
 
-
+This function returns information about dvps, switchs and host networks. It is a primary collector for quick topology graph
 
 =head2 PARAMETERS
 
@@ -1941,6 +1947,8 @@ sub networks : Chained('networkBase'): PathPart(''): Args(0) : ActionClass('REST
 =back
 
 =head2 RETURNS
+
+A JSON with all network objects
 
 =head2 DESCRIPTION
 
@@ -2009,7 +2017,7 @@ sub switches : Chained('switch_base'): PathPart(''): Args(0) : ActionClass('REST
 
 =head2 PURPOSE
 
-
+This function returns all distributed virtual switch morefs
 
 =head2 PARAMETERS
 
@@ -2018,6 +2026,8 @@ sub switches : Chained('switch_base'): PathPart(''): Args(0) : ActionClass('REST
 =back
 
 =head2 RETURNS
+
+A JSON with all distributed virtual switch morefs
 
 =head2 DESCRIPTION
 
@@ -2051,15 +2061,25 @@ sub switches_GET {
 
 =head2 PURPOSE
 
-
+This function creates a distributed virtual switch
 
 =head2 PARAMETERS
 
 =over
 
+=item ticket
+
+The ticket id of the environment
+
+=item host
+
+The ESXi host moref to attach the DVS to
+
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -2068,6 +2088,8 @@ sub switches_GET {
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.Folder.html#createDistributedVirtualSwitch
 
 =cut
 
@@ -2108,7 +2130,7 @@ sub switch : Chained('switch_base'): PathPart(''): Args(1) : ActionClass('REST')
 
 =head2 PURPOSE
 
-
+This function retrieves information about a switch
 
 =head2 PARAMETERS
 
@@ -2118,10 +2140,11 @@ sub switch : Chained('switch_base'): PathPart(''): Args(1) : ActionClass('REST')
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with following information: name, number of ports, uuid, connected virtualmachine morefs
 
 =head2 DESCRIPTION
 
@@ -2130,6 +2153,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.DistributedVirtualSwitch.html
 
 =cut
 
@@ -2155,7 +2180,7 @@ sub switch_GET {
 
 =head2 PURPOSE
 
-
+This function destoys a DVS
 
 =head2 PARAMETERS
 
@@ -2165,10 +2190,11 @@ sub switch_GET {
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -2177,6 +2203,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.ManagedEntity.html#destroy
 
 =cut
 
@@ -2202,7 +2230,7 @@ sub switch_DELETE {
 
 =head2 PURPOSE
 
-
+This function can change parameters of the DVS
 
 =head2 PARAMETERS
 
@@ -2212,10 +2240,15 @@ sub switch_DELETE {
 
 This option is taken from the URI
 
+=item name
+
+The requested new name of the DVS
 
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -2224,6 +2257,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.DistributedVirtualSwitch.html#reconfigure
 
 =cut
 
@@ -2277,7 +2312,7 @@ sub dvps : Chained('dvp_base'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 =head2 PURPOSE
 
-
+This function returns a list of distributed virtual portgroup morefs
 
 =head2 PARAMETERS
 
@@ -2286,6 +2321,8 @@ sub dvps : Chained('dvp_base'): PathPart(''): Args(0) : ActionClass('REST') {}
 =back
 
 =head2 RETURNS
+
+A JSON with a list of distributed virtual portgroup morefs
 
 =head2 DESCRIPTION
 
@@ -2319,15 +2356,29 @@ sub dvps_GET {
 
 =head2 PURPOSE
 
-
+This function creates a new DVP
 
 =head2 PARAMETERS
 
 =over
 
+=item ticket
+
+The ticket id that the switch will be attached to
+
+=item switch
+
+The switch moref value we attach the DVP to
+
+=item func
+
+The function of the DVP, for generating the name
+
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -2336,6 +2387,8 @@ sub dvps_GET {
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.DistributedVirtualSwitch.html#addPortgroups
 
 =cut
 
@@ -2377,7 +2430,7 @@ sub dvp : Chained('dvp_base'): PathPart(''): Args(1) : ActionClass('REST') { }
 
 =head2 PURPOSE
 
-
+This function retrieves information about a distributed virtual portgroup
 
 =head2 PARAMETERS
 
@@ -2387,10 +2440,11 @@ sub dvp : Chained('dvp_base'): PathPart(''): Args(1) : ActionClass('REST') { }
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with following information: name, key, status, connected virtualmachine morefs, moref
 
 =head2 DESCRIPTION
 
@@ -2399,6 +2453,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.dvs.DistributedVirtualPortgroup.html
 
 =cut
 
@@ -2424,7 +2480,7 @@ sub dvp_GET {
 
 =head2 PURPOSE
 
-
+This function destroys a distributed virtual portgroup
 
 =head2 PARAMETERS
 
@@ -2434,10 +2490,11 @@ sub dvp_GET {
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -2446,6 +2503,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.ManagedEntity.html#destroy
 
 =cut
 
@@ -2471,7 +2530,7 @@ sub dvp_DELETE {
 
 =head2 PURPOSE
 
-
+This function update distributed virtual portgroup configuration
 
 =head2 PARAMETERS
 
@@ -2481,10 +2540,31 @@ sub dvp_DELETE {
 
 This option is taken from the URI
 
+=item type
+
+Type of postgroup. Possible values: earlybinding, ephemeral, lateBinding
+
+=item numport
+
+Number of ports in the portgroup
+
+=item desc
+
+A description string of the portgroup
+
+=item autoexpand
+
+Automaticly expands the portgroup above the port number limit
+
+=item name
+
+The new name of the port group
 
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -2493,6 +2573,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.dvs.DistributedVirtualPortgroup.html#reconfigure
 
 =cut
 
@@ -2547,7 +2629,7 @@ sub hostnetworks : Chained('hostnetwork_base'): PathPart(''): Args(0) : ActionCl
 
 =head2 PURPOSE
 
-
+This function retrieves a list of host only network morefs
 
 =head2 PARAMETERS
 
@@ -2556,6 +2638,8 @@ sub hostnetworks : Chained('hostnetwork_base'): PathPart(''): Args(0) : ActionCl
 =back
 
 =head2 RETURNS
+
+A JSON with a list of host only network morefs
 
 =head2 DESCRIPTION
 
@@ -2601,7 +2685,7 @@ sub hostnetwork : Chained('hostnetwork_base'): PathPart(''): Args(1) : ActionCla
 
 =head2 PURPOSE
 
-
+This function retrieves information about a host only network
 
 =head2 PARAMETERS
 
@@ -2611,10 +2695,11 @@ sub hostnetwork : Chained('hostnetwork_base'): PathPart(''): Args(1) : ActionCla
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with following information: name, connected virtualmachine morefs, moref
 
 =head2 DESCRIPTION
 
@@ -2622,7 +2707,11 @@ This option is taken from the URI
 
 =head2 COMMENTS
 
+It is not possible to query host only networks. DVPS are also a subclass of the Network object, so we need to inspect the object in the Controller if it is a host only network
+
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.Network.html
 
 =cut
 
@@ -2676,7 +2765,7 @@ sub hosts : Chained('hostBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 =head2 PURPOSE
 
-
+This function retrieves a list of Hostsystems morefs
 
 =head2 PARAMETERS
 
@@ -2685,6 +2774,8 @@ sub hosts : Chained('hostBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 =back
 
 =head2 RETURNS
+
+A JSON with a list of hostsystems morefs
 
 =head2 DESCRIPTION
 
@@ -2730,7 +2821,7 @@ sub host : Chained('hostBase'): PathPart(''): Args(1) : ActionClass('REST') {}
 
 =head2 PURPOSE
 
-
+This function retrieves information about a hostsystem
 
 =head2 PARAMETERS
 
@@ -2740,10 +2831,12 @@ sub host : Chained('hostBase'): PathPart(''): Args(1) : ActionClass('REST') {}
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with following information: name, reboot required, hw information (cpu speed, cpu model, memory size, model, number of CPU threads, vendor, number of NICs, number of HBAs, number of CPU cores), 
+status, connected virtualmachine morefs, moref 
 
 =head2 DESCRIPTION
 
@@ -2752,6 +2845,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.HostSystem.html
 
 =cut
 
@@ -2805,7 +2900,7 @@ sub vms : Chained('vmsBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 =head2 PURPOSE
 
-
+This function retrieves a list of virtualmachine morefs
 
 =head2 PARAMETERS
 
@@ -2814,6 +2909,8 @@ sub vms : Chained('vmsBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 =back
 
 =head2 RETURNS
+
+A JSON with a list of virtualmachine morefs
 
 =head2 DESCRIPTION
 
@@ -2856,6 +2953,8 @@ This subrotuine would create an empty VM
 =back
 
 =head2 RETURNS
+
+A JSON messages saying not implemented
 
 =head2 DESCRIPTION
 
@@ -2917,7 +3016,7 @@ sub vm : Chained('vmBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 =head2 PURPOSE
 
-
+This function retrieves information about a virtualmachine
 
 =head2 PARAMETERS
 
@@ -2927,10 +3026,11 @@ sub vm : Chained('vmBase'): PathPart(''): Args(0) : ActionClass('REST') {}
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with following information: name, vmpath, memory size in MB, number of CPU, status, vm tools status
 
 =head2 DESCRIPTION
 
@@ -2939,6 +3039,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.VirtualMachine.html
 
 =cut
 
@@ -2964,7 +3066,7 @@ sub vm_GET{
 
 =head2 PURPOSE
 
-
+This function destroy a virtual machine
 
 =head2 PARAMETERS
 
@@ -2974,10 +3076,11 @@ sub vm_GET{
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -2986,6 +3089,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.ManagedEntity.html#destroy
 
 =cut
 
@@ -3011,7 +3116,7 @@ sub vm_DELETE {
 
 =head2 PURPOSE
 
-
+This function clones a virtualmachine
 
 =head2 PARAMETERS
 
@@ -3021,10 +3126,51 @@ sub vm_DELETE {
 
 This option is taken from the URI
 
+=item ticket
+
+The ticket id
+
+=item parent_folder
+
+The parent folder moref value where the machine should be created, by default in the linked clone folder
+
+=item altername
+
+The new requested alternate name for the machine, not mandatory
+
+=item numcpus
+
+The requested CPU number
+
+=item memorymb
+
+The requested memory amount in MB
+
+=item alternateGuestName
+
+Full name for guest, if guestId is specified as other or other-64.
+
+=item cpuHotAddEnabled
+
+Should it be allowed to add cpu without reboot
+
+=item cpuHotRemoveEnabled
+
+Should it be allowed to remove cpu without reboot
+
+=item memoryHotAddEnabled
+
+Should it be allowed to add memory without reboot
+
+=item enterBIOSSetup
+
+At next boot should the bios be entered, not mandatory
 
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -3032,7 +3178,11 @@ This option is taken from the URI
 
 =head2 COMMENTS
 
+Full clone possibility has been removed, since the annotations configuration would talk to long to wait for it to complete
+
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.VirtualMachine.html#clone
 
 =cut
 
@@ -3080,7 +3230,7 @@ sub cpu : Chained('vmBase'): PathPart('cpu'): Args(0) : ActionClass('REST') {}
 
 =head2 PURPOSE
 
-
+This function retrieves the CPU core amount
 
 =head2 PARAMETERS
 
@@ -3090,10 +3240,11 @@ sub cpu : Chained('vmBase'): PathPart('cpu'): Args(0) : ActionClass('REST') {}
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with number of CPUs
 
 =head2 DESCRIPTION
 
@@ -3128,7 +3279,7 @@ sub cpu_GET {
 
 =head2 PURPOSE
 
-
+This function changes the CPU core amount
 
 =head2 PARAMETERS
 
@@ -3138,10 +3289,15 @@ sub cpu_GET {
 
 This option is taken from the URI
 
+=item numcpus
+
+The requested CPU core amount
 
 =back
 
 =head2 RETURNS
+
+A JSON with task moref
 
 =head2 DESCRIPTION
 
@@ -3150,6 +3306,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.VirtualMachine.html#reconfigure
 
 =cut
 
@@ -3188,7 +3346,7 @@ sub process : Chained('vmBase'): PathPart('process'): Args(0) : ActionClass('RES
 
 =head2 PURPOSE
 
-
+This function retrieves a list of processes in virtualmachine
 
 =head2 PARAMETERS
 
@@ -3198,10 +3356,11 @@ sub process : Chained('vmBase'): PathPart('process'): Args(0) : ActionClass('RES
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a list of processes
 
 =head2 DESCRIPTION
 
@@ -3209,7 +3368,11 @@ This option is taken from the URI
 
 =head2 COMMENTS
 
+This function requires vmware tools to be installed and running
+
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.vm.guest.ProcessManager.html#listProcesses
 
 =cut
 
@@ -3237,7 +3400,7 @@ sub process_GET {
 
 =head2 PURPOSE
 
-
+This function runs a command in the virtualmachine
 
 =head2 PARAMETERS
 
@@ -3247,10 +3410,35 @@ sub process_GET {
 
 This option is taken from the URI
 
+=item username
+
+The username used to log into the virtualmachine. Defaults to the annotation
+
+=item password
+
+The password used to log into the virtualmachine. Default to the annotation
+
+=item workdir
+
+The working directory for the program
+
+=item prog
+
+The full path of the program
+
+=item prog_arg
+
+The arguments for the program
+
+=item env
+
+Environmental variables for the program
 
 =back
 
 =head2 RETURNS
+
+A JSON with a pid of the process
 
 =head2 DESCRIPTION
 
@@ -3259,6 +3447,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.vm.guest.ProcessManager.html#startProgram
 
 =cut
 
@@ -3298,7 +3488,7 @@ sub transfer : Chained('vmBase'): PathPart('transfer'): Args(0) : ActionClass('R
 
 =head2 PURPOSE
 
-
+This function transfers files between a virtualmachine
 
 =head2 PARAMETERS
 
@@ -3308,10 +3498,39 @@ sub transfer : Chained('vmBase'): PathPart('transfer'): Args(0) : ActionClass('R
 
 This option is taken from the URI
 
+=item dest
+
+The path on virtual machine the file should be uploaded to
+
+=item source
+
+The file on virtual machine that should be downloaded
+
+=item username
+
+The username to authenticate with on virtualmachine. Defaults to the annotation
+
+=item password
+
+The password to authenticate with on virtualmachine. Defaults to the annotation
+
+=item overwrite
+
+Boolean if destination file should be overwritten
+
+=item size
+
+The size of the file that is going to be uploaded
 
 =back
 
 =head2 RETURNS
+
+In case dest is selected:
+Transferinformation where a PUT request should be done to upload file
+
+In case source is selected:
+Transferinformation where the file can be downloaded from
 
 =head2 DESCRIPTION
 
@@ -3320,6 +3539,9 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.vm.guest.FileManager.html#initiateFileTransferFromGuest
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.vm.guest.FileManager.html#initiateFileTransferToGuest
 
 =cut
 
@@ -3359,7 +3581,7 @@ sub memory : Chained('vmBase'): PathPart('memory'): Args(0) : ActionClass('REST'
 
 =head2 PURPOSE
 
-
+This function retrieves the memory ammount in MB
 
 =head2 PARAMETERS
 
@@ -3369,10 +3591,11 @@ sub memory : Chained('vmBase'): PathPart('memory'): Args(0) : ActionClass('REST'
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with memory ammount in MB
 
 =head2 DESCRIPTION
 
@@ -3407,7 +3630,7 @@ sub memory_GET {
 
 =head2 PURPOSE
 
-
+This function changes memory ammount
 
 =head2 PARAMETERS
 
@@ -3417,10 +3640,15 @@ sub memory_GET {
 
 This option is taken from the URI
 
+=item memorymb
+
+The requested memory size in MB
 
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -3467,7 +3695,7 @@ sub disks : Chained('vmBase'): PathPart('disk'): Args(0) : ActionClass('REST') {
 
 =head2 PURPOSE
 
-
+This function retrieves a list of disk attached to the virtualmachine
 
 =head2 PARAMETERS
 
@@ -3477,10 +3705,11 @@ sub disks : Chained('vmBase'): PathPart('disk'): Args(0) : ActionClass('REST') {
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a list of disk
 
 =head2 DESCRIPTION
 
@@ -3514,7 +3743,7 @@ sub disks_GET {
 
 =head2 PURPOSE
 
-
+This function creates a disk
 
 =head2 PARAMETERS
 
@@ -3524,10 +3753,16 @@ sub disks_GET {
 
 This option is taken from the URI
 
+=item size
+
+The requested size of the disk
+FIXME Unit
 
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -3575,7 +3810,7 @@ sub disk : Chained('vmBase'): PathPart('disk'): Args(1) : ActionClass('REST') {}
 
 =head2 PURPOSE
 
-
+This function retrieves information about a disk
 
 =head2 PARAMETERS
 
@@ -3585,10 +3820,15 @@ sub disk : Chained('vmBase'): PathPart('disk'): Args(1) : ActionClass('REST') {}
 
 This option is taken from the URI
 
+=item id
+
+The id of the disk
 
 =back
 
 =head2 RETURNS
+
+A JSON with information about the disk: key, capacity in KB, disk filename, id
 
 =head2 DESCRIPTION
 
@@ -3597,6 +3837,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.vm.device.VirtualDisk.html
 
 =cut
 
@@ -3622,7 +3864,7 @@ sub disk_GET {
 
 =head2 PURPOSE
 
-
+This function removes a disk from a virtualmachine and destroys it
 
 =head2 PARAMETERS
 
@@ -3632,10 +3874,15 @@ sub disk_GET {
 
 This option is taken from the URI
 
+=item id
+
+Id of the disk to destroy
 
 =back
 
 =head2 RETURNS
+
+A JSON with task moref
 
 =head2 DESCRIPTION
 
@@ -3681,7 +3928,7 @@ sub annotations : Chained('vmBase'): PathPart('annotation'): Args(0) : ActionCla
 
 =head2 PURPOSE
 
-
+This function retrieves a list of annotations and their ids
 
 =head2 PARAMETERS
 
@@ -3691,10 +3938,11 @@ sub annotations : Chained('vmBase'): PathPart('annotation'): Args(0) : ActionCla
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with annotation name and ids
 
 =head2 DESCRIPTION
 
@@ -3703,6 +3951,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.CustomFieldsManager.Value.html
 
 =cut
 
@@ -3740,7 +3990,7 @@ sub annotation : Chained('vmBase'): PathPart('annotation'): Args(1) : ActionClas
 
 =head2 PURPOSE
 
-
+This function retrieves the annotation value
 
 =head2 PARAMETERS
 
@@ -3750,10 +4000,15 @@ sub annotation : Chained('vmBase'): PathPart('annotation'): Args(1) : ActionClas
 
 This option is taken from the URI
 
+=item name
+
+Name of the annotation
 
 =back
 
 =head2 RETURNS
+
+A JSON with the value of the annotation
 
 =head2 DESCRIPTION
 
@@ -3762,6 +4017,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp?topic=%2Fcom.vmware.wssdk.apiref.doc_50%2Fvim.ExtensibleManagedObject.html
 
 =cut
 
@@ -3787,28 +4044,7 @@ sub annotation_GET {
 
 =head2 PURPOSE
 
-
-
-=head2 PARAMETERS
-
-=over
-
-=item mo_ref_value
-
-This option is taken from the URI
-
-
-=back
-
-=head2 RETURNS
-
-=head2 DESCRIPTION
-
-=head2 THROWS
-
-=head2 COMMENTS
-
-=head2 SEE ALSO
+This function invokes annotation_POST with an empty value
 
 =cut
 
@@ -3834,7 +4070,7 @@ sub annotation_DELETE {
 
 =head2 PURPOSE
 
-
+This function changes value of an annotation
 
 =head2 PARAMETERS
 
@@ -3844,10 +4080,15 @@ sub annotation_DELETE {
 
 This option is taken from the URI
 
+=item value
+
+The requested value for the annotation
 
 =back
 
 =head2 RETURNS
+
+A JSON on success
 
 =head2 DESCRIPTION
 
@@ -3856,6 +4097,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.CustomFieldsManager.html#setField
 
 =cut
 
@@ -3894,7 +4137,7 @@ sub events : Chained('vmBase'): PathPart('event'): Args(0) : ActionClass('REST')
 
 =head2 PURPOSE
 
-
+This function retrieves events attached to virtualmachine
 
 =head2 PARAMETERS
 
@@ -3904,10 +4147,11 @@ sub events : Chained('vmBase'): PathPart('event'): Args(0) : ActionClass('REST')
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a list of events
 
 =head2 DESCRIPTION
 
@@ -3916,6 +4160,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/topic/com.vmware.wssdk.apiref.doc_50/vim.event.EventManager.html#QueryEvent
 
 =cut
 
@@ -3953,7 +4199,7 @@ sub event : Chained('vmBase'): PathPart('event'): Args(1) : ActionClass('REST') 
 
 =head2 PURPOSE
 
-
+This function retrieves a list of events according to filter
 
 =head2 PARAMETERS
 
@@ -3963,10 +4209,15 @@ sub event : Chained('vmBase'): PathPart('event'): Args(1) : ActionClass('REST') 
 
 This option is taken from the URI
 
+=item filter
+
+This option is taken from the URI
 
 =back
 
 =head2 RETURNS
+
+A JSON with a list of events according to filter
 
 =head2 DESCRIPTION
 
@@ -3975,6 +4226,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.event.VmEvent.html
 
 =cut
 
@@ -4021,7 +4274,6 @@ sub cdroms : Chained('vmBase'): PathPart('cdrom'): Args(0) : ActionClass('REST')
 =item mo_ref_value
 
 This option is taken from the URI
-
 
 =back
 
