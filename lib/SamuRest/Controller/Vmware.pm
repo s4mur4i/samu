@@ -4265,7 +4265,7 @@ sub cdroms : Chained('vmBase'): PathPart('cdrom'): Args(0) : ActionClass('REST')
 
 =head2 PURPOSE
 
-
+This function retrieves a list of cdroms in virtualmachine
 
 =head2 PARAMETERS
 
@@ -4278,6 +4278,8 @@ This option is taken from the URI
 =back
 
 =head2 RETURNS
+
+A JSON with cdroms listed
 
 =head2 DESCRIPTION
 
@@ -4311,7 +4313,7 @@ sub cdroms_GET {
 
 =head2 PURPOSE
 
-
+This function adds a cdrom to the virtual machine
 
 =head2 PARAMETERS
 
@@ -4321,16 +4323,19 @@ sub cdroms_GET {
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
 =head2 THROWS
 
 =head2 COMMENTS
+
+A CDROM is attached to the ide controller, which has a maximum of 4 devices.
 
 =head2 SEE ALSO
 
@@ -4370,7 +4375,7 @@ sub cdrom : Chained('vmBase'): PathPart('cdrom'): Args(1) : ActionClass('REST') 
 
 =head2 PURPOSE
 
-
+This function retrieves infromation about a specific cdrom
 
 =head2 PARAMETERS
 
@@ -4380,10 +4385,15 @@ sub cdrom : Chained('vmBase'): PathPart('cdrom'): Args(1) : ActionClass('REST') 
 
 This option is taken from the URI
 
+=item id
+
+The id of the cdrom
 
 =back
 
 =head2 RETURNS
+
+A JSON with the cdrom information: id, key, backing, label
 
 =head2 DESCRIPTION
 
@@ -4391,7 +4401,11 @@ This option is taken from the URI
 
 =head2 COMMENTS
 
+Backing is the image in the drive
+
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.vm.device.VirtualCdrom.html
 
 =cut
 
@@ -4417,7 +4431,7 @@ sub cdrom_GET {
 
 =head2 PURPOSE
 
-
+This function changes the cdrom backing
 
 =head2 PARAMETERS
 
@@ -4427,10 +4441,27 @@ sub cdrom_GET {
 
 This option is taken from the URI
 
+=item id
+
+The id of the cdrom
+
+=item exclusive
+
+Should the device be considered exclusive to the vm
+
+=item deviceName
+
+T.B.D.
+
+=item iso
+
+The path to the iso: example: [datastore] folder/something.iso
 
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -4446,8 +4477,11 @@ sub cdrom_PUT {
     my ($self, $c, $id) = @_;
 	$c->log->start;
     my $result = {};
+    my $params = $c->req->params;
+    $params->{moref_value} = $c->stash->{mo_ref_value};
+    $params->{id} = $id;
     eval {
-        $result = $c->stash->{vim}->change_cdrom(moref_value => $c->stash->{mo_ref_value}, id => $id);
+        $result = $c->stash->{vim}->change_cdrom( %{ $params } );
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -4464,7 +4498,7 @@ sub cdrom_PUT {
 
 =head2 PURPOSE
 
-
+This function removes a CDROM fro ma virtualmachine
 
 =head2 PARAMETERS
 
@@ -4474,10 +4508,11 @@ sub cdrom_PUT {
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -4523,7 +4558,7 @@ sub interfaces : Chained('vmBase'): PathPart('interface'): Args(0) : ActionClass
 
 =head2 PURPOSE
 
-
+This function returns the list of interfaces
 
 =head2 PARAMETERS
 
@@ -4533,10 +4568,11 @@ sub interfaces : Chained('vmBase'): PathPart('interface'): Args(0) : ActionClass
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a list of interfaces
 
 =head2 DESCRIPTION
 
@@ -4570,7 +4606,7 @@ sub interfaces_GET {
 
 =head2 PURPOSE
 
-
+This function adds an interface to the virtualmachine
 
 =head2 PARAMETERS
 
@@ -4580,10 +4616,11 @@ sub interfaces_GET {
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -4634,7 +4671,7 @@ sub interface : Chained('vmBase'): PathPart('interface'): Args(1) : ActionClass(
 
 =head2 PURPOSE
 
-
+This function retriees informaiton aboout an interface
 
 =head2 PARAMETERS
 
@@ -4644,10 +4681,11 @@ sub interface : Chained('vmBase'): PathPart('interface'): Args(1) : ActionClass(
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -4656,6 +4694,8 @@ This option is taken from the URI
 =head2 COMMENTS
 
 =head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.vm.device.VirtualEthernetCard.html
 
 =cut
 
@@ -4681,7 +4721,7 @@ sub interface_GET {
 
 =head2 PURPOSE
 
-
+This function changes the network of an interface
 
 =head2 PARAMETERS
 
@@ -4691,10 +4731,20 @@ sub interface_GET {
 
 This option is taken from the URI
 
+=item network
+
+Moref to the requested network
+FIXME
+
+=item id
+
+This option is taken from the URI
 
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -4729,7 +4779,7 @@ sub interface_PUT {
 
 =head2 PURPOSE
 
-
+This function removes an interface from a virtualmachine
 
 =head2 PARAMETERS
 
@@ -4739,10 +4789,11 @@ sub interface_PUT {
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with a task moref
 
 =head2 DESCRIPTION
 
@@ -4788,7 +4839,7 @@ sub powerstatus : Chained('vmBase'): PathPart('powerstatus'): Args(0) : ActionCl
 
 =head2 PURPOSE
 
-
+This function Retrieves the powerstatus of a virtualmachine
 
 =head2 PARAMETERS
 
@@ -4798,10 +4849,11 @@ sub powerstatus : Chained('vmBase'): PathPart('powerstatus'): Args(0) : ActionCl
 
 This option is taken from the URI
 
-
 =back
 
 =head2 RETURNS
+
+A JSON with the current powerstatus
 
 =head2 DESCRIPTION
 
@@ -4847,7 +4899,7 @@ sub powerstate : Chained('vmBase'): PathPart('powerstatus'): Args(1) : ActionCla
 
 =head2 PURPOSE
 
-
+This function changes the powerstate to the requested state
 
 =head2 PARAMETERS
 
@@ -4857,10 +4909,15 @@ sub powerstate : Chained('vmBase'): PathPart('powerstatus'): Args(1) : ActionCla
 
 This option is taken from the URI
 
+=item state
+
+This option is taken from URI. Possible values: standby, shutdown, reboot, poweron, poweroff
 
 =back
 
 =head2 RETURNS
+
+A JSON with either succes, or a task moref
 
 =head2 DESCRIPTION
 
