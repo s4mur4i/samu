@@ -2830,7 +2830,7 @@ sub vms_GET {
 	$c->log->start;
     my $result = {};
     eval {
-        $result = $$c->stash->{vim}->get_all;
+        $result = $c->stash->{vim}->get_all;
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
