@@ -7,9 +7,9 @@ use Carp;
 
 =pod
 
-=head1 VCenter.pm
+=head1 VCenter
 
-Subroutines for VmwareAPI/VCenter.pm
+Base object for VCenter
 
 =cut
 
@@ -28,6 +28,60 @@ our @entities = undef;
 our %find_params = ();
 our $logger = undef;
 
+=pod
+
+=head1 new
+
+=head2 PURPOSE
+
+Constructor for VCenter object
+
+=head2 PARAMETERS
+
+=over
+
+=item logger
+
+The Logging object
+
+=item vcenter_username
+
+The username needed for connecting to vcenter
+
+=item vcenter_password
+
+The password needed for connecting to vcenter
+
+=item vcenter_url
+
+The url to the vcenter
+
+=item sessionfile
+
+The sessionfile that is required to load a session
+
+=back
+
+=head2 RETURNS
+
+A VCenter object
+
+=head2 DESCRIPTION
+
+Either vcenter_username and vcenter password needs to be given or sessionfile
+
+=head2 THROWS
+
+ExConnection::VCenter if unknown option is given
+
+=head2 COMMENTS
+
+Options are parsed by base_parse subroutine
+
+=head2 SEE ALSO
+
+=cut
+
 sub new {
     my ($class, %args) = @_;
     my $self = bless {}, $class;
@@ -35,6 +89,16 @@ sub new {
     $self->{logger}->dumpobj( "self", $self);
     return $self;
 }
+
+=pod
+
+=head1 base_parse
+
+=head2 PURPOSE
+
+Invoked by the new constructor, this sub parses arguments for the constructor
+
+=cut
 
 sub base_parse {
     my ( $self, %args ) = @_;
@@ -58,6 +122,32 @@ sub base_parse {
     return $self
 }
 
+=pod
+
+=head1 connect_vcenter
+
+=head2 PURPOSE
+
+This function connects to a vcenter
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+A vim object used for starting VMware perl SDK calls
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub connect_vcenter {
     my $self = shift;
     $self->{logger}->start;
@@ -73,6 +163,36 @@ sub connect_vcenter {
     $self->{logger}->finish;
     return $vim;
 }
+
+=pod
+
+=head1 savesession_vcenter
+
+=head2 PURPOSE
+
+This function saves a session file in the tmp
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+The sessionfile-s name
+
+=head2 DESCRIPTION
+
+The sessionfile can be used to load session back between calls
+
+=head2 THROWS
+
+ExConnection::VCenter if file could not be saved
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub savesession_vcenter {
     my $self = shift;
@@ -91,6 +211,36 @@ sub savesession_vcenter {
     return $sessionfile->filename;
 }
 
+=pod
+
+=head1 loadsession_vcenter
+
+=head2 PURPOSE
+
+Restores a session from session file
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+The self object
+
+=head2 DESCRIPTION
+
+In the constructor the sessionfile option needs to be specified
+
+=head2 THROWS
+
+ExConnection::VCenter if load was not succesful
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub loadsession_vcenter {
     my $self = shift;
     $self->{logger}->start;
@@ -107,6 +257,36 @@ sub loadsession_vcenter {
     return $self;
 }
 
+=pod
+
+=head1 disconnect_vcenter
+
+=head2 PURPOSE
+
+This sub closses the session on server side
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+The self object
+
+=head2 DESCRIPTION
+
+If a disconnect is needed for security reasons or because server resources should be freed, this is implemented.
+
+=head2 THROWS
+
+ExConnection::VCenter if disconnect was not succesful
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub disconnect_vcenter {
     my $self = shift;
     $self->{logger}->start;
@@ -121,6 +301,52 @@ sub disconnect_vcenter {
     $self->{logger}->finish;
     return $self;
 }
+
+=pod
+
+=head1 set_find_params
+
+=head2 PURPOSE
+
+This function sets parameters for the find_entity_view and find_entity_views sdk calls
+
+=head2 PARAMETERS
+
+=over
+
+=item view_type
+
+The view_type we need to query: ComputeResource, Datacenter, Datastore, DistributedVirtualSwitch, Folder, HostSystem, Network, ResourcePool, VirtualMachine, DistributedVirtualSwitch, DistributedVirtualPortgroup 
+
+=item filter
+
+The filter param to narrow the scope, needs to be a hash ref: { name => "vm1" }
+
+=item begin_entity
+
+The view of the entity from which the recursive search start
+
+=item properties
+
+Property collector for the information to be returned
+
+=back
+
+=head2 RETURNS
+
+The self object
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+ExAPI::Argument if an unrecognized argument is given
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub set_find_params {
     my ($self, %args) = @_;
@@ -146,6 +372,34 @@ sub set_find_params {
     return $self;
 }
 
+=pod
+
+=head1 get_find_params
+
+=head2 PURPOSE
+
+This function retrieves the current find paramteres set by set_find_params
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+A hash ref with current params
+
+=head2 DESCRIPTION
+
+This function is also used by find_entity and find_entities to retrieve current settings
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub get_find_params {
     my $self = shift;
     $self->{logger}->start;
@@ -157,6 +411,46 @@ sub get_find_params {
     $self->{logger}->finish;
     return $return;
 }
+
+=pod
+
+=head1 entity_exists
+
+=head2 PURPOSE
+
+This function verifies if the entity exists
+
+=head2 PARAMETERS
+
+=over
+
+=item moref
+
+A moref object is given and verified if it can be traced to a view
+
+=item name
+
+A name of an object that should be quried
+
+=back
+
+=head2 RETURNS
+
+A boolean if true or false
+
+=head2 DESCRIPTION
+
+If name is requested then it is possible that multiple entities will be found. We are only interested if at least one is found.
+
+=head2 THROWS
+
+ExAPI::Argument if unrecognized argument is given
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub entity_exists {
     my ($self, %args) = @_;
@@ -182,11 +476,85 @@ sub entity_exists {
     return $return;
 }
 
+=pod
+
+=head1 delete_find_params
+
+=head2 PURPOSE
+
+Removes all current find_params
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+A self object
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub delete_find_params {
     my ($self, %args) = @_;
     $self->{find_params} = ();
     return $self;
 }
+
+=pod
+
+=head1 find_entities
+
+=head2 PURPOSE
+
+This function searches for a requested entity
+
+=head2 PARAMETERS
+
+=over
+
+=item view_type
+
+The view_type we need to query: ComputeResource, Datacenter, Datastore, DistributedVirtualSwitch, Folder, HostSystem, Network, ResourcePool, VirtualMachine, DistributedVirtualSwitch, DistributedVirtualPortgroup 
+
+=item filter
+
+The filter param to narrow the scope, needs to be a hash ref: { name => "vm1" }
+
+=item begin_entity
+
+The view of the entity from which the recursive search start
+
+=item properties
+
+Property collector for the information to be returned
+
+=back
+
+=head2 RETURNS
+
+An array ref with the view objects
+
+=head2 DESCRIPTION
+
+This function is a wrapper for the find_entity_views SDK call
+
+=head2 THROWS
+
+ExAPI::Argument if incorrect or unrecognized argument is given
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub find_entities {
     my ($self, %args) = @_;
@@ -221,6 +589,54 @@ sub find_entities {
     $self->{logger}->finish;
     return $results;
 }
+
+=pod
+
+=head1 find_entity
+
+=head2 PURPOSE
+
+This function search for one entity
+
+=head2 PARAMETERS
+
+=over
+
+=item view_type
+
+The view_type we need to query: ComputeResource, Datacenter, Datastore, DistributedVirtualSwitch, Folder, HostSystem, Network, ResourcePool, VirtualMachine, DistributedVirtualSwitch, DistributedVirtualPortgroup 
+
+=item filter
+
+The filter param to narrow the scope, needs to be a hash ref: { name => "vm1" }
+
+=item begin_entity
+
+The view of the entity from which the recursive search start
+
+=item properties
+
+Property collector for the information to be returned
+
+=back
+
+=head2 RETURNS
+
+The requested object or undef
+
+=head2 DESCRIPTION
+
+This is a wrapper call for SDK find_entity_view call.
+
+=head2 THROWS
+
+ExAPI::Argument if unrecognized argument is given
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub find_entity {
     my ($self,%args) = @_;
@@ -257,6 +673,50 @@ sub find_entity {
     return $result;
 }
 
+=pod
+
+=head1 get_view
+
+=head2 PURPOSE
+
+This function converts a moref to a view object
+
+=head2 PARAMETERS
+
+=over
+
+=item properties
+
+Property collector for the information to be returned
+
+=item mo_ref
+
+The moref object
+
+=item begin_entity
+
+The view of the entity from which the recursive search start
+
+=back
+
+=head2 RETURNS
+
+A view object from the moref
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+ExAPI::Argument if unrecognized argument is given
+ExEntity::FindEntityError if the moref could not be converted to a view
+ExEntity::Empty if no object is found
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub get_view {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
@@ -289,6 +749,42 @@ sub get_view {
     return $view;
 }
 
+=pod
+
+=head1 update_view
+
+=head2 PURPOSE
+
+This function refreshes the view data of an object
+
+=head2 PARAMETERS
+
+=over
+
+=item view
+
+This first parameter of the object needs to be a view
+
+=back
+
+=head2 RETURNS
+
+The updated view 
+
+=head2 DESCRIPTION
+
+During the update the whole object is queried, propertycollector doesn't narrow scope
+
+=head2 THROWS
+
+ExEntity::FindEntityError if the update failed
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub update_view {
     my ( $self, $view ) = @_;
     $self->{logger}->start;
@@ -305,11 +801,75 @@ sub update_view {
 
 }
 
+=pod
+
+=head1 clear_entities
+
+=head2 PURPOSE
+
+This function cleares the quried entities hash
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+The self object
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub clear_entities {
     my $self = shift;
     @{ $self->{entities} } = ();
     return $self;
 }
+
+=pod
+
+=head1 create_moref
+
+=head2 PURPOSE
+
+Thes function creates a moref object from the given data
+
+=head2 PARAMETERS
+
+=over
+
+=item type
+
+The type of the moref
+
+=item value
+
+The value of the moref
+
+=back
+
+=head2 RETURNS
+
+A moref object
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+ExAPI::Argument if unrecognized argument is given
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub create_moref {
     my ($self, %args ) = @_;
@@ -326,6 +886,37 @@ sub create_moref {
     $self->{logger}->finish;
     return $moref;
 }
+
+=pod
+
+=head1 get_service_content
+
+=head2 PURPOSE
+
+This function retrieves the servicecontent object
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+The service content object
+
+=head2 DESCRIPTION
+
+This object is used to access managers and important object morefs
+
+=head2 THROWS
+
+ExEntity::ServiceContent if no servicecontent is found
+ExEntity::Empty if servicecontent is empty
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub get_service_content {
     my $self = shift;
@@ -346,6 +937,40 @@ sub get_service_content {
     return $sc;
 }
 
+=pod
+
+=head1 get_manager
+
+=head2 PURPOSE
+
+This function retrieves a manager for accessing functions
+
+=head2 PARAMETERS
+
+=over
+
+=item type
+
+The first parameter defines the requested manager. Possible managers: http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.ServiceInstanceContent.html#field_detail
+
+=back
+
+=head2 RETURNS
+
+The manager oject
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+ExEntity::Empty if no manager found
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub get_manager {
     my ( $self, $type) = @_;
     $self->{logger}->start;
@@ -359,6 +984,34 @@ sub get_manager {
     return $manager;
 }
 
+=pod
+
+=head1 get_hosts
+
+=head2 PURPOSE
+
+This function retrieves all Hostsystems
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+An array ref with the views
+
+=head2 DESCRIPTION
+
+This function retrieves all ESXi servers in VCenter
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub get_hosts {
     my $self = shift;
     $self->{logger}->start;
@@ -368,6 +1021,44 @@ sub get_hosts {
     $self->{logger}->finish;
     return $result;
 }
+
+=pod
+
+=head1 get_host_configmanager
+
+=head2 PURPOSE
+
+This function retrieves the configmanager from a hostsystem
+
+=head2 PARAMETERS
+
+=over
+
+=item view
+
+The view object to a host system
+
+=item manager
+
+The requested manager of the system
+
+=back
+
+=head2 RETURNS
+
+The host configmanager object
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+http://pubs.vmware.com/vsphere-50/index.jsp#com.vmware.wssdk.apiref.doc_50/vim.HostSystem.html
+
+=cut
 
 sub get_host_configmanager{
     my ( $self, %args) = @_;
@@ -379,6 +1070,44 @@ sub get_host_configmanager{
     $self->{logger}->finish;
     return $return;
 }
+
+=pod
+
+=head1 values_to_view
+
+=head2 PURPOSE
+
+This function converts moref to a view
+
+=head2 PARAMETERS
+
+=over
+
+=item value
+
+The moref value
+
+=item type
+
+The moref type
+
+=back
+
+=head2 RETURNS
+
+The view object of the moref
+
+=head2 DESCRIPTION
+
+This is a wrapper for creating the moref and calling the get_view on it
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub values_to_view {
     my ( $self, %args) = @_;
@@ -392,6 +1121,32 @@ sub values_to_view {
     $self->{logger}->finish;
     return $view;
 }
+
+=pod
+
+=head1 get_tasks
+
+=head2 PURPOSE
+
+This function retrieves all recent tasks form taskamanger
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+An array ref with task objects
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub get_tasks {
     my $self = shift;
@@ -408,6 +1163,38 @@ sub get_tasks {
     return $result;
 }
 
+=pod
+
+=head1 get_task
+
+=head2 PURPOSE
+
+Retrieves a task from moref value
+
+=head2 PARAMETERS
+
+=over
+
+=item value
+
+The moref value of the task
+
+=back
+
+=head2 RETURNS
+
+The task object
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub get_task {
     my ($self, %args) = @_;
     $self->{logger}->start;
@@ -417,6 +1204,40 @@ sub get_task {
     $self->{logger}->finish;
     return $result;
 }
+
+=pod
+
+=head1 cancel_task
+
+=head2 PURPOSE
+
+This function cancels a task
+
+=head2 PARAMETERS
+
+=over
+
+=item value
+
+The moref value of the task
+
+=back
+
+=head2 RETURNS
+
+The result status cancelled
+
+=head2 DESCRIPTION
+
+The client needs to verify if the task is cancelable
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub cancel_task {
     my ($self, %args )= @_;
@@ -430,6 +1251,38 @@ sub cancel_task {
     return $result;
 }
 
+=pod
+
+=head1 destroy_entity
+
+=head2 PURPOSE
+
+This function destroy an entity
+
+=head2 PARAMETERS
+
+=over
+
+=item obj
+
+The SamuAPI Entity
+
+=back
+
+=head2 RETURNS
+
+A task moref
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub destroy_entity {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
@@ -440,6 +1293,38 @@ sub destroy_entity {
     $self->{logger}->finish;
     return $result;
 }
+
+=pod
+
+=head1 get_rp_parent
+
+=head2 PURPOSE
+
+This function retrieves a parent resourcepool object
+
+=head2 PARAMETERS
+
+=over
+
+=item parent moref
+
+The first argument should be a resourcepool moref, if not given the root resourcepool will be used
+
+=back
+
+=head2 RETURNS
+
+A resourcepool object
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub get_rp_parent {
     my ( $self, $mo_ref_value ) = @_;
@@ -455,6 +1340,38 @@ sub get_rp_parent {
     return $obj;
 }
 
+=pod
+
+=head1 get_folder_parent
+
+=head2 PURPOSE
+
+This function retrieves a parent folder object
+
+=head2 PARAMETERS
+
+=over
+
+=item parent moref
+
+The first argument should be a folder moref, if not given the root folder will be used
+
+=back
+
+=head2 RETURNS
+
+A folder obj
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub get_folder_parent {
     my ( $self, $mo_ref_value ) = @_;
     $self->{logger}->start;
@@ -468,6 +1385,42 @@ sub get_folder_parent {
     $self->{logger}->finish;
     return $obj;
 }
+
+=pod
+
+=head1 create_rp
+
+=head2 PURPOSE
+
+This function creates a resourcepool
+
+=head2 PARAMETERS
+
+=over
+
+=item parent_resourcepool
+
+The moref value of the parent resourcepool, if not given the root will be used
+
+=item name
+
+The requested name of the resource pool
+
+=back
+
+=head2 RETURNS
+
+The moref of the created resourcepool
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub create_rp {
     my ($self, %args) = @_;
@@ -488,6 +1441,42 @@ sub create_rp {
     return $rp_moref;
 }
 
+=pod
+
+=head1 create_folder
+
+=head2 PURPOSE
+
+This function creates a folder
+
+=head2 PARAMETERS
+
+=over
+
+=item parent_folder
+
+The parent folders moref value. If not given then the root is used
+
+=item name
+
+The requested name for the folder
+
+=back
+
+=head2 RETURNS
+
+The moref of the created folder
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub create_folder {
     my ($self, %args) = @_;
     $self->{logger}->start;
@@ -505,6 +1494,40 @@ sub create_folder {
     $self->{logger}->finish;
     return $folder_moref;
 }
+
+=pod
+
+=head1 create_linked_folder
+
+=head2 PURPOSE
+
+Creates the folder for the linked clones
+
+=head2 PARAMETERS
+
+=over
+
+=item template
+
+The first argument should be the template virtualmachine name
+
+=back
+
+=head2 RETURNS
+
+Returns a view of the linked clone folder
+
+=head2 DESCRIPTION
+
+If folder does not exist anywhere on the esxi we create a folder next to the virtualmachine
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub create_linked_folder {
     my ($self, $template) = @_;
@@ -527,6 +1550,46 @@ sub create_linked_folder {
     return $view;
 }
 
+=pod
+
+=head1 _change_annoation
+
+=head2 PURPOSE
+
+Changes an annotation of a virtualmachine
+
+=head2 PARAMETERS
+
+=over
+
+=item view
+
+The view of the virtualmachine
+
+=item key
+
+The key to the annoation
+
+=item value
+
+The requested value for the annotation
+
+=back
+
+=head2 RETURNS
+
+The self object
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub _change_annotation {
     my ( $self, %args )  = @_;
     $self->{logger}->start;
@@ -536,6 +1599,32 @@ sub _change_annotation {
     $self->{logger}->finish;
     return $self;
 }
+
+=pod
+
+=head1 get_tickets
+
+=head2 PURPOSE
+
+Retrieves all provisioned tickets on VCenter
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+A hash ref with tickets and their connected virtualmachines morefs in a array ref
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub get_tickets {
     my $self = shift;
@@ -555,6 +1644,38 @@ sub get_tickets {
     return $result;
 }
 
+=pod
+
+=head1 get_ticket
+
+=head2 PURPOSE
+
+This function retrieves the virtual machines for a ticket
+
+=head2 PARAMETERS
+
+=over
+
+=item ticket
+
+The requested ticket
+
+=back
+
+=head2 RETURNS
+
+A hash ref with the ticket number and an array ref with the connected virtualmachines
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub get_ticket {
     my ($self, %args) = @_;
     $self->{logger}->start;
@@ -563,6 +1684,32 @@ sub get_ticket {
     $self->{logger}->finish;
     return $result;
 }
+
+=pod
+
+=head1 get_users
+
+=head2 PURPOSE
+
+This function retrieves a list of all users and their connected virtual machines
+
+=head2 PARAMETERS
+
+none
+
+=head2 RETURNS
+
+A hash ref with the users, and attached an array ref with the virtualmachines morefs
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub get_users {
     my $self = shift;
@@ -582,6 +1729,38 @@ sub get_users {
     return $result;
 }
 
+=pod
+
+=head1 get_user
+
+=head2 PURPOSE
+
+Retrieves provisioned machines for a user
+
+=head2 PARAMETERS
+
+=over
+
+=item username
+
+The requested username
+
+=back
+
+=head2 RETURNS
+
+A hash ref with the user and an array ref with the virtualmachines morefs
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
+
 sub get_user {
     my ($self, %args) = @_;
     $self->{logger}->start;
@@ -593,8 +1772,29 @@ sub get_user {
 
 ####################################################################
 
+=pod
+
+=head1 VCenter_resourcepool
+
+=head2 PURPOSE
+
+Collector for resourcepool functions
+
+=cut
+
 package VCenter_resourcepool;
 use base 'VCenter';
+
+=pod
+
+=head1 new
+
+=head2 PURPOSE
+
+The constructor for the VCenter_resourcepool
+The base_args sub will parse the options
+
+=cut
 
 sub new {
     my ($class, %args) = @_;
@@ -602,6 +1802,42 @@ sub new {
     $self->base_parse(%args);
     return $self;
 }
+
+=pod
+
+=head1 destroy
+
+=head2 PURPOSE
+
+Resourcepool delete sub
+
+=head2 PARAMETERS
+
+=over
+
+=item value
+
+The resourcepool moref value
+
+=item type
+
+the resourcepool moref type (Resourcepool)
+
+=back
+
+=head2 RETURNS
+
+A task moref
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub destroy {
     my ($self,%args) = @_;
@@ -625,6 +1861,77 @@ sub destroy {
     $self->{logger}->finish;
     return $return;
 }
+
+=pod
+
+=head1 update
+
+=head2 PURPOSE
+
+this function updates a resourcepool options
+
+=head2 PARAMETERS
+
+=over
+
+=item cpu_share
+
+The number of shares allocated. Used to determine resource allocation in case of resource contention.
+
+=item cpu_expandable_reservation
+
+In a resource pool with an expandable reservation, the reservation on a resource pool can grow beyond the specified value.
+
+=item cpu_reservation
+
+Amount of resource that is guaranteed available to the virtual machine or resource pool. Reserved resources are not wasted if they are not used. If the utilization is less than the reservation, 
+the resources can be utilized by other running virtual machines. Units are MHz for CPU.
+
+=item cpu_limit
+
+The utilization of a virtual machine/resource pool will not exceed this limit, even if there are available resources.  If set to -1, then there is no fixed limit on resource usage.
+Units are MHz for CPU.
+
+=item memory_share
+
+The number of shares allocated. Used to determine resource allocation in case of resource contention.
+
+=item memory_limit
+
+The utilization of a virtual machine/resource pool will not exceed this limit, even if there are available resources.  If set to -1, then there is no fixed limit on resource usage.
+Units are MB for memory.
+
+=item memory_expandable_reservation
+
+In a resource pool with an expandable reservation, the reservation on a resource pool can grow beyond the specified value.
+
+=item memory_reservation
+
+Amount of resource that is guaranteed available to the virtual machine or resource pool. Reserved resources are not wasted if they are not used. If the utilization is less than the reservation, 
+the resources can be utilized by other running virtual machines. Units are MB for memory.
+
+=item shares_level
+
+The allocation level. The level is a simplified view of shares. Values: high, normal low
+high => Shares = 2000 * nmumber of virtual CPUs, 20 * virtual machine memory size in megabytes
+normal => Shares = 10 * virtual machine memory size in megabytes, 1000 * number of virtual CPUs
+low => Shares = 5 * virtual machine memory size in megabytes, 500 * number of virtual CPUs
+
+=back
+
+=head2 RETURNS
+
+A Hash ref with update success
+
+=head2 DESCRIPTION
+
+=head2 THROWS
+
+=head2 COMMENTS
+
+=head2 SEE ALSO
+
+=cut
 
 sub update {
     my ( $self, %args ) = @_;

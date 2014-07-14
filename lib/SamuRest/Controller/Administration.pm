@@ -308,7 +308,7 @@ show all roles
 
 assign $user_id for $role
 
-=head2 roles_POST
+=head2 roles_DELETE
 
     curl -X DELETE -d 'user_id=$user_id&role=$role' http://localhost:3000/admin/roles
 
@@ -422,7 +422,7 @@ get user configs
 
 =head2 configs_POST
 
-    curl -X POST -d "name=vcenter_username&config=test2" http://localhost:3000/admin/profile/$userid/configs/-/$sessionid
+    curl -X POST -d "name=vcenter_username&value=test2" http://localhost:3000/admin/profile/$userid/configs/-/$sessionid
 
 set user config
 
