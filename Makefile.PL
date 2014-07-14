@@ -21,6 +21,7 @@ requires 'DBIx::Class::TimeStamp' => '0.14';
 requires 'DateTime::Format::SQLite' => '0.11';
 requires 'Email::Valid';
 requires 'Digest::SHA1';
+requires 'Exception::Class';
 requires 'Crypt::CBC';
 requires 'Crypt::Blowfish';
 requires 'DBIx::Class::Core';
