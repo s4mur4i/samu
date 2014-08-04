@@ -21,7 +21,7 @@ sub __ok {
     $self->status_ok(
         $c,
         entity => {
-            result => 'success',
+            status => 'success',
             %$data
         },
    );
@@ -34,7 +34,7 @@ sub __error {
     $self->status_ok(
         $c,
         entity => {
-            result => 'error',
+            status => 'error',
             message => $error,
         },
    );

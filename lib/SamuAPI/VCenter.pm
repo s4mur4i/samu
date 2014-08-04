@@ -1015,8 +1015,7 @@ This function retrieves all ESXi servers in VCenter
 sub get_hosts {
     my $self = shift;
     $self->{logger}->start;
-    my $result = ();
-    $result = $self->find_entities( view_type => 'HostSystem');
+    my $result = [$self->find_entities( view_type => 'HostSystem')];
     $self->{logger}->dumpobj( 'result', $result);
     $self->{logger}->finish;
     return $result;
@@ -1151,12 +1150,12 @@ An array ref with task objects
 sub get_tasks {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $taskmanager = $self->get_manager("taskManager");
     for ( @{ $taskmanager->{recentTask}}) {
         my $task_view = $self->get_view( mo_ref => $_);
         my $task = SamuAPI_task->new( view => $task_view, logger => $self->{logger} );
-        $result->{ $task->get_mo_ref_value} = $task->get_info;
+		push( @$result, $task->get_info);
     }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
@@ -1200,7 +1199,7 @@ sub get_task {
     $self->{logger}->start;
     my $task_view = $self->values_to_view( value => $args{value}, type => 'Task');
     my $task = SamuAPI_task->new( view => $task_view, logger => $self->{logger} );
-    my $result =  $task->get_info ;
+    my $result =  [$task->get_info] ;
     $self->{logger}->finish;
     return $result;
 }
@@ -1242,11 +1241,10 @@ The client needs to verify if the task is cancelable
 sub cancel_task {
     my ($self, %args )= @_;
     $self->{logger}->start;
-    my $result = ();
     my $task_view = $self->values_to_view( value => $args{value}, type => 'Task');
     my $task = SamuAPI_task->new( view => $task_view, logger => $self->{logger} );
     $task->{view}->cancel;
-    $result->{status} = "cancelled";
+    my $result = [ { status => "cancelled"}];
     $self->{logger}->finish;
     return $result;
 }
@@ -1288,7 +1286,7 @@ sub destroy_entity {
     $self->{logger}->start;
     my $task = $args{obj}->{view}->Destroy_Task;
     my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    my $result = $obj->get_mo_ref;
+    my $result = [$obj->get_mo_ref];
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
@@ -1629,16 +1627,12 @@ A hash ref with tickets and their connected virtualmachines morefs in a array re
 sub get_tickets {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['name', 'value', 'availableField' ]);
     for my $vm (@$vms) {
         my $obj = SamuAPI_virtualmachine->new( logger => $self->{logger}, view => $vm);
         my $annotation = $obj->get_annotation( name => 'samu_ticket' )->{value};
-        if ( defined($result->{$annotation}) ) {
-            push(@{ $result->{$annotation} }, $obj->get_mo_ref );
-        } else {
-            $result->{$annotation} = [ $obj->get_mo_ref];
-        }
+        push(@$result, $obj->get_mo_ref );
     }
     $self->{logger}->finish;
     return $result;
@@ -1680,7 +1674,7 @@ sub get_ticket {
     my ($self, %args) = @_;
     $self->{logger}->start;
     my $all = $self->get_tickets;
-    my $result = { $args{ticket} => $all->{$args{ticket}}};
+    my $result = [{ $args{ticket} => $all->{$args{ticket}}}];
     $self->{logger}->finish;
     return $result;
 }
@@ -1714,16 +1708,12 @@ A hash ref with the users, and attached an array ref with the virtualmachines mo
 sub get_users {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['name', 'value', 'availableField' ]);
     for my $vm (@$vms) {
         my $obj = SamuAPI_virtualmachine->new( logger => $self->{logger}, view => $vm);
         my $annotation = $obj->get_annotation( name => 'samu_owner' )->{value};
-        if ( defined($result->{$annotation}) ) {
-            push(@{ $result->{$annotation} }, $obj->get_mo_ref );
-        } else {
-            $result->{$annotation} = [ $obj->get_mo_ref];
-        }
+        push( @$result, $obj->get_mo_ref );
     }
     $self->{logger}->finish;
     return $result;
@@ -1765,7 +1755,7 @@ sub get_user {
     my ($self, %args) = @_;
     $self->{logger}->start;
     my $all = $self->get_users;
-    my $result = { $args{username} => $all->{$args{username}}};
+    my $result = [{ $args{username} => $all->{$args{username}}}];
     $self->{logger}->finish;
     return $result;
 }
@@ -1851,7 +1841,7 @@ sub destroy {
     }
     my $return = {};
     eval {
-        $return = $self->destroy_entity( obj => $resourcepool );
+        $return = [$self->destroy_entity( obj => $resourcepool )];
     };
     if ( $@ ) {
         $self->{logger}->dumpobj('error', $@);
@@ -1944,7 +1934,7 @@ sub update {
     $self->{logger}->dumpobj('param', \%param);
     $resourcepool->{view}->UpdateConfig( %param );
     $self->{logger}->finish;
-    return { update => 'success'};
+    return [{ update => 'success'}];
 }
 
 sub move {
@@ -1968,7 +1958,7 @@ sub move {
         ExEntity::Move->throw( error => 'Problem during moving entity', entity => $child_value, parent => $parent_value );
     }
     $self->{logger}->finish;
-    return { status => "moved" };
+    return [{ status => "moved" }];
 }
 
 sub create {
@@ -1976,7 +1966,7 @@ sub create {
     $self->{logger}->start;
     my $rp_moref = $self->create_rp(%args);
     my $rp = SamuAPI_resourcepool->new( mo_ref => $rp_moref, logger => $self->{logger});
-    my $return = $rp->get_mo_ref;
+    my $return = [$rp->get_mo_ref];
     $self->{logger}->dumpobj('return', $return);
     $self->{logger}->finish;
     return $return;
@@ -1985,12 +1975,12 @@ sub create {
 sub get_all {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $rps = $self->find_entities( view_type => 'ResourcePool', properties => ['name']);
     for my $rp ( @{ $rps }) {
         my $obj = SamuAPI_resourcepool->new( view => $rp, logger => $self->{logger});
         $self->{logger}->dumpobj('obj', $obj);
-        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+		push(@$result, { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type});
     }
     $self->{logger}->dumpobj( 'result', $result);
     $self->{logger}->finish;
@@ -2005,7 +1995,7 @@ sub get_single {
         $view->RefreshRuntime;
     }
     my $resourcepool = SamuAPI_resourcepool->new( view => $view, logger => $self->{logger} );
-    my $result = $resourcepool->get_info;
+    my $result = [$resourcepool->get_info];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2026,11 +2016,11 @@ sub new {
 sub get_all {
     my $self = shift;
     $self->{logger}->start;
-    my $return = {};
+    my $return = [];
     my $folders = $self->find_entities( view_type => 'Folder', properties => ['name'] );
     for my $folder_view ( @{ $folders } ) {
         my $obj = SamuAPI_folder->new( view => $folder_view, logger => $self->{logger} );
-        $return->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+		push(@$return, { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type});
     }
     $self->{logger}->dumpobj("return", $return);
     $self->{logger}->finish;
@@ -2042,7 +2032,7 @@ sub get_single {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'Folder', value => $args{moref_value});
     my $folder = SamuAPI_folder->new( view => $view, logger => $self->{logger} );
-    my $result = $folder->get_info;
+    my $result = [$folder->get_info];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2053,7 +2043,7 @@ sub create {
     $self->{logger}->start;
     my $folder_moref = $self->create_folder( %args);
     my $folder = SamuAPI_folder->new( mo_ref => $folder_moref, logger => $self->{logger});
-    my $return = $folder->get_mo_ref;
+    my $return = [$folder->get_mo_ref];
     $self->{logger}->dumpobj('return', $return);
     $self->{logger}->finish;
     return $return;
@@ -2071,7 +2061,7 @@ sub destroy {
         ExEntity::NotEmpty->throw( error => "Folder has child folders", entity => $folder->get_name, count => $folder->child_folders );
     }
     eval {
-        $return = $self->destroy_entity( obj => $folder );
+        $return = [$self->destroy_entity( obj => $folder )];
     };
     if ( $@ ) {
         $self->{logger}->dumpobj('error', $@);
@@ -2102,7 +2092,7 @@ sub move {
         ExEntity::Move->throw( error => 'Problem during moving entity', entity => $child_value, parent => $parent_value );
     }
     $self->{logger}->finish;
-    return { status => "moved" };
+    return [{ status => "moved" }];
 }
 
 ####################################################################
@@ -2120,12 +2110,12 @@ sub new {
 sub get_all {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $networks = $self->find_entities( view_type => 'Network', properties => ['summary'] );
     for my $network ( @{ $networks } ) {
         my $obj = SamuAPI_network->new( view => $network, logger => $self->{logger});
         if ( $obj->get_mo_ref_type eq 'Network' ) {
-            $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+			push( @$result, { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type})
         }
     }
     $self->{logger}->dumpobj('result', $result);
@@ -2138,7 +2128,7 @@ sub get_single {
     $self->{logger}->start;
     my $view = $self->values_to_view( type => 'Network', value => $args{value});
     my $obj = SamuAPI_network->new( view => $view, logger => $self->{logger} );
-    my $result = $obj->get_info;
+    my $result = [$obj->get_info];
     $self->{logger}->finish;
     return $result;
 }
@@ -2181,7 +2171,7 @@ sub create {
         ExTask::Error->throw( error => 'Error during task', number=> 'unknown', creator => (caller(0))[3] );
     }
     my $task = SamuAPI_task->new( mo_ref => $task_moref, logger => $self->{logger});
-    my $return = $task->get_mo_ref;
+    my $return = [$task->get_mo_ref];
     $self->{logger}->dumpobj('return', $return);
     $self->{logger}->finish;
     return $return;
@@ -2190,11 +2180,11 @@ sub create {
 sub get_all {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $dvps = $self->find_entities( view_type => 'DistributedVirtualPortgroup', properties => ['summary', 'key'] );
     for my $dvp ( @{ $dvps } ) {
         my $obj = SamuAPI_distributedvirtualportgroup->new( view => $dvp, logger => $self->{logger});
-        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+		push( @$result, { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type});
     }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
@@ -2206,7 +2196,7 @@ sub get_single {
     $self->{logger}->start;
     my $view = $self->values_to_view( type => 'DistributedVirtualPortgroup', value => $args{value});
     my $obj = SamuAPI_distributedvirtualportgroup->new( view => $view, logger => $self->{logger} );
-    my $result = $obj->get_info;
+    my $result = [$obj->get_info];
     $self->{logger}->finish;
     return $result;
 }
@@ -2219,7 +2209,7 @@ sub destory {
     if ( scalar( @{ $obj->connected_vms} ) ) {
         ExAPI::NotEmpty->throw( error => 'DVP has connected vms', count => scalar( @{ $obj->connected_vms} ), entity => $obj->mo_ref_value  );
     }
-    my $result = $self->destroy_entity( obj => $obj );
+    my $result = [$self->destroy_entity( obj => $obj )];
     $self->{logger}->finish;
     return $result;
 }
@@ -2233,7 +2223,7 @@ sub update {
     $param{spec} = $dvp->_dvportgroupconfigspec(%args) if ( keys %args);
     my $task_moref = $dvp->{view}->ReconfigureDVPortgroup_Task( %param );
     my $task = SamuAPI_task->new( mo_ref => $task_moref, logger => $self->{logger});
-    my $return = $task->get_moref;
+    my $return = [$task->get_moref];
     $self->{logger}->dumpobj('return', $return);
     $self->{logger}->finish;
     return $return;
@@ -2270,7 +2260,7 @@ sub create {
         ExTask::Error->throw( error => 'Error during task', number=> 'unknown', creator => (caller(0))[3] );
     }
     my $task = SamuAPI_task->new( mo_ref => $task_moref, logger => $self->{logger});
-    my $return = $task->get_moref;
+    my $return = [$task->get_moref];
     $self->{logger}->dumpobj('return', $return);
     $self->{logger}->finish;
     return $return;
@@ -2279,11 +2269,11 @@ sub create {
 sub get_all {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $dvs = $self->find_entities( view_type => 'DistributedVirtualSwitch', properties => ['summary', 'portgroup'] );
     for my $switch ( @{ $dvs } ) {
         my $obj = SamuAPI_distributedvirtualswitch->new( view => $switch, logger => $self->{logger});
-        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+		push( @$result, { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type});
     }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
@@ -2295,7 +2285,7 @@ sub get_single {
     $self->{logger}->start;
     my $view = $self->values_to_view( type => 'DistributedVirtualSwitch', value => $args{value});
     my $obj = SamuAPI_distributedvirtualswitch->new( view => $view, logger => $self->{logger} );
-    my $result = $obj->get_info;
+    my $result = [$obj->get_info];
     $self->{logger}->finish;
     return $result;
 }
@@ -2308,7 +2298,7 @@ sub destory {
     if ( scalar( @{ $obj->connected_vms} ) ) {
         ExAPI::NotEmpty->throw( error => 'DVS has connected vms', count => scalar( @{ $obj->connected_vms} ), entity => $obj->mo_ref_value  );
     }
-    my $result = $self->destroy_entity( obj => $obj );
+    my $result = [$self->destroy_entity( obj => $obj )];
     $self->{logger}->finish;
     return $result;
 }
@@ -2322,7 +2312,7 @@ sub update {
     $param{spec} = $dvs->_dvsconfigspec(%args) if ( keys %args);
     my $task_moref = $dvs->{view}->ReconfigureDvs_Task( %param );
     my $task = SamuAPI_task->new( mo_ref => $task_moref, logger => $self->{logger});
-    my $return = $task->get_moref;
+    my $return = [$task->get_moref];
     $self->{logger}->dumpobj('return', $return);
     $self->{logger}->finish;
     return $return;
@@ -2381,11 +2371,11 @@ sub _find_vms_with_disk {
 sub get_templates {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['summary'], filter => { 'config.template' => 'true'  }  );
     for my $vm (@$vms) {
         my $obj = SamuAPI_template->new( view => $vm, logger=> $self->{logger});
-        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+		push( @$result, { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type});
     }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
@@ -2395,11 +2385,9 @@ sub get_templates {
 sub get_template {
     my ($self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
     my $view = $self->values_to_view( value => $args{value}, type => 'VirtualMachine');
     my $obj = SamuAPI_template->new( view => $view, logger=> $self->{logger});
-    $result = $obj->get_info;
-    $result->{active_linked_clones} = $self->_linked_clones( vm => $obj);
+    my $result = [ $obj->get_info, { active_linked_clones => $self->_linked_clones( vm => $obj)} ];
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
@@ -2408,11 +2396,11 @@ sub get_template {
 sub get_all {
     my $self = shift;
     $self->{logger}->start;
-    my $return = {};
+    my $return = [];
     my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['name', 'summary'] );
     for my $vm_view ( @{ $vms } ) {
         my $obj = SamuAPI_virtualmachine->new( view => $vm_view, logger => $self->{logger} );
-        $return->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+		push( @$return, { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type});
     }
     $self->{logger}->dumpobj("return", $return);
     $self->{logger}->finish;
@@ -2424,7 +2412,7 @@ sub get_single {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $result = $vm->get_info;
+    my $result = [$vm->get_info];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2433,7 +2421,7 @@ sub get_single {
 sub promote_template {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $view = $self->values_to_view( type => 'VirtualMachine', value => $args{value});
     my $obj = SamuAPI_template->new( view => $view, logger=> $self->{logger});
     my $vms = $self->_linked_clones( vm => $obj);
@@ -2442,7 +2430,7 @@ sub promote_template {
         my $vm = SamuAPI_virtualmachine->new( view => $vm_view, logger => $self->{logger});
         my $task = $vm->promote;
         my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-        $result->{$vm->get_mo_ref_value} = $obj->get_mo_ref;
+		push( @$result, $obj->get_mo_ref);
     }
     $self->{logger}->finish;
     return $result;
@@ -2454,7 +2442,7 @@ sub update {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $spec = $vm->_virtualmachineconfigspec( %args ) if (keys(%args));
-    my $result = $vm->reconfigvm( spec => $spec );
+    my $result = [$vm->reconfigvm( spec => $spec )];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2471,7 +2459,7 @@ sub create_snapshot {
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $task = $vm->{view}->CreateSnapshot_Task( name        => $name, description => $desc, memory      => $memory, quiesce     => $quiesce);
     my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    my $result = $obj->get_mo_ref;
+    my $result = [$obj->get_mo_ref];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2485,7 +2473,7 @@ sub delete_snapshots {
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $task = $vm->{view}->RemoveAllSnapshots_Task( consolidate => $consolidate );
     my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    my $result = $obj->get_mo_ref;
+    my $result = [$obj->get_mo_ref];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2494,7 +2482,7 @@ sub delete_snapshots {
 sub delete_snapshot {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $removechildren = $args{removeChildren} // 0;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
@@ -2507,7 +2495,7 @@ sub delete_snapshot {
                 my $view = $self->get_view( mo_ref => $snapshot->{snapshot} );
                 my $task = $view->RemoveSnapshot_Task( removeChildren => $removechildren );
                 my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-                $result = $obj->get_mo_ref;
+				push( @$result, $obj->get_mo_ref);
                 last;
             }   
         }   
@@ -2520,12 +2508,12 @@ sub delete_snapshot {
 sub get_snapshots {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     if ( defined( $vm->{view}->{snapshot} ) ) {
-        $result = $vm->parse_snapshot( snapshot => $vm->{view}->{snapshot}->{rootSnapshotList}[0] );
-        $result->{CUR} = $vm->{view}->{snapshot}->{currentSnapshot}->{value};
+		push( @$result, $vm->parse_snapshot( snapshot => $vm->{view}->{snapshot}->{rootSnapshotList}[0]));
+		push( @$result, { CUR => $vm->{view}->{snapshot}->{currentSnapshot}->{value}});
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
@@ -2535,12 +2523,12 @@ sub get_snapshots {
 sub get_snapshot {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     if ( defined( $vm->{view}->{snapshot}->{rootSnapshotList} ) ) {
         my $return = $vm->parse_snapshot( snapshot => $vm->{view}->{snapshot}->{rootSnapshotList}[0] );
-        $result = $return->{$args{id}};
+        $result = [$return->{$args{id}}];
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
@@ -2550,7 +2538,7 @@ sub get_snapshot {
 sub revert_snapshot {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $supress = $args{suppressPowerOn} // 1;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
@@ -2564,7 +2552,7 @@ sub revert_snapshot {
             my $view = $self->get_view( mo_ref => $snapshot->{snapshot} );
             my $task = $view->RevertToSnapshot_Task( suppressPowerOn => $supress );
             my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-            $result = $obj->get_mo_ref;
+            $result = [$obj->get_mo_ref];
             last;
         }
     }
@@ -2578,7 +2566,7 @@ sub get_powerstate {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $result = { powerstate => $vm->get_powerstate };
+    my $result = [{ powerstate => $vm->get_powerstate }];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2587,24 +2575,24 @@ sub get_powerstate {
 sub change_powerstate {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     if ( $args{state} =~ /^suspend$/ ) {
-        $result = $vm->suspend_task;
+        $result = [$vm->suspend_task];
     } elsif ( $args{state} =~ /^standby$/ ) {
         $vm->standby;
-        $result = { standby => 'success' };
+        $result = [{ standby => 'success' }];
     } elsif ( $args{state} =~ /^shutdown$/ ) {
         $vm->shutdown;
-        $result = { shutdown => 'success' };
+        $result = [{ shutdown => 'success' }];
     } elsif ( $args{state} =~ /^reboot$/) {
         $vm->reboot;
-        $result = { reboot => 'success' };
+        $result = [{ reboot => 'success' }];
     } elsif ( $args{state} =~ /^poweron$/) {
-        $result =  $vm->poweron_task;
+        $result =  [$vm->poweron_task];
     } elsif ( $args{state} =~ /^poweroff$/) {
-        $result = $vm->poweroff_task;
+        $result = [$vm->poweroff_task];
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
@@ -2617,7 +2605,7 @@ sub get_cdrom {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ret = $vm->get_cdroms;
-    my $result = $ret->{$args{id}};
+    my $result = [$ret->{$args{id}}];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2628,7 +2616,7 @@ sub get_cdroms {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $result = $vm->get_cdroms;
+    my $result = [$vm->get_cdroms];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2639,7 +2627,7 @@ sub get_interfaces {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $result = $vm->get_interfaces;
+    my $result = [$vm->get_interfaces];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2651,7 +2639,7 @@ sub get_interface {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ret = $vm->get_interfaces;
-    my $result = $ret->{$args{id}};
+    my $result = [$ret->{$args{id}}];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2662,7 +2650,7 @@ sub get_disks {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $result = $vm->get_disks;
+    my $result = [$vm->get_disks];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2674,7 +2662,7 @@ sub get_disk {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ret = $vm->get_disks;
-    my $result = $ret->{$args{id}};
+    my $result = [$ret->{$args{id}}];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2698,7 +2686,7 @@ sub create_disk {
     my $disk = VirtualDisk->new( controllerKey => $scsi_con->key, unitNumber    => $unitnumber, key           => -1, backing       => $disk_backing_info, capacityInKB  => $args{size});
     my $devspec = VirtualDeviceConfigSpec->new( operation     => VirtualDeviceConfigSpecOperation->new('add'), device        => $disk, fileOperation => VirtualDeviceConfigSpecFileOperation->new('create'));
     my $spec = VirtualMachineConfigSpec->new( deviceChange => [$devspec] );
-    my $result = $vm->reconfigvm( spec => $spec );
+    my $result = [$vm->reconfigvm( spec => $spec )];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2707,7 +2695,7 @@ sub create_disk {
 sub get_events {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $manager = $self->get_manager("eventManager");
@@ -2716,7 +2704,7 @@ sub get_events {
     my $events = $manager->QueryEvents( filter => $filterspec );
     for my $event ( @{ $events } ) {
         my $obj = SamuAPI_event->new(view => $event, logger => $self->{logger});
-        $result->{$obj->get_key} = $obj->get_info;
+		push( @$result, { $obj->get_key = $obj->get_info} );
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
@@ -2726,7 +2714,7 @@ sub get_events {
 sub get_event {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $manager = $self->get_manager("eventManager");
@@ -2735,7 +2723,7 @@ sub get_event {
     my $events = $manager->QueryEvents( filter => $filterspec );
     for my $event ( @{ $events } ) {
         my $obj = SamuAPI_event->new(view => $event, logger => $self->{logger});
-        $result->{$obj->get_key} = $obj->get_info;
+		push( @$result, {$obj->get_key = $obj->get_info});
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
@@ -2745,11 +2733,11 @@ sub get_event {
 sub get_annotations {
     my ( $self, %args) = @_;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     foreach ( @{ $vm->{view}->{availableField} } ) {
-        $result->{$_->{key}} = $_->{name};
+		push( @$result, {$_->{key} = $_->{name}});
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
@@ -2761,7 +2749,7 @@ sub get_annotation {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $result = $vm->get_annotation( name => $args{name} );
+    my $result = [$vm->get_annotation( name => $args{name} )];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2770,7 +2758,7 @@ sub get_annotation {
 sub delete_annotation {
     my ( $self, %args) = @_;
     $args{value} = "";
-    my $result = $self->change_annotation(%args);
+    my $result = [$self->change_annotation(%args)];
     return $result;
 }
 
@@ -2781,7 +2769,7 @@ sub change_annotation {
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $key = $vm->get_annotation_key( name => $args{name});
     $self->_chane_annotation( view => $vm->{view}, key => $key , value => $args{value});
-    my $result = { $key => $args{value}};
+    my $result = [{ $key => $args{value}}];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2800,7 +2788,7 @@ sub remove_hw {
         $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('remove'), device    => $$net_hw[$args{num}]);
     }
     my $vmspec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
-    my $result = $vm->reconfigvm( spec => $vmspec );
+    my $result = [$vm->reconfigvm( spec => $vmspec )];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2816,7 +2804,7 @@ sub create_vm {
     my $spec = $vm->_virtualmachineconfigspec( %args );
     my $task = $folder->{view}->CreateVM_Task( pool => $parent_rp->{view}->{mo_ref}, config => $spec );
     my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    my $result = $obj->get_mo_ref;
+    my $result = [$obj->get_mo_ref];
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
@@ -2867,7 +2855,7 @@ sub clone_vm {
     if ( defined($args{altername})) {
         $self->_change_annotation( key => $vm->get_annotation_key( name => 'samu_altername'), value => $args{altername}, view => $cloned_vm);
     }
-    my $result = { clone => 'success', annotation=> 'success'};
+    my $result = [{ clone => 'success', annotation=> 'success'}];
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
@@ -2880,7 +2868,7 @@ sub destroy {
     my $view = $self->values_to_view( %args );
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     eval {
-        $return = $self->destroy_entity( obj => $vm );
+        $return = [$self->destroy_entity( obj => $vm )];
     };
     if ( $@ ) {
         $self->{logger}->dumpobj('error', $@);
@@ -2920,7 +2908,7 @@ sub create_interface {
     }
     my $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('add'), device    => $device);
     my $spec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
-    my $result = $vm->reconfigvm( spec => $spec );
+    my $result = [$vm->reconfigvm( spec => $spec )];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2938,7 +2926,7 @@ sub create_cdrom {
     my $cdrom = VirtualCdrom->new( key           => -1, backing       => $cdrombacking, controllerKey => $ide_key);
     my $devspec = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('add'), device    => $cdrom,);
     my $spec = VirtualMachineConfigSpec->new( deviceChange => [$devspec] );
-    my $result = $vm->reconfigvm( spec => $spec );
+    my $result = [$vm->reconfigvm( spec => $spec )];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2976,7 +2964,7 @@ sub change_interface {
     }
     my $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('edit'), device    => $device);
     my $spec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
-    my $result = $vm->reconfigvm( spec => $spec );
+    my $result = [$vm->reconfigvm( spec => $spec )];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2999,7 +2987,7 @@ sub change_cdrom {
     my $device = VirtualCdrom->new( backing       => $backing, key           => ${ $cdroms}[$args{num}]->{key});
     my $deviceconfig = VirtualDeviceConfigSpec->new( operation => VirtualDeviceConfigSpecOperation->new('edit'), device    => $device);
     my $spec = VirtualMachineConfigSpec->new( deviceChange => [$deviceconfig] );
-    my $result = $vm->reconfigvm( spec => $spec );
+    my $result = [ $vm->reconfigvm( spec => $spec )];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -3018,7 +3006,7 @@ sub run {
     my $guestProgSpec = GuestProgramSpec->new( workingDirectory => $args{workdir}, programPath      => $args{prog}, arguments        => $args{prog_arg}, envVariables     => [ $args{env} ]);
     $self->{logger}->dumpobj('guestprogspec', $guestProgSpec);
     my $pid = $processmanager->StartProgramInGuest( vm   => $view, auth => $guestCreds, spec => $guestProgSpec);
-    my $result = { pid => $pid };
+    my $result = [{ pid => $pid }];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -3059,7 +3047,7 @@ sub transfer_to {
         $self->{logger}->dumpobj('error', $@);
         ExEntity::Transfer->throw( error    => 'Could not retrieve Transfer information', entity   => $vm->get_mo_ref_value, filename => $args{dest});
     }
-    my $result = { url => $transferinfo};
+    my $result = [{ url => $transferinfo}];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -3083,7 +3071,7 @@ sub transfer_from {
         $self->{logger}->dumpobj('error', $@);
         ExEntity::Transfer->throw( error    => 'Could not retrieve Transfer information', entity   => $vm->get_mo_ref_value, filename => $args{source});
     }
-    my $result = { url => $transferinfo->{url}, size => $transferinfo->{size}, accesstime => $transferinfo->{attributes}->{accessTime}, modificationtime => $transferinfo->{attributes}->{modificationTime}};
+    my $result = [{ url => $transferinfo->{url}, size => $transferinfo->{size}, accesstime => $transferinfo->{attributes}->{accessTime}, modificationtime => $transferinfo->{attributes}->{modificationTime}}];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -3104,10 +3092,10 @@ sub get_process {
         $params{pids} = [ $args{pid}];
     }
     my $data = $processmanager->ListProcessesInGuest( %params);
-    my $result = ();
+    my $result = [];
     for my $program ( @{$data} ) {
         my $prog = SamuAPI_process->new( logger => $self->{logger}, view => $program);
-        $result->{$prog->get_pid} = $prog->get_info;
+		push( @$result,  $prog->get_info);
     }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
@@ -3150,12 +3138,12 @@ sub new {
 sub get_all {
     my $self = shift;
     $self->{logger}->start;
-    my $result = ();
+    my $result = [];
     my $hosts = $self->find_entities( view_type => 'HostSystem', properties => ['summary', 'name']);
     for my $host ( @{ $hosts } ) {
         my $obj = SamuAPI_host->new( view => $host, logger => $self->{logger});
         $self->{logger}->dumpobj("host", $obj);
-        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+		push( @$result, { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type});
     }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
@@ -3167,7 +3155,7 @@ sub get_single {
     $self->{logger}->start;
     my $view = $self->values_to_view( type => 'HostSystem', value => $args{value});
     my $obj = SamuAPI_host->new( view => $view, logger => $self->{logger} );
-    my $result = $obj->get_info;
+    my $result = [$obj->get_info];
     $self->{logger}->finish;
     return $result;
 }
@@ -3187,11 +3175,11 @@ sub new {
 sub get_all {
     my $self = shift;
     $self->{logger}->start;
-    my $result = ();
+    my $result = [];
     my $datastores = $self->find_entities( view_type => 'Datastore', properties => ['summary', 'name']);
     for my $datastore ( @{ $datastores } ) {
         my $obj = SamuAPI_datastore->new( view => $datastore, logger => $self->{logger});
-        $result->{$obj->get_mo_ref_value} = { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type};
+		push( @$result, { name => $obj->get_name, value => $obj->get_mo_ref_value, type => $obj->get_mo_ref_type});
     }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
@@ -3203,7 +3191,7 @@ sub get_single {
     $self->{logger}->start;
     my $view = $self->values_to_view( type => 'Datastore', value => $args{value});
     my $obj = SamuAPI_datastore->new( view => $view, logger => $self->{logger} );
-    my $result = $obj->get_info;
+    my $result = [ $obj->get_info ];
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
