@@ -3263,7 +3263,7 @@ sub cpu_GET {
     my $result = {};
     eval {
         my $ret = $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value});
-        $result->{result} = {numcpus => $ret->{numCpu}};
+        $result->{result} = [{numcpus => $ret->[0]->{numCpu}}];
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
@@ -3610,11 +3610,11 @@ A JSON with memory ammount in MB
 
 sub memory_GET {
     my ($self, $c) = @_;
-	$c->log->start;
+	  $c->log->start;
     my $result = {};
     eval {
         my $ret = $c->stash->{vim}->get_single( moref_value => $c->stash->{mo_ref_value});
-        $result->{result} = {memorySizeMB => $ret->{memorySizeMB}};
+        $result->{result} = [{memorySizeMB => $ret->[0]->{memorySizeMB}}];
     };
     if ($@) {
         $c->log->dumpobj('error', $@);
