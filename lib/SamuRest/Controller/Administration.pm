@@ -70,7 +70,7 @@ sub register_POST {
 		password => sha1_hex($password),
 		email    => $email
 	});
-	return $self->__ok($c, { result => { id => $user->id }});
+	return $self->__ok($c, { result => [{ id => $user->id }]});
 }
 
 =pod
@@ -159,7 +159,7 @@ sub profile_GET {
     } else {
         $extend{self} = "no";
     }
-	return $self->__ok($c, { result => { id => $user->id, username => $user->username, email => $user->email , roles=> \@roles, extended => \%extend }});
+	return $self->__ok($c, { result => [{ id => $user->id, username => $user->username, email => $user->email , roles=> \@roles, extended => \%extend }]});
 }
 
 sub profile_DELETE {
@@ -170,7 +170,7 @@ sub profile_DELETE {
 	my $user = $c->stash->{user};
 	$user->delete;
 
-	return $self->__ok($c, { result => { message => 'deleted.' } });
+	return $self->__ok($c, { result => [{ message => 'deleted.' }] });
 }
 
 sub profile_POST {
@@ -193,7 +193,7 @@ sub profile_POST {
     }
     $user->update();
 
-	return $self->__ok($c, { result => { username => $user->username, email => $user->email }});
+	return $self->__ok($c, { result => [{ username => $user->username, email => $user->email }]});
 }
 
 =pod
@@ -218,9 +218,9 @@ sub userlist_GET {
 	my ($self, $c) = @_;
 	my $users_rs = $c->stash->{users_rs};
 	my @users = $c->model('Database::User')->search( undef, { order_by => 'id' } )->all;
-	my %result=(result => {});
+	my %result=(result => []);
 	foreach my $user (@users) {
-		$result{result}{$user->id} = $user->username;
+		push(@{$result{result}}, {$user->id => $user->username});
 	}
 	return $self->__ok($c, \%result);
 }
@@ -242,7 +242,7 @@ sub infouser_GET {
 	my $users_rs = $c->stash->{users_rs};
 	my $user = $users_rs->find( {username => $username} );
 	return $self->__error($c, "Can't find user: $username") unless $user;
-	return $self->__ok($c, { result => { id => $user->id, username => $user->username } });
+	return $self->__ok($c, { result => [{ id => $user->id, username => $user->username }] });
 }
 
 =pod
@@ -272,7 +272,7 @@ sub userLogin : Chained('adminBase') PathPart('login') Args(0) ActionClass('REST
 	return $self->__error($c, "Incorrect password") unless $user->password eq sha1_hex($password);
 	$c->session->{__user} = $user->id;
 
-	return $self->__ok($c, { result => { id => $user->id, username => $user->username, email => $user->email, sessionid => $c->sessionid }});
+	return $self->__ok($c, { result => [{ id => $user->id, username => $user->username, email => $user->email, sessionid => $c->sessionid }]});
 }
 
 =pod
@@ -289,7 +289,7 @@ sub userLogoff : Chained('adminBase') PathPart('logoff') ActionClass('REST') {
 	my ($self, $c) = @_;
 
 	delete $c->session->{__user};
-	return $self->__ok($c, { result => { sessionid => $c->sessionid } });
+	return $self->__ok($c, { result => [{ sessionid => $c->sessionid }] });
 }
 
 =pod
@@ -326,10 +326,10 @@ sub roles : Chained('rolesBase') PathPart('') Args(0) ActionClass('REST') {
 
 sub roles_GET {
     my ($self, $c) = @_;
-    my %result =( result => { } );
+    my %result =( result => [] );
     my @roles = $c->model('Database::Role')->search( undef, { order_by => 'id' } )->all;
     foreach my $role (@roles) {
-        $result{result}{$role->id} = $role->role;
+		push( @{$result{result}}, {$role->id => $role->role} );
     }
     return $self->__ok( $c, \%result);
 }
@@ -360,12 +360,12 @@ sub role_GET {
     my $schema = $c->model('Database');
     my $role_rs = $c->stash->{role_rs};
 
-    my %result =( result => { });
+    my %result =( result => []);
     $result{$role}= [];
     my @users = $c->model('Database::UserRole')->search({role_id => $role_rs->id},undef)->all;
     foreach my $user (@users) {
         my $userobj = $schema->resultset('User')->find($user->user_id);
-        push($result{result}{$role}, $userobj->username);
+        push(@{$result{result}}, { $role => $userobj->username} );
     }
     return $self->__ok( $c, \%result);
 }
@@ -388,7 +388,7 @@ sub role_DELETE {
     return $self->__error($c, "Role already deleted.") unless $cnt;
 
     $schema->resultset('UserRole')->search({ user_id => $to_user->id, role_id => $role_rs->id })->delete;
-    return $self->__ok($c, { result => { id => $to_user->id } });
+    return $self->__ok($c, { result => [{ id => $to_user->id }] });
 }
 
 sub role_POST {
@@ -409,7 +409,7 @@ sub role_POST {
     return $self->__error($c, "Role already granted.") if $cnt;
 
     $schema->resultset('UserRole')->create({ user_id => $to_user->id, role_id => $role_rs->id });
-    return $self->__ok($c, { result => { id => $to_user->id }});
+    return $self->__ok($c, { result => [{ id => $to_user->id }]});
 }
 
 =pod
@@ -443,7 +443,7 @@ sub configs_GET {
     $self->__is_admin_or_owner($c, $id);
 
     my %data = $c->model('Database::UserConfig')->get_user_configs($id);
-    return $self->__ok( $c, { result => \%data});
+    return $self->__ok( $c, { result => [\%data]});
 }
 
 sub configs_POST {
@@ -459,7 +459,7 @@ sub configs_POST {
     my $r = $c->model("Database::UserConfig")->set_user_config($id, $name, $value);
     return $self->__error($c, "Unknown config name: $name") unless $r;
 
-    return $self->__ok($c, { result => { config_id => $r->config_id, data => $value } });
+    return $self->__ok($c, { result => [{ config_id => $r->config_id, data => $value }] });
 }
 
 sub configs_DELETE {
@@ -474,7 +474,7 @@ sub configs_DELETE {
     my $st = $c->model("Database::UserConfig")->delete_user_config($id, $name);
     return $self->__error($c, "Unknown config name: $name") unless $st;
 
-    return $self->__ok($c, { result => {}});
+    return $self->__ok($c, { result => [{}]});
 }
 
 __PACKAGE__->meta->make_immutable;
