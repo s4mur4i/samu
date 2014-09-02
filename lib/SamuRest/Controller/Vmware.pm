@@ -159,17 +159,19 @@ Return a JSON on success
 sub connection_GET {
     my ( $self, $c ) = @_;
     $c->log->start;
-    my $return = { result => {} };
+    my $return = { result => [] };
     if ( !@{ $c->session->{__vim_login}->{sessions} } ) {
-        $return->{result}->{connections} = "";
+        $return->{result} = [];
     } else {
         for my $num ( 0 .. $#{ $c->session->{__vim_login}->{sessions} } ) {
-            $return->{result}->{connections}->{$num} = ();
+        #    $return->{result}->{connections}->{$num} = ();
             for my $key ( keys $c->session->{__vim_login}->{sessions}->[$num]) {
-                $return->{result}->{connections}->{$num}->{$key} = $c->session->{__vim_login}->{sessions}->[$num]->{$key};
+				push( @{$return->{result}}, { $num => $c->session->{__vim_login}->{sessions}->[$num]->{$key}} );
+        #        $return->{result}->{connections}->{$num}->{$key} = $c->session->{__vim_login}->{sessions}->[$num]->{$key};
             }
         }
-        $return->{result}->{active} = $c->session->{__vim_login}->{active};
+		push( @{$return->{result}}, {active => $c->session->{__vim_login}->{active}} );
+        #$return->{result}->{active} = $c->session->{__vim_login}->{active};
     }
     $c->log->dumpobj('return', $return);
     $c->log->finish;
@@ -251,7 +253,7 @@ sub connection_POST {
     $c->session->{__vim_login}->{active} = $#{ $c->session->{__vim_login}->{sessions} };
     $c->log->dumpobj('vcenter', $VCenter);
     $c->log->finish;
-    my $return->{result} = { vim_login => "success", id        => $#{ $c->session->{__vim_login}->{sessions} }, time_stamp => $epoch };
+    my $return->{result} = [{ vim_login => "success", id        => $#{ $c->session->{__vim_login}->{sessions} }, time_stamp => $epoch }];
     return $self->__ok( $c, $return);
 }
 
