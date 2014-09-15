@@ -153,7 +153,7 @@ sub profile_GET {
         push(@roles, $role->role);
     }
     my %extend =();
-    if ( $id == $c->session->{__user}) {
+    if ( defined($c->session->{__user}) and $id == $c->session->{__user}) {
         #add all user_value stored in table for user
         $extend{self} = "yes";
     } else {
