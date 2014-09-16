@@ -416,7 +416,7 @@ sub role_POST {
 
 =head2 configs, configs_GET
 
-    curl http://localhost:3000/admin/profile/$userid/configs/-/$sessionid
+    curl -X GET -d "name=vcenter_username" http://localhost:3000/admin/profile/$userid/configs/-/$sessionid
 
 get user configs
 
