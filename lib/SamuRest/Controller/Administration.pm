@@ -361,11 +361,10 @@ sub role_GET {
     my $role_rs = $c->stash->{role_rs};
 
     my %result =( result => []);
-    $result{$role}= [];
     my @users = $c->model('Database::UserRole')->search({role_id => $role_rs->id},undef)->all;
     foreach my $user (@users) {
         my $userobj = $schema->resultset('User')->find($user->user_id);
-        push(@{$result{result}}, { $role => $userobj->username} );
+        push(@{$result{result}}, { $role => $userobj->username} ) if defined($userobj);
     }
     return $self->__ok( $c, \%result);
 }
