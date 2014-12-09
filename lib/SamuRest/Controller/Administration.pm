@@ -329,7 +329,7 @@ sub roles_GET {
     my %result =( result => [] );
     my @roles = $c->model('Database::Role')->search( undef, { order_by => 'id' } )->all;
     foreach my $role (@roles) {
-		push( @{$result{result}}, {$role->id => $role->role} );
+		push( @{$result{result}}, {id => $role->id, name =>  $role->role} );
     }
     return $self->__ok( $c, \%result);
 }
