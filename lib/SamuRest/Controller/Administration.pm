@@ -220,7 +220,7 @@ sub userlist_GET {
 	my @users = $c->model('Database::User')->search( undef, { order_by => 'id' } )->all;
 	my %result=(result => []);
 	foreach my $user (@users) {
-		push(@{$result{result}}, {$user->id => $user->username});
+		push(@{$result{result}}, { id => $user->id, name => $user->username});
 	}
 	return $self->__ok($c, \%result);
 }
