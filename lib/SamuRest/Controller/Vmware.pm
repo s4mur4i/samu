@@ -312,7 +312,7 @@ sub connection_DELETE {
     }
     $c->session->{__vim_login}->{sessions}->[$id] = undef;
     $c->log->finish;
-    return $self->__ok( $c, { result => { $id => "deleted" }} );
+    return $self->__ok( $c, { result => [{ $id => "deleted" }]} );
 }
 
 =pod
@@ -356,7 +356,7 @@ sub connection_PUT {
     }
     $c->session->{__vim_login}->{active} = $id;
     $c->log->finish;
-    return $self->__ok( $c, { result => { active => $id }} );
+    return $self->__ok( $c, { result => [{ active => $id }]} );
 }
 
 =pod
