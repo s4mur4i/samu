@@ -165,6 +165,9 @@ sub connection_GET {
     } elsif ( defined($c->session->{__vim_login}->{sessions})) {
         $c->log->dumpobj('sessions', $c->session->{__vim_login}->{sessions});
         for my $num ( 0 .. $#{ $c->session->{__vim_login}->{sessions} } ) {
+            if ( !defined($c->session->{__vim_login}->{sessions}->[$num])) {
+                next;
+            }
             my $info = $c->session->{__vim_login}->{sessions}->[$num];
             $info->{'id'} = $num;
             if ($c->session->{__vim_login}->{active} eq $num) {
