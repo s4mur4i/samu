@@ -1243,8 +1243,15 @@ sub cancel_task {
     $self->{logger}->start;
     my $task_view = $self->values_to_view( value => $args{value}, type => 'Task');
     my $task = SamuAPI_task->new( view => $task_view, logger => $self->{logger} );
-    $task->{view}->cancel;
-    my $result = [ { status => "cancelled"}];
+    eval {
+        $task->{view}->cancel;
+    }
+    my $result = []
+    if $@ {
+        $result = [ { status => "Error"}];
+    } else {}
+        $result = [ { status => "cancelled"}];
+    }
     $self->{logger}->finish;
     return $result;
 }
