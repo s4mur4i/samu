@@ -164,14 +164,15 @@ sub connection_GET {
         $return->{result} = [];
     } else {
         for my $num ( 0 .. $#{ $c->session->{__vim_login}->{sessions} } ) {
-        #    $return->{result}->{connections}->{$num} = ();
-            for my $key ( keys $c->session->{__vim_login}->{sessions}->[$num]) {
-				push( @{$return->{result}}, { $num => $c->session->{__vim_login}->{sessions}->[$num]->{$key}} );
-        #        $return->{result}->{connections}->{$num}->{$key} = $c->session->{__vim_login}->{sessions}->[$num]->{$key};
+            my $info = $c->session->{__vim_login}->{sessions}->[$num];
+            $info->{'id'} = $num;
+            if ($c->session->{__vim_login}->{active} eq $num) {
+                    $info->{'active'} = 1;
+            } else {
+                    $info->{'active'} = 0;
             }
+            push ( @{$return->{result}}, $info);
         }
-		push( @{$return->{result}}, {active => $c->session->{__vim_login}->{active}} );
-        #$return->{result}->{active} = $c->session->{__vim_login}->{active};
     }
     $c->log->dumpobj('return', $return);
     $c->log->finish;
