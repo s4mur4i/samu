@@ -154,7 +154,7 @@ sub profile_GET {
     }
     my %extend =();
     if ( defined($c->session->{__user}) and $id == $c->session->{__user}) {
-        #add all user_value stored in table for user
+        #FIXME: add all user_value stored in table for user
         $extend{self} = "yes";
     } else {
         $extend{self} = "no";
