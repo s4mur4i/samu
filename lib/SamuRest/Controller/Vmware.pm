@@ -162,7 +162,7 @@ sub connection_GET {
     my $return = { result => [] };
     if ( !@{ $c->session->{__vim_login}->{sessions} } ) {
         $return->{result} = [];
-    } else {
+    } elsif ( defined($c->session->{__vim_login}->{sessions})) {
         $c->log->dumpobj('sessions', $c->session->{__vim_login}->{sessions})
         for my $num ( 0 .. $#{ $c->session->{__vim_login}->{sessions} } ) {
             my $info = $c->session->{__vim_login}->{sessions}->[$num];
