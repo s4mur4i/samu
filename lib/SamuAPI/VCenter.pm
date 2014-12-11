@@ -1683,7 +1683,12 @@ sub get_ticket {
     $self->{logger}->start;
     my $all = $self->get_tickets;
     $self->{logger}->dumpobj('Ticket', $all);
-    my $result = [{ $args{ticket} => $all->{$args{ticket}}}];
+    my $result = [];
+    foreach ( @$all ) {
+        if ($_->{ticket} eq $args{ticket}) {
+            push(@$result, $_)
+        }
+    } 
     $self->{logger}->finish;
     return $result;
 }
