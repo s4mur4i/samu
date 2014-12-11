@@ -373,7 +373,10 @@ Base sub for folder queries
 
 =cut
 
-sub folderBase : Chained('loginBase') : PathPart('folder') : CaptureArgs(0) { }
+sub folderBase : Chained('loginBase') : PathPart('folder') : CaptureArgs(0) { 
+    my ( $self, $c ) = @_;
+    bless $c->stash->{vim}, 'VCenter_folder';
+}
 
 =pod
 
@@ -386,10 +389,7 @@ We cast the VCenter object to a VCenter_folder object to narrow scope
 
 =cut
 
-sub folders : Chained('folderBase') : PathPart('') : Args(0) : ActionClass('REST') {
-    my ( $self, $c ) = @_;
-    bless $c->stash->{vim}, 'VCenter_folder';
-}
+sub folders : Chained('folderBase') : PathPart('') : Args(0) : ActionClass('REST') { }
 
 =pod
 
