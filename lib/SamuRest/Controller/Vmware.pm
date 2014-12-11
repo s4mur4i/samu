@@ -1986,7 +1986,7 @@ sub networks_GET {
     }    
 	$c->log->dumpobj('result', $result);
 	$c->log->finish;
-    return $self->__ok( $c, $result );
+    return $self->__ok( $c, { 'result' => $result } );
 }
 
 =pod
