@@ -1638,8 +1638,9 @@ sub get_tickets {
     my $vms = $self->find_entities( view_type => 'VirtualMachine', properties => ['name', 'value', 'availableField' ]);
     for my $vm (@$vms) {
         my $obj = SamuAPI_virtualmachine->new( logger => $self->{logger}, view => $vm);
-        my $annotation = $obj->get_annotation( name => 'samu_ticket' )->{value};
-        push(@$result, $obj->get_mo_ref );
+        my $machine = $obj->get_mo_ref;
+        $machine->{'ticket'} = $obj->get_annotation( name => 'samu_ticket' )->{value};
+        push(@$result, $machine );
     }
     $self->{logger}->finish;
     return $result;
