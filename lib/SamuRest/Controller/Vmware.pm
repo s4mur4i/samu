@@ -699,8 +699,10 @@ Base sub for resourcepool queries
 
 =cut
 
-sub resourcepoolBase : Chained('loginBase') : PathPart('resourcepool') :
-  CaptureArgs(0) { }
+sub resourcepoolBase : Chained('loginBase') : PathPart('resourcepool') : CaptureArgs(0) { 
+    my ( $self, $c ) = @_;
+    bless $c->stash->{vim}, 'VCenter_resourcepool';
+}
 
 =pod
 
@@ -713,10 +715,7 @@ We cast the VCenter object to a VCenter_resourcepool object to narrow scope
 
 =cut
 
-sub resourcepools : Chained('resourcepoolBase') : PathPart('') : Args(0) : ActionClass('REST') {
-    my ( $self, $c ) = @_;
-    bless $c->stash->{vim}, 'VCenter_resourcepool';
-}
+sub resourcepools : Chained('resourcepoolBase') : PathPart('') : Args(0) : ActionClass('REST') { }
 
 =pod
 
