@@ -1247,7 +1247,7 @@ sub cancel_task {
         $task->{view}->cancel;
     };
     my $result = [];
-    if $@ {
+    if ($@) {
         $result = [ { status => "Error"}];
     } else {
         $result = [ { status => "cancelled"}];
