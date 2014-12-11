@@ -1245,7 +1245,7 @@ sub cancel_task {
     my $task = SamuAPI_task->new( view => $task_view, logger => $self->{logger} );
     eval {
         $task->{view}->cancel;
-    }
+    };
     my $result = [];
     if $@ {
         $result = [ { status => "Error"}];
