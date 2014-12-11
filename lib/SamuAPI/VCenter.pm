@@ -1249,7 +1249,7 @@ sub cancel_task {
     my $result = [];
     if $@ {
         $result = [ { status => "Error"}];
-    } else {}
+    } else {
         $result = [ { status => "cancelled"}];
     }
     $self->{logger}->finish;
