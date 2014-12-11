@@ -2280,7 +2280,7 @@ sub create {
         ExTask::Error->throw( error => 'Error during task', number=> 'unknown', creator => (caller(0))[3] );
     }
     my $task = SamuAPI_task->new( mo_ref => $task_moref, logger => $self->{logger});
-    my $return = [$task->get_moref];
+    my $return = [$task->get_mo_ref];
     $self->{logger}->dumpobj('return', $return);
     $self->{logger}->finish;
     return $return;
