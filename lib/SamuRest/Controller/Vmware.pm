@@ -1139,7 +1139,7 @@ sub resourcepool_POST {
 	$c->log->start;
     my $result = {};
     my %create_param = %{ $c->req->params };
-    $create_param{value} = $mo_ref_value;
+    $create_param{parent_resourcepool} = $mo_ref_value;
     eval {
         $result->{result} = $c->stash->{vim}->create( %create_param );
     };
