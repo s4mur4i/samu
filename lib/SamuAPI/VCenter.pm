@@ -1293,7 +1293,7 @@ sub destroy_entity {
     $self->{logger}->start;
     my $task = $args{obj}->{view}->Destroy_Task;
     my $obj = SamuAPI_task->new( mo_ref => $task, logger => $self->{logger} );
-    my $result = [$obj->get_mo_ref];
+    my $result = $obj->get_mo_ref;
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
     return $result;
