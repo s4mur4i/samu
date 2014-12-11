@@ -1682,6 +1682,7 @@ sub get_ticket {
     my ($self, %args) = @_;
     $self->{logger}->start;
     my $all = $self->get_tickets;
+    $self->{logger}->dumpobj('Ticket', $all);
     my $result = [{ $args{ticket} => $all->{$args{ticket}}}];
     $self->{logger}->finish;
     return $result;
