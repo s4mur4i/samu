@@ -1246,7 +1246,7 @@ sub cancel_task {
     eval {
         $task->{view}->cancel;
     }
-    my $result = []
+    my $result = [];
     if $@ {
         $result = [ { status => "Error"}];
     } else {}
