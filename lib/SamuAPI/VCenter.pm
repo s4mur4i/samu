@@ -2221,7 +2221,7 @@ sub get_single {
     return $result;
 }
 
-sub destory {
+sub destroy {
     my ($self, %args) = @_;
     $self->{logger}->start;
     my $view = $self->values_to_view( type => 'DistributedVirtualPortgroup', value => $args{value});
