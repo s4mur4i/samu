@@ -2534,12 +2534,15 @@ sub get_snapshots {
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     if ( defined( $vm->{view}->{snapshot} ) ) {
         my $info = $vm->parse_snapshot( snapshot => $vm->{view}->{snapshot}->{rootSnapshotList}[0]);
-        if ( $vm->{view}->{snapshot}->{currentSnapshot}->{value} eq $info->{moref_value}) {
-            $info->{current} = 1;
-        } else {
-            $info->{current} = 0;
+        $self->{logger}->dumpobj('snapshot info', $info);
+        for my $key ( keys $info ) { 
+            if ( $vm->{view}->{snapshot}->{currentSnapshot}->{value} eq $info->{moref_value}) {
+                $info->{current} = 1;
+            } else {
+                $info->{current} = 0;
+            }
+            push( @$result, $info);
         }
-		push( @$result, $info);
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
