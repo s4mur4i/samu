@@ -2731,7 +2731,7 @@ sub get_events {
     my $events = $manager->QueryEvents( filter => $filterspec );
     for my $event ( @{ $events } ) {
         my $obj = SamuAPI_event->new(view => $event, logger => $self->{logger});
-		push( @$result, { $obj->get_key => $obj->get_info} );
+		push( @$result, $obj->get_info );
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
