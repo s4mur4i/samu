@@ -2764,7 +2764,7 @@ sub get_annotations {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     foreach ( @{ $vm->{view}->{availableField} } ) {
-		push( @$result, {$_->{key} = $_->{name}});
+		push( @$result, { key => $_->{key}, value => $_->{name}});
     }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
