@@ -1021,12 +1021,7 @@ sub get_annotation {
         $id = $args{id};
     }
     my $all = $self->get_annotations;
-    my $result = {};
-    for my $a (@$all) {
-        if ( $a->{key} eq $id) {
-            $result = { key => $id,  value => $all->{$id}};
-        }
-    }
+    my $result = { key => $id,  value => $all->{$id}};
     $self->{logger}->dumpobj("result", $result);
     $self->{logger}->finish;
     return $result;
