@@ -858,6 +858,9 @@ sub _virtualmachineclonespec {
     $self->{logger}->start;
     my $poweron = $args{powerOn} // 1;
     my $clonespec = VirtualMachineCloneSpec->new( location => $args{location}, powerOn => $poweron,template => 0, config => $args{config}, customization => $args{customization});
+    if ( defined($args{customization}) ) {
+        $clonespec->{customization} = $args{customization};
+    }
     if ( !defined($args{fullclone}) ) {
         $clonespec->{snapshot} = $self->last_snapshot_moref;
     }
@@ -994,6 +997,7 @@ sub clone {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
     my $task;
+    $self->{logger}->dumpobj('clone args', \%args);
     eval {
         $task = $self->{view}->CloneVM_Task(folder => $args{folder}, name => $args{name}, spec=> $args{spec});
         $self->{logger}->dumpobj('task', $task);
