@@ -857,7 +857,7 @@ sub _virtualmachineclonespec {
     my ( $self, %args ) = @_;
     $self->{logger}->start;
     my $poweron = $args{powerOn} // 1;
-    my $clonespec = VirtualMachineCloneSpec->new( location => $args{location}, powerOn => $poweron,template => 0, config => $args{config}, customization => $args{customization});
+    my $clonespec = VirtualMachineCloneSpec->new( location => $args{location}, powerOn => $poweron,template => 0, config => $args{config} );
     if ( defined($args{customization}) ) {
         $clonespec->{customization} = $args{customization};
     }
