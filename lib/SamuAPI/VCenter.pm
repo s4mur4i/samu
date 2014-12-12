@@ -2626,7 +2626,13 @@ sub get_cdrom {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ret = $vm->get_cdroms;
-    my $result = [$ret->{$args{id}}];
+    my $result = [];
+    for my $cdrom (@$ret) {
+        $self->{logger}->dumpobj('cdrom info', $cdrom);
+        if ( $cdrom->{id} eq $args{id}) {
+            $result = $cdrom;
+        }
+    }
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2637,7 +2643,7 @@ sub get_cdroms {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $result = [$vm->get_cdroms];
+    my $result = $vm->get_cdroms;
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
