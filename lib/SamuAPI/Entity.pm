@@ -644,7 +644,7 @@ sub get_hw {
 sub get_interfaces {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $ethernet_hw = $self->get_hw( 'VirtualEthernetCard' );
     for ( my $i = 0 ; $i < scalar(@$ethernet_hw) ; $i++ ) {
         my $type = "Unknown";
@@ -659,7 +659,7 @@ sub get_interfaces {
         } elsif ( $$ethernet_hw[$i]->isa('VirtualVmxnet3') ) {
             $type = "Vmxnet3";
         }
-        $result->{$i} = { id => $i, key => $$ethernet_hw[$i]->{key}, mac=> $$ethernet_hw[$i]->{macAddress}, label => $$ethernet_hw[$i]->{deviceInfo}->{label}, summary => $$ethernet_hw[$i]->{deviceInfo}->{summary}, type => $type };
+        push(@$result, { id => $i,  key => $$ethernet_hw[$i]->{key},  mac=> $$ethernet_hw[$i]->{macAddress},  label => $$ethernet_hw[$i]->{deviceInfo}->{label},  summary => $$ethernet_hw[$i]->{deviceInfo}->{summary},  type => $type });
     }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
@@ -670,10 +670,10 @@ sub get_interfaces {
 sub get_disks {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $disk_hw = $self->get_hw( 'VirtualDisk' );
     for ( my $i = 0 ; $i < scalar(@$disk_hw) ; $i++ ) {
-        $result->{$i} = { id => $i, key => $$disk_hw[$i]->{key}, capacity => $$disk_hw[$i]->{capacityInKB}, filename => $$disk_hw[$i]->{backing}->{fileName} };
+        push(@$result, { id => $i,  key => $$disk_hw[$i]->{key},  capacity => $$disk_hw[$i]->{capacityInKB},  filename => $$disk_hw[$i]->{backing}->{fileName} });
     }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
@@ -1021,7 +1021,12 @@ sub get_annotation {
         $id = $args{id};
     }
     my $all = $self->get_annotations;
-    my $result = { key => $id, value => $all->{$id}};
+    my $result = {};
+    for my $a (@$all) {
+        if ( $a->{key} eq $id) {
+            $result = { key => $id,  value => $all->{$id}};
+        }
+    }
     $self->{logger}->dumpobj("result", $result);
     $self->{logger}->finish;
     return $result;
@@ -1033,7 +1038,7 @@ sub get_annotations {
     my $result = {};
     foreach ( @{ $self->{view}->{value} } ) {
         $self->{logger}->dumpobj('annotation_entry', $_);
-        $result->{$_->{key}} = $_->{value}
+        push(@$result, { value => $_->{value}, key => $_->{key} });
     }
     $self->{logger}->dumpobj("result", $result);
     $self->{logger}->finish;
