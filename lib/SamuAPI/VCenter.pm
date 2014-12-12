@@ -2677,7 +2677,7 @@ sub get_interface {
     my $result = [];
     for my $interface ( @$ret ) {
         if ( $interface->{id} eq $args{id} ) {
-            $result = [$disk];
+            $result = [$interface];
         }
     }
     $self->{logger}->dumpobj( 'result', $result );
