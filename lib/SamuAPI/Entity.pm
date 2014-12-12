@@ -1035,7 +1035,7 @@ sub get_annotation {
 sub get_annotations {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     foreach ( @{ $self->{view}->{value} } ) {
         $self->{logger}->dumpobj('annotation_entry', $_);
         push(@$result, { value => $_->{value}, key => $_->{key} });
