@@ -2662,7 +2662,7 @@ sub get_interfaces {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $result = [$vm->get_interfaces];
+    my $result = $vm->get_interfaces;
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
@@ -2685,7 +2685,7 @@ sub get_disks {
     $self->{logger}->start;
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
-    my $result = [$vm->get_disks];
+    my $result = $vm->get_disks;
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
