@@ -2674,7 +2674,7 @@ sub get_interface {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ret = $vm->get_interfaces;
-    my $result = []
+    my $result = [];
     for my $interface ( @$ret ) {
         if ( $interface->{id} eq $args{id} ) {
             $result = [$disk];
@@ -2702,7 +2702,7 @@ sub get_disk {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $ret = $vm->get_disks;
-    my $result = []
+    my $result = [];
     for my $disk ( @$ret ) {
         if ( $disk->{id} eq $args{id}) {
             $result = [$disk];
