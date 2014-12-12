@@ -608,7 +608,7 @@ sub shutdown {
 sub get_cdroms {
     my $self = shift;
     $self->{logger}->start;
-    my $result = {};
+    my $result = [];
     my $cdrom_hw = $self->get_hw( 'VirtualCdrom' );
     for ( my $i = 0 ; $i < scalar(@$cdrom_hw) ; $i++ ) {
         my $backing = "Unknown";
@@ -620,7 +620,7 @@ sub get_cdroms {
             $backing = $$cdrom_hw[$i]->{backing}->{deviceName};
         }
         my $label = $$cdrom_hw[$i]->{deviceInfo}->{label} || "None";
-        $result->{$i} = { id => $i, key => $$cdrom_hw[$i]->{key}, backing => "$backing", label => "$label"};
+        push($result, { id => $i, key => $$cdrom_hw[$i]->{key}, backing => "$backing", label => "$label"});
     }
     $self->{logger}->dumpobj('result', $result);
     $self->{logger}->finish;
