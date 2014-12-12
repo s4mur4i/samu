@@ -2630,7 +2630,7 @@ sub get_cdrom {
     for my $cdrom (@$ret) {
         $self->{logger}->dumpobj('cdrom info', $cdrom);
         if ( $cdrom->{id} eq $args{id}) {
-            $result = $cdrom;
+            $result = [$cdrom];
         }
     }
     $self->{logger}->dumpobj( 'result', $result );
