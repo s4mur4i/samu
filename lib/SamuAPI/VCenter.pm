@@ -2813,7 +2813,7 @@ sub change_annotation {
     my $view = $self->values_to_view( type=> 'VirtualMachine', value => $args{moref_value});
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $key = $vm->get_annotation_key( name => $args{name});
-    $self->_chane_annotation( view => $vm->{view}, key => $key , value => $args{value});
+    $self->_change_annotation( view => $vm->{view}, key => $key , value => $args{value});
     my $result = [{ $key => $args{value}}];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
