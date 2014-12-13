@@ -2803,7 +2803,7 @@ sub get_annotation {
 sub delete_annotation {
     my ( $self, %args) = @_;
     $args{value} = "";
-    my $result = [$self->change_annotation(%args)];
+    my $result = $self->change_annotation(%args);
     return $result;
 }
 
@@ -2814,7 +2814,7 @@ sub change_annotation {
     my $vm = SamuAPI_virtualmachine->new( view => $view, logger => $self->{logger} );
     my $key = $vm->get_annotation_key( name => $args{name});
     $self->_change_annotation( view => $vm->{view}, key => $key , value => $args{value});
-    my $result = [{ $key => $args{value}}];
+    my $result = [{ key => $key, value => $args{value}}];
     $self->{logger}->dumpobj( 'result', $result );
     $self->{logger}->finish;
     return $result;
