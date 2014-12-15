@@ -24,9 +24,10 @@ sub rand_3digit {
 sub increment_disk_name {
     my ($name) = @_;
     my ( $pre, $num, $post );
-    if ( $name =~ /(.*)_(\d+)(\.vmdk)/ ) {
+    if ( $name =~ /(.*_\d+)_(\d+)(\.vmdk)/ ) {
         ( $pre, $num, $post ) = ( $1, $2, $3 );
         $num++;
+        # FIXME need better detection here
         if ( $num == 7 ) {
             $num++;
         } elsif ( $num > 15 ) {
@@ -34,6 +35,7 @@ sub increment_disk_name {
         }   
     }   
     else {
+        # we will never enter here with current naming
         ( $pre, $post ) = $name =~ /(.*)(\.vmdk)/;
         $num = 1;
     }   
