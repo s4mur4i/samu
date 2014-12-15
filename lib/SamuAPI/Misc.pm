@@ -31,7 +31,11 @@ sub increment_disk_name {
         if ( $num == 7 ) {
             $num++;
         } elsif ( $num > 15 ) {
-            ExEntity::Range->throw( error  => 'Cannot increment further. Last disk used', entity => $name, count  => '15');
+            if ($num > 15) {
+                $num = 1;
+            } else {
+                ExEntity::Range->throw( error  => 'Cannot increment further. Last disk used', entity => $name, count  => '15');
+            }
         }   
     }   
     else {
